@@ -1,0 +1,25 @@
+--- fontconfig-9999.orig/conf.d/49-symbols.conf	2005-04-03 23:07:50.000000000 +0200
++++ fontconfig-9999/conf.d/49-symbols.conf	2006-04-07 13:10:55.000000000 +0200
+@@ -0,0 +1,12 @@
++<!--
++ Suitable free alias for Symbol font
++ -->
++
++	<alias>
++		<family>Symbol</family>
++		<accept><family>Standard Symbols L</family></accept>
++	</alias>
++	<alias>
++		<family>ZapfDingbats</family>
++		<accept><family>Dingbats</family></accept>
++	</alias>
+--- fontconfig-9999.orig/conf.d/Makefile.am	2006-09-16 12:56:38.000000000 -0700
++++ fontconfig-9999/conf.d/Makefile.am	2006-09-16 12:56:57.000000000 -0700
+@@ -37,6 +37,7 @@
+ 	30-urw-aliases.conf \
+ 	40-generic.conf \
+ 	49-sansserif.conf \
++	49-symbols.conf \
+ 	50-user.conf \
+ 	51-local.conf \
+ 	60-latin.conf \

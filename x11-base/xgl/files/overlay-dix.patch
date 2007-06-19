@@ -1,0 +1,65 @@
+Index: composite/compwindow.c
+===================================================================
+RCS file: /cvs/xorg/xserver/xorg/composite/compwindow.c,v
+retrieving revision 1.12
+diff -u -p -u -r1.12 compwindow.c
+--- composite/compwindow.c	13 Mar 2006 21:59:55 -0000	1.12
++++ composite/compwindow.c	24 Mar 2006 20:13:21 -0000
+@@ -600,6 +602,7 @@ compCreateWindow (WindowPtr pWin)
+     cs->CreateWindow = pScreen->CreateWindow;
+     pScreen->CreateWindow = compCreateWindow;
+     compCheckTree (pWin->drawable.pScreen);
++    RegisterRealChildHeadProc (CompositeRealChildHead);
+     return ret;
+ }
+ 
+Index: dix/window.c
+===================================================================
+RCS file: /cvs/xorg/xserver/xorg/dix/window.c,v
+retrieving revision 1.14
+diff -u -p -u -r1.14 window.c
+--- dix/window.c	15 Feb 2006 20:44:12 -0000	1.14
++++ dix/window.c	24 Mar 2006 20:13:21 -0000
+@@ -535,9 +535,24 @@ ClippedRegionFromBox(register WindowPtr 
+     REGION_INTERSECT(pScreen, Rgn, Rgn, &pWin->winSize);
+ }
+ 
++#ifdef COMPOSITE
++#include "compint.h"
++#endif
++
++static RealChildHeadProc realChildHeadProc;
++
++void
++RegisterRealChildHeadProc (RealChildHeadProc proc)
++{
++    realChildHeadProc = proc;
++}
++
+ WindowPtr
+ RealChildHead(register WindowPtr pWin)
+ {
++    if (realChildHeadProc)
++	return realChildHeadProc (pWin);
++    
+     if (!pWin->parent &&
+ 	(screenIsSaved == SCREEN_SAVER_ON) &&
+ 	(HasSaverWindow (pWin->drawable.pScreen->myNum)))
+Index: include/window.h
+===================================================================
+RCS file: /cvs/xorg/xserver/xorg/include/window.h,v
+retrieving revision 1.10
+diff -u -p -u -r1.10 window.h
+--- include/window.h	12 Jan 2006 22:14:56 -0000	1.10
++++ include/window.h	24 Mar 2006 20:13:21 -0000
+@@ -102,6 +102,10 @@ extern void ClippedRegionFromBox(
+     int /*w*/,
+     int /*h*/);
+ 
++typedef WindowPtr (* RealChildHeadProc) (WindowPtr pWin);
++
++void RegisterRealChildHeadProc (RealChildHeadProc proc);
++
+ extern WindowPtr RealChildHead(
+     WindowPtr /*pWin*/);
+ 
