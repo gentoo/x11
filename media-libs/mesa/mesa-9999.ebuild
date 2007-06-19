@@ -1,8 +1,8 @@
-# Copyright 1999-2006 Gentoo Foundation
+# Copyright 1999-2007 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-libs/mesa/mesa-6.4.1-r1.ebuild,v 1.3 2005/12/26 13:49:10 stefaan Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-libs/mesa/mesa-6.5.3.ebuild,v 1.2 2007/05/13 16:15:24 joshuabaergen Exp $
 
-inherit eutils toolchain-funcs multilib git flag-o-matic portability
+inherit eutils toolchain-funcs multilib git flag-o-matic portability versionator
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/mesa/mesa"
 SRC_URI=""
@@ -14,7 +14,7 @@ DESCRIPTION="OpenGL-like graphic library for Linux"
 HOMEPAGE="http://mesa3d.sourceforge.net/"
 LICENSE="LGPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~ppc ~x86"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE_VIDEO_CARDS="
 	video_cards_i810
 	video_cards_mach64
@@ -40,13 +40,14 @@ IUSE="${IUSE_VIDEO_CARDS}
 	nptl
 	xcb"
 
+RESTRICT="stricter"
 RDEPEND="dev-libs/expat
 	x11-libs/libX11
 	x11-libs/libXext
 	x11-libs/libXxf86vm
 	x11-libs/libXi
 	x11-libs/libXmu
-	>=x11-libs/libdrm-9999
+	>=x11-libs/libdrm-2.2
 	x11-libs/libICE
 	app-admin/eselect-opengl
 	motif? ( virtual/motif )
@@ -73,6 +74,14 @@ if use debug; then
 fi
 
 pkg_setup() {
+	if use xcb; then
+		if ! built_with_use x11-libs/libX11 xcb; then
+			msg="You must build libX11 with xcb enabled."
+			eerror ${msg}
+			die ${msg}
+		fi
+	fi
+
 	if use debug; then
 		strip-flags
 		append-flags -g
@@ -89,7 +98,8 @@ pkg_setup() {
 	elif use x86; then
 		CONFIG="linux-dri-x86"
 	elif use amd64; then
-		CONFIG="linux-dri-x86-64"
+		[[ ${ABI} == "amd64" ]] && CONFIG="linux-dri-x86-64"
+		[[ ${ABI} == "x86" ]] && CONFIG="linux-dri-x86"
 	elif use ppc; then
 		CONFIG="linux-dri-ppc"
 	else
@@ -102,19 +112,12 @@ src_unpack() {
 
 	git_src_unpack
 	cd ${S}
+
+	# Bug #177329
+	epatch "${FILESDIR}/${P}-pthread.patch"
+
 	# FreeBSD 6.* doesn't have posix_memalign().
 	[[ ${CHOST} == *-freebsd6.* ]] && sed -i -e "s/-DHAVE_POSIX_MEMALIGN//" configs/freebsd{,-dri}
-
-	epatch ${FILESDIR}/6.4-multilib-fix.patch
-
-	epatch ${FILESDIR}/r200-copy-pixels-1.patch
-
-	# From xgl-coffee overlay
-	epatch ${FILESDIR}/mesa-radeon-0depthbits.patch
-
-# hacky implem work on GL_LINE_SMOOTH
-#	epatch ${FILESDIR}/r300-smooth-lines-1.diff
-#	epatch ${FILESDIR}/r300-aet.patch
 
 	# Don't compile debug code with USE=-debug - bug #125004
 	if ! use debug; then
@@ -142,7 +145,7 @@ src_unpack() {
 
 	# Configurable DRI drivers
 	if use video_cards_i810; then
-		add_drivers i810 i915 i965
+		add_drivers i810 i915 i915tex i965
 	fi
 	if use video_cards_mach64; then
 		add_drivers mach64
@@ -275,7 +278,10 @@ src_install() {
 
 	# Create the two-number versioned libs (.so.#.#), since only .so.# and
 	# .so.#.#.# were made
-	dosym libGLU.so.1.3.060501 /usr/$(get_libdir)/libGLU.so.1.3
+	local MAJOR_2="$(printf "%.2i" $(get_version_component_range 1 ${PV}))"
+	local MINOR_2="$(printf "%.2i" $(get_version_component_range 2 ${PV}))"
+	local MICRO_2="$(printf "%.2i" $(get_version_component_range 3 ${PV}))"
+	dosym libGLU.so.1.3.${MAJOR_2}.${MINOR_2}.${MICRO_2} /usr/$(get_libdir)/libGLU.so.1.3
 	dosym libGLw.so.1.0.0 /usr/$(get_libdir)/libGLw.so.1.0
 
 	# libGLU doesn't get the plain .so symlink either
