@@ -1,6 +1,6 @@
-# Copyright 1999-2006 Gentoo Foundation
+# Copyright 1999-2007 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-base/xorg-server/xorg-server-1.0.1-r4.ebuild,v 1.1 2006/02/19 03:54:56 spyderous Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-base/xorg-server/xorg-server-1.3.0.0.ebuild,v 1.9 2007/06/04 23:17:40 dberkholz Exp $
 
 # Must be before x-modular eclass is inherited
 SNAPSHOT="yes"
@@ -97,7 +97,6 @@ IUSE_VIDEO_CARDS="
 	video_cards_via
 	video_cards_vmware
 	video_cards_voodoo
-
 	video_cards_fglrx
 	video_cards_nvidia"
 IUSE_SERVERS="dmx kdrive xorg"
@@ -118,7 +117,7 @@ RDEPEND="x11-libs/libXfont
 	x11-libs/libXrender
 	x11-libs/libXi
 	media-libs/freetype
-	>=media-libs/mesa-6.5-r2
+	>=media-libs/mesa-6.5.2
 	media-fonts/font-adobe-75dpi
 	media-fonts/font-misc-misc
 	media-fonts/font-cursor-misc
@@ -133,7 +132,8 @@ RDEPEND="x11-libs/libXfont
 	x11-libs/libXpm
 	x11-libs/libXxf86misc
 	x11-libs/libXxf86vm
-	dmx? ( x11-libs/libdmx )
+	dmx? ( x11-libs/libdmx
+		x11-libs/libXfixes )
 	!minimal? ( x11-libs/libXtst
 		x11-libs/libXres )
 	>=x11-libs/libxkbui-1.0.2
@@ -145,10 +145,10 @@ RDEPEND="x11-libs/libXfont
 	# Xxf86misc and Xxf86vm are xorgcfg-dependent
 	# liblbxutil is lbx- dependent
 DEPEND="${RDEPEND}
-	x11-proto/randrproto
+	>=x11-proto/randrproto-1.2.1
 	x11-proto/renderproto
 	>=x11-proto/fixesproto-4
-	x11-proto/damageproto
+	>=x11-proto/damageproto-1.1
 	x11-proto/xextproto
 	x11-proto/xproto
 	x11-proto/xf86dgaproto
@@ -259,12 +259,12 @@ PDEPEND="
 		video_cards_voodoo? ( >=x11-drivers/xf86-video-voodoo-1.1.0 )
 
 		video_cards_tdfx? ( 3dfx? ( >=media-libs/glide-v3-3.10 ) )
-		video_cards_fglrx? ( >=x11-drivers/ati-drivers-8.27.10 )
 		video_cards_nvidia? ( || (
 				>=x11-drivers/nvidia-drivers-1.0.8774
 				>=x11-drivers/nvidia-legacy-drivers-1.0.7184
 			)
 		)
+		video_cards_fglrx? ( >=x11-drivers/ati-drivers-8.37.6 )
 	)"
 LICENSE="${LICENSE} MIT"
 
@@ -311,6 +311,7 @@ pkg_setup() {
 		$(use_enable xorg)
 		$(use_enable xprint)
 		$(use_enable nptl glx-tls)
+		$(use_enable !minimal xorgcfg)
 		--sysconfdir=/etc/X11
 		--localstatedir=/var
 		--enable-install-setuid
@@ -343,71 +344,14 @@ src_unpack() {
 	x-modular_patch_source
 
 	# Set up kdrive servers to build
-	# Bug #150052 - anything that uses vm86.h is broken on non-x86 arches.
-	# That translates into the following set:
-	vm86_devices="chips epson glint i810 mach64 mga neomagic
-		nv r128 radeon siliconmotion vesa via"
-
 	if use kdrive; then
-		einfo "Removing unused kdrive drivers ..."
-		for card in ${IUSE_VIDEO_CARDS}; do
-			# Skip binary drivers
-			if [[ ${card} = video_cards_nvidia ]] \
-				|| [[ ${card} = video_cards_fglrx ]]; then
-				continue
-			fi
-
-			real_card=${card#video_cards_}
-
-			# Differences between VIDEO_CARDS name and kdrive server name
-			real_card=${real_card/glint/pm2}
-			real_card=${real_card/radeon/ati}
-			real_card=${real_card/%nv/nvidia}
-			real_card=${real_card/siliconmotion/smi}
-			real_card=${real_card/%sis/sis300}
-
-			disable_card=0
-			if ! use ${card}; then
-				# (bug #136370) Radeon needs fbdev and vesa
-				if ! use x86 \
-					&& use video_cards_radeon; then
-					if [[ ${card} = fbdev ]] \
-						|| [[ ${card} = vesa ]]; then
-						continue
-					fi
-				fi
-				disable_card=1
-			# Bug #150052
-			elif ! use x86 &&
-				[[ ${vm86_devices/${card#video_cards_}/} != ${vm86_devices} ]]; then
-				ewarn "	 $real_card does not work on your architecture; disabling."
-				disable_card=1
-			fi
-
-			if [[ $disable_card = 1 ]]; then
-				ebegin "  ${real_card}"
-				sed -i \
-					-e "s:\b${real_card}\b::g" \
-					${S}/hw/kdrive/Makefile.am \
-					|| die "sed of ${real_card} failed"
-				eend
-			fi
-
-		done
-
-		# smi and via are the only things on line 2. If line 2 ends up blank,
-		# we need to get rid of the backslash at the end of line 1.
-		if ! use video_cards_siliconmotion && ! use video_cards_via; then
-			sed -i \
-				-e "s:^\(VESA_SUBDIRS.*\)\\\:\1:g" \
-				${S}/hw/kdrive/Makefile.am
-		fi
+		kdrive_setup
 	fi
 
 	# Make sure eautoreconf gets run if we need the autoconf/make
 	# changes.
 	if [[ ${SNAPSHOT} != "yes" ]]; then
-		if use kdrive || use xprint; then
+		if use kdrive; then
 			eautoreconf
 		fi
 	fi
@@ -427,7 +371,8 @@ src_install() {
 		|| die "couldn't install extra modes"
 
 	# Bug #151421 - this file is not built with USE="minimal"
-	if ! use minimal; then
+	# Bug #151670 - this file is also not build if USE="-xorg"
+	if ! use minimal && use xorg; then
 		# Install xorg.conf.example
 		insinto /etc/X11
 		doins hw/xfree86/xorg.conf.example \
@@ -440,7 +385,7 @@ pkg_postinst() {
 
 	# Bug #135544
 	ewarn "Users of reduced blanking now need:"
-	ewarn "	  Option \"ReducedBlanking\""
+	ewarn "   Option \"ReducedBlanking\""
 	ewarn "In the relevant Monitor section(s)."
 	ewarn "Make sure your reduced blanking modelines are safe!"
 }
@@ -451,6 +396,84 @@ pkg_postrm() {
 		if [ -e ${ROOT}/usr/$(get_libdir)/xorg/modules ]; then
 			rm -rf ${ROOT}/usr/$(get_libdir)/xorg/modules
 		fi
+	fi
+}
+
+kdrive_setup() {
+	local card real_card disable_card kdrive_fbdev kdrive_vesa
+
+	einfo "Removing unused kdrive drivers ..."
+
+	# Some kdrive servers require fbdev and vesa
+	kdrive_fbdev="radeon neomagic sis siliconmotion"
+	# Some kdrive servers require just vesa
+	kdrive_vesa="chips mach64 mga nv glint r128 via"
+
+	for card in ${IUSE_VIDEO_CARDS}; do
+		real_card=${card#video_cards_}
+
+		# Differences between VIDEO_CARDS name and kdrive server name
+		real_card=${real_card/glint/pm2}
+		real_card=${real_card/radeon/ati}
+		real_card=${real_card/%nv/nvidia}
+		real_card=${real_card/siliconmotion/smi}
+		real_card=${real_card/%sis/sis300}
+
+		disable_card=0
+
+		# Check whether it's a valid kdrive server before we waste time
+		# on the rest of this
+		if ! grep -q -o "\b${real_card}\b" ${S}/hw/kdrive/Makefile.am; then
+			continue
+		fi
+
+		if ! use ${card}; then
+			if use x86; then
+				# Some kdrive servers require fbdev and vesa
+				for i in ${kdrive_fbdev}; do
+					if use video_cards_${i}; then
+						if [[ ${real_card} = fbdev ]] \
+							|| [[ ${real_card} = vesa ]]; then
+							continue 2 # Don't disable
+						fi
+						fi
+				done
+
+				# Some kdrive servers require just vesa
+				for i in ${kdrive_vesa}; do
+					if use video_cards_${i}; then
+						if [[ ${real_card} = vesa ]]; then
+							continue 2 # Don't disable
+						fi
+					fi
+				done
+			fi
+			disable_card=1
+		# Bug #150052
+		# fbdev is the only VIDEO_CARDS setting that works on non-x86
+		elif ! use x86 \
+			&& [[ ${real_card} != fbdev ]]; then
+			ewarn "  $real_card does not work on your architecture; disabling."
+			disable_card=1
+		fi
+
+		if [[ $disable_card = 1 ]]; then
+			ebegin "  ${real_card}"
+			sed -i \
+				-e "s:\b${real_card}\b::g" \
+				${S}/hw/kdrive/Makefile.am \
+				|| die "sed of ${real_card} failed"
+			eend
+		fi
+
+	done
+
+	# smi and via are the only things on line 2. If line 2 ends up blank,
+	# we need to get rid of the backslash at the end of line 1.
+	if ! use video_cards_siliconmotion && ! use video_cards_via; then
+		sed -i \
+			-e "s:^\(VESA_SUBDIRS.*\)\\\:\1:g" \
+			${S}/hw/kdrive/Makefile.am
 	fi
 }
 
@@ -490,22 +513,18 @@ switch_opengl_implem() {
 xprint_src_install() {
 	# RH-style init script, we provide a wrapper
 	exeinto /usr/$(get_libdir)/misc
-	doexe ${S}/Xprint/etc/init.d/xprint
-	# Patch init script for fonts location
-	sed -e 's:/lib/X11/fonts/:/share/fonts/:g' \
-		-i ${D}/usr/$(get_libdir)/misc/xprint
+	doexe ${S}/hw/xprint/etc/init.d/xprint
 	# Install the wrapper
 	newinitd ${FILESDIR}/xprint.init xprint
 	# Install profile scripts
 	insinto /etc/profile.d
-	doins ${S}/Xprint/etc/profile.d/xprint*
+	doins ${S}/hw/xprint/etc/profile.d/xprint*
 	insinto /etc/X11/xinit/xinitrc.d
-	newins ${S}/Xprint/etc/Xsession.d/cde_xsessiond_xprint.sh \
-		92xprint-xpserverlist.sh
+	doins ${S}/hw/xprint/etc/Xsession.d/92xprint-xpserverlist
 	# Patch profile scripts
 	sed -e "s:/bin/sh.*get_xpserverlist:/usr/$(get_libdir)/misc/xprint \
 		get_xpserverlist:g" -i ${D}/etc/profile.d/xprint* \
-		${D}/etc/X11/xinit/xinitrc.d/92xprint-xpserverlist.sh
+		${D}/etc/X11/xinit/xinitrc.d/92xprint-xpserverlist
 	# Move profile scripts, we can't touch /etc/profile.d/ in Gentoo
 	dodoc ${D}/etc/profile.d/xprint*
 	rm -f ${D}/etc/profile.d/xprint*
