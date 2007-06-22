@@ -6,11 +6,13 @@
 SNAPSHOT="yes"
 XDPVER=4
 
+EGIT_BRANCH="randr-1.2"
+
 inherit x-modular git
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/driver/${PN}"
 
-DESCRIPTION="ATI video driver"
+DESCRIPTION="ATI video driver -- RandR 1.2 (monitor hotplug) branch"
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 SRC_URI=""
 IUSE="dri"
