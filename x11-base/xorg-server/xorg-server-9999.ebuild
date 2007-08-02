@@ -16,8 +16,6 @@ MESA_PN="mesa"
 MESA_P="${MESA_PN}"
 
 DESCRIPTION="X.Org X servers"
-# It's suid and has lazy bindings, so FEATURES="stricter" doesn't work
-RESTRICT="stricter"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE_INPUT_DEVICES="
 	input_devices_acecad
@@ -104,9 +102,8 @@ IUSE="${IUSE_VIDEO_CARDS}
 	${IUSE_INPUT_DEVICES}
 	${IUSE_SERVERS}
 	3dfx
-	aiglx
 	dri ipv6 minimal nptl sdl xprint"
-RDEPEND="x11-libs/libXfont
+RDEPEND=">=x11-libs/libXfont-1.2.5
 	x11-libs/xtrans
 	x11-libs/libXau
 	x11-libs/libXext
@@ -132,6 +129,7 @@ RDEPEND="x11-libs/libXfont
 	x11-libs/libXpm
 	x11-libs/libXxf86misc
 	x11-libs/libXxf86vm
+	>=media-libs/libpixman-9999
 	dmx? ( x11-libs/libdmx
 		x11-libs/libXfixes )
 	!minimal? ( x11-libs/libXtst
@@ -172,7 +170,7 @@ DEPEND="${RDEPEND}
 	>=x11-proto/glproto-1.4.8
 	dmx? ( x11-proto/dmxproto )
 	dri? ( x11-proto/xf86driproto
-		>=x11-libs/libdrm-2.2 )
+		>=x11-libs/libdrm-2.3 )
 	xprint? ( x11-proto/printproto
 		x11-apps/mkfontdir
 		x11-apps/mkfontscale
@@ -270,17 +268,6 @@ LICENSE="${LICENSE} MIT"
 
 pkg_setup() {
 	use minimal || ensure_a_server_is_building
-
-	# Patches required for compiz to work with AIGLX,
-	# but they slow EXA down (bug #147841).
-	if use aiglx; then
-		einfo "AIGLX patches will be applied."
-		ewarn "These patches are known to cause problems with EXA enabled."
-		PATCHES="${FILESDIR}/01-no-move-damage.patch
-			${FILESDIR}/02-dont-backfill-bg-none.patch
-			${FILESDIR}/05-offscreen-pixmaps.patch
-			${PATCHES}"
-	fi
 
 	# SDL only available in kdrive build
 	if use kdrive && use sdl; then
