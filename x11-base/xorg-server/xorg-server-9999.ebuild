@@ -129,7 +129,7 @@ RDEPEND=">=x11-libs/libXfont-1.2.5
 	x11-libs/libXpm
 	x11-libs/libXxf86misc
 	x11-libs/libXxf86vm
-	>=media-libs/libpixman-9999
+	>=x11-libs/pixman-9999
 	dmx? ( x11-libs/libdmx
 		x11-libs/libXfixes )
 	!minimal? ( x11-libs/libXtst
