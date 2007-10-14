@@ -96,7 +96,6 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=x11-libs/libXpm-3.5.7
 	>=x11-libs/libXxf86misc-1.0.1
 	>=x11-libs/libXxf86vm-1.0.1
-	>=x11-libs/pixman-9999
 	>=x11-libs/libpciaccess-9999
 	dmx? ( >=x11-libs/libdmx-1.0.2
 			>=x11-libs/libXfixes-4.0.3 )
@@ -358,9 +357,9 @@ pkg_postinst() {
 	ewarn "Make sure your reduced blanking modelines are safe!"
 
 	echo
-	ewarn "You must rebuild all drivers if upgrading from xorg-server 1.3"
-	ewarn "or earlier, because the ABI changed. If you cannot start X because"
-	ewarn "of module version mismatch errors, this is your problem."
+	ewarn "You must rebuild all video drivers if upgrading from xorg-server 1.4"
+	ewarn "or earlier, because they access PCI space differently. If you cannot start X"
+	ewarn "because of module version mismatch errors, this is your problem."
 	ebeep 5
 	epause 10
 }
