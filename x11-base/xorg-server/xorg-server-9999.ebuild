@@ -49,57 +49,19 @@ IUSE_INPUT_DEVICES="
 	input_devices_synaptics
 	input_devices_wacom"
 IUSE_VIDEO_CARDS="
-	video_cards_amd
-	video_cards_apm
-	video_cards_ark
-	video_cards_chips
-	video_cards_cirrus
-	video_cards_cyrix
-	video_cards_dummy
-	video_cards_epson
 	video_cards_fbdev
-	video_cards_glint
-	video_cards_i128
-	video_cards_i740
 	video_cards_i810
-	video_cards_impact
-	video_cards_imstt
 	video_cards_mach64
 	video_cards_mga
-	video_cards_neomagic
-	video_cards_newport
-	video_cards_nsc
 	video_cards_nv
 	video_cards_r128
 	video_cards_radeon
 	video_cards_rendition
-	video_cards_s3
-	video_cards_s3virge
 	video_cards_savage
-	video_cards_siliconmotion
-	video_cards_sis
-	video_cards_sisusb
-	video_cards_sunbw2
-	video_cards_suncg14
-	video_cards_suncg3
-	video_cards_suncg6
-	video_cards_sunffb
-	video_cards_sunleo
-	video_cards_suntcx
 	video_cards_tdfx
-	video_cards_tga
-	video_cards_trident
-	video_cards_tseng
-	video_cards_v4l
-	video_cards_vermilion
 	video_cards_vesa
-	video_cards_vga
-	video_cards_via
 	video_cards_vmware
-	video_cards_voodoo
-	video_cards_xgi
-	video_cards_nvidia"
-#	video_cards_fglrx"
+	video_cards_xgi"
 IUSE_SERVERS="dmx kdrive xorg"
 IUSE="${IUSE_VIDEO_CARDS}
 	${IUSE_INPUT_DEVICES}
@@ -219,7 +181,8 @@ PDEPEND="
 		video_cards_fbdev? ( >=x11-drivers/xf86-video-fbdev-0.2.0 )
 		video_cards_i810? ( >=x11-drivers/xf86-video-i810-1.6.0 )
 		video_cards_mach64? ( >=x11-drivers/xf86-video-ati-6.6.0 )
-		video_cards_mga? ( >=x11-drivers/xf86-video-mga-1.4.1 )
+		video_cards_mga? ( >=x11-drivers/xf86-video-mga-1.4.7 )
+		video_cards_nv? ( >=x11-drivers/xf86-video-nv-2.1.5 )
 		video_cards_r128? ( >=x11-drivers/xf86-video-ati-6.6.0 )
 		video_cards_radeon? ( >=x11-drivers/xf86-video-ati-6.6.0 )
 		video_cards_rendition? ( >=x11-drivers/xf86-video-rendition-4.1.0 )
