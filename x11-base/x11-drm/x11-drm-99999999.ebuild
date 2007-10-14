@@ -5,8 +5,10 @@
 WANT_AUTOCONF="latest"
 WANT_AUTOMAKE="1.7"
 
-inherit eutils x11 linux-mod autotools git
+#EGIT_BRANCH="vblank-rework"
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/mesa/drm"
+
+inherit eutils x11 linux-mod autotools git
 
 IUSE_VIDEO_CARDS="
 	video_cards_i810
@@ -27,7 +29,7 @@ IUSE="${IUSE_VIDEO_CARDS} kernel_FreeBSD kernel_linux"
 RESTRICT="strip"
 
 S="${WORKDIR}/drm"
-PATCHVER="0.1"
+PATCHVER="0.2"
 PATCHDIR="${WORKDIR}/patch"
 EXCLUDED="${WORKDIR}/excluded"
 
@@ -59,6 +61,7 @@ pkg_setup() {
 
 src_unpack() {
 	git_src_unpack
+	cd "${WORKDIR}"
 
 	unpack ${P}-gentoo-${PATCHVER}.tar.bz2
 
@@ -82,11 +85,16 @@ src_unpack() {
 }
 
 src_compile() {
+	unset LDFLAGS
+
 	cd ${S}
 	# Building the programs. These are useful for developers and getting info from DRI and DRM.
 	#
 	# libdrm objects are needed for drmstat.
-	econf || die "libdrm configure failed."
+	econf \
+		--enable-static \
+		--disable-shared \
+		|| die "libdrm configure failed."
 	emake || die "libdrm build failed."
 
 	einfo "Building DRM in ${SRC_BUILD}..."
@@ -210,20 +218,22 @@ patch_prepare() {
 	# to be done based on DRM tree.
 }
 
+src_unpack_linux() {
+	convert_to_m "${SRC_BUILD}"/Makefile
+}
+
 src_unpack_freebsd() {
-	# Do FreeBSD stuff.
-	if use kernel_FreeBSD
-	then
-		# Link in freebsd kernel.
-		ln -s "/usr/src/sys-${K_RV}" "${WORKDIR}/sys"
-		# SUBDIR variable gets to all Makefiles, we need it only in the main one.
-		SUBDIRS=${VIDCARDS//.ko}
-		sed -ie "s:SUBDIR\ =.*:SUBDIR\ =\ drm ${SUBDIRS}:" ${SRC_BUILD}/Makefile
-	fi
+	# Link in freebsd kernel.
+	ln -s "/usr/src/sys-${K_RV}" "${WORKDIR}/sys"
+	# SUBDIR variable gets to all Makefiles, we need it only in the main one.
+	SUBDIRS=${VIDCARDS//.ko}
+	sed -ie "s:SUBDIR\ =.*:SUBDIR\ =\ drm ${SUBDIRS}:" ${SRC_BUILD}/Makefile
 }
 
 src_unpack_os() {
-	if use kernel_FreeBSD
+	if use kernel_linux; then
+		src_unpack_linux
+	elif use kernel_FreeBSD
 	then
 		src_unpack_freebsd
 	fi
@@ -253,9 +263,11 @@ src_compile_linux() {
 	# This now uses an M= build system. Makefile does most of the work.
 	cd ${SRC_BUILD}
 	unset ARCH
-	emake M="${SRC_BUILD}" \
+	emake \
+		M="${SRC_BUILD}" \
 		LINUXDIR="${KERNEL_DIR}" \
 		DRM_MODULES="${VIDCARDS}" \
+		O="${KBUILD_OUTPUT}" \
 		modules || die_error
 
 	if linux_chkconfig_present DRM
@@ -300,24 +312,17 @@ die_error() {
 }
 
 src_install_linux() {
-	cd ${SRC_BUILD}
-	unset ARCH
-	kernel_is 2 6 && DRM_KMOD="drm.${KV_OBJ}"
-	emake KV="${KV_FULL}" \
-		LINUXDIR="${KERNEL_DIR}" \
-		DESTDIR="${D}" \
-		RUNNING_REL="${KV_FULL}" \
-		MODULE_LIST="${VIDCARDS} ${DRM_KMOD}" \
-		O="${KBUILD_OUTPUT}" \
-		install || die "Install failed."
+	for i in drm.${KV_OBJ} ${VIDCARDS}; do
+		i=${i%.*}
+		MODULE_NAMES="${MODULE_NAMES} ${i}(${PN}:${SRC_BUILD})"
+		i=$(echo ${i} | tr '[:lower:]' '[:upper:]')
+		eval MODULESD_${i}_ENABLED="yes"
+	done
+
+	linux-mod_src_install
 
 	# Strip binaries, leaving /lib/modules untouched (bug #24415)
 	strip_bins \/lib\/modules
-
-	# Yoinked from the sys-apps/touchpad ebuild. Thanks to whoever made this.
-	keepdir /etc/modules.d
-	sed 's:%PN%:'${PN}':g' ${FILESDIR}/modules.d-${PN} > ${D}/etc/modules.d/${PN}
-	sed -i 's:%KV%:'${KV_FULL}':g' ${D}/etc/modules.d/${PN}
 }
 
 src_install_freebsd() {
