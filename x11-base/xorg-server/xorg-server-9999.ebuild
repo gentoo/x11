@@ -5,10 +5,9 @@
 # Must be before x-modular eclass is inherited
 SNAPSHOT="yes"
 
-inherit x-modular multilib git
+inherit x-modular multilib
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/xserver"
-SRC_URI=""
 
 OPENGL_DIR="xorg-x11"
 
@@ -300,7 +299,7 @@ src_unpack() {
 
 	# Don't patch before everything's ready
 	PATCHES="" mesa_git_src_unpack
-	git_src_unpack
+	x-modular_src_unpack
 	x-modular_patch_source
 
 	# Set up kdrive servers to build
