@@ -234,7 +234,7 @@ PDEPEND="
 	)"
 LICENSE="${LICENSE} MIT"
 
-PATCHES="${FILESDIR}/export-DoCreateGLXPixmap.patch"
+PATCHES=""
 
 pkg_setup() {
 	use minimal || ensure_a_server_is_building
@@ -362,6 +362,9 @@ pkg_postinst() {
 	ewarn "You must rebuild all video drivers if upgrading from xorg-server 1.4"
 	ewarn "or earlier, because they access PCI space differently. If you cannot start X"
 	ewarn "because of module version mismatch errors, this is your problem."
+
+	print_installed x11-drivers/
+
 	ebeep 5
 	epause 10
 }
@@ -484,6 +487,27 @@ switch_opengl_implem() {
 		echo
 #		eselect opengl set --use-old ${OPENGL_DIR}
 		eselect opengl set ${OLD_IMPLEM}
+}
+
+print_installed() {
+	local command line token=$1
+
+	if $(type -P qlist >/dev/null 2>&1); then
+		command="qlist -I -v -C ${token}"
+	elif $(type -P equery >/dev/null 2>&1); then
+		command="equery -q -C list ${token} | grep -o '${token}[[:alnum:].-]*'"
+	elif $(type -P epm >/dev/null 2>&1); then
+		command="epm -qaG | grep ${token}"
+	else
+		local dir
+		command="true"
+		for dir in "${PORTDIR}"/${token}*; do
+			command="${command} ; best_version ${dir#${PORTDIR}/}"
+		done
+	fi
+	while read line; do
+		ewarn "${line}"
+	done < <(eval ${command})
 }
 
 xprint_src_install() {
