@@ -179,7 +179,7 @@ PDEPEND="
 		input_devices_wacom? ( x11-drivers/linuxwacom )
 
 		video_cards_fbdev? ( >=x11-drivers/xf86-video-fbdev-0.2.0 )
-		video_cards_i810? ( >=x11-drivers/xf86-video-i810-1.6.0 )
+		video_cards_i810? ( >=x11-drivers/xf86-video-i810-1.9.91 )
 		video_cards_mach64? ( >=x11-drivers/xf86-video-ati-6.6.0 )
 		video_cards_mga? ( >=x11-drivers/xf86-video-mga-1.4.7 )
 		video_cards_nv? ( >=x11-drivers/xf86-video-nv-2.1.5 )
