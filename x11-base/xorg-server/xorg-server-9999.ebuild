@@ -49,58 +49,99 @@ IUSE_INPUT_DEVICES="
 	input_devices_synaptics
 	input_devices_wacom"
 IUSE_VIDEO_CARDS="
+	video_cards_amd
+	video_cards_apm
+	video_cards_ark
+	video_cards_chips
+	video_cards_cirrus
+	video_cards_cyrix
+	video_cards_dummy
+	video_cards_epson
 	video_cards_fbdev
+	video_cards_glint
+	video_cards_i128
+	video_cards_i740
 	video_cards_i810
+	video_cards_impact
+	video_cards_imstt
 	video_cards_mach64
 	video_cards_mga
+	video_cards_neomagic
+	video_cards_newport
+	video_cards_nsc
+	video_cards_nv
 	video_cards_r128
 	video_cards_radeon
 	video_cards_rendition
+	video_cards_s3
+	video_cards_s3virge
 	video_cards_savage
+	video_cards_siliconmotion
+	video_cards_sis
+	video_cards_sisusb
+	video_cards_sunbw2
+	video_cards_suncg14
+	video_cards_suncg3
+	video_cards_suncg6
+	video_cards_sunffb
+	video_cards_sunleo
+	video_cards_suntcx
 	video_cards_tdfx
+	video_cards_tga
+	video_cards_trident
+	video_cards_tseng
+	video_cards_v4l
+	video_cards_vermilion
 	video_cards_vesa
+	video_cards_vga
+	video_cards_via
 	video_cards_vmware
-	video_cards_xgi"
+	video_cards_voodoo
+	video_cards_xgi
+	video_cards_nvidia"
+#	video_cards_fglrx"
 IUSE_SERVERS="dmx kdrive xorg"
 IUSE="${IUSE_VIDEO_CARDS}
 	${IUSE_INPUT_DEVICES}
 	${IUSE_SERVERS}
 	3dfx
-	dri ipv6 minimal nptl sdl xprint"
-RDEPEND=">=x11-libs/libXfont-1.2.5
-	x11-libs/xtrans
-	x11-libs/libXau
-	x11-libs/libXext
-	x11-libs/libX11
-	x11-libs/libxkbfile
-	x11-libs/libXdmcp
-	x11-libs/libXmu
-	x11-libs/libXrender
-	x11-libs/libXi
+	dri hal ipv6 minimal nptl sdl xprint"
+RDEPEND="hal? ( sys-apps/hal )
+	>=x11-libs/libXfont-1.3.1
+	>=x11-libs/xtrans-1.0.4
+	>=x11-libs/libXau-1.0.3
+	>=x11-libs/libXext-1.0.2
+	>=x11-libs/libX11-1.1.3
+	>=x11-libs/libxkbfile-1.0.4
+	>=x11-libs/libXdmcp-1.0.2
+	>=x11-libs/libXmu-1.0.3
+	>=x11-libs/libXrender-0.9.4
+	>=x11-libs/libXi-1.1.3
+	>=x11-libs/pixman-0.9.5
 	media-libs/freetype
-	>=media-libs/mesa-6.5.2
+	>=media-libs/mesa-7.0.1
 	media-fonts/font-adobe-75dpi
 	media-fonts/font-misc-misc
 	media-fonts/font-cursor-misc
-	x11-misc/xbitmaps
-	|| ( x11-misc/xkeyboard-config x11-misc/xkbdata )
-	x11-apps/iceauth
-	x11-apps/rgb
-	x11-apps/xauth
-	x11-apps/xinit
+	>=x11-misc/xbitmaps-1.0.1
+	>=x11-misc/xkeyboard-config-0.9
+	>=x11-apps/iceauth-1.0.2
+	>=x11-apps/rgb-1.0.1
+	>=x11-apps/xauth-1.0.2
+	>=x11-apps/xinit-1.0.5
 	app-admin/eselect-opengl
-	x11-libs/libXaw
-	x11-libs/libXpm
-	x11-libs/libXxf86misc
-	x11-libs/libXxf86vm
+	>=x11-libs/libXaw-1.0.4
+	>=x11-libs/libXpm-3.5.7
+	>=x11-libs/libXxf86misc-1.0.1
+	>=x11-libs/libXxf86vm-1.0.1
 	>=x11-libs/pixman-9999
 	>=x11-libs/libpciaccess-9999
-	dmx? ( x11-libs/libdmx
-		x11-libs/libXfixes )
-	!minimal? ( x11-libs/libXtst
-		x11-libs/libXres )
+	dmx? ( >=x11-libs/libdmx-1.0.2
+			>=x11-libs/libXfixes-4.0.3 )
+	!minimal? ( >=x11-libs/libXtst-1.0.3
+		>=x11-libs/libXres-1.0.3 )
 	>=x11-libs/libxkbui-1.0.2
-	x11-libs/liblbxutil
+	>=x11-libs/liblbxutil-1.0.1
 	kdrive? ( sdl? ( media-libs/libsdl ) )"
 	# Xres is dmx-dependent, xkbui is xorgcfg-dependent
 	# Xaw is dmx- and xorgcfg-dependent
@@ -109,67 +150,67 @@ RDEPEND=">=x11-libs/libXfont-1.2.5
 	# liblbxutil is lbx- dependent
 DEPEND="${RDEPEND}
 	>=x11-proto/randrproto-1.2.1
-	x11-proto/renderproto
+	>=x11-proto/renderproto-0.9.3
 	>=x11-proto/fixesproto-4
 	>=x11-proto/damageproto-1.1
-	x11-proto/xextproto
-	x11-proto/xproto
-	x11-proto/xf86dgaproto
-	x11-proto/xf86miscproto
-	x11-proto/xf86rushproto
-	x11-proto/xf86vidmodeproto
-	x11-proto/xf86bigfontproto
-	>=x11-proto/compositeproto-0.3
-	x11-proto/recordproto
-	x11-proto/resourceproto
-	x11-proto/videoproto
+	>=x11-proto/xextproto-7.0.2
+	>=x11-proto/xproto-7.0.10
+	>=x11-proto/xf86dgaproto-2.0.3
+	>=x11-proto/xf86miscproto-0.9.2
+	>=x11-proto/xf86rushproto-1.1.2
+	>=x11-proto/xf86vidmodeproto-2.2.2
+	>=x11-proto/xf86bigfontproto-1.1.2
+	>=x11-proto/compositeproto-0.4
+	>=x11-proto/recordproto-1.13.2
+	>=x11-proto/resourceproto-1.0.2
+	>=x11-proto/videoproto-2.2.2
 	>=x11-proto/scrnsaverproto-1.1.0
-	x11-proto/evieext
-	x11-proto/trapproto
+	>=x11-proto/evieext-1.0.2
+	>=x11-proto/trapproto-3.4.3
 	>=x11-proto/xineramaproto-1.1-r1
-	x11-proto/fontsproto
+	>=x11-proto/fontsproto-2.0.2
 	>=x11-proto/kbproto-1.0.3
 	>=x11-proto/inputproto-9999
-	x11-proto/bigreqsproto
-	x11-proto/xcmiscproto
+	>=x11-proto/bigreqsproto-1.0.2
+	>=x11-proto/xcmiscproto-1.1.2
 	>=x11-proto/glproto-1.4.8
-	dmx? ( x11-proto/dmxproto )
-	dri? ( x11-proto/xf86driproto
+	dmx? ( >=x11-proto/dmxproto-2.2.2 )
+	dri? ( >=x11-proto/xf86driproto-2.0.3
 		>=x11-libs/libdrm-2.3 )
-	xprint? ( x11-proto/printproto
-		x11-apps/mkfontdir
-		x11-apps/mkfontscale
-		x11-apps/xplsprinters )"
+	xprint? ( >=x11-proto/printproto-1.0.3
+		>=x11-apps/mkfontdir-1.0.3
+		>=x11-apps/mkfontscale-1.0.3
+		>=x11-apps/xplsprinters-1.0.1 )"
 
 # Drivers
 PDEPEND="
 	xorg? (
 		input_devices_acecad? ( >=x11-drivers/xf86-input-acecad-1.1.0 )
 		input_devices_aiptek? ( >=x11-drivers/xf86-input-aiptek-1.0.1 )
-		input_devices_calcomp? ( >=x11-drivers/xf86-input-calcomp-1.1.0 )
-		input_devices_citron? ( >=x11-drivers/xf86-input-citron-2.2.0 )
+		input_devices_calcomp? ( >=x11-drivers/xf86-input-calcomp-1.1.1 )
+		input_devices_citron? ( >=x11-drivers/xf86-input-citron-2.2.1 )
 		input_devices_digitaledge? ( >=x11-drivers/xf86-input-digitaledge-1.1.0 )
 		input_devices_dmc? ( >=x11-drivers/xf86-input-dmc-1.1.0 )
-		input_devices_dynapro? ( >=x11-drivers/xf86-input-dynapro-1.1.0 )
-		input_devices_elo2300? ( >=x11-drivers/xf86-input-elo2300-1.1.0 )
+		input_devices_dynapro? ( >=x11-drivers/xf86-input-dynapro-1.1.1 )
+		input_devices_elo2300? ( >=x11-drivers/xf86-input-elo2300-1.1.1 )
 		input_devices_elographics? ( >=x11-drivers/xf86-input-elographics-1.1.0 )
 		input_devices_evdev? ( >=x11-drivers/xf86-input-evdev-1.1.1 )
 		input_devices_fpit? ( >=x11-drivers/xf86-input-fpit-1.1.0 )
 		input_devices_hyperpen? ( >=x11-drivers/xf86-input-hyperpen-1.1.0 )
 		input_devices_jamstudio? ( >=x11-drivers/xf86-input-jamstudio-1.1.0 )
 		input_devices_joystick? ( >=x11-drivers/xf86-input-joystick-1.1.0 )
-		input_devices_keyboard? ( >=x11-drivers/xf86-input-keyboard-1.1.0 )
-		input_devices_magellan? ( >=x11-drivers/xf86-input-magellan-1.1.0 )
-		input_devices_microtouch? ( >=x11-drivers/xf86-input-microtouch-1.1.0 )
+		input_devices_keyboard? ( >=x11-drivers/xf86-input-keyboard-1.2.0 )
+		input_devices_magellan? ( >=x11-drivers/xf86-input-magellan-1.1.1 )
+		input_devices_microtouch? ( >=x11-drivers/xf86-input-microtouch-1.1.1 )
 		input_devices_mouse? ( >=x11-drivers/xf86-input-mouse-1.1.0 )
 		input_devices_mutouch? ( >=x11-drivers/xf86-input-mutouch-1.1.0 )
 		input_devices_palmax? ( >=x11-drivers/xf86-input-palmax-1.1.0 )
-		input_devices_penmount? ( >=x11-drivers/xf86-input-penmount-1.1.0 )
-		input_devices_spaceorb? ( >=x11-drivers/xf86-input-spaceorb-1.1.0 )
+		input_devices_penmount? ( >=x11-drivers/xf86-input-penmount-1.2.1 )
+		input_devices_spaceorb? ( >=x11-drivers/xf86-input-spaceorb-1.1.1 )
 		input_devices_summa? ( >=x11-drivers/xf86-input-summa-1.1.0 )
 		input_devices_tek4957? ( >=x11-drivers/xf86-input-tek4957-1.1.0 )
 		input_devices_ur98? ( >=x11-drivers/xf86-input-ur98-1.1.0 )
-		input_devices_vmmouse? ( >=x11-drivers/xf86-input-vmmouse-12.4.0 )
+		input_devices_vmmouse? ( >=x11-drivers/xf86-input-vmmouse-12.4.2 )
 		input_devices_void? ( >=x11-drivers/xf86-input-void-1.1.0 )
 
 		input_devices_synaptics? ( x11-drivers/synaptics )
@@ -189,6 +230,45 @@ PDEPEND="
 		video_cards_xgi? ( >=x11-drivers/xf86-video-xgi-1.5.0 )
 
 		video_cards_tdfx? ( 3dfx? ( >=media-libs/glide-v3-3.10 ) )
+		!x11-drivers/nvidia-drivers
+		!x11-drivers/ati-drivers
+
+		!x11-drivers/xf86-video-amd
+		!x11-drivers/xf86-video-apm
+		!x11-drivers/xf86-video-ark
+		!x11-drivers/xf86-video-chips
+		!x11-drivers/xf86-video-cirrus
+		!x11-drivers/xf86-video-cyrix
+		!x11-drivers/xf86-video-dummy
+		!x11-drivers/xf86-video-glint
+		!x11-drivers/xf86-video-i128
+		!x11-drivers/xf86-video-i740
+		!x11-drivers/xf86-video-impact
+		!x11-drivers/xf86-video-imstt
+		!x11-drivers/xf86-video-neomagic
+		!x11-drivers/xf86-video-newport
+		!x11-drivers/xf86-video-nsc
+		!x11-drivers/xf86-video-nv
+		!x11-drivers/xf86-video-s3
+		!x11-drivers/xf86-video-s3virge
+		!x11-drivers/xf86-video-siliconmotion
+		!x11-drivers/xf86-video-sis
+		!x11-drivers/xf86-video-sisusb
+		!x11-drivers/xf86-video-sunbw2
+		!x11-drivers/xf86-video-suncg14
+		!x11-drivers/xf86-video-suncg3
+		!x11-drivers/xf86-video-suncg6
+		!x11-drivers/xf86-video-sunffb
+		!x11-drivers/xf86-video-sunleo
+		!x11-drivers/xf86-video-suntcx
+		!x11-drivers/xf86-video-tga
+		!x11-drivers/xf86-video-trident
+		!x11-drivers/xf86-video-tseng
+		!x11-drivers/xf86-video-v4l
+		!x11-drivers/xf86-video-vermilion
+		!x11-drivers/xf86-video-vga
+		!x11-drivers/xf86-video-via
+		!x11-drivers/xf86-video-voodoo
 	)"
 LICENSE="${LICENSE} MIT"
 
@@ -225,10 +305,13 @@ pkg_setup() {
 		$(use_enable xprint)
 		$(use_enable nptl glx-tls)
 		$(use_enable !minimal xorgcfg)
+		$(use_enable hal config-dbus)
+		$(use_enable hal config-hal)
 		--sysconfdir=/etc/X11
 		--localstatedir=/var
 		--enable-install-setuid
 		--with-fontdir=/usr/share/fonts
+		--with-xkb-output=/var/lib/xkb
 		${conf_opts}"
 
 	local diemsg="You must build xorg-server and mesa with the same nptl USE setting."
@@ -264,10 +347,19 @@ src_unpack() {
 	# Make sure eautoreconf gets run if we need the autoconf/make
 	# changes.
 	if [[ ${SNAPSHOT} != "yes" ]]; then
-		if use kdrive; then
-			eautoreconf
+		if use kdrive || use dmx || use xprint; then
+			SNAPSHOT="yes"
 		fi
 	fi
+
+	if use hal; then
+		sed -i \
+			-e "s:^\(dbusconfigdir = \).*\(dbus-1.*\):\1/etc/\2:g" \
+			"${S}"/config/Makefile.am \
+			|| die "failed to fix DBUS config directory"
+		SNAPSHOT="yes"
+	fi
+
 	x-modular_reconf_source
 }
 
@@ -285,7 +377,7 @@ src_install() {
 
 	# Bug #151421 - this file is not built with USE="minimal"
 	# Bug #151670 - this file is also not build if USE="-xorg"
-	if ! use minimal && use xorg; then
+	if ! use minimal &&	use xorg; then
 		# Install xorg.conf.example
 		insinto /etc/X11
 		doins hw/xfree86/xorg.conf.example \
@@ -301,13 +393,20 @@ pkg_postinst() {
 	ewarn "   Option \"ReducedBlanking\""
 	ewarn "In the relevant Monitor section(s)."
 	ewarn "Make sure your reduced blanking modelines are safe!"
+
+	echo
+	ewarn "You must rebuild all drivers if upgrading from xorg-server 1.3"
+	ewarn "or earlier, because the ABI changed. If you cannot start X because"
+	ewarn "of module version mismatch errors, this is your problem."
+	ebeep 5
+	epause 10
 }
 
 pkg_postrm() {
 	# Get rid of module dir to ensure opengl-update works properly
 	if ! has_version x11-base/xorg-server; then
-		if [ -e ${ROOT}/usr/$(get_libdir)/xorg/modules ]; then
-			rm -rf ${ROOT}/usr/$(get_libdir)/xorg/modules
+		if [[ -e ${ROOT}/usr/$(get_libdir)/xorg/modules ]]; then
+			rm -rf "${ROOT}"/usr/$(get_libdir)/xorg/modules
 		fi
 	fi
 }
@@ -336,7 +435,7 @@ kdrive_setup() {
 
 		# Check whether it's a valid kdrive server before we waste time
 		# on the rest of this
-		if ! grep -q -o "\b${real_card}\b" ${S}/hw/kdrive/Makefile.am; then
+		if ! grep -q -o "\b${real_card}\b" "${S}"/hw/kdrive/Makefile.am; then
 			continue
 		fi
 
@@ -374,7 +473,7 @@ kdrive_setup() {
 			ebegin "  ${real_card}"
 			sed -i \
 				-e "s:\b${real_card}\b::g" \
-				${S}/hw/kdrive/Makefile.am \
+				"${S}"/hw/kdrive/Makefile.am \
 				|| die "sed of ${real_card} failed"
 			eend
 		fi
@@ -386,7 +485,7 @@ kdrive_setup() {
 	if ! use video_cards_siliconmotion && ! use video_cards_via; then
 		sed -i \
 			-e "s:^\(VESA_SUBDIRS.*\)\\\:\1:g" \
-			${S}/hw/kdrive/Makefile.am
+			"${S}"/hw/kdrive/Makefile.am
 	fi
 }
 
@@ -395,9 +494,9 @@ dynamic_libgl_install() {
 	ebegin "Moving GL files for dynamic switching"
 		dodir /usr/$(get_libdir)/opengl/${OPENGL_DIR}/extensions
 		local x=""
-		for x in ${D}/usr/$(get_libdir)/xorg/modules/extensions/libglx*; do
+		for x in "${D}"/usr/$(get_libdir)/xorg/modules/extensions/libglx*; do
 			if [ -f ${x} -o -L ${x} ]; then
-				mv -f ${x} ${D}/usr/$(get_libdir)/opengl/${OPENGL_DIR}/extensions
+				mv -f ${x} "${D}"/usr/$(get_libdir)/opengl/${OPENGL_DIR}/extensions
 			fi
 		done
 	eend 0
@@ -407,10 +506,10 @@ server_based_install() {
 	use xprint && xprint_src_install
 
 	if ! use xorg; then
-		rm ${D}/usr/share/man/man1/Xserver.1x \
-			${D}/usr/$(get_libdir)/xserver/SecurityPolicy \
-			${D}/usr/$(get_libdir)/pkgconfig/xorg-server.pc \
-			${D}/usr/share/man/man1/Xserver.1x
+		rm "${D}"/usr/share/man/man1/Xserver.1x \
+			"${D}"/usr/$(get_libdir)/xserver/SecurityPolicy \
+			"${D}"/usr/$(get_libdir)/pkgconfig/xorg-server.pc \
+			"${D}"/usr/share/man/man1/Xserver.1x
 	fi
 }
 
@@ -426,21 +525,21 @@ switch_opengl_implem() {
 xprint_src_install() {
 	# RH-style init script, we provide a wrapper
 	exeinto /usr/$(get_libdir)/misc
-	doexe ${S}/hw/xprint/etc/init.d/xprint
+	doexe "${S}"/hw/xprint/etc/init.d/xprint
 	# Install the wrapper
-	newinitd ${FILESDIR}/xprint.init xprint
+	newinitd "${FILESDIR}"/xprint.init xprint
 	# Install profile scripts
 	insinto /etc/profile.d
-	doins ${S}/hw/xprint/etc/profile.d/xprint*
-	insinto /etc/X11/xinit/xinitrc.d
-	doins ${S}/hw/xprint/etc/Xsession.d/92xprint-xpserverlist
+	doins "${S}"/hw/xprint/etc/profile.d/xprint*
+	exeinto /etc/X11/xinit/xinitrc.d
+	doexe "${S}"/hw/xprint/etc/Xsession.d/92xprint-xpserverlist
 	# Patch profile scripts
-	sed -e "s:/bin/sh.*get_xpserverlist:/usr/$(get_libdir)/misc/xprint \
-		get_xpserverlist:g" -i ${D}/etc/profile.d/xprint* \
-		${D}/etc/X11/xinit/xinitrc.d/92xprint-xpserverlist
+	sed -e "s:/etc/init.*get_xpserverlist:/usr/$(get_libdir)/misc/xprint \
+		get_xpserverlist:g" -i "${D}"/etc/profile.d/xprint* \
+		"${D}"/etc/X11/xinit/xinitrc.d/92xprint-xpserverlist
 	# Move profile scripts, we can't touch /etc/profile.d/ in Gentoo
-	dodoc ${D}/etc/profile.d/xprint*
-	rm -f ${D}/etc/profile.d/xprint*
+	dodoc "${D}"/etc/profile.d/xprint*
+	rm -f "${D}"/etc/profile.d/xprint*
 }
 
 ensure_a_server_is_building() {
