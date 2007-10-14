@@ -363,7 +363,7 @@ pkg_postinst() {
 	ewarn "or earlier, because they access PCI space differently. If you cannot start X"
 	ewarn "because of module version mismatch errors, this is your problem."
 
-	print_installed x11-drivers/
+	print_installed x11-drivers/xf86-video
 
 	ebeep 5
 	epause 10
