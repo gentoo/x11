@@ -234,6 +234,8 @@ PDEPEND="
 	)"
 LICENSE="${LICENSE} MIT"
 
+PATCHES="${FILESDIR}/export-DoCreateGLXPixmap.patch"
+
 pkg_setup() {
 	use minimal || ensure_a_server_is_building
 
