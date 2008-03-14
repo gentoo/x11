@@ -1,0 +1,20 @@
+# Don't let people install these accidentally
+=x11-base/x11-drm-99999999
+=x11-base/xorg-server-9999
+=x11-drivers/xf86-video-ati-9999_pre12
+=x11-drivers/xf86-video-ati-9999
+=x11-drivers/xf86-video-intel-9999
+=media-libs/mesa-9999
+=media-libs/glitz-9999
+=media-libs/fontconfig-9999
+=x11-wm/compiz-9999
+=x11-libs/xcb-util-9999
+=x11-libs/pixman-9999
+=x11-libs/libdrm-9999
+=x11-libs/libxcb-9999
+=x11-libs/libpciaccess-9999
+=x11-libs/libX11-9999
+=x11-libs/cairo-9999
+=x11-proto/glproto-9999
+=x11-proto/inputproto-9999
+=x11-proto/xcb-proto-9999
