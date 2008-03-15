@@ -111,7 +111,7 @@ IUSE="${IUSE_VIDEO_CARDS}
 	${IUSE_INPUT_DEVICES}
 	${IUSE_SERVERS}
 	3dfx
-	dri hal ipv6 minimal nptl sdl xprint"
+	dri hal ipv6 minimal nptl sdl" # xprint
 RDEPEND="hal? ( sys-apps/hal )
 	>=x11-libs/libXfont-1.3.2
 	>=x11-libs/xtrans-1.0.4
@@ -182,11 +182,11 @@ DEPEND="${RDEPEND}
 	>=x11-proto/glproto-1.4.9
 	dmx? ( >=x11-proto/dmxproto-2.2.2 )
 	dri? ( >=x11-proto/xf86driproto-9999
-		>=x11-libs/libdrm-2.3 )
-	xprint? ( >=x11-proto/printproto-1.0.4
-		>=x11-apps/mkfontdir-1.0.4
-		>=x11-apps/mkfontscale-1.0.4
-		>=x11-apps/xplsprinters-1.0.1 )"
+		>=x11-libs/libdrm-2.3 )"
+#	xprint? ( >=x11-proto/printproto-1.0.4
+#		>=x11-apps/mkfontdir-1.0.4
+#		>=x11-apps/mkfontscale-1.0.4
+#		>=x11-apps/xplsprinters-1.0.1 )"
 
 # Drivers
 PDEPEND="
@@ -322,11 +322,11 @@ pkg_setup() {
 		$(use_enable !minimal install-libxf86config)
 		$(use_enable dri)
 		$(use_enable xorg)
-		$(use_enable xprint)
 		$(use_enable nptl glx-tls)
 		$(use_enable !minimal xorgcfg)
 		$(use_enable hal config-dbus)
 		$(use_enable hal config-hal)
+		--disable-xprint
 		--sysconfdir=/etc/X11
 		--localstatedir=/var
 		--enable-install-setuid
@@ -367,7 +367,7 @@ src_unpack() {
 	# Make sure eautoreconf gets run if we need the autoconf/make
 	# changes.
 	if [[ ${SNAPSHOT} != "yes" ]]; then
-		if use kdrive || use dmx || use xprint; then
+		if use kdrive || use dmx; then # || use xprint
 			SNAPSHOT="yes"
 		fi
 	fi
@@ -381,12 +381,12 @@ src_unpack() {
 	fi
 
 	x-modular_reconf_source
-	#do not install xprint's Xsession.d files, we'll do it later
-	if use xprint; then
-		sed -e "s:install-data-am\: install-dist_xpcDATA:install-data-am\::g" \
-		    -i "${S}"/hw/xprint/etc/Xsession.d/Makefile.in \
-		    || die "sed of Xsession.d makefile failed"
-	fi
+#	#do not install xprint's Xsession.d files, we'll do it later
+#	if use xprint; then
+#		sed -e "s:install-data-am\: install-dist_xpcDATA:install-data-am\::g" \
+#		    -i "${S}"/hw/xprint/etc/Xsession.d/Makefile.in \
+#		    || die "sed of Xsession.d makefile failed"
+#	fi
 }
 
 src_install() {
@@ -527,7 +527,7 @@ dynamic_libgl_install() {
 }
 
 server_based_install() {
-	use xprint && xprint_src_install
+#	use xprint && xprint_src_install
 
 	if ! use xorg; then
 		rm "${D}"/usr/share/man/man1/Xserver.1x \
@@ -546,25 +546,25 @@ switch_opengl_implem() {
 		eselect opengl set ${OLD_IMPLEM}
 }
 
-xprint_src_install() {
-	# RH-style init script, we provide a wrapper
-	exeinto /usr/$(get_libdir)/misc
-	doexe "${S}"/hw/xprint/etc/init.d/xprint
-	# Install the wrapper
-	newinitd "${FILESDIR}"/xprint.init xprint
-	# Install profile scripts
-	insinto /etc/profile.d
-	doins "${S}"/hw/xprint/etc/profile.d/xprint*
-	exeinto /etc/X11/xinit/xinitrc.d
-	doexe "${S}"/hw/xprint/etc/Xsession.d/92xprint-xpserverlist
-	# Patch profile scripts
-	sed -e "s:/etc/init.*get_xpserverlist:/usr/$(get_libdir)/misc/xprint \
-		get_xpserverlist:g" -i "${D}"/etc/profile.d/xprint* \
-		"${D}"/etc/X11/xinit/xinitrc.d/92xprint-xpserverlist
-	# Move profile scripts, we can't touch /etc/profile.d/ in Gentoo
-	dodoc "${D}"/etc/profile.d/xprint*
-	rm -f "${D}"/etc/profile.d/xprint*
-}
+#xprint_src_install() {
+#	# RH-style init script, we provide a wrapper
+#	exeinto /usr/$(get_libdir)/misc
+#	doexe "${S}"/hw/xprint/etc/init.d/xprint
+#	# Install the wrapper
+#	newinitd "${FILESDIR}"/xprint.init xprint
+#	# Install profile scripts
+#	insinto /etc/profile.d
+#	doins "${S}"/hw/xprint/etc/profile.d/xprint*
+#	exeinto /etc/X11/xinit/xinitrc.d
+#	doexe "${S}"/hw/xprint/etc/Xsession.d/92xprint-xpserverlist
+#	# Patch profile scripts
+#	sed -e "s:/etc/init.*get_xpserverlist:/usr/$(get_libdir)/misc/xprint \
+#		get_xpserverlist:g" -i "${D}"/etc/profile.d/xprint* \
+#		"${D}"/etc/X11/xinit/xinitrc.d/92xprint-xpserverlist
+#	# Move profile scripts, we can't touch /etc/profile.d/ in Gentoo
+#	dodoc "${D}"/etc/profile.d/xprint*
+#	rm -f "${D}"/etc/profile.d/xprint*
+#}
 
 ensure_a_server_is_building() {
 	for server in ${IUSE_SERVERS}; do
