@@ -18,3 +18,4 @@
 =x11-proto/glproto-9999
 =x11-proto/inputproto-9999
 =x11-proto/xcb-proto-9999
+=x11-proto/xf86driproto-9999
