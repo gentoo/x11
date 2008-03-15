@@ -1,0 +1,137 @@
+From ef702d586697c4ae9092ab0a412719c11973ec60 Mon Sep 17 00:00:00 2001
+From: Adam Jackson <ajax@redhat.com>
+Date: Fri, 7 Mar 2008 09:25:06 -0500
+Subject: [PATCH] Size xf86DefaultModes explicitly.
+
+i.e., don't check for the end of the list by ->name == NULL, since that
+won't work now.  Fix the consumers of xf86DefaultModes to use the new
+explicit size as well.
+---
+ hw/xfree86/common/modeline2c.awk |    3 ++-
+ hw/xfree86/common/xf86Config.c   |   30 +++++++++---------------------
+ hw/xfree86/common/xf86Priv.h     |    1 +
+ hw/xfree86/modes/xf86Modes.c     |   28 +++++-----------------------
+ 4 files changed, 17 insertions(+), 45 deletions(-)
+
+diff --git a/hw/xfree86/common/modeline2c.awk b/hw/xfree86/common/modeline2c.awk
+index b9ad3cd..ca32e2f 100644
+--- a/hw/xfree86/common/modeline2c.awk
++++ b/hw/xfree86/common/modeline2c.awk
+@@ -91,5 +91,6 @@ BEGIN {
+ }
+ 
+ END {
+-	printf("\t{MODEPREFIX,0,0,0,0,0,0,0,0,0,0,0,0,MODESUFFIX}\n};\n")
++	print "};"
++	printf "const int xf86NumDefaultModes = sizeof(xf86NumDefaultModes) / sizeof(DisplayModeRec);"
+ }
+diff --git a/hw/xfree86/common/xf86Config.c b/hw/xfree86/common/xf86Config.c
+index 635a88c..4a4aabc 100644
+--- a/hw/xfree86/common/xf86Config.c
++++ b/hw/xfree86/common/xf86Config.c
+@@ -2420,28 +2420,16 @@ addDefaultModes(MonPtr monitorp)
+     DisplayModePtr last = monitorp->Last;
+     int i = 0;
+ 
+-    while (xf86DefaultModes[i].name != NULL)
++    for (i = 0; i < xf86NumDefaultModes; i++)
+     {
+-	if ( ! modeIsPresent(xf86DefaultModes[i].name,monitorp) )
+-	    do
+-	    {
+-		mode = xf86DuplicateMode(&xf86DefaultModes[i]);
+-		if( last ) {
+-		    mode->prev = last;
+-		    last->next = mode;
+-		}
+-		else {
+-		    /* this is the first mode */
+-		    monitorp->Modes = mode;
+-		    mode->prev = NULL;
+-		}
+-		last = mode;
+-		i++;
+-	    }
+-	    while((xf86DefaultModes[i].name != NULL) &&
+-		  (!strcmp(xf86DefaultModes[i].name,xf86DefaultModes[i-1].name)));
+-	else
+-	    i++;
++	mode = xf86DuplicateMode(&xf86DefaultModes[i]);
++	if (!modeIsPresent(mode, monitorp))
++	{
++	    monitorp->Modes = xf86ModesAdd(monitorp->Modes, mode);
++	    last = mode;
++	} else {
++	    xfree(mode);
++	}
+     }
+     monitorp->Last = last;
+ 
+diff --git a/hw/xfree86/common/xf86Priv.h b/hw/xfree86/common/xf86Priv.h
+index dd8b5a0..c0d240d 100644
+--- a/hw/xfree86/common/xf86Priv.h
++++ b/hw/xfree86/common/xf86Priv.h
+@@ -154,6 +154,7 @@ Bool xf86PathIsSafe(const char *path);
+ /* xf86DefaultModes */
+ 
+ extern const DisplayModeRec xf86DefaultModes[];
++extern const int xf86NumDefaultModes;
+ 
+ /* xf86DoProbe.c */
+ void DoProbe(void);
+diff --git a/hw/xfree86/modes/xf86Modes.c b/hw/xfree86/modes/xf86Modes.c
+index 9e31512..a07eba9 100644
+--- a/hw/xfree86/modes/xf86Modes.c
++++ b/hw/xfree86/modes/xf86Modes.c
+@@ -214,11 +214,7 @@ xf86DuplicateMode(DisplayModePtr pMode)
+     *pNew = *pMode;
+     pNew->next = NULL;
+     pNew->prev = NULL;
+-    /*
+-     * It is important to copy the name explicitly.
+-     * Otherwise a mode could reference an invalid piece of memory, after one of them runs free().
+-     * This will lead to obscure problems, that you really don't want.
+-     */
++
+     if (pMode->name == NULL)
+ 	xf86SetModeDefaultName(pNew);
+     else
+@@ -662,7 +658,7 @@ xf86GetDefaultModes (Bool interlaceAllowed, Bool doubleScanAllowed)
+     DisplayModePtr  head = NULL, prev = NULL, mode;
+     int		    i;
+ 
+-    for (i = 0; xf86DefaultModes[i].name != NULL; i++)
++    for (i = 0; i < xf86NumDefaultModes; i++)
+     {
+ 	DisplayModePtr	defMode = &xf86DefaultModes[i];
+ 	
+@@ -671,23 +667,9 @@ xf86GetDefaultModes (Bool interlaceAllowed, Bool doubleScanAllowed)
+ 	if (!doubleScanAllowed && (defMode->Flags & V_DBLSCAN))
+ 	    continue;
+ 
+-	mode = xalloc(sizeof(DisplayModeRec));
+-	if (!mode)
+-	    continue;
+-        memcpy(mode,&xf86DefaultModes[i],sizeof(DisplayModeRec));
+-        mode->name = xstrdup(xf86DefaultModes[i].name);
+-        if (!mode->name)
+-	{
+-	    xfree (mode);
+-	    continue;
+-	}
+-        mode->prev = prev;
+-	mode->next = NULL;
+-	if (prev)
+-	    prev->next = mode;
+-	else
+-	    head = mode;
+-	prev = mode;
++	mode = xf86DuplicateMode(defMode);
++
++	head = xf86ModesAdd(head, mode);
+     }
+     return head;
+ }
+-- 
+1.5.4.3
+

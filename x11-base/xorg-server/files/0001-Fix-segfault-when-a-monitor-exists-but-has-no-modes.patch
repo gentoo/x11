@@ -1,0 +1,28 @@
+From b260febcec2e483c094d5c31ed9910a36a65cc53 Mon Sep 17 00:00:00 2001
+From: Adam Jackson <ajax@redhat.com>
+Date: Fri, 7 Mar 2008 08:29:49 -0500
+Subject: [PATCH] Fix segfault when a monitor exists but has no modes.
+
+Thanks to Zhenyu Wang for finding this.
+(cherry picked from commit 3fcb6445dc08f42488287162e3b7009d405e9c5b)
+---
+ hw/xfree86/modes/xf86Crtc.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/hw/xfree86/modes/xf86Crtc.c b/hw/xfree86/modes/xf86Crtc.c
+index 4d5d7b8..0bef5b4 100644
+--- a/hw/xfree86/modes/xf86Crtc.c
++++ b/hw/xfree86/modes/xf86Crtc.c
+@@ -1678,6 +1678,9 @@ nextAspectMode(DisplayModePtr start, float aspect)
+ {
+     DisplayModePtr m = start;
+ 
++    if (!m)
++	return NULL;
++
+     for (m = m->next; m; m = m->next)
+ 	if (aspectMatch(aspect, (float)m->HDisplay / (float)m->VDisplay))
+ 	    return m;
+-- 
+1.5.4.3
+

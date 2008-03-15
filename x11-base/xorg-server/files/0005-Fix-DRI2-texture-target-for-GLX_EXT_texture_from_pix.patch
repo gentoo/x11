@@ -1,0 +1,57 @@
+From 4aaf048b5a00ee4f91c2a1d026cd313f0207f0bc Mon Sep 17 00:00:00 2001
+From: =?utf-8?q?Kristian=20H=C3=B8gsberg?= <krh@redhat.com>
+Date: Fri, 7 Mar 2008 14:12:28 -0500
+Subject: [PATCH] Fix DRI2 texture target for GLX_EXT_texture_from_pixmap.
+
+Thanks to Dennis Kasprzyk for pointing it out and for reminding me to
+commit it.
+(cherry picked from commit 9abaad115cb6245b12b2adb3552ace99b634ab4a)
+---
+ GL/glx/glxdri2.c |   15 ++-------------
+ 1 files changed, 2 insertions(+), 13 deletions(-)
+
+diff --git a/GL/glx/glxdri2.c b/GL/glx/glxdri2.c
+index b0082a0..27257d3 100644
+--- a/GL/glx/glxdri2.c
++++ b/GL/glx/glxdri2.c
+@@ -216,8 +216,6 @@ __glXDRIcontextForceCurrent(__GLXcontext *baseContext)
+ 
+ #ifdef __DRI_TEX_BUFFER
+ 
+-#define isPowerOfTwo(n) (((n) & ((n) - 1 )) == 0)
+-
+ static int
+ __glXDRIbindTexImage(__GLXcontext *baseContext,
+ 		     int buffer,
+@@ -228,26 +226,17 @@ __glXDRIbindTexImage(__GLXcontext *baseContext,
+     PixmapPtr pixmap;
+     __GLXDRIcontext *context = (__GLXDRIcontext *) baseContext;
+     unsigned int flags;
+-    int w, h, target;
+ 
+     if (screen->texBuffer == NULL)
+         return Success;
+ 
+     pixmap = (PixmapPtr) glxPixmap->pDraw;
+-    w = pixmap->drawable.width;
+-    h = pixmap->drawable.height;
+-
+-    if (!isPowerOfTwo(w) || !isPowerOfTwo(h))
+-	target = GL_TEXTURE_RECTANGLE_ARB;
+-    else
+-	target = GL_TEXTURE_2D;
+-
+     screen->texBuffer->setTexBuffer(&context->driContext,
+-				    target,
++				    glxPixmap->target,
+ 				    DRI2GetPixmapHandle(pixmap, &flags),
+ 				    pixmap->drawable.depth,
+ 				    pixmap->devKind,
+-				    h);
++				    pixmap->drawable.height);
+ 
+     return Success;
+ }
+-- 
+1.5.4.3
+

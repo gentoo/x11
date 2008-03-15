@@ -1,0 +1,32 @@
+From 921cbc58036491eab491b4c7b07111f04aa58d40 Mon Sep 17 00:00:00 2001
+From: Adam Jackson <ajax@redhat.com>
+Date: Mon, 10 Mar 2008 13:40:00 -0400
+Subject: [PATCH] Add the "amd" driver to magic driver selection.
+
+---
+ hw/xfree86/common/xf86AutoConfig.c |    5 +++--
+ 1 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/hw/xfree86/common/xf86AutoConfig.c b/hw/xfree86/common/xf86AutoConfig.c
+index e3e0bb3..268b50c 100644
+--- a/hw/xfree86/common/xf86AutoConfig.c
++++ b/hw/xfree86/common/xf86AutoConfig.c
+@@ -140,12 +140,13 @@ videoPtrToDriverName(struct pci_device *dev)
+ {
+     /*
+      * things not handled yet:
+-     * amd/cyrix/nsc
+-     * xgi
++     * cyrix/nsc.  should be merged into geode anyway.
++     * xgi.
+      */
+ 
+     switch (dev->vendor_id)
+     {
++	case 0x1022:		    return "amd";
+ 	case 0x1142:		    return "apm";
+ 	case 0xedd8:		    return "ark";
+ 	case 0x1a03:		    return "ast";
+-- 
+1.5.4.3
+

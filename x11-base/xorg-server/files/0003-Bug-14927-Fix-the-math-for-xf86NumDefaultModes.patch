@@ -1,0 +1,24 @@
+From e5bd75e11f1ac6b01d408166e628e9bbdb218b71 Mon Sep 17 00:00:00 2001
+From: Adam Jackson <ajax@redhat.com>
+Date: Mon, 10 Mar 2008 09:14:20 -0400
+Subject: [PATCH] Bug #14927: Fix the math for xf86NumDefaultModes.
+ (cherry picked from commit 0f6aaf636b7ac4c98467284ff7baf1b83e0b72e7)
+
+---
+ hw/xfree86/common/modeline2c.awk |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/hw/xfree86/common/modeline2c.awk b/hw/xfree86/common/modeline2c.awk
+index ca32e2f..71a956e 100644
+--- a/hw/xfree86/common/modeline2c.awk
++++ b/hw/xfree86/common/modeline2c.awk
+@@ -92,5 +92,5 @@ BEGIN {
+ 
+ END {
+ 	print "};"
+-	printf "const int xf86NumDefaultModes = sizeof(xf86NumDefaultModes) / sizeof(DisplayModeRec);"
++	printf "const int xf86NumDefaultModes = sizeof(xf86DefaultModes) / sizeof(DisplayModeRec);"
+ }
+-- 
+1.5.4.3
+
