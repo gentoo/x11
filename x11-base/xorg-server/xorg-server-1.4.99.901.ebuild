@@ -290,6 +290,7 @@ PATCHES="
 	${FILESDIR}/0005-Fix-DRI2-texture-target-for-GLX_EXT_texture_from_pix.patch
 	${FILESDIR}/0006-DRI2-Return-event-buffer-head-index-in-DRI2CreateDr.patch
 	${FILESDIR}/0007-GLX-Track-changes-to-DRI_TEX_BUFFER-extension.patch
+	${FILESDIR}/0001-Xephyr-Build-fix-Port-across-XF86dri.c-changes-fro.patch
 	"
 
 pkg_setup() {
