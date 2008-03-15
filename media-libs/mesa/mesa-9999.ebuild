@@ -1,17 +1,25 @@
 # Copyright 1999-2007 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-libs/mesa/mesa-6.5.3.ebuild,v 1.2 2007/05/13 16:15:24 joshuabaergen Exp $
-
-inherit eutils toolchain-funcs multilib git flag-o-matic portability versionator
+# $Header: /var/cvsroot/gentoo-x86/media-libs/mesa/mesa-7.0.2.ebuild,v 1.6 2007/11/16 18:16:30 dberkholz Exp $
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/mesa/mesa"
-SRC_URI=""
+
+inherit eutils toolchain-funcs multilib flag-o-matic git portability versionator
 
 OPENGL_DIR="xorg-x11"
 
-MY_SRC_P="${PN}Lib-${PV}"
+MY_PN="${PN/m/M}"
+MY_P="${MY_PN}-${PV//_}"
+MY_SRC_P="${MY_PN}Lib-${PV//_}"
 DESCRIPTION="OpenGL-like graphic library for Linux"
 HOMEPAGE="http://mesa3d.sourceforge.net/"
+if [[ $PV = *_rc* ]]; then
+	SRC_URI="http://www.mesa3d.org/beta/${MY_SRC_P}.tar.gz"
+elif [[ $PV = 9999 ]]; then
+	SRC_URI=""
+else
+	SRC_URI="mirror://sourceforge/mesa3d/${MY_SRC_P}.tar.bz2"
+fi
 LICENSE="LGPL-2"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
@@ -20,11 +28,8 @@ IUSE_VIDEO_CARDS="
 	video_cards_mach64
 	video_cards_mga
 	video_cards_none
-	video_cards_nv
 	video_cards_r128
-	video_cards_r100
-	video_cards_r200
-	video_cards_r300
+	video_cards_radeon
 	video_cards_s3virge
 	video_cards_savage
 	video_cards_sis
@@ -35,26 +40,28 @@ IUSE_VIDEO_CARDS="
 IUSE="${IUSE_VIDEO_CARDS}
 	debug
 	doc
-	hardened
+	pic
 	motif
 	nptl
-	xcb"
+	xcb
+	kernel_FreeBSD"
 
-RESTRICT="stricter"
-RDEPEND="dev-libs/expat
+RDEPEND="app-admin/eselect-opengl
+	dev-libs/expat
 	x11-libs/libX11
 	x11-libs/libXext
 	x11-libs/libXxf86vm
 	x11-libs/libXi
 	x11-libs/libXmu
-	>=x11-libs/libdrm-2.2
+	x11-libs/libXdamage
+	>=x11-libs/libdrm-9999
 	x11-libs/libICE
-	app-admin/eselect-opengl
 	motif? ( virtual/motif )
 	doc? ( app-doc/opengl-manpages )
 	!<=x11-base/xorg-x11-6.9
 	xcb? ( x11-libs/libxcb )"
 DEPEND="${RDEPEND}
+	!<=x11-proto/xf86driproto-2.0.3
 	dev-util/pkgconfig
 	x11-misc/makedepend
 	x11-proto/inputproto
@@ -64,14 +71,9 @@ DEPEND="${RDEPEND}
 	>=x11-proto/glproto-1.4.8
 	motif? ( x11-proto/printproto )"
 
+S="${WORKDIR}/${MY_P}"
 
 # Think about: ggi, svga, fbcon, no-X configs
-
-if use debug; then
-	if ! has splitdebug ${FEATURES}; then
-		RESTRICT="${RESTRICT} nostrip"
-	fi
-fi
 
 pkg_setup() {
 	if use xcb; then
@@ -88,6 +90,11 @@ pkg_setup() {
 	fi
 
 	append-flags -fno-strict-aliasing
+
+	# gcc 4.2 has buggy ivopts
+	if [[ $(gcc-version) = "4.2" ]]; then
+		append-flags -fno-ivopts
+	fi
 
 	if use x86-fbsd; then
 		CONFIG="freebsd-dri-x86"
@@ -111,10 +118,7 @@ src_unpack() {
 	HOSTCONF="${S}/configs/${CONFIG}"
 
 	git_src_unpack
-	cd ${S}
-
-	# Bug #177329
-	epatch "${FILESDIR}/${P}-pthread.patch"
+	cd "${S}"
 
 	# FreeBSD 6.* doesn't have posix_memalign().
 	[[ ${CHOST} == *-freebsd6.* ]] && sed -i -e "s/-DHAVE_POSIX_MEMALIGN//" configs/freebsd{,-dri}
@@ -126,117 +130,84 @@ src_unpack() {
 	fi
 
 	# Set up libdir
-	echo "LIB_DIR = $(get_libdir)" >> ${HOSTCONF}
+	echo "LIB_DIR = $(get_libdir)" >> "${HOSTCONF}"
 
 	# Set default dri drivers directory
-	echo 'DRI_DRIVER_SEARCH_DIR = /usr/$(LIB_DIR)/dri' >> ${HOSTCONF}
+	echo 'DRI_DRIVER_SEARCH_DIR = /usr/$(LIB_DIR)/dri' >> "${HOSTCONF}"
 
 	# Do we want thread-local storage (TLS)?
 	if use nptl; then
-		echo "ARCH_FLAGS += -DGLX_USE_TLS" >> ${HOSTCONF}
+		echo "ARCH_FLAGS += -DGLX_USE_TLS" >> "${HOSTCONF}"
 	fi
 
-	echo "X11_INCLUDES = `pkg-config --cflags-only-I x11`" >> ${HOSTCONF}
+	echo "X11_INCLUDES = `pkg-config --cflags-only-I x11`" >> "${HOSTCONF}"
 	if use xcb; then
-		echo "DEFINES += -DUSE_XCB" >> ${HOSTCONF}
-		echo "X11_INCLUDES += `pkg-config --cflags-only-I xcb` `pkg-config --cflags-only-I x11-xcb` `pkg-config --cflags-only-I xcb-glx`" >> ${HOSTCONF}
-		echo "GL_LIB_DEPS += `pkg-config --libs xcb` `pkg-config --libs x11-xcb` `pkg-config --libs xcb-glx`" >> ${HOSTCONF}
+		echo "DEFINES += -DUSE_XCB" >> "${HOSTCONF}"
+		echo "X11_INCLUDES += `pkg-config --cflags-only-I xcb` `pkg-config --cflags-only-I x11-xcb` `pkg-config --cflags-only-I xcb-glx`" >> "${HOSTCONF}"
+		echo "GL_LIB_DEPS += `pkg-config --libs xcb` `pkg-config --libs x11-xcb` `pkg-config --libs xcb-glx`" >> "${HOSTCONF}"
 	fi
 
 	# Configurable DRI drivers
-	if use video_cards_i810; then
-		add_drivers i810 i915 i915tex i965
-	fi
-	if use video_cards_mach64; then
-		add_drivers mach64
-	fi
-	if use video_cards_mga; then
-		add_drivers mga
-	fi
-	if use video_cards_nv; then
-		add_drivers nouveau
-	fi
-	if use video_cards_r128; then
-		add_drivers r128
-	fi
-	if use video_cards_r100; then
-		add_drivers radeon
-	fi
-	if use video_cards_r200; then
-		add_drivers r200
-	fi
-	if use video_cards_r300; then
-		add_drivers r300
-	fi
-	if use video_cards_s3virge; then
-		add_drivers s3v
-	fi
-	if use video_cards_savage; then
-		add_drivers savage
-	fi
-	if use video_cards_sis; then
-		add_drivers sis
-	fi
-	if use video_cards_sunffb; then
-		add_drivers ffb
-	fi
-	if use video_cards_tdfx; then
-		add_drivers tdfx
-	fi
-	if use video_cards_trident; then
-		add_drivers trident
-	fi
-	if use video_cards_via; then
-		add_drivers unichrome
-	fi
+	driver_enable video_cards_i810 i810 i915 i915tex i965
+	driver_enable video_cards_mach64 mach64
+	driver_enable video_cards_mga mga
+	driver_enable video_cards_r128 r128
+	driver_enable video_cards_radeon radeon r200 r300
+	driver_enable video_cards_s3virge s3v
+	driver_enable video_cards_savage savage
+	driver_enable video_cards_sis sis
+	driver_enable video_cards_sunffb ffb
+	driver_enable video_cards_tdfx tdfx
+	driver_enable video_cards_trident trident
+	driver_enable video_cards_via unichrome
 
-	# Set drivers to everything on which we ran add_drivers()
-	echo "DRI_DIRS = ${DRI_DRIVERS}" >> ${HOSTCONF}
+	# Set drivers to everything on which we ran driver_enable()
+	echo "DRI_DIRS = ${DRI_DRIVERS}" >> "${HOSTCONF}"
 
-	if use hardened; then
-		einfo "Deactivating assembly code for hardened build"
-		echo "ASM_FLAGS =" >> ${HOSTCONF}
-		echo "ASM_SOURCES =" >> ${HOSTCONF}
-		echo "ASM_API =" >> ${HOSTCONF}
+	if use pic; then
+		einfo "Deactivating assembly code for pic build"
+		echo "ASM_FLAGS =" >> "${HOSTCONF}"
+		echo "ASM_SOURCES =" >> "${HOSTCONF}"
+		echo "ASM_API =" >> "${HOSTCONF}"
 	fi
 
 	if use sparc; then
 		einfo "Sparc assembly code is not working; deactivating"
-		echo "ASM_FLAGS =" >> ${HOSTCONF}
-		echo "ASM_SOURCES =" >> ${HOSTCONF}
+		echo "ASM_FLAGS =" >> "${HOSTCONF}"
+		echo "ASM_SOURCES =" >> "${HOSTCONF}"
 	fi
 
 	# Replace hardcoded /usr/X11R6 with this
-	echo "EXTRA_LIB_PATH = `pkg-config --libs-only-L x11`" >> ${HOSTCONF}
+	echo "EXTRA_LIB_PATH = `pkg-config --libs-only-L x11`" >> "${HOSTCONF}"
 
-	echo 'CFLAGS = $(OPT_FLAGS) $(PIC_FLAGS) $(ARCH_FLAGS) $(DEFINES) $(ASM_FLAGS)' >> ${HOSTCONF}
-	echo "OPT_FLAGS = ${CFLAGS}" >> ${HOSTCONF}
-	echo "CC = $(tc-getCC)" >> ${HOSTCONF}
-	echo "CXX = $(tc-getCXX)" >> ${HOSTCONF}
+	echo 'CFLAGS = $(OPT_FLAGS) $(PIC_FLAGS) $(ARCH_FLAGS) $(DEFINES) $(ASM_FLAGS)' >> "${HOSTCONF}"
+	echo "OPT_FLAGS = ${CFLAGS}" >> "${HOSTCONF}"
+	echo "CC = $(tc-getCC)" >> "${HOSTCONF}"
+	echo "CXX = $(tc-getCXX)" >> "${HOSTCONF}"
 	# bug #110840 - Build with PIC, since it hasn't been shown to slow it down
-	echo "PIC_FLAGS = -fPIC" >> ${HOSTCONF}
+	echo "PIC_FLAGS = -fPIC" >> "${HOSTCONF}"
 
 	# Removed glut, since we have separate freeglut/glut ebuilds
 	# Remove EGL, since Brian Paul says it's not ready for a release
-	echo "SRC_DIRS = glx/x11 mesa glu glw" >> ${HOSTCONF}
+	echo "SRC_DIRS = glx/x11 mesa glu glw" >> "${HOSTCONF}"
 
 	# Get rid of glut includes
-	rm -f ${S}/include/GL/glut*h
-
-	# r200 breaks without this, since it's the only EGL-enabled driver so far
-	echo "USING_EGL = 0" >> ${HOSTCONF}
-
-	# Don't build EGL demos. EGL isn't ready for release, plus they produce a
-	# circular dependency with glut.
-	echo "PROGRAM_DIRS =" >> ${HOSTCONF}
+	rm -f "${S}"/include/GL/glut*h
 
 	# Documented in configs/default
 	if use motif; then
 		# Add -lXm
-		echo "GLW_LIB_DEPS += -lXm" >> ${HOSTCONF}
+		echo "GLW_LIB_DEPS += -lXm" >> "${HOSTCONF}"
 		# Add GLwMDrawA.c
-		echo "GLW_SOURCES += GLwMDrawA.c" >> ${HOSTCONF}
+		echo "GLW_SOURCES += GLwMDrawA.c" >> "${HOSTCONF}"
 	fi
+
+	# Shut up pointless warnings
+#	echo "MKDEP = gcc -M" >> "${HOSTCONF}"
+#	echo "MKDEP_OPTIONS = -MF depend" >> "${HOSTCONF}"
+	echo "MKDEP_OPTIONS = -fdepend -I$(gcc-config -L)/include" >> "${HOSTCONF}"
+	echo "INSTALL_DIR = /usr" >> "${HOSTCONF}"
+	echo 'DRI_DRIVER_INSTALL_DIR = /usr/$(LIB_DIR)/dri' >> "${HOSTCONF}"
 }
 
 src_compile() {
@@ -245,18 +216,16 @@ src_compile() {
 
 src_install() {
 	dodir /usr
-	make \
-		INSTALL_DIR="${D}/usr" \
-		DRI_DRIVER_INSTALL_DIR="${D}/usr/\$(LIB_DIR)/dri" \
-		INCLUDE_DIR="${D}/usr/include" \
+	emake -j1 \
+		DESTDIR="${D}" \
 		install || die "Installation failed"
 
 	if ! use motif; then
-		rm ${D}/usr/include/GL/GLwMDrawA.h
+		rm "${D}"/usr/include/GL/GLwMDrawA.h
 	fi
 
 	# Don't install private headers
-	rm ${D}/usr/include/GL/GLw*P.h
+	rm -f "${D}"/usr/include/GL/GLw*P.h
 
 	fix_opengl_symlinks
 	dynamic_libgl_install
@@ -264,24 +233,26 @@ src_install() {
 	# Install libtool archives
 	insinto /usr/$(get_libdir)
 	# (#67729) Needs to be lib, not $(get_libdir)
-	doins ${FILESDIR}/lib/libGLU.la
-	sed -e "s:\${libdir}:$(get_libdir):g" ${FILESDIR}/lib/libGL.la \
-		> ${D}/usr/$(get_libdir)/opengl/xorg-x11/lib/libGL.la
+	doins "${FILESDIR}"/lib/libGLU.la
+	sed -e "s:\${libdir}:$(get_libdir):g" "${FILESDIR}"/lib/libGL.la \
+		> "${D}"/usr/$(get_libdir)/opengl/xorg-x11/lib/libGL.la
 
 	# On *BSD libcs dlopen() and similar functions are present directly in
 	# libc.so and does not require linking to libdl. portability eclass takes
 	# care of finding the needed library (if needed) witht the dlopen_lib
 	# function.
 	sed -i -e 's:-ldl:'$(dlopen_lib)':g' \
-		${D}/usr/$(get_libdir)/libGLU.la \
-		${D}/usr/$(get_libdir)/opengl/xorg-x11/lib/libGL.la
+		"${D}"/usr/$(get_libdir)/libGLU.la \
+		"${D}"/usr/$(get_libdir)/opengl/xorg-x11/lib/libGL.la
 
 	# Create the two-number versioned libs (.so.#.#), since only .so.# and
 	# .so.#.#.# were made
 	local MAJOR_2="$(printf "%.2i" $(get_version_component_range 1 ${PV}))"
 	local MINOR_2="$(printf "%.2i" $(get_version_component_range 2 ${PV}))"
 	local MICRO_2="$(printf "%.2i" $(get_version_component_range 3 ${PV}))"
-	dosym libGLU.so.1.3.${MAJOR_2}.${MINOR_2}.${MICRO_2} /usr/$(get_libdir)/libGLU.so.1.3
+	dosym \
+		libGLU.so.1.3.${MAJOR_2}${MINOR_2}${MICRO_2} \
+		/usr/$(get_libdir)/libGLU.so.1.3
 	dosym libGLw.so.1.0.0 /usr/$(get_libdir)/libGLw.so.1.0
 
 	# libGLU doesn't get the plain .so symlink either
@@ -293,12 +264,23 @@ src_install() {
 
 pkg_postinst() {
 	switch_opengl_implem
+
+	# We need the outer check, because xorg-server may not be installed
+	# first, and built_with_use() dies if the package isn't installed.
+	if has_version x11-base/xorg-server; then
+		if built_with_use x11-base/xorg-server nptl; then
+			ewarn "Rebuild x11-base/xorg-server without USE=nptl"
+			ewarn "or AIGLX (compiz, etc.) will not work."
+			ewarn "This is because of a bug in the Mesa NPTL assembly code"
+			ewarn "in all Mesa 7.0.x versions (Mesa 6.x is OK)."
+		fi
+	fi
 }
 
 fix_opengl_symlinks() {
 	# Remove invalid symlinks
 	local LINK
-	for LINK in $(find ${D}/usr/$(get_libdir) \
+	for LINK in $(find "${D}"/usr/$(get_libdir) \
 		-name libGL\.* -type l); do
 		rm -f ${LINK}
 	done
@@ -319,18 +301,18 @@ dynamic_libgl_install() {
 	ebegin "Moving libGL and friends for dynamic switching"
 		dodir /usr/$(get_libdir)/opengl/${OPENGL_DIR}/{lib,extensions,include}
 		local x=""
-		for x in ${D}/usr/$(get_libdir)/libGL.so* \
-			${D}/usr/$(get_libdir)/libGL.la \
-			${D}/usr/$(get_libdir)/libGL.a; do
+		for x in "${D}"/usr/$(get_libdir)/libGL.so* \
+			"${D}"/usr/$(get_libdir)/libGL.la \
+			"${D}"/usr/$(get_libdir)/libGL.a; do
 			if [ -f ${x} -o -L ${x} ]; then
 				# libGL.a cause problems with tuxracer, etc
-				mv -f ${x} ${D}/usr/$(get_libdir)/opengl/${OPENGL_DIR}/lib
+				mv -f ${x} "${D}"/usr/$(get_libdir)/opengl/${OPENGL_DIR}/lib
 			fi
 		done
 		# glext.h added for #54984
-		for x in ${D}/usr/include/GL/{gl.h,glx.h,glext.h,glxext.h}; do
+		for x in "${D}"/usr/include/GL/{gl.h,glx.h,glext.h,glxext.h}; do
 			if [ -f ${x} -o -L ${x} ]; then
-				mv -f ${x} ${D}/usr/$(get_libdir)/opengl/${OPENGL_DIR}/include
+				mv -f ${x} "${D}"/usr/$(get_libdir)/opengl/${OPENGL_DIR}/include
 			fi
 		done
 	eend 0
@@ -344,6 +326,11 @@ switch_opengl_implem() {
 		eselect opengl set --use-old ${OPENGL_DIR}
 }
 
-add_drivers() {
-	DRI_DRIVERS="${DRI_DRIVERS} $@"
+# $1 - VIDEO_CARDS flag
+# other args - names of DRI drivers to enable
+driver_enable() {
+	if use $1; then
+		shift
+		DRI_DRIVERS="${DRI_DRIVERS} $@"
+	fi
 }
