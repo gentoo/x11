@@ -1,3 +1,6 @@
+# 1.5 prereleases, currently require live git ebuilds
+=x11-base/xorg-server-1.4.99*
+
 # Don't let people install these accidentally
 =x11-base/x11-drm-99999999
 =x11-base/xorg-server-9999
