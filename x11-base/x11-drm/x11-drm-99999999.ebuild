@@ -160,10 +160,10 @@ kernel_setup() {
 set_vidcards() {
 	if use kernel_linux; then
 		set_kvobj
-		I810_VIDCARDS="i810.${KV_OBJ} i830.${KV_OBJ} i915.${KV_OBJ}"
+		I810_VIDCARDS="i810.${KV_OBJ} i915.${KV_OBJ}"
 	elif use kernel_FreeBSD; then
 		KV_OBJ="ko"
-		# bsd does not have i810/i830, only i915:
+		# bsd does not have i810, only i915:
 		I810_VIDCARDS="i915.${KV_OBJ}"
 	fi
 
