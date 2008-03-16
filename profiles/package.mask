@@ -6,7 +6,7 @@
 =x11-base/xorg-server-9999
 =x11-drivers/xf86-video-ati-9999_pre12
 =x11-drivers/xf86-video-ati-9999
-=x11-drivers/xf86-video-intel-9999
+=x11-drivers/xf86-video-i810-9999
 =media-libs/mesa-9999
 =media-libs/glitz-9999
 =media-libs/fontconfig-9999

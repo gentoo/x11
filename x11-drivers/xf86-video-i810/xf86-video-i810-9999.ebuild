@@ -10,7 +10,7 @@ XDPVER=-1
 
 inherit x-modular git
 
-EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/driver/${PN}"
+EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/driver/${PN/i810/intel}"
 
 DESCRIPTION="X.Org driver for Intel cards"
 
