@@ -74,7 +74,6 @@ IUSE_VIDEO_CARDS="
 	video_cards_newport
 	video_cards_nsc
 	video_cards_nv
-	video_cards_openchrome
 	video_cards_r128
 	video_cards_radeon
 	video_cards_radeonhd
@@ -264,6 +263,7 @@ PDEPEND="
 		!x11-drivers/xf86-video-impact
 		!x11-drivers/xf86-video-imstt
 		!x11-drivers/xf86-video-newport
+		!x11-drivers/xf86-video-openchrome
 		!x11-drivers/xf86-video-sunbw2
 		!x11-drivers/xf86-video-suncg14
 		!x11-drivers/xf86-video-suncg3
@@ -273,7 +273,6 @@ PDEPEND="
 		!x11-drivers/xf86-video-suntcx
 		!x11-drivers/xf86-video-tga
 		!x11-drivers/xf86-video-vermilion
-		!x11-drivers/xf86-video-via
 
 		!x11-drivers/xf86-video-cyrix
 		!x11-drivers/xf86-video-nsc
