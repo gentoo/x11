@@ -222,19 +222,38 @@ PDEPEND="
 		input_devices_synaptics? ( x11-drivers/synaptics )
 		input_devices_wacom? ( x11-drivers/linuxwacom )
 
-		video_cards_fbdev? ( >=x11-drivers/xf86-video-fbdev-0.3.1 )
+		video_cards_apm? ( >=x11-drivers/xf86-video-apm-1.2.0  )
+		video_cards_ark? ( >=x11-drivers/xf86-video-ark-0.7.0 )
+		video_cards_ast? ( >=x11-drivers/xf86-video-ast-0.85.0 )
+		video_cards_chips? ( >=x11-drivers/xf86-video-chips-1.2.0 )
+		video_cards_cirrus? ( >=x11-drivers/xf86-video-cirrus-1.2.0 )
+		video_cards_dummy? ( >=x11-drivers/xf86-video-dummy-0.3.0 )
+		video_cards_fbdev? ( >=x11-drivers/xf86-video-fbdev-0.4.0 )
+		video_cards_glint? ( >=x11-drivers/xf86-video-glint-1.2.0 )
+		video_cards_i128? ( >=x11-drivers/xf86-video-i128-1.3.0 )
+		video_cards_i740? ( >=x11-drivers/xf86-video-i740-1.2.0 )
 		video_cards_i810? ( >=x11-drivers/xf86-video-i810-2.2.1 )
 		video_cards_mach64? ( >=x11-drivers/xf86-video-ati-6.8.0 )
 		video_cards_mga? ( >=x11-drivers/xf86-video-mga-1.4.8 )
+		video_cards_neomagic? ( >=x11-drivers/xf86-video-neomagic-1.2.0 )
 		video_cards_nv? ( >=x11-drivers/xf86-video-nv-2.1.8 )
 		video_cards_r128? ( >=x11-drivers/xf86-video-ati-6.8.0 )
 		video_cards_radeon? ( >=x11-drivers/xf86-video-ati-6.8.0 )
 		video_cards_radeonhd? ( >=x11-drivers/xf86-video-radeonhd-1.1.0 )
-		video_cards_rendition? ( >=x11-drivers/xf86-video-rendition-4.1.3 )
-		video_cards_savage? ( >=x11-drivers/xf86-video-savage-2.1.3 )
-		video_cards_tdfx? ( >=x11-drivers/xf86-video-tdfx-1.3.0 )
+		video_cards_rendition? ( >=x11-drivers/xf86-video-rendition-4.2.0 )
+		video_cards_s3? ( >=x11-drivers/xf86-video-s3-0.6.0 )
+		video_cards_s3virge? ( >=x11-drivers/xf86-video-s3virge-1.10.0 )
+		video_cards_savage? ( >=x11-drivers/xf86-video-savage-2.2.0 )
+		video_cards_siliconmotion? ( >=x11-drivers/xf86-video-siliconmotion-1.6.0 )
+		video_cards_sis? ( >=x11-drivers/xf86-video-sis-0.10.0 )
+		video_cards_sisusb? ( >=x11-drivers/xf86-video-sisusb-0.9.0 )
+		video_cards_tdfx? ( >=x11-drivers/xf86-video-tdfx-1.4.0 )
+		video_cards_trident? ( >=x11-drivers/xf86-video-trident-1.3.0 )
+		video_cards_tseng? ( >=x11-drivers/xf86-video-tseng-1.2.0 )
+		video_cards_v4l? ( >=x11-drivers/xf86-video-v4l-0.2.0 )
 		video_cards_vesa? ( >=x11-drivers/xf86-video-vesa-1.3.0 )
-		video_cards_vmware? ( >=x11-drivers/xf86-video-vmware-10.15.2 )
+		video_cards_vmware? ( >=x11-drivers/xf86-video-vmware-10.16.0 )
+		video_cards_voodoo? ( >=x11-drivers/xf86-video-voodoo-1.2.0 )
 		video_cards_xgi? ( >=x11-drivers/xf86-video-xgi-1.5.0 )
 
 		video_cards_tdfx? ( 3dfx? ( >=media-libs/glide-v3-3.10 ) )
@@ -242,26 +261,9 @@ PDEPEND="
 		!x11-drivers/ati-drivers
 
 		!x11-drivers/xf86-video-amd
-		!x11-drivers/xf86-video-apm
-		!x11-drivers/xf86-video-ark
-		!x11-drivers/xf86-video-chips
-		!x11-drivers/xf86-video-cirrus
-		!x11-drivers/xf86-video-cyrix
-		!x11-drivers/xf86-video-dummy
-		!x11-drivers/xf86-video-glint
-		!x11-drivers/xf86-video-i128
-		!x11-drivers/xf86-video-i740
 		!x11-drivers/xf86-video-impact
 		!x11-drivers/xf86-video-imstt
-		!x11-drivers/xf86-video-neomagic
 		!x11-drivers/xf86-video-newport
-		!x11-drivers/xf86-video-nsc
-		!x11-drivers/xf86-video-nv
-		!x11-drivers/xf86-video-s3
-		!x11-drivers/xf86-video-s3virge
-		!x11-drivers/xf86-video-siliconmotion
-		!x11-drivers/xf86-video-sis
-		!x11-drivers/xf86-video-sisusb
 		!x11-drivers/xf86-video-sunbw2
 		!x11-drivers/xf86-video-suncg14
 		!x11-drivers/xf86-video-suncg3
@@ -270,13 +272,12 @@ PDEPEND="
 		!x11-drivers/xf86-video-sunleo
 		!x11-drivers/xf86-video-suntcx
 		!x11-drivers/xf86-video-tga
-		!x11-drivers/xf86-video-trident
-		!x11-drivers/xf86-video-tseng
-		!x11-drivers/xf86-video-v4l
 		!x11-drivers/xf86-video-vermilion
-		!x11-drivers/xf86-video-vga
 		!x11-drivers/xf86-video-via
-		!x11-drivers/xf86-video-voodoo
+
+		!x11-drivers/xf86-video-cyrix
+		!x11-drivers/xf86-video-nsc
+		!x11-drivers/xf86-video-vga
 	)"
 LICENSE="${LICENSE} MIT"
 
