@@ -221,6 +221,7 @@ PDEPEND="
 		input_devices_synaptics? ( x11-drivers/synaptics )
 		input_devices_wacom? ( x11-drivers/linuxwacom )
 
+		video_cards_amd? ( >=x11-drivers/xf86-video-amd-2.7.7.7  )
 		video_cards_apm? ( >=x11-drivers/xf86-video-apm-1.2.0  )
 		video_cards_ark? ( >=x11-drivers/xf86-video-ark-0.7.0 )
 		video_cards_ast? ( >=x11-drivers/xf86-video-ast-0.85.0 )
@@ -259,7 +260,6 @@ PDEPEND="
 		!x11-drivers/nvidia-drivers
 		!x11-drivers/ati-drivers
 
-		!x11-drivers/xf86-video-amd
 		!x11-drivers/xf86-video-impact
 		!x11-drivers/xf86-video-imstt
 		!x11-drivers/xf86-video-newport
