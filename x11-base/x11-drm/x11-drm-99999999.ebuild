@@ -74,7 +74,7 @@ src_unpack() {
 
 	# Substitute new directory under /lib/modules/${KV_FULL}
 	cd "${SRC_BUILD}"
-	sed -ie "s:/kernel/drivers/char/drm:/${PN}:g" Makefile
+	sed -i -e "s:/kernel/drivers/char/drm:/${PN}:g" Makefile
 
 	cp "${S}"/tests/*.c ${SRC_BUILD}
 
@@ -227,7 +227,7 @@ src_unpack_freebsd() {
 	ln -s "/usr/src/sys-${K_RV}" "${WORKDIR}/sys"
 	# SUBDIR variable gets to all Makefiles, we need it only in the main one.
 	SUBDIRS=${VIDCARDS//.ko}
-	sed -ie "s:SUBDIR\ =.*:SUBDIR\ =\ drm ${SUBDIRS}:" "${SRC_BUILD}"/Makefile
+	sed -i -e "s:SUBDIR\ =.*:SUBDIR\ =\ drm ${SUBDIRS}:" "${SRC_BUILD}"/Makefile
 }
 
 src_unpack_os() {
