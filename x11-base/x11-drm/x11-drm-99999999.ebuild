@@ -281,7 +281,7 @@ src_compile_linux() {
 
 	if linux_chkconfig_present DRM
 	then
-		echo "Please disable in-kernel DRM support to use this package."
+		ewarn "Please disable in-kernel DRM support to use this package."
 	fi
 
 	# LINUXDIR is needed to allow Makefiles to find kernel release.
