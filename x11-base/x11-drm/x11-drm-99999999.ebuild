@@ -193,6 +193,18 @@ set_vidcards() {
 		use video_cards_tdfx && \
 			VIDCARDS="${VIDCARDS} tdfx.${KV_OBJ}"
 	fi
+	
+	# remove leading and trailing space
+	VIDCARDS="${VIDCARDS% }"
+	VIDCARDS="${VIDCARDS# }"
+
+	if use kernel_linux; then
+		check_modules_supported
+		MODULE_NAMES=""
+		for i in $VIDCARDS ; do
+			MODULE_NAMES="${MODULE_NAMES}${i/.${KV_OBJ}}(x11-drm) "
+		done
+	fi
 }
 
 get_drm_build_dir() {
@@ -263,12 +275,9 @@ src_compile_linux() {
 	# This now uses an M= build system. Makefile does most of the work.
 	cd "${SRC_BUILD}"
 	unset ARCH
-	emake \
-		M="${SRC_BUILD}" \
-		LINUXDIR="${KERNEL_DIR}" \
-		DRM_MODULES="${VIDCARDS}" \
-		O="${KBUILD_OUTPUT}" \
-		modules || die_error
+	BUILD_TARGETS="modules"
+	BUILD_PARAMS="DRM_MODULES='${VIDCARDS}' LINUXDIR='${KERNEL_DIR}' M='${SRC_BUILD}'"
+	ECONF_PARAMS='' S="${SRC_BUILD}" linux-mod_src_compile
 
 	if linux_chkconfig_present DRM
 	then
