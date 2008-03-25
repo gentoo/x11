@@ -65,7 +65,7 @@ src_unpack() {
 
 	unpack ${P}-gentoo-${PATCHVER}.tar.bz2
 
-	cd ${S}
+	cd "${S}"
 
 	patch_prepare
 
@@ -73,21 +73,21 @@ src_unpack() {
 	EPATCH_SUFFIX="patch" epatch ${PATCHDIR}
 
 	# Substitute new directory under /lib/modules/${KV_FULL}
-	cd ${SRC_BUILD}
+	cd "${SRC_BUILD}"
 	sed -ie "s:/kernel/drivers/char/drm:/${PN}:g" Makefile
 
-	cp ${S}/tests/*.c ${SRC_BUILD}
+	cp "${S}"/tests/*.c ${SRC_BUILD}
 
 	src_unpack_os
 
-	cd ${S}
+	cd "${S}"
 	eautoreconf -v --install
 }
 
 src_compile() {
 	unset LDFLAGS
 
-	cd ${S}
+	cd "${S}"
 	# Building the programs. These are useful for developers and getting info from DRI and DRM.
 	#
 	# libdrm objects are needed for drmstat.
@@ -104,7 +104,7 @@ src_compile() {
 
 src_install() {
 	einfo "Installing DRM..."
-	cd ${SRC_BUILD}
+	cd "${SRC_BUILD}"
 
 	src_install_os
 
@@ -211,7 +211,7 @@ patch_prepare() {
 	#     2.4 vs. 2.6 kernels
 	if use kernel_linux
 	then
-	    kernel_is 2 6 && mv -f ${PATCHDIR}/*kernel-2.4* ${EXCLUDED}
+	    kernel_is 2 6 && mv -f "${PATCHDIR}"/*kernel-2.4* "${EXCLUDED}"
 	fi
 
 	# There is only one tree being maintained now. No numeric exclusions need
@@ -227,7 +227,7 @@ src_unpack_freebsd() {
 	ln -s "/usr/src/sys-${K_RV}" "${WORKDIR}/sys"
 	# SUBDIR variable gets to all Makefiles, we need it only in the main one.
 	SUBDIRS=${VIDCARDS//.ko}
-	sed -ie "s:SUBDIR\ =.*:SUBDIR\ =\ drm ${SUBDIRS}:" ${SRC_BUILD}/Makefile
+	sed -ie "s:SUBDIR\ =.*:SUBDIR\ =\ drm ${SUBDIRS}:" "${SRC_BUILD}"/Makefile
 }
 
 src_unpack_os() {
@@ -261,7 +261,7 @@ src_install_os() {
 
 src_compile_linux() {
 	# This now uses an M= build system. Makefile does most of the work.
-	cd ${SRC_BUILD}
+	cd "${SRC_BUILD}"
 	unset ARCH
 	emake \
 		M="${SRC_BUILD}" \
@@ -276,13 +276,13 @@ src_compile_linux() {
 	fi
 
 	# LINUXDIR is needed to allow Makefiles to find kernel release.
-	cd ${SRC_BUILD}
+	cd "${SRC_BUILD}"
 	emake LINUXDIR="${KERNEL_DIR}" dristat || die "Building dristat failed."
 	emake LINUXDIR="${KERNEL_DIR}" drmstat || die "Building drmstat failed."
 }
 
 src_compile_freebsd() {
-	cd ${SRC_BUILD}
+	cd "${SRC_BUILD}"
 	# Environment CFLAGS overwrite kernel CFLAGS which is bad.
 	local svcflags=${CFLAGS}; local svldflags=${LDFLAGS}
 	unset CFLAGS; unset LDFLAGS
@@ -326,7 +326,7 @@ src_install_linux() {
 }
 
 src_install_freebsd() {
-	cd ${SRC_BUILD}
+	cd "${SRC_BUILD}"
 	dodir "/boot/modules"
 	MAKE=make \
 		emake \
