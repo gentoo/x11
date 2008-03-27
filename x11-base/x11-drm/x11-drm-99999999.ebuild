@@ -193,18 +193,6 @@ set_vidcards() {
 		use video_cards_tdfx && \
 			VIDCARDS="${VIDCARDS} tdfx.${KV_OBJ}"
 	fi
-	
-	# remove leading and trailing space
-	VIDCARDS="${VIDCARDS% }"
-	VIDCARDS="${VIDCARDS# }"
-
-	if use kernel_linux; then
-		check_modules_supported
-		MODULE_NAMES=""
-		for i in $VIDCARDS ; do
-			MODULE_NAMES="${MODULE_NAMES}${i/.${KV_OBJ}}(x11-drm) "
-		done
-	fi
 }
 
 get_drm_build_dir() {
@@ -272,6 +260,18 @@ src_install_os() {
 }
 
 src_compile_linux() {
+	# remove leading and trailing space
+	VIDCARDS="${VIDCARDS% }"
+	VIDCARDS="${VIDCARDS# }"
+
+	check_modules_supported
+	MODULE_NAMES=""
+	for i in drm.${KV_OBJ} ${VIDCARDS}; do
+		MODULE_NAMES="${MODULE_NAMES} ${i/.${KV_OBJ}}(${PN}:${SRC_BUILD})"
+		i=$(echo ${i} | tr '[:lower:]' '[:upper:]')
+		eval MODULESD_${i}_ENABLED="yes"
+	done
+
 	# This now uses an M= build system. Makefile does most of the work.
 	cd "${SRC_BUILD}"
 	unset ARCH
@@ -321,13 +321,6 @@ die_error() {
 }
 
 src_install_linux() {
-	for i in drm.${KV_OBJ} ${VIDCARDS}; do
-		i=${i%.*}
-		MODULE_NAMES="${MODULE_NAMES} ${i}(${PN}:${SRC_BUILD})"
-		i=$(echo ${i} | tr '[:lower:]' '[:upper:]')
-		eval MODULESD_${i}_ENABLED="yes"
-	done
-
 	linux-mod_src_install
 
 	# Strip binaries, leaving /lib/modules untouched (bug #24415)
