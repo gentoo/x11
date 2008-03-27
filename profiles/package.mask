@@ -12,6 +12,9 @@
 =x11-drivers/xf86-video-i810-9999
 =x11-libs/cairo-9999
 =x11-libs/libX11-9999
+=x11-libs/libXamine-9999
+=x11-libs/libXft-9999
+=x11-libs/libXrender-9999
 =x11-libs/libdrm-9999
 =x11-libs/libpciaccess-9999
 =x11-libs/libxcb-9999
