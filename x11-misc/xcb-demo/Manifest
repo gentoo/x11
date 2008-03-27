@@ -3,6 +3,3 @@ EBUILD xcb-demo-0.1.ebuild 569 RMD160 c2d5583471ef9567e7bc5bfed13ba2e3547ecb29 S
 MD5 96e6258d87b693eb52198bbd6ae0cfef xcb-demo-0.1.ebuild 569
 RMD160 c2d5583471ef9567e7bc5bfed13ba2e3547ecb29 xcb-demo-0.1.ebuild 569
 SHA256 e16a2dfcbf67efd046410246009b66069b26be57d25130047744f2ba41bd7829 xcb-demo-0.1.ebuild 569
-MD5 f5836c6cf5c364ec033c80cc2c178d70 files/digest-xcb-demo-0.1 238
-RMD160 94d7619f27842348d77a424df88b65c1789ba1e7 files/digest-xcb-demo-0.1 238
-SHA256 ba7948e361eb2099becf2f04b11ae2705df1e6f5d98ab75f0831e336cb108a22 files/digest-xcb-demo-0.1 238

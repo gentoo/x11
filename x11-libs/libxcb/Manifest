@@ -2,6 +2,3 @@ EBUILD libxcb-9999.ebuild 800 RMD160 92b154fbf524fa6515c952cf591fbe38f03edca2 SH
 MD5 b68cce8daee9fa75cd4d9167fa291d1a libxcb-9999.ebuild 800
 RMD160 92b154fbf524fa6515c952cf591fbe38f03edca2 libxcb-9999.ebuild 800
 SHA256 21d7d23dab5db6816d5fab6af81cca1e4eb8626bf65b16846fe70c9b46bb7973 libxcb-9999.ebuild 800
-MD5 d41d8cd98f00b204e9800998ecf8427e files/digest-libxcb-9999 0
-RMD160 9c1185a5c5e9fc54612808977ee8f548b2258d31 files/digest-libxcb-9999 0
-SHA256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 files/digest-libxcb-9999 0
