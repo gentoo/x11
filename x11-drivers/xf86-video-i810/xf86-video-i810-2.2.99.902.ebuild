@@ -5,7 +5,7 @@
 # Must be before x-modular eclass is inherited
 # Enable snapshot to get the man page in the right place
 # This should be fixed with a XDP patch later
-SNAPSHOT="yes"
+#SNAPSHOT="yes"
 XDPVER=-1
 
 inherit x-modular
