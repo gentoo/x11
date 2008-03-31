@@ -26,6 +26,7 @@
 =x11-proto/compositeproto-9999
 =x11-proto/damageproto-9999
 =x11-proto/dmxproto-9999
+=x11-proto/dri2proto-9999
 =x11-proto/evieext-9999
 =x11-proto/fixesproto-9999
 =x11-proto/fontcacheproto-9999
