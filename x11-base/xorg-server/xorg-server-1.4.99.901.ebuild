@@ -122,7 +122,7 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=x11-libs/libXmu-1.0.3
 	>=x11-libs/libXrender-0.9.4
 	>=x11-libs/libXi-1.1.3
-	>=x11-libs/pixman-0.9.6
+	>=x11-libs/pixman-0.10.0
 	media-libs/freetype
 	>=media-libs/mesa-9999
 	media-fonts/font-adobe-75dpi
