@@ -67,6 +67,7 @@ DEPEND="${RDEPEND}
 	x11-proto/inputproto
 	x11-proto/xextproto
 	!hppa? ( x11-proto/xf86driproto )
+	x11-proto/dri2proto
 	x11-proto/xf86vidmodeproto
 	>=x11-proto/glproto-1.4.8
 	motif? ( x11-proto/printproto )"
