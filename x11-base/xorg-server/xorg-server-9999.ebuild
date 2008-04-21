@@ -300,7 +300,7 @@ src_unpack() {
 
 	# Don't patch before everything's ready
 	PATCHES="" mesa_git_src_unpack
-	x-modular_src_unpack
+	x-modular_unpack_source
 	x-modular_patch_source
 
 	# Set up kdrive servers to build
