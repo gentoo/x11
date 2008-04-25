@@ -11,7 +11,7 @@ RDEPEND=">=x11-libs/xtrans-1.0.1
 	x11-libs/libXdmcp
 	x11-proto/kbproto
 	>=x11-proto/xproto-7.0.6
-	xcb? ( >=x11-libs/libxcb-1.2 )"
+	xcb? ( >=x11-libs/libxcb-9999 )"
 DEPEND="${RDEPEND}
 	x11-proto/xf86bigfontproto
 	x11-proto/bigreqsproto
