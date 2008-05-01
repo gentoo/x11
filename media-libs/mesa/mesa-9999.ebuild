@@ -4,7 +4,7 @@
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/mesa/mesa"
 
-inherit eutils toolchain-funcs multilib flag-o-matic git portability versionator
+inherit autotools eutils toolchain-funcs multilib flag-o-matic git portability versionator
 
 OPENGL_DIR="xorg-x11"
 
@@ -43,7 +43,6 @@ IUSE="${IUSE_VIDEO_CARDS}
 	pic
 	motif
 	nptl
-	xcb
 	kernel_FreeBSD"
 
 RDEPEND="app-admin/eselect-opengl
@@ -58,8 +57,7 @@ RDEPEND="app-admin/eselect-opengl
 	x11-libs/libICE
 	motif? ( virtual/motif )
 	doc? ( app-doc/opengl-manpages )
-	!<=x11-base/xorg-x11-6.9
-	xcb? ( x11-libs/libxcb )"
+	!<=x11-base/xorg-x11-6.9"
 DEPEND="${RDEPEND}
 	!<=x11-proto/xf86driproto-2.0.3
 	dev-util/pkgconfig
@@ -77,52 +75,32 @@ S="${WORKDIR}/${MY_P}"
 # Think about: ggi, svga, fbcon, no-X configs
 
 pkg_setup() {
-	if use xcb; then
-		if ! built_with_use x11-libs/libX11 xcb; then
-			msg="You must build libX11 with xcb enabled."
-			eerror ${msg}
-			die ${msg}
-		fi
-	fi
+	## No XCB support yet
+	#if use xcb; then
+	#	if ! built_with_use x11-libs/libX11 xcb; then
+	#		msg="You must build libX11 with xcb enabled."
+	#		eerror ${msg}
+	#		die ${msg}
+	#	fi
+	#fi
 
 	if use debug; then
 		strip-flags
 		append-flags -g
 	fi
 
-	append-flags -fno-strict-aliasing
-
 	# gcc 4.2 has buggy ivopts
 	if [[ $(gcc-version) = "4.2" ]]; then
 		append-flags -fno-ivopts
 	fi
-
-	if use x86-fbsd; then
-		CONFIG="freebsd-dri-x86"
-	elif use amd64-fbsd; then
-		CONFIG="freebsd-dri-amd64"
-	elif use kernel_FreeBSD; then
-		CONFIG="freebsd-dri"
-	elif use x86; then
-		CONFIG="linux-dri-x86"
-	elif use amd64; then
-		[[ ${ABI} == "amd64" ]] && CONFIG="linux-dri-x86-64"
-		[[ ${ABI} == "x86" ]] && CONFIG="linux-dri-x86"
-	elif use ppc; then
-		CONFIG="linux-dri-ppc"
-	else
-		CONFIG="linux-dri"
-	fi
 }
 
 src_unpack() {
-	HOSTCONF="${S}/configs/${CONFIG}"
-
 	git_src_unpack
 	cd "${S}"
 
 	# FreeBSD 6.* doesn't have posix_memalign().
-	[[ ${CHOST} == *-freebsd6.* ]] && sed -i -e "s/-DHAVE_POSIX_MEMALIGN//" configs/freebsd{,-dri}
+	[[ ${CHOST} == *-freebsd6.* ]] && sed -i -e "s/-DHAVE_POSIX_MEMALIGN//" configure.ac
 
 	# Don't compile debug code with USE=-debug - bug #125004
 	if ! use debug; then
@@ -130,26 +108,23 @@ src_unpack() {
 	   find src/mesa/drivers/dri -name *.[hc] -exec egrep -l "\#define\W+DO_DEBUG\W+1" {} \; | xargs sed -i -re "s/\#define\W+DO_DEBUG\W+1/\#define DO_DEBUG 0/" ;
 	fi
 
-	# Set up libdir
-	echo "LIB_DIR = $(get_libdir)" >> "${HOSTCONF}"
+	eautoreconf
+}
+
+src_compile() {
+	local myconf
+
+	# This is where we might later change to build xlib/osmesa
+	myconf="${myconf} --with-driver=dri"
 
 	# Set default dri drivers directory
-	echo 'DRI_DRIVER_SEARCH_DIR = /usr/$(LIB_DIR)/dri' >> "${HOSTCONF}"
+	myconf="${myconf} --with-dri-driverdir=/usr/$(get_libdir)/dri"
 
 	# Do we want thread-local storage (TLS)?
-	if use nptl; then
-		echo "ARCH_FLAGS += -DGLX_USE_TLS" >> "${HOSTCONF}"
-	fi
-
-	echo "X11_INCLUDES = `pkg-config --cflags-only-I x11`" >> "${HOSTCONF}"
-	if use xcb; then
-		echo "DEFINES += -DUSE_XCB" >> "${HOSTCONF}"
-		echo "X11_INCLUDES += `pkg-config --cflags-only-I xcb` `pkg-config --cflags-only-I x11-xcb` `pkg-config --cflags-only-I xcb-glx`" >> "${HOSTCONF}"
-		echo "GL_LIB_DEPS += `pkg-config --libs xcb` `pkg-config --libs x11-xcb` `pkg-config --libs xcb-glx`" >> "${HOSTCONF}"
-	fi
+	myconf="${myconf} $(use_enable nptl glx-tls)"
 
 	# Configurable DRI drivers
-	driver_enable video_cards_i810 i810 i915 i915tex i965
+	driver_enable video_cards_i810 i810 i915 i965
 	driver_enable video_cards_mach64 mach64
 	driver_enable video_cards_mga mga
 	driver_enable video_cards_r128 r128
@@ -163,61 +138,37 @@ src_unpack() {
 	driver_enable video_cards_via unichrome
 
 	# Set drivers to everything on which we ran driver_enable()
-	echo "DRI_DIRS = ${DRI_DRIVERS}" >> "${HOSTCONF}"
+	myconf="${myconf} --with-dri-drivers=${DRI_DRIVERS}"
 
-	if use pic; then
-		einfo "Deactivating assembly code for pic build"
-		echo "ASM_FLAGS =" >> "${HOSTCONF}"
-		echo "ASM_SOURCES =" >> "${HOSTCONF}"
-		echo "ASM_API =" >> "${HOSTCONF}"
-	fi
+	# Deactivate assembly code for pic build
+	myconf="${myconf} $(use_enable pic asm)"
 
-	if use sparc; then
-		einfo "Sparc assembly code is not working; deactivating"
-		echo "ASM_FLAGS =" >> "${HOSTCONF}"
-		echo "ASM_SOURCES =" >> "${HOSTCONF}"
-	fi
+	# Sparc assembly code is not working
+	myconf="${myconf} $(use_enable sparc asm)"
 
-	# Replace hardcoded /usr/X11R6 with this
-	echo "EXTRA_LIB_PATH = `pkg-config --libs-only-L x11`" >> "${HOSTCONF}"
+	myconf="${myconf} --disable-glut"
 
-	echo 'CFLAGS = $(OPT_FLAGS) $(PIC_FLAGS) $(ARCH_FLAGS) $(DEFINES) $(ASM_FLAGS)' >> "${HOSTCONF}"
-	echo "OPT_FLAGS = ${CFLAGS}" >> "${HOSTCONF}"
-	echo "CC = $(tc-getCC)" >> "${HOSTCONF}"
-	echo "CXX = $(tc-getCXX)" >> "${HOSTCONF}"
-	# bug #110840 - Build with PIC, since it hasn't been shown to slow it down
-	echo "PIC_FLAGS = -fPIC" >> "${HOSTCONF}"
+	myconf="${myconf} --without-demos"
 
-	# Removed glut, since we have separate freeglut/glut ebuilds
-	# Remove EGL, since Brian Paul says it's not ready for a release
-	echo "SRC_DIRS = glx/x11 mesa glu glw" >> "${HOSTCONF}"
+	## No XCB support yet
+	#if use xcb; then
+	#	echo "DEFINES += -DUSE_XCB" >> "${HOSTCONF}"
+	#	echo "X11_INCLUDES += `pkg-config --cflags-only-I xcb` `pkg-config --cflags-only-I x11-xcb` `pkg-config --cflags-only-I xcb-glx`" >> "${HOSTCONF}"
+	#	echo "GL_LIB_DEPS += `pkg-config --libs xcb` `pkg-config --libs x11-xcb` `pkg-config --libs xcb-glx`" >> "${HOSTCONF}"
+	#fi
 
 	# Get rid of glut includes
 	rm -f "${S}"/include/GL/glut*h
 
-	# Documented in configs/default
-	if use motif; then
-		# Add -lXm
-		echo "GLW_LIB_DEPS += -lXm" >> "${HOSTCONF}"
-		# Add GLwMDrawA.c
-		echo "GLW_SOURCES += GLwMDrawA.c" >> "${HOSTCONF}"
-	fi
+	myconf="${myconf} $(use_enable motif glw)"
 
-	# Shut up pointless warnings
-#	echo "MKDEP = gcc -M" >> "${HOSTCONF}"
-#	echo "MKDEP_OPTIONS = -MF depend" >> "${HOSTCONF}"
-	echo "MKDEP_OPTIONS = -fdepend -I$(gcc-config -L)/include" >> "${HOSTCONF}"
-	echo "INSTALL_DIR = /usr" >> "${HOSTCONF}"
-	echo 'DRI_DRIVER_INSTALL_DIR = /usr/$(LIB_DIR)/dri' >> "${HOSTCONF}"
-}
-
-src_compile() {
-	emake -j1 ${CONFIG} || die "Build failed"
+	econf ${myconf} || die
+	emake || die
 }
 
 src_install() {
 	dodir /usr
-	emake -j1 \
+	emake \
 		DESTDIR="${D}" \
 		install || die "Installation failed"
 
@@ -246,18 +197,8 @@ src_install() {
 		"${D}"/usr/$(get_libdir)/libGLU.la \
 		"${D}"/usr/$(get_libdir)/opengl/xorg-x11/lib/libGL.la
 
-	# Create the two-number versioned libs (.so.#.#), since only .so.# and
-	# .so.#.#.# were made
-	local MAJOR_2="$(printf "%.2i" $(get_version_component_range 1 ${PV}))"
-	local MINOR_2="$(printf "%.2i" $(get_version_component_range 2 ${PV}))"
-	local MICRO_2="$(printf "%.2i" $(get_version_component_range 3 ${PV}))"
-	dosym \
-		libGLU.so.1.3.${MAJOR_2}${MINOR_2}${MICRO_2} \
-		/usr/$(get_libdir)/libGLU.so.1.3
-	dosym libGLw.so.1.0.0 /usr/$(get_libdir)/libGLw.so.1.0
-
 	# libGLU doesn't get the plain .so symlink either
-	dosym libGLU.so.1 /usr/$(get_libdir)/libGLU.so
+	#dosym libGLU.so.1 /usr/$(get_libdir)/libGLU.so
 
 	# Figure out why libGL.so.1.5 is built (directfb), and why it's linked to
 	# as the default libGL.so.1
@@ -332,6 +273,8 @@ switch_opengl_implem() {
 driver_enable() {
 	if use $1; then
 		shift
-		DRI_DRIVERS="${DRI_DRIVERS} $@"
+		for i in $@; do
+			DRI_DRIVERS="${DRI_DRIVERS},${i}"
+		done
 	fi
 }
