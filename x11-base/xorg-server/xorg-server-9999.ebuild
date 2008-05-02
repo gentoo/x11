@@ -11,6 +11,9 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/xserver"
 
 OPENGL_DIR="xorg-x11"
 
+MESA_PN="mesa"
+MESA_P="${MESA_PN}"
+
 DESCRIPTION="X.Org X servers"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE_INPUT_DEVICES="
@@ -246,6 +249,12 @@ pkg_setup() {
 		conf_opts="${conf_opts} --disable-xsdl"
 	fi
 
+	# Only Xorg and Xgl support this, and we won't build Xgl
+	# until it merges to trunk
+	if use xorg; then
+		conf_opts="${conf_opts} --with-mesa-source=${WORKDIR}/${MESA_P}"
+	fi
+
 	# localstatedir is used for the log location; we need to override the default
 	# from ebuild.sh
 	# sysconfdir is used for the xorg.conf location; same applies
@@ -293,6 +302,7 @@ src_unpack() {
 	x-modular_dri_check
 
 	# Don't patch before everything's ready
+	PATCHES="" mesa_git_src_unpack
 	x-modular_unpack_source
 	x-modular_patch_source
 
@@ -530,4 +540,11 @@ ensure_a_server_is_building() {
 	eerror "You need to specify at least one server to build."
 	eerror "Valid servers are: ${IUSE_SERVERS}."
 	die "No servers were specified to build."
+}
+
+mesa_git_src_unpack() {
+	local EGIT_REPO_URI="git://anongit.freedesktop.org/mesa/mesa"
+	local EGIT_PROJECT="${MESA_PN}"
+	local S=${WORKDIR}/${MESA_PN}
+	git_src_unpack
 }
