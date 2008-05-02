@@ -4,7 +4,7 @@
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/mesa/mesa"
 
-inherit autotools eutils toolchain-funcs multilib flag-o-matic git portability versionator
+inherit autotools multilib flag-o-matic git portability
 
 OPENGL_DIR="xorg-x11"
 
