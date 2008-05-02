@@ -25,24 +25,12 @@ SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE="debug pic kernel_FreeBSD"
 
-RDEPEND="x11-libs/libX11
-	x11-libs/libXext
-	x11-libs/libXxf86vm
-	x11-libs/libXi
-	x11-libs/libXmu
-	x11-libs/libXdamage
-	>=x11-libs/libdrm-9999
-	x11-libs/libICE
-	>=x11-base/xorg-server-9999"
+RDEPEND=">=x11-base/xorg-server-9999"
 DEPEND="${RDEPEND}
-	!<=x11-proto/xf86driproto-2.0.3
 	dev-util/pkgconfig
 	x11-misc/makedepend
-	x11-proto/inputproto
+	x11-libs/libX11
 	x11-proto/xextproto
-	!hppa? ( x11-proto/xf86driproto )
-	x11-proto/dri2proto
-	x11-proto/xf86vidmodeproto
 	>=x11-proto/glproto-1.4.8"
 
 S="${WORKDIR}/${MY_P}"
