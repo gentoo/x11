@@ -48,7 +48,10 @@ IUSE_INPUT_DEVICES="
 	input_devices_synaptics
 	input_devices_wacom"
 IUSE_VIDEO_CARDS="
+	video_cards_chips
+	video_cards_epson
 	video_cards_fbdev
+	video_cards_glint
 	video_cards_i810
 	video_cards_mach64
 	video_cards_mga
@@ -57,8 +60,11 @@ IUSE_VIDEO_CARDS="
 	video_cards_radeon
 	video_cards_rendition
 	video_cards_savage
+	video_cards_siliconmotion
+	video_cards_sis
 	video_cards_tdfx
 	video_cards_vesa
+	video_cards_via
 	video_cards_vmware
 	video_cards_xgi"
 IUSE_SERVERS="dmx kdrive xorg"
@@ -237,7 +243,10 @@ PDEPEND="${PDEPEND}
 	)"
 LICENSE="${LICENSE} MIT"
 
-PATCHES=""
+PATCHES=(
+	"${FILESDIR}/9999-fix-kdrive-automake.patch"
+	"${FILESDIR}/1.4-fpic-libxf86config.patch"
+	)
 
 pkg_setup() {
 	use minimal || ensure_a_server_is_building
@@ -290,11 +299,6 @@ pkg_setup() {
 
 	# (#121394) Causes window corruption
 	filter-flags -fweb
-
-	# Nothing else provides new enough glxtokens.h
-	ewarn "Forcing on xorg-x11 for new enough glxtokens.h..."
-	OLD_IMPLEM="$(eselect opengl show)"
-	eselect opengl set --impl-headers ${OPENGL_DIR}
 }
 
 src_unpack() {
@@ -410,7 +414,7 @@ kdrive_setup() {
 		fi
 
 		if ! use ${card}; then
-			if use x86; then
+			if use x86 || use amd64; then
 				# Some kdrive servers require fbdev and vesa
 				for i in ${kdrive_fbdev}; do
 					if use video_cards_${i}; then
@@ -433,7 +437,7 @@ kdrive_setup() {
 			disable_card=1
 		# Bug #150052
 		# fbdev is the only VIDEO_CARDS setting that works on non-x86
-		elif ! use x86 \
+		elif ! use x86 && ! use amd64 \
 			&& [[ ${real_card} != fbdev ]]; then
 			ewarn "  $real_card does not work on your architecture; disabling."
 			disable_card=1
@@ -488,8 +492,7 @@ switch_opengl_implem() {
 		# Use new opengl-update that will not reset user selected
 		# OpenGL interface ...
 		echo
-#		eselect opengl set --use-old ${OPENGL_DIR}
-		eselect opengl set ${OLD_IMPLEM}
+		eselect opengl set --use-old ${OPENGL_DIR}
 }
 
 print_installed() {
