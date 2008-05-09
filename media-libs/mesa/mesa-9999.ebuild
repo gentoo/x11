@@ -43,6 +43,7 @@ IUSE="${IUSE_VIDEO_CARDS}
 	pic
 	motif
 	nptl
+	xcb
 	kernel_FreeBSD"
 
 RDEPEND="app-admin/eselect-opengl
@@ -75,14 +76,13 @@ S="${WORKDIR}/${MY_P}"
 # Think about: ggi, svga, fbcon, no-X configs
 
 pkg_setup() {
-	## No XCB support yet
-	#if use xcb; then
-	#	if ! built_with_use x11-libs/libX11 xcb; then
-	#		msg="You must build libX11 with xcb enabled."
-	#		eerror ${msg}
-	#		die ${msg}
-	#	fi
-	#fi
+	if use xcb; then
+		if ! built_with_use x11-libs/libX11 xcb; then
+			msg="You must build libX11 with xcb enabled."
+			eerror ${msg}
+			die ${msg}
+		fi
+	fi
 
 	if use debug; then
 		strip-flags
@@ -117,9 +117,6 @@ src_compile() {
 	# This is where we might later change to build xlib/osmesa
 	myconf="${myconf} --with-driver=dri"
 
-	# Set default dri drivers directory
-	myconf="${myconf} --with-dri-driverdir=/usr/$(get_libdir)/dri"
-
 	# Do we want thread-local storage (TLS)?
 	myconf="${myconf} $(use_enable nptl glx-tls)"
 
@@ -150,12 +147,7 @@ src_compile() {
 
 	myconf="${myconf} --without-demos"
 
-	## No XCB support yet
-	#if use xcb; then
-	#	echo "DEFINES += -DUSE_XCB" >> "${HOSTCONF}"
-	#	echo "X11_INCLUDES += `pkg-config --cflags-only-I xcb` `pkg-config --cflags-only-I x11-xcb` `pkg-config --cflags-only-I xcb-glx`" >> "${HOSTCONF}"
-	#	echo "GL_LIB_DEPS += `pkg-config --libs xcb` `pkg-config --libs x11-xcb` `pkg-config --libs xcb-glx`" >> "${HOSTCONF}"
-	#fi
+	myconf="${myconf} $(use_enable xcb)"
 
 	# Get rid of glut includes
 	rm -f "${S}"/include/GL/glut*h
