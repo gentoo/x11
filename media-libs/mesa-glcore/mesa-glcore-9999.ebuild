@@ -3,6 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/media-libs/mesa/mesa-7.0.2.ebuild,v 1.6 2007/11/16 18:16:30 dberkholz Exp $
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/mesa/mesa"
+EGIT_PROJECT="mesa"
 
 inherit autotools multilib flag-o-matic git
 
