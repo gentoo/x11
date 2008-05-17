@@ -243,10 +243,7 @@ PDEPEND="${PDEPEND}
 	)"
 LICENSE="${LICENSE} MIT"
 
-PATCHES=(
-	"${FILESDIR}/9999-fix-kdrive-automake.patch"
-	"${FILESDIR}/1.4-fpic-libxf86config.patch"
-	)
+PATCHES="${FILESDIR}/1.4-fpic-libxf86config.patch"
 
 pkg_setup() {
 	use minimal || ensure_a_server_is_building
