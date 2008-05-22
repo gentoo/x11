@@ -121,6 +121,7 @@ src_compile() {
 	myconf="${myconf} $(use_enable nptl glx-tls)"
 
 	# Configurable DRI drivers
+	driver_enable swrast
 	driver_enable video_cards_i810 i810 i915 i965
 	driver_enable video_cards_mach64 mach64
 	driver_enable video_cards_mga mga
@@ -263,10 +264,18 @@ switch_opengl_implem() {
 # $1 - VIDEO_CARDS flag
 # other args - names of DRI drivers to enable
 driver_enable() {
-	if use $1; then
-		shift
-		for i in $@; do
-			DRI_DRIVERS="${DRI_DRIVERS},${i}"
-		done
-	fi
+	case $# in
+		# for enabling unconditionally
+		1)
+			DRI_DRIVERS="${DRI_DRIVERS},$1"
+			;;
+		*)
+			if use $1; then
+				shift
+				for i in $@; do
+					DRI_DRIVERS="${DRI_DRIVERS},${i}"
+				done
+			fi
+			;;
+	esac
 }
