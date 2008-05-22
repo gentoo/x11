@@ -149,9 +149,6 @@ DEPEND="${RDEPEND}
 		>=x11-apps/mkfontscale-1.0.3
 		>=x11-apps/xplsprinters-1.0.1 )"
 
-PDEPEND="${PDEPEND}
-	>=media-libs/mesa-glcore-9999"
-
 # Drivers
 PDEPEND="${PDEPEND}
 	xorg? (
