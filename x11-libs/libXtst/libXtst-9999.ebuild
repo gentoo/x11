@@ -11,4 +11,5 @@ RDEPEND="x11-libs/libX11
 	x11-proto/recordproto
 	x11-libs/libXext"
 DEPEND="${RDEPEND}
-	x11-proto/inputproto"
+	x11-proto/inputproto
+	app-text/xmlto"
