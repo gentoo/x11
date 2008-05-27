@@ -256,6 +256,7 @@ pkg_setup() {
 		$(use_enable ipv6)
 		$(use_enable dmx)
 		$(use_enable kdrive)
+		$(use_enable x86 kdrive-vesa)
 		$(use_enable !minimal xvfb)
 		$(use_enable !minimal xnest)
 		$(use_enable !minimal xfree86-utils)
