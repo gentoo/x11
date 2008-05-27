@@ -293,14 +293,6 @@ src_unpack() {
 	x-modular_unpack_source
 	x-modular_patch_source
 
-	# Make sure eautoreconf gets run if we need the autoconf/make
-	# changes.
-	if [[ ${SNAPSHOT} != "yes" ]]; then
-		if use dmx; then
-			SNAPSHOT="yes"
-		fi
-	fi
-
 	if use hal; then
 		sed -i \
 			-e "s:^\(dbusconfigdir = \).*\(dbus-1.*\):\1/etc/\2:g" \
