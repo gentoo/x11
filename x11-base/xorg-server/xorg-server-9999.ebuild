@@ -337,11 +337,11 @@ pkg_postinst() {
 	ewarn "Make sure your reduced blanking modelines are safe!"
 
 	echo
-	ewarn "You must rebuild all video drivers if upgrading from xorg-server 1.4"
-	ewarn "or earlier, because they access PCI space differently. If you cannot start X"
-	ewarn "because of module version mismatch errors, this is your problem."
+	ewarn "Rebuild all drivers if upgrading from a build before May 27, 2008,"
+	ewarn "or earlier, If you cannot start X because of module version mismatch errors,"
+	ewarn "this is your problem."
 
-	print_installed x11-drivers/xf86-video
+	print_installed x11-drivers/
 
 	ebeep 5
 	epause 10
