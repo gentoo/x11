@@ -8,6 +8,8 @@
 =x11-base/x11-drm-99999999
 =x11-base/xorg-server-9999
 =x11-drivers/xf86-input-evdev-9999
+=x11-drivers/xf86-input-keyboard-9999
+=x11-drivers/xf86-input-mouse-9999
 =x11-drivers/xf86-video-ati-9999
 =x11-drivers/xf86-video-ati-9999_pre12
 =x11-drivers/xf86-video-i810-9999
@@ -22,6 +24,7 @@
 =x11-libs/pixman-9999
 =x11-libs/xcb-util-9999
 =x11-misc/xcb-demo-9999
+=x11-misc/xinput-9999
 =x11-proto/bigreqsproto-9999
 =x11-proto/calibrateproto-9999
 =x11-proto/compositeproto-9999
