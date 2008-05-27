@@ -66,7 +66,7 @@ IUSE="${IUSE_VIDEO_CARDS}
 	${IUSE_INPUT_DEVICES}
 	${IUSE_SERVERS}
 	3dfx
-	dri hal ipv6 minimal nptl sdl xprint"
+	dri hal ipv6 minimal nptl sdl"
 RDEPEND="hal? ( sys-apps/hal )
 	>=x11-libs/libXfont-1.3.1
 	>=x11-libs/xtrans-1.0.4
@@ -137,11 +137,7 @@ DEPEND="${RDEPEND}
 	dmx? ( >=x11-proto/dmxproto-2.2.2 )
 	dri? ( >=x11-proto/xf86driproto-2.0.3
 		>=x11-proto/dri2proto-9999
-		>=x11-libs/libdrm-2.3 )
-	xprint? ( >=x11-proto/printproto-1.0.3
-		>=x11-apps/mkfontdir-1.0.3
-		>=x11-apps/mkfontscale-1.0.3
-		>=x11-apps/xplsprinters-1.0.1 )"
+		>=x11-libs/libdrm-2.3 )"
 
 # Drivers
 PDEPEND="${PDEPEND}
@@ -266,7 +262,6 @@ pkg_setup() {
 		$(use_enable !minimal install-libxf86config)
 		$(use_enable dri)
 		$(use_enable xorg)
-		$(use_enable xprint)
 		$(use_enable nptl glx-tls)
 		$(use_enable !minimal xorgcfg)
 		$(use_enable hal config-dbus)
@@ -301,7 +296,7 @@ src_unpack() {
 	# Make sure eautoreconf gets run if we need the autoconf/make
 	# changes.
 	if [[ ${SNAPSHOT} != "yes" ]]; then
-		if use dmx || use xprint; then
+		if use dmx; then
 			SNAPSHOT="yes"
 		fi
 	fi
@@ -382,8 +377,6 @@ dynamic_libgl_install() {
 }
 
 server_based_install() {
-	use xprint && xprint_src_install
-
 	if ! use xorg; then
 		rm "${D}"/usr/share/man/man1/Xserver.1x \
 			"${D}"/usr/$(get_libdir)/xserver/SecurityPolicy \
@@ -419,26 +412,6 @@ print_installed() {
 	while read line; do
 		ewarn "${line}"
 	done < <(eval ${command})
-}
-
-xprint_src_install() {
-	# RH-style init script, we provide a wrapper
-	exeinto /usr/$(get_libdir)/misc
-	doexe "${S}"/hw/xprint/etc/init.d/xprint
-	# Install the wrapper
-	newinitd "${FILESDIR}"/xprint.init xprint
-	# Install profile scripts
-	insinto /etc/profile.d
-	doins "${S}"/hw/xprint/etc/profile.d/xprint*
-	exeinto /etc/X11/xinit/xinitrc.d
-	doexe "${S}"/hw/xprint/etc/Xsession.d/92xprint-xpserverlist
-	# Patch profile scripts
-	sed -e "s:/etc/init.*get_xpserverlist:/usr/$(get_libdir)/misc/xprint \
-		get_xpserverlist:g" -i "${D}"/etc/profile.d/xprint* \
-		"${D}"/etc/X11/xinit/xinitrc.d/92xprint-xpserverlist
-	# Move profile scripts, we can't touch /etc/profile.d/ in Gentoo
-	dodoc "${D}"/etc/profile.d/xprint*
-	rm -f "${D}"/etc/profile.d/xprint*
 }
 
 ensure_a_server_is_building() {
