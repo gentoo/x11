@@ -85,7 +85,6 @@ pkg_setup() {
 	fi
 
 	if use debug; then
-		strip-flags
 		append-flags -g
 	fi
 
@@ -93,6 +92,9 @@ pkg_setup() {
 	if [[ $(gcc-version) = "4.2" ]]; then
 		append-flags -fno-ivopts
 	fi
+
+	# recommended by upstream
+	append-flags -ffast-math
 }
 
 src_unpack() {

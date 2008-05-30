@@ -10,7 +10,7 @@ OPENGL_DIR="xorg-x11"
 
 MY_PN="${PN/m/M}"
 MY_P="${MY_PN}-${PV//_}"
-MY_SRC_P="${MY_PN}Lib-${PV//_}"
+MY_SRC_P="${MY_PN}Lib-${PV/_/-}"
 DESCRIPTION="OpenGL-like graphic library for Linux"
 HOMEPAGE="http://mesa3d.sourceforge.net/"
 if [[ $PV = *_rc* ]]; then
@@ -85,7 +85,6 @@ pkg_setup() {
 	fi
 
 	if use debug; then
-		strip-flags
 		append-flags -g
 	fi
 
@@ -93,6 +92,9 @@ pkg_setup() {
 	if [[ $(gcc-version) = "4.2" ]]; then
 		append-flags -fno-ivopts
 	fi
+
+	# recommended by upstream
+	append-flags -ffast-math
 }
 
 src_unpack() {
