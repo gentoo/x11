@@ -11,4 +11,5 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~spar
 
 RDEPEND=""
 DEPEND="${RDEPEND}
-	dev-libs/libxml2"
+	dev-libs/libxml2
+	>=dev-lang/python-2.5"

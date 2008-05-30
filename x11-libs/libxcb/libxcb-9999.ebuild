@@ -13,4 +13,5 @@ RDEPEND="x11-libs/libXau
 	dev-libs/libpthread-stubs"
 DEPEND="${RDEPEND}
 	dev-libs/libxslt
-	>=x11-proto/xcb-proto-9999"
+	>=x11-proto/xcb-proto-9999
+	>=dev-lang/python-2.5"
