@@ -80,7 +80,7 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=x11-libs/libXi-9999
 	>=x11-libs/pixman-0.9.5
 	media-libs/freetype
-	>=media-libs/mesa-9999
+	>=media-libs/mesa-7.1_rc1
 	media-fonts/font-adobe-75dpi
 	media-fonts/font-misc-misc
 	media-fonts/font-cursor-misc
