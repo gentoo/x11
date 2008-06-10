@@ -125,7 +125,7 @@ RDEPEND="hal? ( sys-apps/hal )
 	media-fonts/font-misc-misc
 	media-fonts/font-cursor-misc
 	>=x11-misc/xbitmaps-1.0.1
-	>=x11-misc/xkeyboard-config-1.2
+	>=x11-misc/xkeyboard-config-1.3
 	>=x11-apps/iceauth-1.0.2
 	>=x11-apps/rgb-1.0.3
 	>=x11-apps/xauth-1.0.3
