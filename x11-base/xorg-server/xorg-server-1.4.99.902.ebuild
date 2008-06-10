@@ -323,6 +323,7 @@ pkg_setup() {
 		$(use_enable !minimal xorgcfg)
 		$(use_enable hal config-dbus)
 		$(use_enable hal config-hal)
+		--disable-dri2
 		--disable-xprint
 		--sysconfdir=/etc/X11
 		--localstatedir=/var
