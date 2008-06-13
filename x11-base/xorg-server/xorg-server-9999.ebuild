@@ -11,9 +11,6 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/xserver"
 
 OPENGL_DIR="xorg-x11"
 
-MESA_PN="mesa"
-MESA_P="${MESA_PN}"
-
 DESCRIPTION="X.Org X servers"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE_INPUT_DEVICES="
@@ -68,7 +65,7 @@ IUSE="${IUSE_VIDEO_CARDS}
 	3dfx
 	dri hal ipv6 minimal nptl sdl"
 RDEPEND="hal? ( sys-apps/hal )
-	>=x11-libs/libXfont-1.3.1
+	>=x11-libs/libXfont-1.3.2
 	>=x11-libs/xtrans-1.0.4
 	>=x11-libs/libXau-1.0.3
 	>=x11-libs/libXext-9999
@@ -78,24 +75,24 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=x11-libs/libXmu-1.0.3
 	>=x11-libs/libXrender-0.9.4
 	>=x11-libs/libXi-9999
-	>=x11-libs/pixman-0.9.5
+	>=x11-libs/pixman-0.11.4
 	media-libs/freetype
 	>=media-libs/mesa-7.1_rc1
 	media-fonts/font-adobe-75dpi
 	media-fonts/font-misc-misc
 	media-fonts/font-cursor-misc
 	>=x11-misc/xbitmaps-1.0.1
-	>=x11-misc/xkeyboard-config-0.9
+	>=x11-misc/xkeyboard-config-1.3
 	>=x11-apps/iceauth-1.0.2
-	>=x11-apps/rgb-1.0.1
-	>=x11-apps/xauth-1.0.2
-	>=x11-apps/xinit-1.0.5
+	>=x11-apps/rgb-1.0.3
+	>=x11-apps/xauth-1.0.3
+	>=x11-apps/xinit-1.0.8
 	app-admin/eselect-opengl
 	>=x11-libs/libXaw-1.0.4
 	>=x11-libs/libXpm-3.5.7
 	>=x11-libs/libXxf86misc-1.0.1
 	>=x11-libs/libXxf86vm-1.0.1
-	>=x11-libs/libpciaccess-9999
+	>=x11-libs/libpciaccess-0.10
 	dmx? ( >=x11-libs/libdmx-1.0.2
 			>=x11-libs/libXfixes-4.0.3 )
 	!minimal? ( >=x11-libs/libXtst-1.0.3
@@ -127,7 +124,7 @@ DEPEND="${RDEPEND}
 	>=x11-proto/scrnsaverproto-1.1.0
 	>=x11-proto/evieext-1.0.2
 	>=x11-proto/trapproto-3.4.3
-	>=x11-proto/xineramaproto-1.1-r1
+	>=x11-proto/xineramaproto-1.1.2
 	>=x11-proto/fontsproto-2.0.2
 	>=x11-proto/kbproto-1.0.3
 	>=x11-proto/inputproto-9999
@@ -136,55 +133,55 @@ DEPEND="${RDEPEND}
 	>=x11-proto/glproto-1.4.9
 	dmx? ( >=x11-proto/dmxproto-2.2.2 )
 	dri? ( >=x11-proto/xf86driproto-2.0.3
-		>=x11-proto/dri2proto-9999
+		>=x11-proto/dri2proto-1.1
 		>=x11-libs/libdrm-2.3 )"
 
 # Drivers
 PDEPEND="${PDEPEND}
 	xorg? (
-		input_devices_acecad? ( >=x11-drivers/xf86-input-acecad-1.1.0 )
-		input_devices_aiptek? ( >=x11-drivers/xf86-input-aiptek-1.0.1 )
-		input_devices_calcomp? ( >=x11-drivers/xf86-input-calcomp-1.1.1 )
+		input_devices_acecad? ( >=x11-drivers/xf86-input-acecad-1.2.2 )
+		input_devices_aiptek? ( >=x11-drivers/xf86-input-aiptek-1.1.1 )
+		input_devices_calcomp? ( >=x11-drivers/xf86-input-calcomp-1.1.2 )
 		input_devices_citron? ( >=x11-drivers/xf86-input-citron-2.2.1 )
-		input_devices_digitaledge? ( >=x11-drivers/xf86-input-digitaledge-1.1.0 )
-		input_devices_dmc? ( >=x11-drivers/xf86-input-dmc-1.1.0 )
-		input_devices_dynapro? ( >=x11-drivers/xf86-input-dynapro-1.1.1 )
-		input_devices_elo2300? ( >=x11-drivers/xf86-input-elo2300-1.1.1 )
-		input_devices_elographics? ( >=x11-drivers/xf86-input-elographics-1.1.0 )
-		input_devices_evdev? ( >=x11-drivers/xf86-input-evdev-1.1.1 )
-		input_devices_fpit? ( >=x11-drivers/xf86-input-fpit-1.1.0 )
-		input_devices_hyperpen? ( >=x11-drivers/xf86-input-hyperpen-1.1.0 )
-		input_devices_jamstudio? ( >=x11-drivers/xf86-input-jamstudio-1.1.0 )
-		input_devices_joystick? ( >=x11-drivers/xf86-input-joystick-1.1.0 )
-		input_devices_keyboard? ( >=x11-drivers/xf86-input-keyboard-1.2.0 )
-		input_devices_magellan? ( >=x11-drivers/xf86-input-magellan-1.1.1 )
-		input_devices_microtouch? ( >=x11-drivers/xf86-input-microtouch-1.1.1 )
-		input_devices_mouse? ( >=x11-drivers/xf86-input-mouse-1.1.0 )
-		input_devices_mutouch? ( >=x11-drivers/xf86-input-mutouch-1.1.0 )
-		input_devices_palmax? ( >=x11-drivers/xf86-input-palmax-1.1.0 )
-		input_devices_penmount? ( >=x11-drivers/xf86-input-penmount-1.2.1 )
+		input_devices_digitaledge? ( >=x11-drivers/xf86-input-digitaledge-1.1.1 )
+		input_devices_dmc? ( >=x11-drivers/xf86-input-dmc-1.1.2 )
+		input_devices_dynapro? ( >=x11-drivers/xf86-input-dynapro-1.1.2 )
+		input_devices_elo2300? ( >=x11-drivers/xf86-input-elo2300-1.1.2 )
+		input_devices_elographics? ( >=x11-drivers/xf86-input-elographics-1.2.1 )
+		input_devices_evdev? ( >=x11-drivers/xf86-input-evdev-1.99.2-r2 )
+		input_devices_fpit? ( >=x11-drivers/xf86-input-fpit-1.2.0 )
+		input_devices_hyperpen? ( >=x11-drivers/xf86-input-hyperpen-1.2.0 )
+		input_devices_jamstudio? ( >=x11-drivers/xf86-input-jamstudio-1.2.0 )
+		input_devices_joystick? ( >=x11-drivers/xf86-input-joystick-1.3.2 )
+		input_devices_keyboard? ( >=x11-drivers/xf86-input-keyboard-1.3.1 )
+		input_devices_magellan? ( >=x11-drivers/xf86-input-magellan-1.2.0 )
+		input_devices_microtouch? ( >=x11-drivers/xf86-input-microtouch-1.2.0 )
+		input_devices_mouse? ( >=x11-drivers/xf86-input-mouse-1.3.0 )
+		input_devices_mutouch? ( >=x11-drivers/xf86-input-mutouch-1.2.0 )
+		input_devices_palmax? ( >=x11-drivers/xf86-input-palmax-1.2.0 )
+		input_devices_penmount? ( >=x11-drivers/xf86-input-penmount-1.3.0 )
 		input_devices_spaceorb? ( >=x11-drivers/xf86-input-spaceorb-1.1.1 )
-		input_devices_summa? ( >=x11-drivers/xf86-input-summa-1.1.0 )
-		input_devices_tek4957? ( >=x11-drivers/xf86-input-tek4957-1.1.0 )
+		input_devices_summa? ( >=x11-drivers/xf86-input-summa-1.2.0 )
+		input_devices_tek4957? ( >=x11-drivers/xf86-input-tek4957-1.2.0 )
 		input_devices_ur98? ( >=x11-drivers/xf86-input-ur98-1.1.0 )
-		input_devices_vmmouse? ( >=x11-drivers/xf86-input-vmmouse-12.4.2 )
-		input_devices_void? ( >=x11-drivers/xf86-input-void-1.1.0 )
+		input_devices_vmmouse? ( >=x11-drivers/xf86-input-vmmouse-12.5.0 )
+		input_devices_void? ( >=x11-drivers/xf86-input-void-1.1.1 )
 
 		input_devices_synaptics? ( x11-drivers/synaptics )
 		input_devices_wacom? ( x11-drivers/linuxwacom )
 
-		video_cards_fbdev? ( >=x11-drivers/xf86-video-fbdev-0.2.0 )
-		video_cards_i810? ( >=x11-drivers/xf86-video-i810-1.9.91 )
-		video_cards_mach64? ( >=x11-drivers/xf86-video-ati-6.6.0 )
-		video_cards_mga? ( >=x11-drivers/xf86-video-mga-1.4.7 )
-		video_cards_nv? ( >=x11-drivers/xf86-video-nv-2.1.5 )
-		video_cards_r128? ( >=x11-drivers/xf86-video-ati-6.6.0 )
-		video_cards_radeon? ( >=x11-drivers/xf86-video-ati-6.6.0 )
-		video_cards_rendition? ( >=x11-drivers/xf86-video-rendition-4.1.0 )
-		video_cards_savage? ( >=x11-drivers/xf86-video-savage-2.1.1 )
-		video_cards_tdfx? ( >=x11-drivers/xf86-video-tdfx-1.2.1 )
-		video_cards_vesa? ( >=x11-drivers/xf86-video-vesa-1.1.0 )
-		video_cards_vmware? ( >=x11-drivers/xf86-video-vmware-10.13.0 )
+		video_cards_fbdev? ( >=x11-drivers/xf86-video-fbdev-0.4.0 )
+		video_cards_i810? ( >=x11-drivers/xf86-video-i810-2.3.1-r1 )
+		video_cards_mach64? ( >=x11-drivers/xf86-video-ati-6.8.0-r1 )
+		video_cards_mga? ( >=x11-drivers/xf86-video-mga-1.4.8 )
+		video_cards_nv? ( >=x11-drivers/xf86-video-nv-2.1.9 )
+		video_cards_r128? ( >=x11-drivers/xf86-video-ati-6.8.0-r1 )
+		video_cards_radeon? ( >=x11-drivers/xf86-video-ati-6.8.0-r1 )
+		video_cards_rendition? ( >=x11-drivers/xf86-video-rendition-4.2.0 )
+		video_cards_savage? ( >=x11-drivers/xf86-video-savage-2.2.1 )
+		video_cards_tdfx? ( >=x11-drivers/xf86-video-tdfx-1.4.0 )
+		video_cards_vesa? ( >=x11-drivers/xf86-video-vesa-1.3.0 )
+		video_cards_vmware? ( >=x11-drivers/xf86-video-vmware-10.16.0 )
 		video_cards_xgi? ( >=x11-drivers/xf86-video-xgi-1.5.0 )
 
 		video_cards_tdfx? ( 3dfx? ( >=media-libs/glide-v3-3.10 ) )
@@ -206,7 +203,6 @@ PDEPEND="${PDEPEND}
 		!x11-drivers/xf86-video-neomagic
 		!x11-drivers/xf86-video-newport
 		!x11-drivers/xf86-video-nsc
-		!x11-drivers/xf86-video-nv
 		!x11-drivers/xf86-video-s3
 		!x11-drivers/xf86-video-s3virge
 		!x11-drivers/xf86-video-siliconmotion
@@ -240,12 +236,6 @@ pkg_setup() {
 		conf_opts="${conf_opts} --enable-xsdl"
 	else
 		conf_opts="${conf_opts} --disable-xsdl"
-	fi
-
-	# Only Xorg and Xgl support this, and we won't build Xgl
-	# until it merges to trunk
-	if use xorg; then
-		conf_opts="${conf_opts} --with-mesa-source=${WORKDIR}/${MESA_P}"
 	fi
 
 	# localstatedir is used for the log location; we need to override the default
@@ -288,9 +278,6 @@ pkg_setup() {
 src_unpack() {
 	x-modular_specs_check
 	x-modular_dri_check
-
-	# Don't patch before everything's ready
-	PATCHES="" mesa_git_src_unpack
 	x-modular_unpack_source
 	x-modular_patch_source
 
@@ -341,7 +328,10 @@ pkg_postinst() {
 	ewarn "or earlier, If you cannot start X because of module version mismatch errors,"
 	ewarn "this is your problem."
 
-	print_installed x11-drivers/
+	echo
+	ewarn "You can generate a list of all installed packages in the x11-drivers"
+	ewarn "category using this command:"
+	ewarn "emerge portage-utils; qlist -I -C x11-drivers/"
 
 	ebeep 5
 	epause 10
@@ -386,27 +376,6 @@ switch_opengl_implem() {
 		eselect opengl set --use-old ${OPENGL_DIR}
 }
 
-print_installed() {
-	local command line token=$1
-
-	if $(type -P qlist >/dev/null 2>&1); then
-		command="qlist -I -v -C ${token}"
-	elif $(type -P equery >/dev/null 2>&1); then
-		command="equery -q -C list ${token} | grep -o '${token}[[:alnum:].-]*'"
-	elif $(type -P epm >/dev/null 2>&1); then
-		command="epm -qaG | grep ${token}"
-	else
-		local dir
-		command="true"
-		for dir in "${PORTDIR}"/${token}*; do
-			command="${command} ; best_version ${dir#${PORTDIR}/}"
-		done
-	fi
-	while read line; do
-		ewarn "${line}"
-	done < <(eval ${command})
-}
-
 ensure_a_server_is_building() {
 	for server in ${IUSE_SERVERS}; do
 		use ${server} && return;
@@ -414,11 +383,4 @@ ensure_a_server_is_building() {
 	eerror "You need to specify at least one server to build."
 	eerror "Valid servers are: ${IUSE_SERVERS}."
 	die "No servers were specified to build."
-}
-
-mesa_git_src_unpack() {
-	local EGIT_REPO_URI="git://anongit.freedesktop.org/mesa/mesa"
-	local EGIT_PROJECT="${MESA_PN}"
-	local S=${WORKDIR}/${MESA_PN}
-	git_src_unpack
 }
