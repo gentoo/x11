@@ -110,7 +110,7 @@ index 9c327d1..9d61087 100644
 +    dpy->xcb->real_bufmax = dpy->bufmax;
 +    dpy->bufmax = dpy->buffer;
 +#endif
-  
+ 
  	/* Set up the input event queue and input event queue parameters. */
  	dpy->head = dpy->tail = NULL;
 @@ -651,6 +648,12 @@ XOpenDisplay (
