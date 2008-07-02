@@ -56,7 +56,7 @@ RDEPEND="app-admin/eselect-opengl
 	x11-libs/libXdamage
 	>=x11-libs/libdrm-9999
 	x11-libs/libICE
-	motif? ( virtual/motif )
+	motif? ( x11-libs/openmotif )
 	doc? ( app-doc/opengl-manpages )
 	!<=x11-base/xorg-x11-6.9"
 DEPEND="${RDEPEND}
