@@ -66,7 +66,7 @@ IUSE="${IUSE_VIDEO_CARDS}
 	dri hal ipv6 minimal nptl sdl"
 RDEPEND="hal? ( sys-apps/hal )
 	>=x11-libs/libXfont-1.3.2
-	>=x11-libs/xtrans-1.0.4
+	=x11-libs/xtrans-9999
 	>=x11-libs/libXau-1.0.3
 	>=x11-libs/libXext-9999
 	>=x11-libs/libX11-9999
