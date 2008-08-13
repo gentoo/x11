@@ -100,10 +100,9 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=x11-libs/libxkbui-1.0.2
 	>=x11-libs/liblbxutil-1.0.1
 	kdrive? ( sdl? ( media-libs/libsdl ) )"
-	# Xres is dmx-dependent, xkbui is xorgcfg-dependent
-	# Xaw is dmx- and xorgcfg-dependent
-	# Xpm is dmx- and xorgcfg-dependent, pulls in Xt
-	# Xxf86misc and Xxf86vm are xorgcfg-dependent
+	# Xres is dmx-dependent
+	# Xaw is dmx-dependent
+	# Xpm is dmx-dependent, pulls in Xt
 	# liblbxutil is lbx- dependent
 DEPEND="${RDEPEND}
 	>=x11-proto/randrproto-1.2.1
@@ -255,7 +254,6 @@ pkg_setup() {
 		$(use_enable dri)
 		$(use_enable xorg)
 		$(use_enable nptl glx-tls)
-		$(use_enable !minimal xorgcfg)
 		$(use_enable hal config-dbus)
 		$(use_enable hal config-hal)
 		--sysconfdir=/etc/X11
