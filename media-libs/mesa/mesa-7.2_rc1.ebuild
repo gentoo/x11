@@ -146,10 +146,10 @@ src_compile() {
 	myconf="${myconf} --with-dri-drivers=${DRI_DRIVERS}"
 
 	# Deactivate assembly code for pic build
-	myconf="${myconf} $(use_enable pic asm)"
+	myconf="${myconf} $(use_enable !pic asm)"
 
 	# Sparc assembly code is not working
-	myconf="${myconf} $(use_enable sparc asm)"
+	myconf="${myconf} $(use_enable !sparc asm)"
 
 	myconf="${myconf} --disable-glut"
 
