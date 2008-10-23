@@ -19,6 +19,8 @@ KEYWORDS="~alpha amd64 ~arm hppa ia64 ~mips ppc ppc64 ~s390 ~sh ~sparc x86 ~x86-
 RDEPEND=""
 DEPEND="${RDEPEND}"
 
+CONFIGURE_OPTIONS="--enable-udev"
+
 pkg_preinst() {
 	x-modular_pkg_preinst
 
