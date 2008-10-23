@@ -272,7 +272,7 @@ RDEPEND="
 		!x11-drivers/xf86-video-glint
 		!x11-drivers/xf86-video-i128
 		!x11-drivers/xf86-video-i740
-		!x11-drivers/xf86-video-i810
+		!x11-drivers/xf86-video-intel
 		!x11-drivers/xf86-video-imstt
 		!x11-drivers/xf86-video-mga
 		!x11-drivers/xf86-video-neomagic

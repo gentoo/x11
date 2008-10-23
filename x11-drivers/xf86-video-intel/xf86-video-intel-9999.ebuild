@@ -3,21 +3,13 @@
 # $Header: /var/cvsroot/gentoo-x86/x11-drivers/xf86-video-i810/xf86-video-i810-2.0.0.ebuild,v 1.1 2007/04/21 05:56:37 joshuabaergen Exp $
 
 # Must be before x-modular eclass is inherited
-# Enable snapshot to get the man page in the right place
-# This should be fixed with a XDP patch later
-SNAPSHOT="yes"
-XDPVER=-1
+#SNAPSHOT="yes"
 
-EGIT_BRANCH="xf86-video-intel-2.4-branch"
-
-inherit x-modular git
-
-EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/driver/${PN/i810/intel}"
+inherit x-modular
 
 DESCRIPTION="X.Org driver for Intel cards"
 
 KEYWORDS="~amd64 ~arm ~ia64 ~sh ~x86 ~x86-fbsd"
-SRC_URI=""
 IUSE="dri"
 
 RDEPEND=">=x11-base/xorg-server-1.2
@@ -32,7 +24,6 @@ DEPEND="${RDEPEND}
 			>=x11-libs/libdrm-2.2
 			x11-libs/libX11 )"
 
-PATCHES=("${FILESDIR}/0001-intel-fix-drm-check.patch")
 CONFIGURE_OPTIONS="$(use_enable dri)"
 
 pkg_setup() {

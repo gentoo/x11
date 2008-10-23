@@ -46,7 +46,7 @@ IUSE_INPUT_DEVICES="
 	input_devices_wacom"
 IUSE_VIDEO_CARDS="
 	video_cards_fbdev
-	video_cards_i810
+	video_cards_intel
 	video_cards_mach64
 	video_cards_mga
 	video_cards_nv
@@ -170,7 +170,7 @@ PDEPEND="${PDEPEND}
 		input_devices_wacom? ( x11-drivers/linuxwacom )
 
 		video_cards_fbdev? ( >=x11-drivers/xf86-video-fbdev-0.4.0 )
-		video_cards_i810? ( >=x11-drivers/xf86-video-i810-2.3.1-r1 )
+		video_cards_intel? ( >=x11-drivers/xf86-video-intel-2.3.1-r1 )
 		video_cards_mach64? ( >=x11-drivers/xf86-video-ati-6.8.0-r1 )
 		video_cards_mga? ( >=x11-drivers/xf86-video-mga-1.4.8 )
 		video_cards_nv? ( >=x11-drivers/xf86-video-nv-2.1.9 )

@@ -24,7 +24,7 @@ LICENSE="LGPL-2"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE_VIDEO_CARDS="
-	video_cards_i810
+	video_cards_intel
 	video_cards_mach64
 	video_cards_mga
 	video_cards_none
@@ -124,7 +124,7 @@ src_compile() {
 
 	# Configurable DRI drivers
 	driver_enable swrast
-	driver_enable video_cards_i810 i810 i915 i965
+	driver_enable video_cards_intel i810 i915 i965
 	driver_enable video_cards_mach64 mach64
 	driver_enable video_cards_mga mga
 	driver_enable video_cards_r128 r128
