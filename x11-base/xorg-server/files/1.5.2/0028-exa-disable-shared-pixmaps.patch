@@ -1,0 +1,30 @@
+From a38345ecc016e0a6515235160a8fb02cdeb8b584 Mon Sep 17 00:00:00 2001
+From: Julien Cristau <jcristau@debian.org>
+Date: Tue, 16 Sep 2008 17:13:42 +0200
+Subject: [PATCH 28/37] exa: disable shared pixmaps
+
+They got re-enabled in ee7c684f21d220d5e046bab31ae617a7d64d60f6
+("Reimplement ShmPutImage.")
+(cherry picked from commit b4762c0245ed2966606171cf27f40aa745fdc76e)
+---
+ exa/exa.c |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/exa/exa.c b/exa/exa.c
+index c8e345a..c40bedf 100644
+--- a/exa/exa.c
++++ b/exa/exa.c
+@@ -44,6 +44,10 @@ DevPrivateKey exaPixmapPrivateKey = &exaPixmapPrivateKey;
+ static ShmFuncs exaShmFuncs = { NULL, NULL };
+ #endif
+ 
++#ifdef MITSHM
++static ShmFuncs exaShmFuncs = { NULL, NULL };
++#endif
++
+ static _X_INLINE void*
+ ExaGetPixmapAddress(PixmapPtr p)
+ {
+-- 
+1.6.0.2
+

@@ -1,0 +1,151 @@
+From e3ec8ba65df89f856cb0fcbba0f9fc666e629ed5 Mon Sep 17 00:00:00 2001
+From: Remi Cardona <remi@gentoo.org>
+Date: Fri, 24 Oct 2008 00:11:52 +0200
+Subject: [PATCH 22/37] exa: move destination damage for internal calls to a special function
+ - This should improve clarity for someone who isn't familiar with the code.
+ (cherry picked from commit 988725f32e082aee9392a71464125157a83d1e67)
+
+Conflicts:
+
+	exa/exa_accel.c
+---
+ exa/exa.h           |    3 +++
+ exa/exa_migration.c |   33 +++++++++++++++++++++++++++++++++
+ exa/exa_render.c    |   43 +++++++++++--------------------------------
+ 3 files changed, 47 insertions(+), 32 deletions(-)
+
+diff --git a/exa/exa.h b/exa/exa.h
+index 2562094..7c2f4c1 100644
+--- a/exa/exa.h
++++ b/exa/exa.h
+@@ -795,6 +795,9 @@ exaGetPixmapDriverPrivate(PixmapPtr p);
+ CARD32
+ exaGetPixmapFirstPixel (PixmapPtr pPixmap);
+ 
++Bool
++exaDamageDestForMigration(PixmapPtr pPix, RegionPtr region);
++
+ /**
+  * Returns TRUE if the given planemask covers all the significant bits in the
+  * pixel values for pDrawable.
+diff --git a/exa/exa_migration.c b/exa/exa_migration.c
+index 25ea73d..56515ab 100644
+--- a/exa/exa_migration.c
++++ b/exa/exa_migration.c
+@@ -43,6 +43,39 @@
+ #endif
+ 
+ /**
++ * Returns TRUE if the pixmap has damage.
++ * EXA only migrates the parts of a destination 
++ * that are affected by rendering.
++ * It uses the current damage as indication.
++ * So anything that does not need to be updated won't be.
++ * For clarity this seperate function was made.
++ * Note that some situations don't use this, 
++ * because their calls are wrapped by the damage layer.
++ */
++Bool
++exaDamageDestForMigration(PixmapPtr pPix, RegionPtr region)
++{
++    ScreenPtr pScreen = pPix->drawable.pScreen;
++    (void) pScreen; /* the macros don't use pScreen currently */
++    ExaPixmapPriv (pPix);
++    int x_offset, y_offset;
++    RegionPtr pending_damage;
++
++    if (!pExaPixmap->pDamage)
++	return FALSE;
++
++    exaGetDrawableDeltas(&pPix->drawable, pPix, &x_offset, &y_offset);
++
++    REGION_TRANSLATE(pScreen, region, x_offset, y_offset);
++    pending_damage = DamagePendingRegion(pExaPixmap->pDamage);
++    REGION_UNION(pScreen, pending_damage, pending_damage, region);
++    /* Restore region as we got it. */
++    REGION_TRANSLATE(pScreen, region, -x_offset, -y_offset);
++
++    return TRUE;
++}
++
++/**
+  * Returns TRUE if the pixmap is not movable.  This is the case where it's a
+  * fake pixmap for the frontbuffer (no pixmap private) or it's a scratch
+  * pixmap created by some other X Server internals (the score says it's
+diff --git a/exa/exa_render.c b/exa/exa_render.c
+index 7042285..d45af0a 100644
+--- a/exa/exa_render.c
++++ b/exa/exa_render.c
+@@ -520,12 +520,7 @@ exaCompositeRects(CARD8	              op,
+ 
+ 	REGION_INIT(pScreen, &region, &box, 1);
+     
+-	exaGetDrawableDeltas(pDst->pDrawable, pPixmap, &xoff, &yoff);
+-
+-	REGION_TRANSLATE(pScreen, &region, xoff, yoff);
+-	pending_damage = DamagePendingRegion(pExaPixmap->pDamage);
+-	REGION_UNION(pScreen, pending_damage, pending_damage, &region);
+-	REGION_TRANSLATE(pScreen, &region, -xoff, -yoff);
++	exaDamageDestForMigration(pPixmap, &region);
+     }
+     
+     /************************************************************/
+@@ -1074,22 +1069,14 @@ exaTrapezoids (CARD8 op, PicturePtr pSrc, PicturePtr pDst,
+ 
+ 	if (pExaPixmap->pDamage) {
+ 	    RegionRec migration;
+-	    RegionPtr pending_damage = DamagePendingRegion(pExaPixmap->pDamage);
+-	    int xoff, yoff;
+-
+-	    exaGetDrawableDeltas(pDraw, pixmap, &xoff, &yoff);
+-
+-	    xoff += pDraw->x;
+-	    yoff += pDraw->y;
+ 
+-	    bounds.x1 += xoff;
+-	    bounds.y1 += yoff;
+-	    bounds.x2 += xoff;
+-	    bounds.y2 += yoff;
++	    bounds.x1 += pDraw->x;
++	    bounds.y1 += pDraw->y;
++	    bounds.x2 += pDraw->x;
++	    bounds.y2 += pDraw->y;
+ 
+ 	    REGION_INIT(pScreen, &migration, &bounds, 1);
+-	    REGION_UNION(pScreen, pending_damage, pending_damage, &migration);
+-	    REGION_UNINIT(pScreen, &migration);
++	    exaDamageDestForMigration(pixmap, &migration);
+ 	}
+ 
+ 	exaPrepareAccess(pDraw, EXA_PREPARE_DEST);
+@@ -1180,22 +1167,14 @@ exaTriangles (CARD8 op, PicturePtr pSrc, PicturePtr pDst,
+ 
+ 	if (pExaPixmap->pDamage) {
+ 	    RegionRec migration;
+-	    RegionPtr pending_damage = DamagePendingRegion(pExaPixmap->pDamage);
+-	    int xoff, yoff;
+-
+-	    exaGetDrawableDeltas(pDraw, pixmap, &xoff, &yoff);
+-
+-	    xoff += pDraw->x;
+-	    yoff += pDraw->y;
+ 
+-	    bounds.x1 += xoff;
+-	    bounds.y1 += yoff;
+-	    bounds.x2 += xoff;
+-	    bounds.y2 += yoff;
++	    bounds.x1 += pDraw->x;
++	    bounds.y1 += pDraw->y;
++	    bounds.x2 += pDraw->x;
++	    bounds.y2 += pDraw->y;
+ 
+ 	    REGION_INIT(pScreen, &migration, &bounds, 1);
+-	    REGION_UNION(pScreen, pending_damage, pending_damage, &migration);
+-	    REGION_UNINIT(pScreen, &migration);
++	    exaDamageDestForMigration(pixmap, &migration);
+ 	}
+ 
+ 	exaPrepareAccess(pDraw, EXA_PREPARE_DEST);
+-- 
+1.6.0.2
+

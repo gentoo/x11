@@ -1,0 +1,440 @@
+From 685463974a0f9b7067dea87d08b09c25d871c3ee Mon Sep 17 00:00:00 2001
+From: Owen Taylor <otaylor@huygens.home.fishsoup.net>
+Date: Mon, 28 Apr 2008 21:00:54 +0200
+Subject: [PATCH 03/37] EXA: Add exaCompositeRects()
+
+Add a function to composite multiple independent rectangles
+from the same source to the same destination in a single
+operation: this is useful for building a glyph mask.
+(cherry picked from commit 40eb14c9482457969e0bde97c49edad536285e02)
+---
+ exa/exa_glyphs.c |   83 +++++++-------------
+ exa/exa_priv.h   |   16 ++++
+ exa/exa_render.c |  222 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 267 insertions(+), 54 deletions(-)
+
+diff --git a/exa/exa_glyphs.c b/exa/exa_glyphs.c
+index 3fe433a..55fdb01 100644
+--- a/exa/exa_glyphs.c
++++ b/exa/exa_glyphs.c
+@@ -56,16 +56,6 @@
+ #define DBG_GLYPH_CACHE(a)
+ #endif
+ 
+-/* Instructions for rendering a single glyph */
+-typedef struct {
+-    INT16 xSrc;
+-    INT16 ySrc;
+-    INT16 xDst;
+-    INT16 yDst;
+-    INT16 width;
+-    INT16 height;
+-} ExaGlyphRenderRec, *ExaGlyphRenderPtr;
+-
+ /* Width of the pixmaps we use for the caches; this should be less than
+  * max texture size of the driver; this may need to actually come from
+  * the driver.
+@@ -79,7 +69,7 @@ typedef struct {
+ 
+ typedef struct {
+     PicturePtr source;
+-    ExaGlyphRenderRec glyphs[GLYPH_BUFFER_SIZE];
++    ExaCompositeRectRec rects[GLYPH_BUFFER_SIZE];
+     int count;
+ } ExaGlyphBuffer, *ExaGlyphBufferPtr;
+ 
+@@ -364,7 +354,7 @@ exaGlyphCacheBufferGlyph(ScreenPtr         pScreen,
+ 			 int               xGlyph,
+ 			 int               yGlyph)
+ {
+-    ExaGlyphRenderPtr glyphRec;
++    ExaCompositeRectPtr rect;
+     int pos;
+     
+     if (buffer->source && buffer->source != cache->picture)
+@@ -407,7 +397,7 @@ exaGlyphCacheBufferGlyph(ScreenPtr         pScreen,
+ 		y = (pos / cache->columns) * cache->glyphHeight;
+ 
+ 		for (i = 0; i < buffer->count; i++) {
+-		    if (buffer->glyphs[i].xSrc == x && buffer->glyphs[i].ySrc == y) {
++		    if (buffer->rects[i].xSrc == x && buffer->rects[i].ySrc == y) {
+ 			DBG_GLYPH_CACHE(("  must flush buffer\n"));
+ 			return ExaGlyphNeedFlush;
+ 		    }
+@@ -439,13 +429,13 @@ exaGlyphCacheBufferGlyph(ScreenPtr         pScreen,
+ 
+     buffer->source = cache->picture;
+ 	    
+-    glyphRec = &buffer->glyphs[buffer->count];
+-    glyphRec->xSrc = (pos % cache->columns) * cache->glyphWidth;
+-    glyphRec->ySrc = (pos / cache->columns) * cache->glyphHeight;
+-    glyphRec->xDst = xGlyph - pGlyph->info.x;
+-    glyphRec->yDst = yGlyph - pGlyph->info.y;
+-    glyphRec->width = pGlyph->info.width;
+-    glyphRec->height = pGlyph->info.height;
++    rect = &buffer->rects[buffer->count];
++    rect->xSrc = (pos % cache->columns) * cache->glyphWidth;
++    rect->ySrc = (pos / cache->columns) * cache->glyphHeight;
++    rect->xDst = xGlyph - pGlyph->info.x;
++    rect->yDst = yGlyph - pGlyph->info.y;
++    rect->width = pGlyph->info.width;
++    rect->height = pGlyph->info.height;
+ 	    
+     buffer->count++;
+ 
+@@ -463,7 +453,7 @@ exaBufferGlyph(ScreenPtr         pScreen,
+     unsigned int format = (GlyphPicture(pGlyph)[pScreen->myNum])->format;
+     int width = pGlyph->info.width;
+     int height = pGlyph->info.width;
+-    ExaGlyphRenderPtr glyphRec;
++    ExaCompositeRectPtr rect;
+     PicturePtr source;
+     int i;
+ 
+@@ -497,13 +487,13 @@ exaBufferGlyph(ScreenPtr         pScreen,
+ 
+     buffer->source = source;
+     
+-    glyphRec = &buffer->glyphs[buffer->count];
+-    glyphRec->xSrc = 0;
+-    glyphRec->ySrc = 0;
+-    glyphRec->xDst = xGlyph - pGlyph->info.x;
+-    glyphRec->yDst = yGlyph - pGlyph->info.y;
+-    glyphRec->width = pGlyph->info.width;
+-    glyphRec->height = pGlyph->info.height;
++    rect = &buffer->rects[buffer->count];
++    rect->xSrc = 0;
++    rect->ySrc = 0;
++    rect->xDst = xGlyph - pGlyph->info.x;
++    rect->yDst = yGlyph - pGlyph->info.y;
++    rect->width = pGlyph->info.width;
++    rect->height = pGlyph->info.height;
+ 
+     buffer->count++;
+ 
+@@ -514,23 +504,8 @@ static void
+ exaGlyphsToMask(PicturePtr        pMask,
+ 		ExaGlyphBufferPtr buffer)
+ {
+-    int i;
+-
+-    for (i = 0; i < buffer->count; i++) {
+-	ExaGlyphRenderPtr glyphRec = &buffer->glyphs[i];
+-	
+-	CompositePicture (PictOpAdd,
+-			  buffer->source,
+-			  None,
+-			  pMask,
+-			  glyphRec->xSrc,
+-			  glyphRec->ySrc,
+-			  0, 0,
+-			  glyphRec->xDst,
+-			  glyphRec->yDst,
+-			  glyphRec->width,
+-			  glyphRec->height);
+-    }
++    exaCompositeRects(PictOpAdd, buffer->source, pMask,
++		      buffer->count, buffer->rects);
+     
+     buffer->count = 0;
+     buffer->source = NULL;
+@@ -549,20 +524,20 @@ exaGlyphsToDst(CARD8		 op,
+     int i;
+ 
+     for (i = 0; i < buffer->count; i++) {
+-	ExaGlyphRenderPtr glyphRec = &buffer->glyphs[i];
++	ExaCompositeRectPtr rect = &buffer->rects[i];
+ 	
+ 	CompositePicture (op,
+ 			  pSrc,
+ 			  buffer->source,
+ 			  pDst,
+-			  xSrc + glyphRec->xDst - xDst,
+-			  ySrc + glyphRec->yDst - yDst,
+-			  glyphRec->xSrc,
+-			  glyphRec->ySrc,
+-			  glyphRec->xDst,
+-			  glyphRec->yDst,
+-			  glyphRec->width,
+-			  glyphRec->height);
++			  xSrc + rect->xDst - xDst,
++			  ySrc + rect->yDst - yDst,
++			  rect->xSrc,
++			  rect->ySrc,
++			  rect->xDst,
++			  rect->yDst,
++			  rect->width,
++			  rect->height);
+     }
+     
+     buffer->count = 0;
+diff --git a/exa/exa_priv.h b/exa/exa_priv.h
+index 4685cce..8f63c9b 100644
+--- a/exa/exa_priv.h
++++ b/exa/exa_priv.h
+@@ -244,6 +244,15 @@ typedef struct _ExaMigrationRec {
+     RegionPtr pReg;
+ } ExaMigrationRec, *ExaMigrationPtr;
+ 
++typedef struct {
++    INT16 xSrc;
++    INT16 ySrc;
++    INT16 xDst;
++    INT16 yDst;
++    INT16 width;
++    INT16 height;
++} ExaCompositeRectRec, *ExaCompositeRectPtr;
++
+ /**
+  * exaDDXDriverInit must be implemented by the DDX using EXA, and is the place
+  * to set EXA options or hook in screen functions to handle using EXA as the AA.
+@@ -456,6 +465,13 @@ exaComposite(CARD8	op,
+ 	     CARD16	height);
+ 
+ void
++exaCompositeRects(CARD8	              op,
++		  PicturePtr	      Src,
++		  PicturePtr	      pDst,
++		  int                 nrect,
++		  ExaCompositeRectPtr rects);
++
++void
+ exaTrapezoids (CARD8 op, PicturePtr pSrc, PicturePtr pDst,
+                PictFormatPtr maskFormat, INT16 xSrc, INT16 ySrc,
+                int ntrap, xTrapezoid *traps);
+diff --git a/exa/exa_render.c b/exa/exa_render.c
+index 1d7b897..43b0029 100644
+--- a/exa/exa_render.c
++++ b/exa/exa_render.c
+@@ -332,6 +332,228 @@ exaTryDriverSolidFill(PicturePtr	pSrc,
+ }
+ 
+ static int
++exaTryDriverCompositeRects(CARD8	       op,
++			   PicturePtr	       pSrc,
++			   PicturePtr	       pDst,
++			   int                 nrect,
++			   ExaCompositeRectPtr rects)
++{
++    ExaScreenPriv (pDst->pDrawable->pScreen);
++    int src_off_x, src_off_y, dst_off_x, dst_off_y;
++    PixmapPtr pSrcPix, pDstPix;
++    ExaPixmapPrivPtr pSrcExaPix, pDstExaPix;
++    struct _Pixmap scratch;
++    ExaMigrationRec pixmaps[2];
++
++    pSrcPix = exaGetDrawablePixmap(pSrc->pDrawable);
++    pSrcExaPix = ExaGetPixmapPriv(pSrcPix);
++
++    pDstPix = exaGetDrawablePixmap(pDst->pDrawable);
++    pDstExaPix = ExaGetPixmapPriv(pDstPix);
++
++    /* Check whether the accelerator can use these pixmaps.
++     * FIXME: If it cannot, use temporary pixmaps so that the drawing
++     * happens within limits.
++     */
++    if (pSrcExaPix->accel_blocked ||
++	pDstExaPix->accel_blocked)
++    {
++	return -1;
++    }
++
++    if (pExaScr->info->CheckComposite &&
++	!(*pExaScr->info->CheckComposite) (op, pSrc, NULL, pDst))
++    {
++	return -1;
++    }
++    
++    exaGetDrawableDeltas (pDst->pDrawable, pDstPix, &dst_off_x, &dst_off_y);
++	
++    pixmaps[0].as_dst = TRUE;
++    pixmaps[0].as_src = exaOpReadsDestination(op);
++    pixmaps[0].pPix = pDstPix;
++    pixmaps[0].pReg = NULL;
++    pixmaps[1].as_dst = FALSE;
++    pixmaps[1].as_src = TRUE;
++    pixmaps[1].pPix = pSrcPix;
++    pixmaps[1].pReg = NULL;
++    exaDoMigration(pixmaps, 2, TRUE);
++
++    pSrcPix = exaGetOffscreenPixmap (pSrc->pDrawable, &src_off_x, &src_off_y);
++    if (!exaPixmapIsOffscreen(pDstPix))
++	return 0;
++    
++    if (!pSrcPix && pExaScr->info->UploadToScratch)
++    {
++	pSrcPix = exaGetDrawablePixmap (pSrc->pDrawable);
++	if ((*pExaScr->info->UploadToScratch) (pSrcPix, &scratch))
++	    pSrcPix = &scratch;
++    }
++
++    if (!pSrcPix)
++	return 0;
++
++    if (!(*pExaScr->info->PrepareComposite) (op, pSrc, NULL, pDst, pSrcPix,
++					     NULL, pDstPix))
++	return -1;
++
++    while (nrect--)
++    {
++	INT16 xDst = rects->xDst + pDst->pDrawable->x;
++	INT16 yDst = rects->yDst + pDst->pDrawable->y;
++	INT16 xSrc = rects->xSrc + pSrc->pDrawable->x;
++	INT16 ySrc = rects->ySrc + pSrc->pDrawable->y;
++	
++	RegionRec region;
++	BoxPtr pbox;
++	int nbox;
++	
++	if (!miComputeCompositeRegion (&region, pSrc, NULL, pDst,
++				       xSrc, ySrc, 0, 0, xDst, yDst,
++				       rects->width, rects->height))
++	    goto next_rect;
++	
++	REGION_TRANSLATE(pScreen, &region, dst_off_x, dst_off_y);
++	
++	nbox = REGION_NUM_RECTS(&region);
++	pbox = REGION_RECTS(&region);
++
++	xSrc = xSrc + src_off_x - xDst - dst_off_x;
++	ySrc = ySrc + src_off_y - yDst - dst_off_y;
++	
++	while (nbox--)
++	{
++	    (*pExaScr->info->Composite) (pDstPix,
++					 pbox->x1 + xSrc,
++					 pbox->y1 + ySrc,
++					 0, 0,
++					 pbox->x1,
++					 pbox->y1,
++					 pbox->x2 - pbox->x1,
++					 pbox->y2 - pbox->y1);
++	    pbox++;
++	}
++
++    next_rect:
++	REGION_UNINIT(pDst->pDrawable->pScreen, &region);
++
++	rects++;
++    }
++    
++    (*pExaScr->info->DoneComposite) (pDstPix);
++    exaMarkSync(pDst->pDrawable->pScreen);
++	
++    return 1;
++}
++
++/**
++ * Copy a number of rectangles from source to destination in a single
++ * operation. This is specialized for building a glyph mask: we don'y
++ * have a mask argument because we don't need it for that, and we
++ * don't have he special-case fallbacks found in exaComposite() - if the
++ * driver can support it, we use the driver functionality, otherwise we
++ * fallback straight to software.
++ */
++void
++exaCompositeRects(CARD8	              op,
++		  PicturePtr	      pSrc,
++		  PicturePtr	      pDst,
++		  int                 nrect,
++		  ExaCompositeRectPtr rects)
++{
++    PixmapPtr pPixmap = exaGetDrawablePixmap(pDst->pDrawable);
++    ExaPixmapPriv(pPixmap);
++    
++    int xoff, yoff;
++    int x1 = MAXSHORT;
++    int y1 = MAXSHORT;
++    int x2 = MINSHORT;
++    int y2 = MINSHORT;
++    RegionRec region;
++    RegionPtr pending_damage;
++    BoxRec box;
++    int n;
++    ExaCompositeRectPtr r;
++    
++    /* We have to manage the damage ourselves, since CompositeRects isn't
++     * something in the screen that can be managed by the damage extension,
++     * and EXA depends on damage to track what needs to be migrated between
++     * offscreen and onscreen.
++     */
++
++    /* Compute the overall extents of the composited region - we're making
++     * the assumption here that we are compositing a bunch of glyphs that
++     * cluster closely together and damaging each glyph individually would
++     * be a loss compared to damaging the bounding box.
++     */
++    n = nrect;
++    r = rects;
++    while (n--) {
++	int rect_x2 = r->xDst + r->width;
++	int rect_y2 = r->yDst + r->width;
++
++	if (r->xDst < x1) x1 = r->xDst;
++	if (r->xDst < y1) y1 = r->xDst;
++	if (rect_x2 > x2) x2 = rect_x2;
++	if (rect_y2 > y2) y2 = rect_y2;
++	
++	r++;
++    }
++
++    if (x2 <= x1 && y2 <= y1)
++	return;
++
++    box.x1 = x1;
++    box.x2 = x2 < MAXSHORT ? x2 : MAXSHORT;
++    box.y1 = y1;
++    box.y2 = y2 < MAXSHORT ? y2 : MAXSHORT;
++    
++    /* The pixmap migration code relies on pendingDamage indicating
++     * the bounds of the current rendering, so we need to force 
++     * the actual damage into that region before we do anything, and
++     * (see use of DamagePendingRegion in exaCopyDirty)
++     */
++    
++    REGION_INIT(pScreen, &region, &box, 1);
++    
++    exaGetDrawableDeltas(pDst->pDrawable, pPixmap, &xoff, &yoff);
++
++    REGION_TRANSLATE(pScreen, &region, xoff, yoff);
++    pending_damage = DamagePendingRegion(pExaPixmap->pDamage);
++    REGION_UNION(pScreen, pending_damage, pending_damage, &region);
++    REGION_TRANSLATE(pScreen, &region, -xoff, -yoff);
++    
++    /************************************************************/
++    
++    ValidatePicture (pSrc);
++    ValidatePicture (pDst);
++    
++    if (exaTryDriverCompositeRects(op, pSrc, pDst, nrect, rects) != 1) {
++	n = nrect;
++	r = rects;
++	while (n--) {
++	    ExaCheckComposite (op, pSrc, NULL, pDst,
++			       r->xSrc, r->ySrc,
++			       0, 0,
++			       r->xDst, r->yDst,
++			       r->width, r->height);
++	    r++;
++	}
++    }
++    
++    /************************************************************/
++
++    /* Now we have to flush the damage out from pendingDamage => damage 
++     * Calling DamageDamageRegion has that effect. (We could pass
++     * in an empty region here, but we pass in the same region we
++     * use above; the effect is the same.)
++     */
++
++    DamageDamageRegion(pDst->pDrawable, &region);
++    REGION_UNINIT(pScreen, &region);
++}
++
++static int
+ exaTryDriverComposite(CARD8		op,
+ 		      PicturePtr	pSrc,
+ 		      PicturePtr	pMask,
+-- 
+1.6.0.2
+

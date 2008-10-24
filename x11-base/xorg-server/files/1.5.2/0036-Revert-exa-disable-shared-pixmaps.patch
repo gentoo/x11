@@ -1,0 +1,30 @@
+From cd85eb4bc486be931bab44c38b6a572b56e838b6 Mon Sep 17 00:00:00 2001
+From: Remi Cardona <remi@gentoo.org>
+Date: Fri, 24 Oct 2008 00:46:29 +0200
+Subject: [PATCH 36/37] Revert "exa: disable shared pixmaps"
+
+For some reason, this hunk got added twice *shrug*
+
+This reverts commit a38345ecc016e0a6515235160a8fb02cdeb8b584.
+---
+ exa/exa.c |    4 ----
+ 1 files changed, 0 insertions(+), 4 deletions(-)
+
+diff --git a/exa/exa.c b/exa/exa.c
+index 8271f41..21e02d5 100644
+--- a/exa/exa.c
++++ b/exa/exa.c
+@@ -44,10 +44,6 @@ DevPrivateKey exaPixmapPrivateKey = &exaPixmapPrivateKey;
+ static ShmFuncs exaShmFuncs = { NULL, NULL };
+ #endif
+ 
+-#ifdef MITSHM
+-static ShmFuncs exaShmFuncs = { NULL, NULL };
+-#endif
+-
+ static _X_INLINE void*
+ ExaGetPixmapAddress(PixmapPtr p)
+ {
+-- 
+1.6.0.2
+

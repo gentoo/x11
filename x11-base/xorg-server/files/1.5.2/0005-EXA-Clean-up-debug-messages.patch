@@ -1,0 +1,51 @@
+From 6e6796bb8627fa6e2bd61751084e835d8d201610 Mon Sep 17 00:00:00 2001
+From: Owen Taylor <otaylor@huygens.home.fishsoup.net>
+Date: Mon, 28 Apr 2008 21:00:55 +0200
+Subject: [PATCH 05/37] EXA: Clean up debug messages
+ (cherry picked from commit 13fd2256300b61d88b840952d838f834523f5dd7)
+
+---
+ exa/exa_glyphs.c |    3 ---
+ exa/exa_priv.h   |    2 +-
+ 2 files changed, 1 insertions(+), 4 deletions(-)
+
+diff --git a/exa/exa_glyphs.c b/exa/exa_glyphs.c
+index 851e439..27ecd4a 100644
+--- a/exa/exa_glyphs.c
++++ b/exa/exa_glyphs.c
+@@ -260,11 +260,9 @@ exaGlyphCacheHashLookup(ExaGlyphCachePtr cache,
+ 	    return -1;
+ 
+ 	if (memcmp(pGlyph->sha1, cache->glyphs[entryPos].sha1, sizeof(pGlyph->sha1)) == 0){
+-	    DBG_GLYPH_CACHE((" found entry at %d\n", slot));
+ 	    return entryPos;
+ 	}
+ 	    
+-	DBG_GLYPH_CACHE((" lookup linear probe bumpalong\n"));
+ 	slot--;
+ 	if (slot < 0)
+ 	    slot = cache->hashSize - 1;
+@@ -284,7 +282,6 @@ exaGlyphCacheHashInsert(ExaGlyphCachePtr cache,
+     
+     while (TRUE) { /* hash table can never be full */
+ 	if (cache->hashEntries[slot] == -1) {
+-	    DBG_GLYPH_CACHE((" inserting entry at %d\n", slot));
+ 	    cache->hashEntries[slot] = pos;
+ 	    return;
+ 	}
+diff --git a/exa/exa_priv.h b/exa/exa_priv.h
+index 9947416..f3c7c71 100644
+--- a/exa/exa_priv.h
++++ b/exa/exa_priv.h
+@@ -61,7 +61,7 @@
+ #define DEBUG_MIGRATE		0
+ #define DEBUG_PIXMAP		0
+ #define DEBUG_OFFSCREEN		0
+-#define DEBUG_GLYPH_CACHE	1
++#define DEBUG_GLYPH_CACHE	0
+ 
+ #if DEBUG_TRACE_FALL
+ #define EXA_FALLBACK(x)     					\
+-- 
+1.6.0.2
+
