@@ -1,7 +1,7 @@
-From 3012334957cb84d30d1f7981b0b30692fe69cd08 Mon Sep 17 00:00:00 2001
+From 040cf8ca8bda9687e77141c71e559acb020eeeb5 Mon Sep 17 00:00:00 2001
 From: Jamey Sharp <jamey@minilop.net>
 Date: Fri, 14 Mar 2008 20:18:29 -0700
-Subject: [PATCH 3/6] Use sequence number ranges in pending replies
+Subject: [PATCH] Use sequence number ranges in pending replies
 
 This allows optimizing adjacent pending replies with the same flags, and
 will help support default flags for a range of future requests.
@@ -12,7 +12,7 @@ Commit by Josh Triplett and Jamey Sharp.
  1 files changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/src/xcb_in.c b/src/xcb_in.c
-index a0e5e10..0c68208 100644
+index 0c04621..61027b7 100644
 --- a/src/xcb_in.c
 +++ b/src/xcb_in.c
 @@ -52,7 +52,8 @@ struct reply_list {
@@ -45,7 +45,7 @@ index a0e5e10..0c68208 100644
              pend = 0;
      }
  
-@@ -506,7 +509,7 @@ int _xcb_in_expect_reply(xcb_connection_t *c, unsigned int request, enum workaro
+@@ -507,7 +510,7 @@ int _xcb_in_expect_reply(xcb_connection_t *c, unsigned int request, enum workaro
          _xcb_conn_shutdown(c);
          return 0;
      }

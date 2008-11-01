@@ -1,7 +1,7 @@
-From 67438753bef0d52e5a4a74bd15c444196a809b2b Mon Sep 17 00:00:00 2001
+From 3ee2dac8e00be4666bd74d5b5263ff52c2f9f199 Mon Sep 17 00:00:00 2001
 From: Josh Triplett <josh@freedesktop.org>
 Date: Sun, 16 Mar 2008 23:16:08 -0700
-Subject: [PATCH 5/6] Support handing off socket write permission to external code.
+Subject: [PATCH] Support handing off socket write permission to external code.
 
 Libraries like Xlib, some XCB language bindings, and potentially others
 have a common problem: they want to share the X connection with XCB. This
@@ -40,7 +40,7 @@ index bf6e991..756337a 100644
  XCB_LIBS = libxcb.la
  
 diff --git a/src/xcb_in.c b/src/xcb_in.c
-index 6bf6648..212dc9a 100644
+index ff59894..36ec26b 100644
 --- a/src/xcb_in.c
 +++ b/src/xcb_in.c
 @@ -113,6 +113,7 @@ static int read_packet(xcb_connection_t *c)
@@ -63,7 +63,7 @@ index 6bf6648..212dc9a 100644
              pend = 0;
      }
  
-@@ -352,7 +354,7 @@ void *xcb_wait_for_reply(xcb_connection_t *c, unsigned int request, xcb_generic_
+@@ -353,7 +355,7 @@ void *xcb_wait_for_reply(xcb_connection_t *c, unsigned int request, xcb_generic_
          widened_request -= UINT64_C(1) << 32;
  
      /* If this request has not been written yet, write it. */
@@ -72,7 +72,7 @@ index 6bf6648..212dc9a 100644
      {
          pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
          reader_list reader;
-@@ -523,6 +525,20 @@ int _xcb_in_expect_reply(xcb_connection_t *c, uint64_t request, enum workarounds
+@@ -524,6 +526,20 @@ int _xcb_in_expect_reply(xcb_connection_t *c, uint64_t request, enum workarounds
      return 1;
  }
  
@@ -185,10 +185,10 @@ index 1094ceb..4c6ab13 100644
          return 0;
      out->writing = 0;
 diff --git a/src/xcbext.h b/src/xcbext.h
-index 01dd590..2e10ba2 100644
+index 856ad3d..bd26039 100644
 --- a/src/xcbext.h
 +++ b/src/xcbext.h
-@@ -59,6 +59,23 @@ enum xcb_send_request_flags_t {
+@@ -60,6 +60,23 @@ enum xcb_send_request_flags_t {
  
  unsigned int xcb_send_request(xcb_connection_t *c, int flags, struct iovec *vector, const xcb_protocol_request_t *request);
  

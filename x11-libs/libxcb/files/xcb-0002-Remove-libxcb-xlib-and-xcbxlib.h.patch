@@ -1,7 +1,7 @@
-From ae210575178ea559a8811911d5a7231118cd03a1 Mon Sep 17 00:00:00 2001
+From c8282883b7d7360e554412357e4b20a00f6fe2eb Mon Sep 17 00:00:00 2001
 From: Jamey Sharp <jamey@minilop.net>
 Date: Fri, 14 Mar 2008 12:08:09 -0700
-Subject: [PATCH 1/6] Remove libxcb-xlib and xcbxlib.h.
+Subject: [PATCH] Remove libxcb-xlib and xcbxlib.h.
 
 ---
  Makefile.am     |    4 +--

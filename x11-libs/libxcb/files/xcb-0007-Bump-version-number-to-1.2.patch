@@ -1,7 +1,7 @@
-From 1819224ff28a9f2c5d5229a3a841e439a84cc34f Mon Sep 17 00:00:00 2001
+From 958b1acbc99e99fc584c416bcbe77a94d8b049f4 Mon Sep 17 00:00:00 2001
 From: Josh Triplett <josh@freedesktop.org>
 Date: Sat, 15 Mar 2008 18:17:18 -0700
-Subject: [PATCH 6/6] Bump version number to 1.2
+Subject: [PATCH] Bump version number to 1.2
 
 ---
  configure.ac |    2 +-

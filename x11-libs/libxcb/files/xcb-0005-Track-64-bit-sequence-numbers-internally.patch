@@ -1,7 +1,7 @@
-From 0a403b5613a5c6a3c076fa2d50517c0a93208586 Mon Sep 17 00:00:00 2001
+From cdaaa63e7cc2729164da1326c54ad100eade0aac Mon Sep 17 00:00:00 2001
 From: Jamey Sharp <jamey@minilop.net>
 Date: Wed, 21 May 2008 14:43:53 -0700
-Subject: [PATCH 4/6] Track 64-bit sequence numbers internally.
+Subject: [PATCH] Track 64-bit sequence numbers internally.
 
 External APIs that used 32-bit sequence numbers continue to do so.
 
@@ -13,7 +13,7 @@ Commit by Josh Triplett and Jamey Sharp.
  3 files changed, 31 insertions(+), 25 deletions(-)
 
 diff --git a/src/xcb_in.c b/src/xcb_in.c
-index 0c68208..6bf6648 100644
+index 61027b7..ff59894 100644
 --- a/src/xcb_in.c
 +++ b/src/xcb_in.c
 @@ -52,8 +52,8 @@ struct reply_list {
@@ -38,7 +38,7 @@ index 0c68208..6bf6648 100644
          if(XCB_SEQUENCE_COMPARE(c->in.request_read, <, lastread))
              c->in.request_read += 0x10000;
          if(XCB_SEQUENCE_COMPARE(c->in.request_read, >, c->in.request_expected))
-@@ -203,10 +203,10 @@ static int read_packet(xcb_connection_t *c)
+@@ -204,10 +204,10 @@ static int read_packet(xcb_connection_t *c)
          c->in.current_reply_tail = &cur->next;
          for(reader = c->in.readers; 
  	    reader && 
@@ -51,7 +51,7 @@ index 0c68208..6bf6648 100644
              {
                  pthread_cond_signal(reader->data);
                  break;
-@@ -288,7 +288,7 @@ static int poll_for_reply(xcb_connection_t *c, unsigned int request, void **repl
+@@ -289,7 +289,7 @@ static int poll_for_reply(xcb_connection_t *c, unsigned int request, void **repl
          head = 0;
      /* We've read requests past the one we want, so if it has replies we have
       * them all and they're in the replies map. */
@@ -60,7 +60,7 @@ index 0c68208..6bf6648 100644
      {
          head = _xcb_map_remove(c->in.replies, request);
          if(head && head->next)
-@@ -296,7 +296,7 @@ static int poll_for_reply(xcb_connection_t *c, unsigned int request, void **repl
+@@ -297,7 +297,7 @@ static int poll_for_reply(xcb_connection_t *c, unsigned int request, void **repl
      }
      /* We're currently processing the responses to the request we want, and we
       * have a reply ready to return. So just return it without blocking. */
@@ -69,7 +69,7 @@ index 0c68208..6bf6648 100644
      {
          head = c->in.current_reply;
          c->in.current_reply = head->next;
-@@ -305,7 +305,7 @@ static int poll_for_reply(xcb_connection_t *c, unsigned int request, void **repl
+@@ -306,7 +306,7 @@ static int poll_for_reply(xcb_connection_t *c, unsigned int request, void **repl
      }
      /* We know this request can't have any more replies, and we've already
       * established it doesn't have a reply now. Don't bother blocking. */
@@ -78,7 +78,7 @@ index 0c68208..6bf6648 100644
          head = 0;
      /* We may have more replies on the way for this request: block until we're
       * sure. */
-@@ -338,6 +338,7 @@ static int poll_for_reply(xcb_connection_t *c, unsigned int request, void **repl
+@@ -339,6 +339,7 @@ static int poll_for_reply(xcb_connection_t *c, unsigned int request, void **repl
  
  void *xcb_wait_for_reply(xcb_connection_t *c, unsigned int request, xcb_generic_error_t **e)
  {
@@ -86,7 +86,7 @@ index 0c68208..6bf6648 100644
      void *ret = 0;
      if(e)
          *e = 0;
-@@ -346,8 +347,12 @@ void *xcb_wait_for_reply(xcb_connection_t *c, unsigned int request, xcb_generic_
+@@ -347,8 +348,12 @@ void *xcb_wait_for_reply(xcb_connection_t *c, unsigned int request, xcb_generic_
  
      pthread_mutex_lock(&c->iolock);
  
@@ -100,7 +100,7 @@ index 0c68208..6bf6648 100644
      {
          pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
          reader_list reader;
-@@ -355,7 +360,7 @@ void *xcb_wait_for_reply(xcb_connection_t *c, unsigned int request, xcb_generic_
+@@ -356,7 +361,7 @@ void *xcb_wait_for_reply(xcb_connection_t *c, unsigned int request, xcb_generic_
  
          for(prev_reader = &c->in.readers; 
  	    *prev_reader && 
@@ -109,7 +109,7 @@ index 0c68208..6bf6648 100644
  	    prev_reader = &(*prev_reader)->next)
  	{
              /* empty */;
-@@ -371,7 +376,7 @@ void *xcb_wait_for_reply(xcb_connection_t *c, unsigned int request, xcb_generic_
+@@ -372,7 +377,7 @@ void *xcb_wait_for_reply(xcb_connection_t *c, unsigned int request, xcb_generic_
  
          for(prev_reader = &c->in.readers;
  	    *prev_reader && 
@@ -118,7 +118,7 @@ index 0c68208..6bf6648 100644
  	    prev_reader = &(*prev_reader)->next)
  	{
              if(*prev_reader == &reader)
-@@ -445,8 +450,8 @@ xcb_generic_error_t *xcb_request_check(xcb_connection_t *c, xcb_void_cookie_t co
+@@ -446,8 +451,8 @@ xcb_generic_error_t *xcb_request_check(xcb_connection_t *c, xcb_void_cookie_t co
      void *reply;
      if(c->has_error)
          return 0;
@@ -129,7 +129,7 @@ index 0c68208..6bf6648 100644
      {
          free(xcb_get_input_focus_reply(c, xcb_get_input_focus(c), &ret));
          assert(!ret);
-@@ -500,7 +505,7 @@ void _xcb_in_destroy(_xcb_in *in)
+@@ -501,7 +506,7 @@ void _xcb_in_destroy(_xcb_in *in)
      }
  }
  
