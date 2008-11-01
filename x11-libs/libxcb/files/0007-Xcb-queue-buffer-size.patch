@@ -1,0 +1,22 @@
+diff --git a/src/xcbint.h b/src/xcbint.h
+index 2c9f7cd..6cac8e3 100644
+--- a/src/xcbint.h
++++ b/src/xcbint.h
+@@ -85,7 +85,7 @@ typedef struct _xcb_out {
+     void *socket_closure;
+     int socket_moving;
+ 
+-    char queue[4096];
++    char queue[XCB_QUEUE_BUFFER_SIZE];
+     int queue_len;
+ 
+     uint64_t request;
+@@ -112,7 +112,7 @@ typedef struct _xcb_in {
+     pthread_cond_t event_cond;
+     int reading;
+ 
+-    char queue[4096];
++    char queue[XCB_QUEUE_BUFFER_SIZE];
+     int queue_len;
+ 
+     uint64_t request_expected;

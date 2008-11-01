@@ -1,14 +1,14 @@
-From 60f5427b87648f7fb7eddc4927647f2bd409ba0d Mon Sep 17 00:00:00 2001
+From 1819224ff28a9f2c5d5229a3a841e439a84cc34f Mon Sep 17 00:00:00 2001
 From: Josh Triplett <josh@freedesktop.org>
-Date: Sat, 15 Mar 2008 18:17:41 -0700
-Subject: [PATCH 5/5] Bump version number to 1.2
+Date: Sat, 15 Mar 2008 18:17:18 -0700
+Subject: [PATCH 6/6] Bump version number to 1.2
 
 ---
  configure.ac |    2 +-
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 3edaa69..2a85bac 100644
+index e9d9412..8685608 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -3,7 +3,7 @@
@@ -21,5 +21,5 @@ index 3edaa69..2a85bac 100644
  AC_CONFIG_SRCDIR([xcb.pc.in])
  AM_INIT_AUTOMAKE([foreign dist-bzip2])
 -- 
-1.5.4.1
+1.6.0.2.307.gc427.dirty
 

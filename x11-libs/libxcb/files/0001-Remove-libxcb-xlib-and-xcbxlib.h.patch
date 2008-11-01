@@ -1,20 +1,51 @@
-From f7a9ef8199cf39e155e972b06b5e94bc700475ce Mon Sep 17 00:00:00 2001
+From ae210575178ea559a8811911d5a7231118cd03a1 Mon Sep 17 00:00:00 2001
 From: Jamey Sharp <jamey@minilop.net>
-Date: Fri, 14 Mar 2008 12:08:32 -0700
-Subject: [PATCH 1/5] Remove libxcb-xlib and xcbxlib.h.
+Date: Fri, 14 Mar 2008 12:08:09 -0700
+Subject: [PATCH 1/6] Remove libxcb-xlib and xcbxlib.h.
 
 ---
+ Makefile.am     |    4 +--
+ configure.ac    |    1 -
  src/Makefile.am |    9 +----
  src/xcb_conn.c  |   49 +------------------------------
  src/xcb_xlib.c  |   87 -------------------------------------------------------
  src/xcbint.h    |   19 +-----------
  src/xcbxlib.h   |   44 ----------------------------
- 5 files changed, 5 insertions(+), 203 deletions(-)
+ xcb-xlib.pc.in  |   11 -------
+ 8 files changed, 6 insertions(+), 218 deletions(-)
  delete mode 100644 src/xcb_xlib.c
  delete mode 100644 src/xcbxlib.h
+ delete mode 100644 xcb-xlib.pc.in
 
+diff --git a/Makefile.am b/Makefile.am
+index ee97180..3a2f6f5 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -2,9 +2,7 @@ SUBDIRS=src tests doc
+ 
+ pkgconfigdir = $(libdir)/pkgconfig
+ 
+-pkgconfig_DATA = \
+-xcb.pc \
+-xcb-xlib.pc
++pkgconfig_DATA = xcb.pc
+ 
+ if BUILD_COMPOSITE
+ pkgconfig_DATA += xcb-composite.pc
+diff --git a/configure.ac b/configure.ac
+index c3d3595..e9d9412 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -142,7 +142,6 @@ tests/Makefile
+ 
+ AC_CONFIG_FILES([
+ xcb.pc
+-xcb-xlib.pc
+ xcb-composite.pc
+ xcb-damage.pc
+ xcb-dpms.pc
 diff --git a/src/Makefile.am b/src/Makefile.am
-index fc613b4..fb70c92 100644
+index aa8b755..bf6e991 100644
 --- a/src/Makefile.am
 +++ b/src/Makefile.am
 @@ -1,5 +1,4 @@
@@ -34,8 +65,8 @@ index fc613b4..fb70c92 100644
 -
  # FIXME: find a way to autogenerate this from the XML files.
  
- if BUILD_COMPOSITE
-@@ -237,7 +232,7 @@ endif
+ EXTHEADERS += composite.h
+@@ -257,7 +252,7 @@ endif
  
  
  
@@ -45,7 +76,7 @@ index fc613b4..fb70c92 100644
  
  BUILT_SOURCES = $(EXTSOURCES) $(EXTHEADERS)
 diff --git a/src/xcb_conn.c b/src/xcb_conn.c
-index e7856c3..a2b0ab7 100644
+index 02f60bd..2bb8661 100644
 --- a/src/xcb_conn.c
 +++ b/src/xcb_conn.c
 @@ -59,21 +59,6 @@ static int set_fd_flags(const int fd)
@@ -343,6 +374,23 @@ index 4cb5cd4..0000000
 -void xcb_xlib_unlock(xcb_connection_t *c);
 -
 -#endif
+diff --git a/xcb-xlib.pc.in b/xcb-xlib.pc.in
+deleted file mode 100644
+index f28b529..0000000
+--- a/xcb-xlib.pc.in
++++ /dev/null
+@@ -1,11 +0,0 @@
+-prefix=@prefix@
+-exec_prefix=@exec_prefix@
+-libdir=@libdir@
+-includedir=@includedir@
+-
+-Name: XCB Xlib
+-Description: XCB Xlib support functions
+-Version: @PACKAGE_VERSION@
+-Requires: xcb
+-Libs: -L${libdir} -lxcb-xlib
+-Cflags: -I${includedir}
 -- 
-1.5.4.1
+1.6.0.2.307.gc427.dirty
 

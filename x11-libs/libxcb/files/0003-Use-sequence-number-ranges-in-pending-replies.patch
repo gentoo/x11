@@ -1,7 +1,7 @@
-From 8e851fc6ac73ff6d11e64be1f0c3a850a5533704 Mon Sep 17 00:00:00 2001
+From 3012334957cb84d30d1f7981b0b30692fe69cd08 Mon Sep 17 00:00:00 2001
 From: Jamey Sharp <jamey@minilop.net>
-Date: Fri, 14 Mar 2008 20:18:52 -0700
-Subject: [PATCH 3/5] Use sequence number ranges in pending replies
+Date: Fri, 14 Mar 2008 20:18:29 -0700
+Subject: [PATCH 3/6] Use sequence number ranges in pending replies
 
 This allows optimizing adjacent pending replies with the same flags, and
 will help support default flags for a range of future requests.
@@ -12,10 +12,10 @@ Commit by Josh Triplett and Jamey Sharp.
  1 files changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/src/xcb_in.c b/src/xcb_in.c
-index 14de474..aa462f0 100644
+index a0e5e10..0c68208 100644
 --- a/src/xcb_in.c
 +++ b/src/xcb_in.c
-@@ -51,7 +51,8 @@ struct reply_list {
+@@ -52,7 +52,8 @@ struct reply_list {
  };
  
  typedef struct pending_reply {
@@ -25,7 +25,7 @@ index 14de474..aa462f0 100644
      enum workarounds workaround;
      int flags;
      struct pending_reply *next;
-@@ -110,7 +111,7 @@ static int read_packet(xcb_connection_t *c)
+@@ -112,7 +113,7 @@ static int read_packet(xcb_connection_t *c)
          }
  
          while(c->in.pending_replies && 
@@ -34,7 +34,7 @@ index 14de474..aa462f0 100644
          {
              pending_reply *oldpend = c->in.pending_replies;
              c->in.pending_replies = oldpend->next;
-@@ -126,7 +127,9 @@ static int read_packet(xcb_connection_t *c)
+@@ -128,7 +129,9 @@ static int read_packet(xcb_connection_t *c)
      if(genrep.response_type == XCB_ERROR || genrep.response_type == XCB_REPLY)
      {
          pend = c->in.pending_replies;
@@ -45,7 +45,7 @@ index 14de474..aa462f0 100644
              pend = 0;
      }
  
-@@ -484,7 +487,7 @@ int _xcb_in_expect_reply(xcb_connection_t *c, unsigned int request, enum workaro
+@@ -506,7 +509,7 @@ int _xcb_in_expect_reply(xcb_connection_t *c, unsigned int request, enum workaro
          _xcb_conn_shutdown(c);
          return 0;
      }
@@ -55,5 +55,5 @@ index 14de474..aa462f0 100644
      pend->flags = flags;
      pend->next = 0;
 -- 
-1.5.4.1
+1.6.0.2.307.gc427.dirty
 

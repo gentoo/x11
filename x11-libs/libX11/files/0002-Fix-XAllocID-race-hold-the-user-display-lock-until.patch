@@ -1,7 +1,7 @@
-From 25e841ed2557bb725695289f9e49124ab9bf95ca Mon Sep 17 00:00:00 2001
+From d4e77ee5023cda7cb04afdce9be81eaf72785c2a Mon Sep 17 00:00:00 2001
 From: Jamey Sharp <jamey@minilop.net>
-Date: Sun, 23 Mar 2008 16:33:50 -0700
-Subject: [PATCH 2/2] Fix XAllocID race: hold the user display lock until we have a new XID.
+Date: Sun, 23 Mar 2008 16:33:27 -0700
+Subject: [PATCH 2/4] Fix XAllocID race: hold the user display lock until we have a new XID.
 
 Xlib built --without-xcb is also vulnerable to this race, and a similar
 fix might work there too.
@@ -13,10 +13,10 @@ requested.
  1 files changed, 10 insertions(+), 1 deletions(-)
 
 diff --git a/src/xcb_io.c b/src/xcb_io.c
-index 030b69b..1af52b0 100644
+index 830ddb9..d0abf4c 100644
 --- a/src/xcb_io.c
 +++ b/src/xcb_io.c
-@@ -300,6 +300,10 @@ _XIDHandler(Display *dpy)
+@@ -343,6 +343,10 @@ _XIDHandler(Display *dpy)
  {
  	XID next = xcb_generate_id(dpy->xcb->connection);
  	LockDisplay(dpy);
@@ -27,7 +27,7 @@ index 030b69b..1af52b0 100644
  	dpy->xcb->next_xid = next;
  	if(dpy->flags & XlibDisplayPrivSync)
  	{
-@@ -314,8 +318,13 @@ _XIDHandler(Display *dpy)
+@@ -357,8 +361,13 @@ _XIDHandler(Display *dpy)
  /* _XAllocID - resource ID allocation routine. */
  XID _XAllocID(Display *dpy)
  {
@@ -43,5 +43,5 @@ index 030b69b..1af52b0 100644
  	if(!(dpy->flags & XlibDisplayPrivSync))
  	{
 -- 
-1.5.4.1
+1.6.0.2.307.gc427.dirty
 

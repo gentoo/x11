@@ -1,7 +1,7 @@
-From 1bd47897b8fc944c4033f527c49d55d87a0280d4 Mon Sep 17 00:00:00 2001
+From 50d5c8363da0cd10217d4f24e8561ed9a1e1881e Mon Sep 17 00:00:00 2001
 From: Josh Triplett <josh@freedesktop.org>
-Date: Sat, 15 Mar 2008 17:22:23 -0700
-Subject: [PATCH 1/2] Use XCB's new socket handoff mechanism rather than the old XCB Xlib lock.
+Date: Sat, 15 Mar 2008 17:22:00 -0700
+Subject: [PATCH 1/4] Use XCB's new socket handoff mechanism rather than the old XCB Xlib lock.
 
 Previously, Xlib/XCB used XCB's Xlib lock to prevent XCB from sending
 requests between calls to Xlib's LockDisplay and UnlockDisplay macros.
@@ -51,17 +51,17 @@ XCB's handoff mechanism inspired by Keith Packard.
  configure.ac    |    4 +-
  src/Makefile.am |    1 -
  src/OpenDis.c   |   27 +++----
- src/Xxcbint.h   |   21 +-----
- src/xcb_io.c    |  150 ++++++++++++++++++++---------------
+ src/Xxcbint.h   |   27 +-----
+ src/xcb_io.c    |  194 +++++++++++++++++++++++++++++-----------------
  src/xcb_lock.c  |  235 -------------------------------------------------------
- 6 files changed, 100 insertions(+), 338 deletions(-)
+ 6 files changed, 140 insertions(+), 348 deletions(-)
  delete mode 100644 src/xcb_lock.c
 
 diff --git a/configure.ac b/configure.ac
-index 3719f02..8ade3e7 100644
+index 5febfb3..6141fa4 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -43,8 +43,8 @@ no)
+@@ -52,8 +52,8 @@ no)
  	AC_DEFINE(USE_XCB, 0, [Use XCB for low-level protocol implementation])
  	;;
  *)
@@ -85,10 +85,10 @@ index 564e03f..3380f81 100644
                    xcb_io.c \
                    Xxcbint.h
 diff --git a/src/OpenDis.c b/src/OpenDis.c
-index 9c327d1..9d61087 100644
+index d5089e8..aa2541f 100644
 --- a/src/OpenDis.c
 +++ b/src/OpenDis.c
-@@ -260,13 +260,6 @@ XOpenDisplay (
+@@ -261,13 +261,6 @@ XOpenDisplay (
  		return(NULL);
  	}
  
@@ -102,7 +102,7 @@ index 9c327d1..9d61087 100644
  	if (!_XPollfdCacheInit(dpy)) {
  	        OutOfMemory (dpy, setup);
  		return(NULL);
-@@ -291,6 +284,10 @@ XOpenDisplay (
+@@ -292,6 +285,10 @@ XOpenDisplay (
           return(NULL);
      }
      dpy->bufmax = dpy->buffer + conn_buf_size;
@@ -113,7 +113,7 @@ index 9c327d1..9d61087 100644
  
  	/* Set up the input event queue and input event queue parameters. */
  	dpy->head = dpy->tail = NULL;
-@@ -651,6 +648,12 @@ XOpenDisplay (
+@@ -652,6 +649,12 @@ XOpenDisplay (
  	UnlockDisplay(dpy);
  #endif /* !USE_XCB */
  
@@ -126,7 +126,7 @@ index 9c327d1..9d61087 100644
  /*
   * Set up other stuff clients are always going to use.
   */
-@@ -672,12 +675,6 @@ XOpenDisplay (
+@@ -673,12 +676,6 @@ XOpenDisplay (
   */
  	(void) XSynchronize(dpy, _Xdebug);
  
@@ -139,7 +139,7 @@ index 9c327d1..9d61087 100644
  /*
   * get availability of large requests, and
   * get the resource manager database off the root window.
-@@ -882,10 +879,6 @@ void _XFreeDisplayStructure(dpy)
+@@ -883,10 +880,6 @@ void _XFreeDisplayStructure(dpy)
   	    Xfree (dpy->scratch_buffer);
  	FreeDisplayLock(dpy);
  
@@ -151,24 +151,29 @@ index 9c327d1..9d61087 100644
  	    register _XQEvent *qelt = dpy->qfree;
  
 diff --git a/src/Xxcbint.h b/src/Xxcbint.h
-index cc73749..e6674f9 100644
+index cc73749..1b3137b 100644
 --- a/src/Xxcbint.h
 +++ b/src/Xxcbint.h
-@@ -7,7 +7,6 @@
+@@ -5,34 +5,28 @@
+ #define XXCBINT_H
+ 
  #include <assert.h>
++#include <stdint.h>
  #include <X11/Xlibint.h>
  #include <X11/Xlib-xcb.h>
 -#include "locking.h" /* really just want X11/Xthreads.h but can't have it. */
  
- #define XCB_SEQUENCE_COMPARE(a,op,b)	((int) ((a) - (b)) op 0)
- #define assert_sequence_less(a,b) assert(XCB_SEQUENCE_COMPARE((a), <=, (b)))
-@@ -15,24 +14,19 @@
+-#define XCB_SEQUENCE_COMPARE(a,op,b)	((int) ((a) - (b)) op 0)
+-#define assert_sequence_less(a,b) assert(XCB_SEQUENCE_COMPARE((a), <=, (b)))
++#define XLIB_SEQUENCE_COMPARE(a,op,b)	(((long) (a) - (long) (b)) op 0)
+ 
  typedef struct PendingRequest PendingRequest;
  struct PendingRequest {
  	PendingRequest *next;
 -	xcondition_rec condition;
 -	int waiters; /* Number of threads waiting; -1 if no wait needed */
- 	unsigned int sequence;
+-	unsigned int sequence;
++	unsigned long sequence;
  };
  
  typedef struct _X11XCBPrivate {
@@ -185,7 +190,7 @@ index cc73749..e6674f9 100644
  	char *reply_data;
  	int reply_length;
  	int reply_consumed;
-+	unsigned int last_flushed;
++	uint64_t last_flushed;
  	enum XEventQueueOwner event_owner;
  	XID next_xid;
  } _X11XCBPrivate;
@@ -206,18 +211,62 @@ index cc73749..e6674f9 100644
 -
  #endif /* XXCBINT_H */
 diff --git a/src/xcb_io.c b/src/xcb_io.c
-index 5f07184..030b69b 100644
+index dcbe5a8..830ddb9 100644
 --- a/src/xcb_io.c
 +++ b/src/xcb_io.c
-@@ -5,7 +5,6 @@
+@@ -5,12 +5,50 @@
  #include "locking.h"
  #include "Xxcbint.h"
  #include <xcb/xcbext.h>
 -#include <xcb/xcbxlib.h>
  
  #include <assert.h>
++#include <inttypes.h>
++#include <stdint.h>
  #include <stdlib.h>
-@@ -68,15 +67,6 @@ static void check_internal_connections(Display *dpy)
+ #include <string.h>
+ 
++static void return_socket(void *closure)
++{
++	Display *dpy = closure;
++	LockDisplay(dpy);
++	_XSend(dpy, 0, 0);
++	dpy->bufmax = dpy->buffer;
++	UnlockDisplay(dpy);
++}
++
++static void require_socket(Display *dpy)
++{
++	if(dpy->bufmax == dpy->buffer)
++	{
++		uint64_t sent;
++		int flags = 0;
++		/* if we don't own the event queue, we have to ask XCB
++		 * to set our errors aside for us. */
++		if(dpy->xcb->event_owner != XlibOwnsEventQueue)
++			flags = XCB_REQUEST_CHECKED;
++		if(!xcb_take_socket(dpy->xcb->connection, return_socket, dpy,
++		                    flags, &sent))
++			_XIOError(dpy);
++		/* Xlib uses unsigned long for sequence numbers.  XCB
++		 * uses 64-bit internally, but currently exposes an
++		 * unsigned int API.  If these differ, Xlib cannot track
++		 * the full 64-bit sequence number if 32-bit wrap
++		 * happens while Xlib does not own the socket.  A
++		 * complete fix would be to make XCB's public API use
++		 * 64-bit sequence numbers. */
++		assert(!(sizeof(unsigned long) > sizeof(unsigned int)
++		         && dpy->xcb->event_owner == XlibOwnsEventQueue
++		         && (sent - dpy->last_request_read >= (UINT64_C(1) << 32))));
++		dpy->xcb->last_flushed = dpy->request = sent;
++		dpy->bufmax = dpy->xcb->real_bufmax;
++	}
++}
++
+ /* Call internal connection callbacks for any fds that are currently
+  * ready to read. This function will not block unless one of the
+  * callbacks blocks.
+@@ -68,15 +106,6 @@ static void check_internal_connections(Display *dpy)
  		}
  }
  
@@ -233,7 +282,57 @@ index 5f07184..030b69b 100644
  static void call_handlers(Display *dpy, xcb_generic_reply_t *buf)
  {
  	_XAsyncHandler *async, *next;
-@@ -139,18 +129,9 @@ static void process_responses(Display *dpy, int wait_for_first_event, xcb_generi
+@@ -105,7 +134,17 @@ static xcb_generic_event_t * wait_or_poll_for_event(Display *dpy, int wait)
+ 	return event;
+ }
+ 
+-static void process_responses(Display *dpy, int wait_for_first_event, xcb_generic_error_t **current_error, unsigned int current_request)
++/* Widen a 32-bit sequence number into a native-word-size (unsigned long)
++ * sequence number.  Treating the comparison as a 1 and shifting it avoids a
++ * conditional branch, and shifting by 16 twice avoids a compiler warning when
++ * sizeof(unsigned long) == 4. */
++static void widen(unsigned long *wide, unsigned int narrow)
++{
++	unsigned long new = (*wide & ~0xFFFFFFFFUL) | narrow;
++	*wide = new + ((unsigned long) (new < *wide) << 16 << 16);
++}
++
++static void process_responses(Display *dpy, int wait_for_first_event, xcb_generic_error_t **current_error, unsigned long current_request)
+ {
+ 	void *reply;
+ 	xcb_generic_event_t *event = dpy->xcb->next_event;
+@@ -114,13 +153,18 @@ static void process_responses(Display *dpy, int wait_for_first_event, xcb_generi
+ 	if(!event && dpy->xcb->event_owner == XlibOwnsEventQueue)
+ 		event = wait_or_poll_for_event(dpy, wait_for_first_event);
+ 
++	require_socket(dpy);
++
+ 	while(1)
+ 	{
+ 		PendingRequest *req = dpy->xcb->pending_requests;
+-		assert(!(req && current_request && !XCB_SEQUENCE_COMPARE(req->sequence, <=, current_request)));
+-		if(event && (!req || XCB_SEQUENCE_COMPARE(event->full_sequence, <=, req->sequence)))
++		unsigned long event_sequence = dpy->last_request_read;
++		if(event)
++			widen(&event_sequence, event->full_sequence);
++		assert(!(req && current_request && !XLIB_SEQUENCE_COMPARE(req->sequence, <=, current_request)));
++		if(event && (!req || XLIB_SEQUENCE_COMPARE(event_sequence, <=, req->sequence)))
+ 		{
+-			dpy->last_request_read = event->full_sequence;
++			dpy->last_request_read = event_sequence;
+ 			if(event->response_type != X_Error)
+ 			{
+ 				/* GenericEvents may be > 32 bytes. In this
+@@ -139,7 +183,7 @@ static void process_responses(Display *dpy, int wait_for_first_event, xcb_generi
+ 				_XEnq(dpy, (xEvent *) event);
+ 				wait_for_first_event = 0;
+ 			}
+-			else if(current_error && event->full_sequence == current_request)
++			else if(current_error && event_sequence == current_request)
+ 			{
+ 				/* This can only occur when called from
+ 				 * _XReply, which doesn't need a new event. */
+@@ -152,18 +196,9 @@ static void process_responses(Display *dpy, int wait_for_first_event, xcb_generi
  			free(event);
  			event = wait_or_poll_for_event(dpy, wait_for_first_event);
  		}
@@ -254,13 +353,23 @@ index 5f07184..030b69b 100644
  		}
  		else if(req && xcb_poll_for_reply(dpy->xcb->connection, req->sequence, &reply, &error))
  		{
-@@ -221,32 +202,71 @@ void _XReadEvents(Display *dpy)
+@@ -192,7 +227,7 @@ static void process_responses(Display *dpy, int wait_for_first_event, xcb_generi
+ 	if(xcb_connection_has_error(c))
+ 		_XIOError(dpy);
+ 
+-	assert_sequence_less(dpy->last_request_read, dpy->request);
++	assert(XLIB_SEQUENCE_COMPARE(dpy->last_request_read, <=, dpy->request));
+ 	assert(!wait_for_first_event);
+ }
+ 
+@@ -234,32 +269,61 @@ void _XReadEvents(Display *dpy)
   */
  void _XSend(Display *dpy, const char *data, long size)
  {
 +	static const xReq dummy_request;
 +	static char const pad[3];
 +	struct iovec vec[3];
++	uint64_t requests;
 +	_XExtension *ext;
  	xcb_connection_t *c = dpy->xcb->connection;
  	if(dpy->flags & XlibDisplayIOError)
@@ -271,9 +380,7 @@ index 5f07184..030b69b 100644
 -	dpy->xcb->request_extra_size = size;
 +	if(dpy->bufptr == dpy->buffer && !size)
 +		return;
- 
--	/* give dpy->buffer to XCB */
--	_XPutXCBBuffer(dpy);
++
 +	/* iff we asked XCB to set aside errors, we must pick those up
 +	 * eventually. iff there are async handlers, we may have just
 +	 * issued requests that will generate replies. in either case,
@@ -291,17 +398,20 @@ index 5f07184..030b69b 100644
 +			dpy->xcb->pending_requests_tail = &req->next;
 +		}
 +	}
++	requests = dpy->request - dpy->xcb->last_flushed;
 +	dpy->xcb->last_flushed = dpy->request;
  
--	if(xcb_flush(c) <= 0)
--		_XIOError(dpy);
+-	/* give dpy->buffer to XCB */
+-	_XPutXCBBuffer(dpy);
 +	vec[0].iov_base = dpy->buffer;
 +	vec[0].iov_len = dpy->bufptr - dpy->buffer;
 +	vec[1].iov_base = (caddr_t) data;
 +	vec[1].iov_len = size;
 +	vec[2].iov_base = (caddr_t) pad;
 +	vec[2].iov_len = -size & 3;
-+
+ 
+-	if(xcb_flush(c) <= 0)
+-		_XIOError(dpy);
 +	for(ext = dpy->flushes; ext; ext = ext->next_flush)
 +	{
 +		int i;
@@ -312,7 +422,7 @@ index 5f07184..030b69b 100644
  
 -	/* get a new dpy->buffer */
 -	_XGetXCBBuffer(dpy);
-+	if(xcb_writev(c, vec, 3) < 0)
++	if(xcb_writev(c, vec, 3, requests) < 0)
 +		_XIOError(dpy);
 +	dpy->bufptr = dpy->buffer;
 +	dpy->last_req = (char *) &dummy_request;
@@ -327,44 +437,18 @@ index 5f07184..030b69b 100644
 -	 * effect until after UnlockDisplay returns, we may as well do
 -	 * the check in _XUnlockDisplay. */
 +	_XSetSeqSyncFunction(dpy);
-+}
-+
-+static unsigned int return_socket(void *closure)
-+{
-+	unsigned int request;
-+	Display *dpy = closure;
-+	LockDisplay(dpy);
-+	_XSend(dpy, 0, 0);
-+	dpy->bufmax = dpy->buffer;
-+	request = dpy->request;
-+	UnlockDisplay(dpy);
-+	return request;
  }
  
  /*
-@@ -255,6 +275,21 @@ void _XSend(Display *dpy, const char *data, long size)
+@@ -268,6 +332,7 @@ void _XSend(Display *dpy, const char *data, long size)
   */
  void _XFlush(Display *dpy)
  {
-+	if(dpy->bufmax == dpy->buffer)
-+	{
-+		unsigned int sent, read;
-+		int flags = 0;
-+		/* if we don't own the event queue, we have to ask XCB
-+		 * to set our errors aside for us. */
-+		if(dpy->xcb->event_owner != XlibOwnsEventQueue)
-+			flags = XCB_REQUEST_CHECKED;
-+		if(!xcb_take_socket(dpy->xcb->connection, return_socket, dpy,
-+		                    flags, &sent, &read))
-+			_XIOError(dpy);
-+		dpy->xcb->last_flushed = dpy->request = sent;
-+		dpy->last_request_read = read;
-+		dpy->bufmax = dpy->xcb->real_bufmax;
-+	}
++	require_socket(dpy);
  	_XSend(dpy, 0, 0);
  
  	_XEventsQueued(dpy, QueuedAfterReading);
-@@ -295,10 +330,18 @@ XID _XAllocID(Display *dpy)
+@@ -308,10 +373,18 @@ XID _XAllocID(Display *dpy)
  void _XAllocIDs(Display *dpy, XID *ids, int count)
  {
  	int i;
@@ -385,9 +469,12 @@ index 5f07184..030b69b 100644
  }
  
  static void _XFreeReplyData(Display *dpy, Bool force)
-@@ -314,14 +357,7 @@ static PendingRequest * insert_pending_request(Display *dpy)
+@@ -325,16 +398,9 @@ static void _XFreeReplyData(Display *dpy, Bool force)
+ static PendingRequest * insert_pending_request(Display *dpy)
+ {
  	PendingRequest **cur = &dpy->xcb->pending_requests;
- 	while(*cur && XCB_SEQUENCE_COMPARE((*cur)->sequence, <, dpy->request))
+-	while(*cur && XCB_SEQUENCE_COMPARE((*cur)->sequence, <, dpy->request))
++	while(*cur && XLIB_SEQUENCE_COMPARE((*cur)->sequence, <, dpy->request))
  		cur = &((*cur)->next);
 -	if(*cur && (*cur)->sequence == dpy->request)
 -	{
@@ -401,7 +488,7 @@ index 5f07184..030b69b 100644
  	{
  		PendingRequest *node = malloc(sizeof(PendingRequest));
  		assert(node);
-@@ -331,8 +367,6 @@ static PendingRequest * insert_pending_request(Display *dpy)
+@@ -344,8 +410,6 @@ static PendingRequest * insert_pending_request(Display *dpy)
  			dpy->xcb->pending_requests_tail = &(node->next);
  		*cur = node;
  	}
@@ -410,7 +497,7 @@ index 5f07184..030b69b 100644
  	return *cur;
  }
  
-@@ -354,27 +388,15 @@ Status _XReply(Display *dpy, xReply *rep, int extra, Bool discard)
+@@ -367,27 +431,15 @@ Status _XReply(Display *dpy, xReply *rep, int extra, Bool discard)
  	if(dpy->flags & XlibDisplayIOError)
  		return 0;
  
@@ -683,5 +770,5 @@ index 71b2383..0000000
 -    dpy->bufptr = dpy->buffer;
 -}
 -- 
-1.5.4.1
+1.6.0.2.307.gc427.dirty
 
