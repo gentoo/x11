@@ -166,7 +166,7 @@ PDEPEND="${PDEPEND}
 		input_devices_vmmouse? ( >=x11-drivers/xf86-input-vmmouse-12.5.0 )
 		input_devices_void? ( >=x11-drivers/xf86-input-void-1.1.1 )
 
-		input_devices_synaptics? ( x11-drivers/synaptics )
+		input_devices_synaptics? ( x11-drivers/xf86-input-synaptics )
 		input_devices_wacom? ( x11-drivers/linuxwacom )
 
 		video_cards_fbdev? ( >=x11-drivers/xf86-video-fbdev-0.4.0 )
