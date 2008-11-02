@@ -101,3 +101,4 @@
 =x11-libs/libxkbui-9999
 =x11-libs/xtrans-9999
 =x11-misc/xkeyboard-config-9999
+=x11-drivers/xf86-input-synaptics-9999
