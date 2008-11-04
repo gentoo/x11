@@ -1,0 +1,25 @@
+From 5ec1d9da0f69982c002f88c9d049324b4b281b3b Mon Sep 17 00:00:00 2001
+From: root <root@gentoo-dev.localdomain>
+Date: Tue, 4 Nov 2008 12:18:01 +0200
+Subject: [PATCH] Bump version number to 1.2
+
+---
+ configure.ac |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index e16d70d..4bc0c25 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -3,7 +3,7 @@
+ 
+ AC_PREREQ(2.57)
+ AC_INIT([libxcb],
+-        1.1.92,
++        1.2,
+         [xcb@lists.freedesktop.org])
+ AC_CONFIG_SRCDIR([xcb.pc.in])
+ AM_INIT_AUTOMAKE([foreign dist-bzip2])
+-- 
+1.6.0.3
+
