@@ -5,12 +5,11 @@
 # Must be before x-modular eclass is inherited
 #SNAPSHOT="yes"
 
-inherit x-modular
 
 DESCRIPTION="X.Org driver for Intel cards"
 
 KEYWORDS="~amd64 ~arm ~ia64 ~sh ~x86 ~x86-fbsd"
-IUSE="dri"
+IUSE="dri dri2"
 
 RDEPEND=">=x11-base/xorg-server-1.2
 	x11-libs/libXvMC"
@@ -25,6 +24,10 @@ DEPEND="${RDEPEND}
 			x11-libs/libX11 )"
 
 CONFIGURE_OPTIONS="$(use_enable dri)"
+
+use dri2 && EGIT_BRANCH="dri2";
+
+inherit x-modular
 
 pkg_setup() {
 	if use dri && ! built_with_use x11-base/xorg-server dri; then
