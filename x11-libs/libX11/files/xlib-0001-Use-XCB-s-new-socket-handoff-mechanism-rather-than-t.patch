@@ -1,7 +1,7 @@
-From 50d5c8363da0cd10217d4f24e8561ed9a1e1881e Mon Sep 17 00:00:00 2001
-From: Josh Triplett <josh@freedesktop.org>
-Date: Sat, 15 Mar 2008 17:22:00 -0700
-Subject: [PATCH 1/4] Use XCB's new socket handoff mechanism rather than the old XCB Xlib lock.
+From 70fe1551f2faf239bbe22688bb7f65d9714baae2 Mon Sep 17 00:00:00 2001
+From: root <root@gentoo-dev.localdomain>
+Date: Tue, 4 Nov 2008 12:11:14 +0200
+Subject: [PATCH] Use XCB's new socket handoff mechanism rather than the old XCB Xlib lock.
 
 Previously, Xlib/XCB used XCB's Xlib lock to prevent XCB from sending
 requests between calls to Xlib's LockDisplay and UnlockDisplay macros.
@@ -47,26 +47,28 @@ the locks reduces implementation complexity and should not impact applications.
 
 Commit by Jamey Sharp and Josh Triplett.
 XCB's handoff mechanism inspired by Keith Packard.
+
+Conflicts:
+
+	configure.ac
 ---
- configure.ac    |    4 +-
+ configure.ac    |    2 +
  src/Makefile.am |    1 -
  src/OpenDis.c   |   27 +++----
  src/Xxcbint.h   |   27 +-----
  src/xcb_io.c    |  194 +++++++++++++++++++++++++++++-----------------
  src/xcb_lock.c  |  235 -------------------------------------------------------
- 6 files changed, 140 insertions(+), 348 deletions(-)
+ 6 files changed, 140 insertions(+), 346 deletions(-)
  delete mode 100644 src/xcb_lock.c
 
 diff --git a/configure.ac b/configure.ac
-index 5febfb3..6141fa4 100644
+index 73bf00f..f8d0001 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -52,8 +52,8 @@ no)
+@@ -53,6 +53,8 @@ no)
  	AC_DEFINE(USE_XCB, 0, [Use XCB for low-level protocol implementation])
  	;;
  *)
--	X11_REQUIRES="xcb-xlib >= 1.1.90"
--	X11_EXTRA_DEPS="xcb-xlib"
 +	X11_REQUIRES="xcb >= 1.2"
 +	X11_EXTRA_DEPS="xcb >= 1.2"
  	xdmauth="no" # XCB handles all auth
@@ -770,5 +772,5 @@ index 71b2383..0000000
 -    dpy->bufptr = dpy->buffer;
 -}
 -- 
-1.6.0.2.307.gc427.dirty
+1.6.0.3
 

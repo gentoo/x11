@@ -1,7 +1,7 @@
-From 1cfce69bf65d9631a72f8b20d637bf158c0afd20 Mon Sep 17 00:00:00 2001
+From d179d72a72ac42585a4a89207bb02b30e44707ab Mon Sep 17 00:00:00 2001
 From: Keith Packard <keithp@keithp.com>
-Date: Sat, 11 Oct 2008 21:10:00 -0700
-Subject: [PATCH 3/4] Permit only one Xlib thread to block waiting for events
+Date: Sat, 11 Oct 2008 21:10:23 -0700
+Subject: [PATCH] Permit only one Xlib thread to block waiting for events
 
 As Xlib queues events internally, we must prevent multiple Xlib threads from
 entering XCB to wait for an event in case the queued event is to be
@@ -99,5 +99,5 @@ index d0abf4c..fc8e53f 100644
  
  int _XEventsQueued(Display *dpy, int mode)
 -- 
-1.6.0.2.307.gc427.dirty
+1.6.0.3
 
