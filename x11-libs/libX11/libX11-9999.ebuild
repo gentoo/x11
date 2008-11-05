@@ -20,7 +20,7 @@ DEPEND="${RDEPEND}
 	x11-proto/xcmiscproto
 	>=x11-misc/util-macros-0.99.0_p20051007"
 
-PATCHES="${FILESDIR}/xlib-*.patch"
+#PATCHES="${FILESDIR}/xlib-*.patch"
 
 CONFIGURE_OPTIONS="$(use_enable ipv6)
 	$(use_with xcb)"
