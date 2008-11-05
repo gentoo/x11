@@ -1,0 +1,67 @@
+From bf4cceaf2cdaa281a6d67341ff3de1b2ffb079a5 Mon Sep 17 00:00:00 2001
+From: Keith Packard <keithp@keithp.com>
+Date: Fri, 17 Oct 2008 00:07:08 -0700
+Subject: [PATCH] XAA tiling support was mis-computing adjusted pitch (>>4 instead of >>2)
+
+This may well explain why XAA never worked well on tiled front buffers;
+tiled buffers require a different pitch programming on 965 than non-tiled
+buffers, in dwords rather than bytes.
+
+Signed-off-by: Keith Packard <keithp@keithp.com>
+Signed-off-by: Eric Anholt <eric@anholt.net>
+---
+ src/i830_xaa.c |   10 +++++-----
+ 1 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/src/i830_xaa.c b/src/i830_xaa.c
+index c9c26b0..e5e849d 100644
+--- a/src/i830_xaa.c
++++ b/src/i830_xaa.c
+@@ -314,7 +314,7 @@ I830SetupForSolidFill(ScrnInfoPtr pScrn, int color, int rop,
+ 	       color, rop, planemask);
+ 
+     if (IS_I965G(pI830) && I830CheckTiling(pScrn)) {
+-	pI830->BR[13] = (pScrn->displayWidth * pI830->cpp) >> 4;
++	pI830->BR[13] = (pScrn->displayWidth * pI830->cpp) >> 2;
+     } else {
+ 	pI830->BR[13] = (pScrn->displayWidth * pI830->cpp);
+     }
+@@ -385,7 +385,7 @@ I830SetupForScreenToScreenCopy(ScrnInfoPtr pScrn, int xdir, int ydir, int rop,
+ 	       xdir, ydir, rop, planemask, transparency_color);
+ 
+     if (IS_I965G(pI830) && I830CheckTiling(pScrn)) {
+-	pI830->BR[13] = (pScrn->displayWidth * pI830->cpp) >> 4;
++	pI830->BR[13] = (pScrn->displayWidth * pI830->cpp) >> 2;
+     } else {
+ 	pI830->BR[13] = (pScrn->displayWidth * pI830->cpp);
+     }
+@@ -468,7 +468,7 @@ I830SetupForMono8x8PatternFill(ScrnInfoPtr pScrn, int pattx, int patty,
+     pI830->BR[19] = fg;
+ 
+     if (IS_I965G(pI830) && I830CheckTiling(pScrn)) {
+-	pI830->BR[13] = (pScrn->displayWidth * pI830->cpp) >> 4;
++	pI830->BR[13] = (pScrn->displayWidth * pI830->cpp) >> 2;
+     } else {
+ 	pI830->BR[13] = (pScrn->displayWidth * pI830->cpp);
+     }
+@@ -565,7 +565,7 @@ I830SetupForScanlineCPUToScreenColorExpandFill(ScrnInfoPtr pScrn,
+ 
+     /* Fill out register values */
+     if (IS_I965G(pI830) && I830CheckTiling(pScrn)) {
+-	pI830->BR[13] = (pScrn->displayWidth * pI830->cpp) >> 4;
++	pI830->BR[13] = (pScrn->displayWidth * pI830->cpp) >> 2;
+     } else {
+ 	pI830->BR[13] = (pScrn->displayWidth * pI830->cpp);
+     }
+@@ -671,7 +671,7 @@ I830SetupForScanlineImageWrite(ScrnInfoPtr pScrn, int rop,
+ 
+     /* Fill out register values */
+     if (IS_I965G(pI830) && I830CheckTiling(pScrn)) {
+-	pI830->BR[13] = (pScrn->displayWidth * pI830->cpp) >> 4;
++	pI830->BR[13] = (pScrn->displayWidth * pI830->cpp) >> 2;
+     } else {
+ 	pI830->BR[13] = (pScrn->displayWidth * pI830->cpp);
+     }
+-- 
+1.6.0.3
+

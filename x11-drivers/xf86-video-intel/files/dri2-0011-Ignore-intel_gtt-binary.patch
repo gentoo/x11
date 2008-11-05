@@ -1,0 +1,22 @@
+From 7012057ce0e7da000aab3f4c29ae8a8ee51667cb Mon Sep 17 00:00:00 2001
+From: Carl Worth <cworth@cworth.org>
+Date: Wed, 22 Oct 2008 14:51:42 -0700
+Subject: [PATCH] Ignore intel_gtt binary
+
+We simply forgot to add this to .gitignore when it was created.
+---
+ src/reg_dumper/.gitignore |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/src/reg_dumper/.gitignore b/src/reg_dumper/.gitignore
+index 0adc8b2..5aac542 100644
+--- a/src/reg_dumper/.gitignore
++++ b/src/reg_dumper/.gitignore
+@@ -1,3 +1,4 @@
++intel_gtt
+ intel_hotplug
+ intel_idle
+ intel_reg_dumper
+-- 
+1.6.0.3
+

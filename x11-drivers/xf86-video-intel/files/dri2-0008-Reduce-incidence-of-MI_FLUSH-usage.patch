@@ -1,0 +1,200 @@
+From 67c3b4c9a57f66bb49a9e1af5ede7b17b6cf1420 Mon Sep 17 00:00:00 2001
+From: Keith Packard <keithp@keithp.com>
+Date: Tue, 14 Oct 2008 14:38:05 -0700
+Subject: [PATCH] Reduce incidence of MI_FLUSH usage.
+
+This tracks whether the last command in each batch is an MI_FLUSH command
+and avoids appending another MI_FLUSH in the non-GEM cases.
+
+Signed-off-by: Keith Packard <keithp@keithp.com>
+---
+ src/i830_accel.c       |    5 ++---
+ src/i830_batchbuffer.c |   16 ++++++++++++++--
+ src/i830_batchbuffer.h |    8 ++++----
+ src/i830_driver.c      |    6 +++++-
+ src/i830_exa.c         |   10 +++++-----
+ 5 files changed, 30 insertions(+), 15 deletions(-)
+
+diff --git a/src/i830_accel.c b/src/i830_accel.c
+index e29982a..c01076a 100644
+--- a/src/i830_accel.c
++++ b/src/i830_accel.c
+@@ -192,7 +192,7 @@ I830Sync(ScrnInfoPtr pScrn)
+ 
+    I830EmitFlush(pScrn);
+ 
+-   intel_batch_flush(pScrn);
++   intel_batch_flush(pScrn, TRUE);
+ 
+    if (pI830->directRenderingType > DRI_NONE) {
+        struct drm_i915_irq_emit emit;
+@@ -237,9 +237,8 @@ I830EmitFlush(ScrnInfoPtr pScrn)
+       flags = 0;
+ 
+    {
+-       BEGIN_BATCH(2);
++       BEGIN_BATCH(1);
+        OUT_BATCH(MI_FLUSH | flags);
+-       OUT_BATCH(MI_NOOP);		/* pad to quadword */
+        ADVANCE_BATCH();
+    }
+ }
+diff --git a/src/i830_batchbuffer.c b/src/i830_batchbuffer.c
+index 9ae2141..9aa99ed 100644
+--- a/src/i830_batchbuffer.c
++++ b/src/i830_batchbuffer.c
+@@ -156,7 +156,7 @@ intel_batch_teardown(ScrnInfoPtr pScrn)
+ }
+ 
+ void
+-intel_batch_flush(ScrnInfoPtr pScrn)
++intel_batch_flush(ScrnInfoPtr pScrn, Bool flushed)
+ {
+     I830Ptr pI830 = I830PTR(pScrn);
+     int ret;
+@@ -164,6 +164,17 @@ intel_batch_flush(ScrnInfoPtr pScrn)
+     if (pI830->batch_used == 0)
+ 	return;
+ 
++    /* If we're not using GEM, then emit a flush after each batch buffer */
++    if (pI830->memory_manager == NULL && !flushed) {
++	int flags = MI_WRITE_DIRTY_STATE | MI_INVALIDATE_MAP_CACHE;
++
++	if (IS_I965G(pI830))
++	    flags = 0;
++
++	*(uint32_t *)(pI830->batch_ptr + pI830->batch_used) = MI_FLUSH | flags;
++	pI830->batch_used += 4;
++    }
++	
+     /* Emit a padding dword if we aren't going to be quad-word aligned. */
+     if ((pI830->batch_used & 4) == 0) {
+ 	*(uint32_t *)(pI830->batch_ptr + pI830->batch_used) = MI_NOOP;
+@@ -188,5 +199,6 @@ intel_batch_flush(ScrnInfoPtr pScrn)
+      * blockhandler.  We could set this less often, but it's probably not worth
+      * the work.
+      */
+-    pI830->need_mi_flush = TRUE;
++    if (pI830->memory_manager != NULL)
++	pI830->need_mi_flush = TRUE;
+ }
+diff --git a/src/i830_batchbuffer.h b/src/i830_batchbuffer.h
+index 3c7a69b..0511493 100644
+--- a/src/i830_batchbuffer.h
++++ b/src/i830_batchbuffer.h
+@@ -34,7 +34,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ 
+ void intel_batch_init(ScrnInfoPtr pScrn);
+ void intel_batch_teardown(ScrnInfoPtr pScrn);
+-void intel_batch_flush(ScrnInfoPtr pScrn);
++void intel_batch_flush(ScrnInfoPtr pScrn, Bool flushed);
+ 
+ static inline int
+ intel_batch_space(I830Ptr pI830)
+@@ -47,7 +47,7 @@ intel_batch_require_space(ScrnInfoPtr pScrn, I830Ptr pI830, GLuint sz)
+ {
+     assert(sz < pI830->batch_bo->size - 8);
+     if (intel_batch_space(pI830) < sz)
+-	intel_batch_flush(pScrn);
++	intel_batch_flush(pScrn, FALSE);
+ }
+ 
+ static inline void
+@@ -119,8 +119,8 @@ do {									\
+     if (pI830->batch_emitting != 0)					\
+ 	FatalError("%s: BEGIN_BATCH called without closing "		\
+ 		   "ADVANCE_BATCH\n", __FUNCTION__);			\
++    intel_batch_require_space(pScrn, pI830, (n) * 4);			\
+     pI830->batch_emitting = (n) * 4;					\
+-    intel_batch_require_space(pScrn, pI830, pI830->batch_emitting);	\
+     pI830->batch_emit_start = pI830->batch_used;			\
+ } while (0)
+ 
+@@ -140,7 +140,7 @@ do {									\
+ 		   pI830->batch_emitting);				\
+     if ((pI830->batch_emitting > 8) && (I810_DEBUG & DEBUG_ALWAYS_SYNC)) { \
+ 	/* Note: not actually syncing, just flushing each batch. */	\
+-	intel_batch_flush(pScrn);					\
++	intel_batch_flush(pScrn, FALSE);					\
+     }									\
+     pI830->batch_emitting = 0;						\
+ } while (0)
+diff --git a/src/i830_driver.c b/src/i830_driver.c
+index 740dc1c..ae1c219 100644
+--- a/src/i830_driver.c
++++ b/src/i830_driver.c
+@@ -2683,17 +2683,21 @@ I830BlockHandler(int i,
+     pScreen->BlockHandler = I830BlockHandler;
+ 
+     if (pScrn->vtSema && pI830->accel != ACCEL_NONE) {
++       Bool flushed = FALSE;
+        /* Emit a flush of the rendering cache, or on the 965 and beyond
+ 	* rendering results may not hit the framebuffer until significantly
+ 	* later.
+ 	*/
+        if (pI830->accel != ACCEL_NONE && (pI830->need_mi_flush || pI830->batch_used))
++       {
++	  flushed = TRUE;
+ 	  I830EmitFlush(pScrn);
++       }
+ 
+        /* Flush the batch, so that any rendering is executed in a timely
+ 	* fashion.
+ 	*/
+-       intel_batch_flush(pScrn);
++       intel_batch_flush(pScrn, flushed);
+ #ifdef XF86DRI
+        if (pI830->memory_manager)
+ 	 drmCommandNone(pI830->drmSubFD, DRM_I915_GEM_THROTTLE);
+diff --git a/src/i830_exa.c b/src/i830_exa.c
+index 5a34231..64e1402 100644
+--- a/src/i830_exa.c
++++ b/src/i830_exa.c
+@@ -252,7 +252,7 @@ I830EXADoneSolid(PixmapPtr pPixmap)
+     ScrnInfoPtr pScrn = xf86Screens[pPixmap->drawable.pScreen->myNum];
+ 
+ #if ALWAYS_FLUSH
+-    intel_batch_flush(pScrn);
++    intel_batch_flush(pScrn, FALSE);
+ #endif
+ #if ALWAYS_SYNC
+     I830Sync(pScrn);
+@@ -353,7 +353,7 @@ I830EXADoneCopy(PixmapPtr pDstPixmap)
+     ScrnInfoPtr pScrn = xf86Screens[pDstPixmap->drawable.pScreen->myNum];
+ 
+ #if ALWAYS_FLUSH
+-    intel_batch_flush(pScrn);
++    intel_batch_flush(pScrn, FALSE);
+ #endif
+ #if ALWAYS_SYNC
+     I830Sync(pScrn);
+@@ -374,7 +374,7 @@ i830_done_composite(PixmapPtr pDst)
+     ScrnInfoPtr pScrn = xf86Screens[pDst->drawable.pScreen->myNum];
+ 
+ #if ALWAYS_FLUSH
+-    intel_batch_flush(pScrn);
++    intel_batch_flush(pScrn, FALSE);
+ #endif
+ #if ALWAYS_SYNC
+     I830Sync(pScrn);
+@@ -530,7 +530,7 @@ static Bool I830EXAPrepareAccess(PixmapPtr pPix, int index)
+ 	return TRUE;
+     }
+ 
+-    intel_batch_flush(scrn);
++    intel_batch_flush(scrn, FALSE);
+     if (i830->need_sync) {
+ 	I830Sync(scrn);
+ 	i830->need_sync = FALSE;
+@@ -771,7 +771,7 @@ i830_uxa_prepare_access (PixmapPtr pixmap, uxa_access_t access)
+ 	ScrnInfoPtr scrn = xf86Screens[screen->myNum];
+ 	I830Ptr i830 = I830PTR(scrn);
+ 	
+-	intel_batch_flush(scrn);
++	intel_batch_flush(scrn, FALSE);
+ 	if (i830->need_sync) {
+ 	    I830Sync(scrn);
+ 	    i830->need_sync = FALSE;
+-- 
+1.6.0.3
+

@@ -1,0 +1,48 @@
+From c563830b2f7f5ec1035f7e002957aafa90ba4a75 Mon Sep 17 00:00:00 2001
+From: Carl Worth <cworth@cworth.org>
+Date: Wed, 22 Oct 2008 15:28:24 -0700
+Subject: [PATCH] Rename gen4_state_init to gen4_static_state_init
+
+This follows naturally from the structure rename.
+
+Also we make things less muddled by having this function
+actually accept a pointer to a gen4_static_state_t rather
+than a gen4_state_t, (and then fetching the desired pointer
+out from that).
+
+Again, no intended change in functionality here.
+---
+ src/i965_render.c |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/i965_render.c b/src/i965_render.c
+index 7cc81f2..c23ff0c 100644
+--- a/src/i965_render.c
++++ b/src/i965_render.c
+@@ -706,11 +706,10 @@ wm_state_init (struct brw_wm_unit_state *wm_state,
+  * Called at EnterVT to fill in our state buffer with any static information.
+  */
+ static void
+-gen4_state_init (struct gen4_render_state *render_state)
++gen4_static_state_init (gen4_static_state_t *static_state,
++			uint32_t state_base_offset)
+ {
+     int i, j, k, l;
+-    gen4_static_state_t *static_state = render_state->static_state;
+-    uint32_t state_base_offset = render_state->static_state_offset;
+ 
+ #define KERNEL_COPY(kernel) \
+     memcpy(static_state->kernel, kernel ## _static, sizeof(kernel ## _static))
+@@ -1481,7 +1480,8 @@ gen4_render_state_init(ScrnInfoPtr pScrn)
+ 	    (pI830->FbBase + render_state->static_state_offset);
+     }
+ 
+-    gen4_state_init(render_state);
++    gen4_static_state_init(render_state->static_state,
++			   render_state->static_state_offset);
+ }
+ 
+ /**
+-- 
+1.6.0.3
+

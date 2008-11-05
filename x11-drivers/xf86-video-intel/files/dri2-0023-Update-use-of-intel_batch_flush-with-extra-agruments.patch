@@ -1,0 +1,25 @@
+From 7ab3121329a3bb0c3eed6a570549ba1ba0a31230 Mon Sep 17 00:00:00 2001
+From: Ahmed Ammar <b33fc0d3@gentoo.org>
+Date: Wed, 5 Nov 2008 16:45:37 +0200
+Subject: [PATCH] Update use of intel_batch_flush with extra agruments
+
+---
+ src/i830_dri.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/src/i830_dri.c b/src/i830_dri.c
+index d2271a8..54edfb0 100644
+--- a/src/i830_dri.c
++++ b/src/i830_dri.c
+@@ -1936,7 +1936,7 @@ I830DRI2CopyRegion(DrawablePtr pDraw, RegionPtr pRegion,
+ 
+     /* We can't rely on getting into the block handler before the DRI
+      * client gets to run again so flush now. */
+-    intel_batch_flush(pScrn);
++    intel_batch_flush(pScrn, TRUE);
+ #if ALWAYS_SYNC
+     I830Sync(pScrn);
+ #endif
+-- 
+1.6.0.3
+

@@ -1,0 +1,27 @@
+From 2abc90f9a84eab5bd2e4def233f476f2dcbdf9d4 Mon Sep 17 00:00:00 2001
+From: Jesse Barnes <jbarnes@virtuousgeek.org>
+Date: Thu, 30 Oct 2008 13:40:23 -0700
+Subject: [PATCH] Don't modify render standby if kernel mode setting is active
+
+Since we can't bang on registers directly in that case.
+---
+ src/i830_driver.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/src/i830_driver.c b/src/i830_driver.c
+index ae1c219..68157e4 100644
+--- a/src/i830_driver.c
++++ b/src/i830_driver.c
+@@ -3339,7 +3339,8 @@ I830ScreenInit(int scrnIndex, ScreenPtr pScreen, int argc, char **argv)
+ 	   return FALSE;
+    }
+ 
+-   i830_disable_render_standby(pScrn);
++   if (!pI830->use_drm_mode)
++       i830_disable_render_standby(pScrn);
+ 
+    DPRINTF(PFX, "assert( if(!I830EnterVT(scrnIndex, 0)) )\n");
+ 
+-- 
+1.6.0.3
+

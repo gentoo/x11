@@ -25,7 +25,10 @@ DEPEND="${RDEPEND}
 
 CONFIGURE_OPTIONS="$(use_enable dri)"
 
-use dri2 && EGIT_BRANCH="dri2";
+if use dri2; then
+	EGIT_BRANCH="dri2";
+	PATCHES="${FILESDIR}/dri2-*.patch"
+fi
 
 inherit x-modular
 

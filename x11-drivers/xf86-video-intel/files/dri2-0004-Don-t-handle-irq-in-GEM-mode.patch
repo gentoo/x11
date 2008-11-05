@@ -1,0 +1,43 @@
+From ec4fa074b4ef07bc4aeef6650b7aa1f4e4918862 Mon Sep 17 00:00:00 2001
+From: Zhenyu Wang <zhenyu.z.wang@intel.com>
+Date: Thu, 16 Oct 2008 10:35:17 +0800
+Subject: [PATCH] Don't handle irq in GEM mode
+
+---
+ src/i830_dri.c    |    2 +-
+ src/i830_driver.c |    6 ++++--
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/src/i830_dri.c b/src/i830_dri.c
+index 12de9d4..cc771d7 100644
+--- a/src/i830_dri.c
++++ b/src/i830_dri.c
+@@ -952,7 +952,7 @@ I830DRIResume(ScreenPtr pScreen)
+    I830ResumeDma(pScrn);
+ 
+    if (!pI830->memory_manager)
+-      I830DRIInstIrqHandler(pScrn);
++       I830DRIInstIrqHandler(pScrn);
+ 
+    return TRUE;
+ }
+diff --git a/src/i830_driver.c b/src/i830_driver.c
+index 7bc10fd..740dc1c 100644
+--- a/src/i830_driver.c
++++ b/src/i830_driver.c
+@@ -3562,8 +3562,10 @@ I830LeaveVT(int scrnIndex, int flags)
+        pI830->directRenderingType == DRI_XF86DRI) {
+       DRILock(screenInfo.screens[pScrn->scrnIndex], 0);
+ 
+-      I830DRISetVBlankInterrupt (pScrn, FALSE);
+-      drmCtlUninstHandler(pI830->drmSubFD);
++      if (!pI830->memory_manager) {
++	  I830DRISetVBlankInterrupt (pScrn, FALSE);
++	  drmCtlUninstHandler(pI830->drmSubFD);
++      }
+    }
+ #endif
+ 
+-- 
+1.6.0.3
+
