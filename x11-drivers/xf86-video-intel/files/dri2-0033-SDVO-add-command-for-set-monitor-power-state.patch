@@ -1,0 +1,66 @@
+From b6eea1e5dbcb29eeb26401ac9e3401b536a7ace5 Mon Sep 17 00:00:00 2001
+From: Zhenyu Wang <zhenyu.z.wang@intel.com>
+Date: Mon, 3 Nov 2008 16:05:28 +0800
+Subject: [PATCH] SDVO: add command for set monitor power state
+
+SDVO encoder power state must be higher than monitor's state.
+This only adds command and doesn't enable monitor power state
+setting yet.
+---
+ src/i830_sdvo.c      |    3 ++-
+ src/i830_sdvo_regs.h |   18 +++++++++++++++++-
+ 2 files changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/src/i830_sdvo.c b/src/i830_sdvo.c
+index 75a8d02..4a424de 100644
+--- a/src/i830_sdvo.c
++++ b/src/i830_sdvo.c
+@@ -231,8 +231,9 @@ const static struct _sdvo_cmd_name {
+     SDVO_CMD_NAME_ENTRY(SDVO_CMD_GET_TV_FORMAT),
+     SDVO_CMD_NAME_ENTRY(SDVO_CMD_SET_TV_FORMAT),
+     SDVO_CMD_NAME_ENTRY(SDVO_CMD_GET_SUPPORTED_POWER_STATES),
+-    SDVO_CMD_NAME_ENTRY(SDVO_CMD_GET_ENCODER_POWER_STATE),
++    SDVO_CMD_NAME_ENTRY(SDVO_CMD_GET_POWER_STATE),
+     SDVO_CMD_NAME_ENTRY(SDVO_CMD_SET_ENCODER_POWER_STATE),
++    SDVO_CMD_NAME_ENTRY(SDVO_CMD_SET_DISPLAY_POWER_STATE),
+     SDVO_CMD_NAME_ENTRY(SDVO_CMD_SET_CONTROL_BUS_SWITCH),
+     SDVO_CMD_NAME_ENTRY(SDVO_CMD_GET_SDTV_RESOLUTION_SUPPORT),
+     SDVO_CMD_NAME_ENTRY(SDVO_CMD_GET_SCALED_HDTV_RESOLUTION_SUPPORT),
+diff --git a/src/i830_sdvo_regs.h b/src/i830_sdvo_regs.h
+index 5ec22d4..11e49c8 100644
+--- a/src/i830_sdvo_regs.h
++++ b/src/i830_sdvo_regs.h
+@@ -513,13 +513,29 @@ struct i830_sdvo_hdtv_resolution_reply {
+     unsigned int pad5:7;
+ } __attribute__((packed));
+ 
++/* Get supported power state returns info for encoder and monitor, rely on
++   last SetTargetInput and SetTargetOutput calls */
+ #define SDVO_CMD_GET_SUPPORTED_POWER_STATES		0x2a
+-#define SDVO_CMD_GET_ENCODER_POWER_STATE		0x2b
++/* Get power state returns info for encoder and monitor, rely on last
++   SetTargetInput and SetTargetOutput calls */
++#define SDVO_CMD_GET_POWER_STATE			0x2b
++/* Set encoder power state */
+ #define SDVO_CMD_SET_ENCODER_POWER_STATE		0x2c
+ # define SDVO_ENCODER_STATE_ON					(1 << 0)
+ # define SDVO_ENCODER_STATE_STANDBY				(1 << 1)
+ # define SDVO_ENCODER_STATE_SUSPEND				(1 << 2)
+ # define SDVO_ENCODER_STATE_OFF					(1 << 3)
++# define SDVO_MONITOR_STATE_ON					(1 << 4)
++# define SDVO_MONITOR_STATE_STANDBY				(1 << 5)
++# define SDVO_MONITOR_STATE_SUSPEND				(1 << 6)
++# define SDVO_MONITOR_STATE_OFF					(1 << 7)
++
++/* Set display power state */
++#define SDVO_CMD_SET_DISPLAY_POWER_STATE		0x7d
++# define SDVO_DISPLAY_STATE_ON				(1 << 0)
++# define SDVO_DISPLAY_STATE_STANDBY			(1 << 1)
++# define SDVO_DISPLAY_STATE_SUSPEND			(1 << 2)
++# define SDVO_DISPLAY_STATE_OFF				(1 << 3)
+ 
+ #define SDVO_CMD_GET_SUPPORTED_ENHANCEMENTS		0x84
+ struct i830_sdvo_enhancements_reply {
+-- 
+1.6.0.3
+

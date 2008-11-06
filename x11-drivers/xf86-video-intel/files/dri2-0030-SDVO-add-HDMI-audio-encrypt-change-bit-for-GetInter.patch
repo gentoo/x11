@@ -1,0 +1,26 @@
+From 76437c01eee36343ad30f2ed7798675f75728067 Mon Sep 17 00:00:00 2001
+From: Zhenyu Wang <zhenyu.z.wang@intel.com>
+Date: Mon, 3 Nov 2008 14:59:53 +0800
+Subject: [PATCH] SDVO: add HDMI audio encrypt change bit for GetInterruptEventSource command
+
+---
+ src/i830_sdvo_regs.h |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/src/i830_sdvo_regs.h b/src/i830_sdvo_regs.h
+index be35b8d..53544ae 100644
+--- a/src/i830_sdvo_regs.h
++++ b/src/i830_sdvo_regs.h
+@@ -210,7 +210,8 @@ struct i830_sdvo_in_out_map {
+ struct i830_sdvo_get_interrupt_event_source_response {
+     uint16_t interrupt_status;
+     unsigned int ambient_light_interrupt:1;
+-    unsigned int pad:7;
++    unsigned int hdmi_audio_encrypt_change:1;
++    unsigned int pad:6;
+ } __attribute__((packed));
+ 
+ /**
+-- 
+1.6.0.3
+

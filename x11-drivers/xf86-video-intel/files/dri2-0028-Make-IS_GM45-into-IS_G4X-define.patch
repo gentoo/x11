@@ -1,0 +1,160 @@
+From e7582958f276914e67272850de8fd728f7df2d1c Mon Sep 17 00:00:00 2001
+From: Zhenyu Wang <zhenyu.z.wang@intel.com>
+Date: Thu, 6 Nov 2008 09:46:54 +0800
+Subject: [PATCH] Make IS_GM45 into IS_G4X define
+
+Those are identical that using one define is much clear.
+And it can also apply fixes for GM45 too, which is missing with
+origin define.
+---
+ src/common.h         |   14 +++++++-------
+ src/i830_display.c   |    2 +-
+ src/i830_driver.c    |    6 +++---
+ src/i830_hdmi.c      |    4 ++--
+ src/i965_render.c    |    2 +-
+ src/i965_video.c     |    2 +-
+ src/reg_dumper/gtt.c |    2 +-
+ 7 files changed, 16 insertions(+), 16 deletions(-)
+
+diff --git a/src/common.h b/src/common.h
+index acd5f4a..214932a 100644
+--- a/src/common.h
++++ b/src/common.h
+@@ -343,9 +343,9 @@ extern int I810_DEBUG;
+ #define IS_I945G(pI810) (DEVICE_ID(pI810->PciInfo) == PCI_CHIP_I945_G)
+ #define IS_I945GM(pI810) (DEVICE_ID(pI810->PciInfo) == PCI_CHIP_I945_GM || DEVICE_ID(pI810->PciInfo) == PCI_CHIP_I945_GME)
+ #define IS_GM45(pI810) (DEVICE_ID(pI810->PciInfo) == PCI_CHIP_GM45_GM)
+-#define IS_G4X(pI810) (DEVICE_ID(pI810->PciInfo) == PCI_CHIP_IGD_E_G || DEVICE_ID(pI810->PciInfo) == PCI_CHIP_G45_G || DEVICE_ID(pI810->PciInfo) == PCI_CHIP_Q45_G || DEVICE_ID(pI810->PciInfo) == PCI_CHIP_G41_G)
++#define IS_G4X(pI810) (DEVICE_ID(pI810->PciInfo) == PCI_CHIP_IGD_E_G || DEVICE_ID(pI810->PciInfo) == PCI_CHIP_G45_G || DEVICE_ID(pI810->PciInfo) == PCI_CHIP_Q45_G || DEVICE_ID(pI810->PciInfo) == PCI_CHIP_G41_G || IS_GM45(pI810))
+ #define IS_I965GM(pI810) (DEVICE_ID(pI810->PciInfo) == PCI_CHIP_I965_GM || DEVICE_ID(pI810->PciInfo) == PCI_CHIP_I965_GME)
+-#define IS_I965G(pI810) (DEVICE_ID(pI810->PciInfo) == PCI_CHIP_I965_G || DEVICE_ID(pI810->PciInfo) == PCI_CHIP_G35_G || DEVICE_ID(pI810->PciInfo) == PCI_CHIP_I965_Q || DEVICE_ID(pI810->PciInfo) == PCI_CHIP_I946_GZ || DEVICE_ID(pI810->PciInfo) == PCI_CHIP_I965_GM || DEVICE_ID(pI810->PciInfo) == PCI_CHIP_I965_GME || IS_GM45(pI810) || IS_G4X(pI810))
++#define IS_I965G(pI810) (DEVICE_ID(pI810->PciInfo) == PCI_CHIP_I965_G || DEVICE_ID(pI810->PciInfo) == PCI_CHIP_G35_G || DEVICE_ID(pI810->PciInfo) == PCI_CHIP_I965_Q || DEVICE_ID(pI810->PciInfo) == PCI_CHIP_I946_GZ || DEVICE_ID(pI810->PciInfo) == PCI_CHIP_I965_GM || DEVICE_ID(pI810->PciInfo) == PCI_CHIP_I965_GME || IS_G4X(pI810))
+ #define IS_G33CLASS(pI810) (DEVICE_ID(pI810->PciInfo) == PCI_CHIP_G33_G ||\
+  			    DEVICE_ID(pI810->PciInfo) == PCI_CHIP_Q35_G ||\
+  			    DEVICE_ID(pI810->PciInfo) == PCI_CHIP_Q33_G)
+@@ -356,16 +356,16 @@ extern int I810_DEBUG;
+ /* mark chipsets for using gfx VM offset for overlay */
+ #define OVERLAY_NOPHYSICAL(pI810) (IS_G33CLASS(pI810) || IS_I965G(pI810))
+ /* mark chipsets without overlay hw */
+-#define OVERLAY_NOEXIST(pI810) (IS_GM45(pI810) || IS_G4X(pI810))
++#define OVERLAY_NOEXIST(pI810) (IS_G4X(pI810))
+ /* chipsets require graphics mem for hardware status page */
+ #define HWS_NEED_GFX(pI810) (!pI810->use_drm_mode && \
+-			     (IS_G33CLASS(pI810) || IS_GM45(pI810) || \
++			     (IS_G33CLASS(pI810) ||\
+ 			      IS_G4X(pI810)))
+ /* chipsets require status page in non stolen memory */
+-#define HWS_NEED_NONSTOLEN(pI810) (IS_GM45(pI810) || IS_G4X(pI810))
+-#define SUPPORTS_INTEGRATED_HDMI(pI810) (IS_GM45(pI810) || IS_G4X(pI810))
++#define HWS_NEED_NONSTOLEN(pI810) (IS_G4X(pI810))
++#define SUPPORTS_INTEGRATED_HDMI(pI810) (IS_G4X(pI810))
+ /* dsparb controlled by hw only */
+-#define DSPARB_HWCONTROL(pI810) (IS_G4X(pI810) || IS_GM45(pI810))
++#define DSPARB_HWCONTROL(pI810) (IS_G4X(pI810))
+ 
+ #define GTT_PAGE_SIZE			KB(4)
+ #define ROUND_TO(x, y)			(((x) + (y) - 1) / (y) * (y))
+diff --git a/src/i830_display.c b/src/i830_display.c
+index 84384c0..2626612 100644
+--- a/src/i830_display.c
++++ b/src/i830_display.c
+@@ -1126,7 +1126,7 @@ i830_update_dsparb(ScrnInfoPtr pScrn)
+   /*
+     * FIFO entries will be split based on programmed modes
+     */
+-   if (IS_I965GM(pI830) || IS_GM45(pI830))
++   if (IS_I965GM(pI830))
+        fifo_entries = 127;
+    else if (IS_I9XX(pI830))
+        fifo_entries = 95;
+diff --git a/src/i830_driver.c b/src/i830_driver.c
+index 5f81980..6b5ef37 100644
+--- a/src/i830_driver.c
++++ b/src/i830_driver.c
+@@ -503,7 +503,7 @@ I830DetectMemory(ScrnInfoPtr pScrn)
+    range = gtt_size + 4;
+ 
+    /* new 4 series hardware has seperate GTT stolen with GFX stolen */
+-   if (IS_G4X(pI830) || IS_GM45(pI830))
++   if (IS_G4X(pI830))
+        range = 4;
+ 
+    if (IS_I85X(pI830) || IS_I865G(pI830) || IS_I9XX(pI830)) {
+@@ -638,7 +638,7 @@ I830MapMMIO(ScrnInfoPtr pScrn)
+ 
+       if (IS_I965G(pI830)) 
+       {
+-	 if (IS_GM45(pI830) || IS_G4X(pI830)) {
++	 if (IS_G4X(pI830)) {
+ 	     gttaddr = pI830->MMIOAddr + MB(2);
+ 	     pI830->GTTMapSize = MB(2);
+ 	 } else {
+@@ -963,7 +963,7 @@ i830_init_clock_gating(ScrnInfoPtr pScrn)
+ 
+     /* Disable clock gating reported to work incorrectly according to the specs.
+      */
+-    if (IS_GM45(pI830) || IS_G4X(pI830)) {
++    if (IS_G4X(pI830)) {
+ 	uint32_t dspclk_gate;
+ 	OUTREG(RENCLK_GATE_D1, 0);
+ 	OUTREG(RENCLK_GATE_D2, VF_UNIT_CLOCK_GATE_DISABLE |
+diff --git a/src/i830_hdmi.c b/src/i830_hdmi.c
+index 44e5c05..806ca7d 100644
+--- a/src/i830_hdmi.c
++++ b/src/i830_hdmi.c
+@@ -142,11 +142,11 @@ i830_hdmi_detect(xf86OutputPtr output)
+     xf86OutputStatus status;
+     xf86MonPtr edid_mon;
+ 
+-    /* For G4X, PEG_BAND_GAP_DATA 3:0 must first be written 0xd.
++    /* For G4X desktop chip, PEG_BAND_GAP_DATA 3:0 must first be written 0xd.
+      * Failure to do so will result in spurious interrupts being
+      * generated on the port when a cable is not attached.
+      */
+-    if (IS_G4X(pI830)) {
++    if (IS_G4X(pI830) && !IS_GM45(pI830)) {
+ 	temp = INREG(PEG_BAND_GAP_DATA);
+ 	OUTREG(PEG_BAND_GAP_DATA, (temp & ~0xf) | 0xd);
+     }
+diff --git a/src/i965_render.c b/src/i965_render.c
+index f773c1f..9863697 100644
+--- a/src/i965_render.c
++++ b/src/i965_render.c
+@@ -1143,7 +1143,7 @@ _emit_batch_header_for_composite_internal (ScrnInfoPtr pScrn, Bool check_twice)
+         BEGIN_BATCH(12);
+ 
+         /* Match Mesa driver setup */
+-	if (IS_GM45(pI830) || IS_G4X(pI830))
++	if (IS_G4X(pI830))
+ 	    OUT_BATCH(NEW_PIPELINE_SELECT | PIPELINE_SELECT_3D);
+ 	else
+ 	    OUT_BATCH(BRW_PIPELINE_SELECT | PIPELINE_SELECT_3D);
+diff --git a/src/i965_video.c b/src/i965_video.c
+index 78f69ee..37eebb3 100644
+--- a/src/i965_video.c
++++ b/src/i965_video.c
+@@ -584,7 +584,7 @@ I965DisplayVideoTextured(ScrnInfoPtr pScrn, I830PortPrivPtr pPriv, int id,
+     {
+ 	BEGIN_BATCH(12);
+ 	/* Match Mesa driver setup */
+-	if (IS_GM45(pI830) || IS_G4X(pI830))
++	if (IS_G4X(pI830))
+ 	    OUT_BATCH(NEW_PIPELINE_SELECT | PIPELINE_SELECT_3D);
+ 	else
+ 	    OUT_BATCH(BRW_PIPELINE_SELECT | PIPELINE_SELECT_3D);
+diff --git a/src/reg_dumper/gtt.c b/src/reg_dumper/gtt.c
+index eca4bc6..ead5935 100644
+--- a/src/reg_dumper/gtt.c
++++ b/src/reg_dumper/gtt.c
+@@ -52,7 +52,7 @@ int main(int argc, char **argv)
+ 		exit(1);
+ 	}
+ 
+-	if (IS_G4X(pI830) || IS_GM45(pI830))
++	if (IS_G4X(pI830))
+ 		gtt = (unsigned char *)(pI830->mmio + MB(2));
+ 	else if (IS_I965G(pI830))
+ 		gtt = (unsigned char *)(pI830->mmio + KB(512));
+-- 
+1.6.0.3
+

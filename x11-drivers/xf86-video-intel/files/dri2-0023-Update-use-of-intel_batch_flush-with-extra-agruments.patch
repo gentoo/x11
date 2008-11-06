@@ -16,7 +16,7 @@ index d2271a8..54edfb0 100644
      /* We can't rely on getting into the block handler before the DRI
       * client gets to run again so flush now. */
 -    intel_batch_flush(pScrn);
-+    intel_batch_flush(pScrn, TRUE);
++    intel_batch_flush(pScrn, FALSE);
  #if ALWAYS_SYNC
      I830Sync(pScrn);
  #endif

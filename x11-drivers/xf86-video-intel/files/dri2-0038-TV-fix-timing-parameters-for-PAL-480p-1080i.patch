@@ -1,0 +1,52 @@
+From 9b726b7d65443462d19f079b57cbc20d7e978cac Mon Sep 17 00:00:00 2001
+From: Zhenyu Wang <zhenyu.z.wang@intel.com>
+Date: Wed, 29 Oct 2008 20:41:46 +0800
+Subject: [PATCH] TV: fix timing parameters for PAL, 480p, 1080i
+
+---
+ src/i830_tv.c |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/i830_tv.c b/src/i830_tv.c
+index d02bc11..112c588 100644
+--- a/src/i830_tv.c
++++ b/src/i830_tv.c
+@@ -487,7 +487,7 @@ const static tv_mode_t tv_modes[] = {
+ 	.oversample	= TV_OVERSAMPLE_8X,
+ 	.component_only = 0,
+ 
+-	.hsync_end	= 64,		    .hblank_end		= 128,
++	.hsync_end	= 64,		    .hblank_end		= 142,
+ 	.hblank_start	= 844,	    .htotal		= 863,
+ 
+ 	.progressive	= FALSE,    .trilevel_sync = FALSE,
+@@ -548,7 +548,7 @@ const static tv_mode_t tv_modes[] = {
+ 	.veq_ena        = FALSE,
+ 
+ 	.vi_end_f1      = 44,               .vi_end_f2          = 44,
+-	.nbr_end        = 496,
++	.nbr_end        = 479,
+ 
+ 	.burst_ena      = FALSE,
+ 
+@@ -572,7 +572,7 @@ const static tv_mode_t tv_modes[] = {
+ 	.veq_ena        = FALSE,
+ 
+ 	.vi_end_f1      = 44,               .vi_end_f2          = 44,
+-	.nbr_end        = 496,
++	.nbr_end        = 479,
+ 
+ 	.burst_ena      = FALSE,
+ 
+@@ -733,7 +733,7 @@ const static tv_mode_t tv_modes[] = {
+ 	.component_only = 1,
+ 
+ 	.hsync_end      = 88,               .hblank_end         = 235,
+-	.hblank_start   = 2155,             .htotal             = 2200,
++	.hblank_start   = 2155,             .htotal             = 2201,
+ 
+ 	.progressive    = FALSE,	    .trilevel_sync = TRUE,
+ 
+-- 
+1.6.0.3
+
