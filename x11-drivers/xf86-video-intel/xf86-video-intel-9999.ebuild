@@ -3,8 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/x11-drivers/xf86-video-i810/xf86-video-i810-2.0.0.ebuild,v 1.1 2007/04/21 05:56:37 joshuabaergen Exp $
 
 # Must be before x-modular eclass is inherited
-#SNAPSHOT="yes"
-
+SNAPSHOT="yes"
 
 DESCRIPTION="X.Org driver for Intel cards"
 
@@ -19,9 +18,11 @@ DEPEND="${RDEPEND}
 	x11-proto/renderproto
 	x11-proto/xextproto
 	x11-proto/xproto
-	dri? ( x11-proto/xf86driproto
+	dri? ( 	x11-proto/xf86driproto
 			>=x11-libs/libdrm-2.2
-			x11-libs/libX11 )"
+			x11-libs/libX11 )
+	dri2? ( x11-proto/dri2proto
+			=x11-base/xorg-server-9999 )"
 
 CONFIGURE_OPTIONS="$(use_enable dri)"
 
@@ -36,14 +37,4 @@ pkg_setup() {
 	if use dri && ! built_with_use x11-base/xorg-server dri; then
 		die "Build x11-base/xorg-server with USE=dri."
 	fi
-}
-
-src_unpack() {
-	x-modular_specs_check
-	x-modular_server_supports_drivers_check
-	x-modular_dri_check
-	git_src_unpack
-	cd ${S}
-	x-modular_patch_source
-	x-modular_reconf_source
 }
