@@ -1,0 +1,83 @@
+From e8ab16df9d85773e592857245f241bf1a45d99b3 Mon Sep 17 00:00:00 2001
+From: =?utf-8?q?Michel=20D=C3=A4nzer?= <michel@tungstengraphics.com>
+Date: Tue, 19 Aug 2008 11:36:12 +0200
+Subject: [PATCH 19/36] EXA: Inline Prepare/FinishAccessWindow into only caller, ChangeWindowAttributes.
+
+Also check the requested mask in addition to the GC state before doing work.
+(cherry picked from commit f227fbf74f0c619ecf3275cdb4c10b1a4b3a8cfc)
+---
+ exa/exa.c      |   33 ++++++++++++---------------------
+ exa/exa_priv.h |    6 ------
+ 2 files changed, 12 insertions(+), 27 deletions(-)
+
+diff --git a/exa/exa.c b/exa/exa.c
+index 4529a96..3755078 100644
+--- a/exa/exa.c
++++ b/exa/exa.c
+@@ -675,34 +675,25 @@ exaCreateGC (GCPtr pGC)
+     return TRUE;
+ }
+ 
+-void
+-exaPrepareAccessWindow(WindowPtr pWin)
++static Bool
++exaChangeWindowAttributes(WindowPtr pWin, unsigned long mask)
+ {
+-    if (pWin->backgroundState == BackgroundPixmap) 
++    Bool ret;
++
++    if ((mask & CWBackPixmap) && pWin->backgroundState == BackgroundPixmap) 
+         exaPrepareAccess(&pWin->background.pixmap->drawable, EXA_PREPARE_SRC);
+ 
+-    if (pWin->borderIsPixel == FALSE)
+-        exaPrepareAccess(&pWin->border.pixmap->drawable, EXA_PREPARE_SRC);
+-}
++    if ((mask & CWBorderPixmap) && pWin->borderIsPixel == FALSE)
++        exaPrepareAccess(&pWin->border.pixmap->drawable, EXA_PREPARE_MASK);
+ 
+-void
+-exaFinishAccessWindow(WindowPtr pWin)
+-{
+-    if (pWin->backgroundState == BackgroundPixmap) 
+-        exaFinishAccess(&pWin->background.pixmap->drawable, EXA_PREPARE_SRC);
++    ret = fbChangeWindowAttributes(pWin, mask);
+ 
+-    if (pWin->borderIsPixel == FALSE)
+-        exaFinishAccess(&pWin->border.pixmap->drawable, EXA_PREPARE_SRC);
+-}
++    if ((mask & CWBorderPixmap) && pWin->borderIsPixel == FALSE)
++        exaFinishAccess(&pWin->border.pixmap->drawable, EXA_PREPARE_MASK);
+ 
+-static Bool
+-exaChangeWindowAttributes(WindowPtr pWin, unsigned long mask)
+-{
+-    Bool ret;
++    if ((mask & CWBackPixmap) && pWin->backgroundState == BackgroundPixmap) 
++        exaFinishAccess(&pWin->background.pixmap->drawable, EXA_PREPARE_SRC);
+ 
+-    exaPrepareAccessWindow(pWin);
+-    ret = fbChangeWindowAttributes(pWin, mask);
+-    exaFinishAccessWindow(pWin);
+     return ret;
+ }
+ 
+diff --git a/exa/exa_priv.h b/exa/exa_priv.h
+index 4b070dc..c148538 100644
+--- a/exa/exa_priv.h
++++ b/exa/exa_priv.h
+@@ -261,12 +261,6 @@ typedef struct {
+   */
+ void exaDDXDriverInit (ScreenPtr pScreen);
+ 
+-void
+-exaPrepareAccessWindow(WindowPtr pWin);
+-
+-void
+-exaFinishAccessWindow(WindowPtr pWin);
+-
+ /* exa_unaccel.c */
+ void
+ exaPrepareAccessGC(GCPtr pGC);
+-- 
+1.6.0.3
+

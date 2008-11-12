@@ -1,0 +1,682 @@
+From 2d4921d5f33eb5cb96a76fa56f6b9463a8d6babe Mon Sep 17 00:00:00 2001
+From: Remi Cardona <remi@gentoo.org>
+Date: Fri, 24 Oct 2008 00:24:04 +0200
+Subject: [PATCH 25/36] {damage,exa}: sanitise damage
+
+- Redo damage naming for more consistency.
+- Call post submission functions only where appropriate.
+- EXA can now live without it's odd damage workarounds.
+(cherry picked from commit 1861250cd7e84b05e8298b74e3c7e97da72ddfba)
+
+Conflicts:
+
+	exa/exa_migration.c
+	exa/exa_priv.h
+	exa/exa_render.c
+---
+ composite/compalloc.c         |    2 +-
+ composite/compwindow.c        |    4 +-
+ damageext/damageext.c         |    4 +-
+ exa/exa.c                     |   21 ++---------
+ exa/exa_migration.c           |   39 --------------------
+ exa/exa_priv.h                |    4 --
+ exa/exa_render.c              |   45 +++++++++++------------
+ glx/glxdri.c                  |    4 ++-
+ hw/xfree86/modes/xf86Rotate.c |    2 +-
+ miext/damage/damage.c         |   81 +++++++++++++++++++++++++----------------
+ miext/damage/damage.h         |    9 +++++
+ 11 files changed, 93 insertions(+), 122 deletions(-)
+
+diff --git a/composite/compalloc.c b/composite/compalloc.c
+index 19c7db0..a62647e 100644
+--- a/composite/compalloc.c
++++ b/composite/compalloc.c
+@@ -224,7 +224,7 @@ compFreeClientWindow (WindowPtr pWin, XID id)
+ 	DamageRegister (&pWin->drawable, cw->damage);
+ 	cw->damageRegistered = TRUE;
+ 	pWin->redirectDraw = RedirectDrawAutomatic;
+-	DamageDamageRegion (&pWin->drawable, &pWin->borderSize);
++	DamageRegionPending(&pWin->drawable, &pWin->borderSize);
+     }
+     if (wasMapped && !pWin->mapped)
+     {
+diff --git a/composite/compwindow.c b/composite/compwindow.c
+index 05dc055..da7b181 100644
+--- a/composite/compwindow.c
++++ b/composite/compwindow.c
+@@ -585,7 +585,7 @@ compCopyWindow (WindowPtr pWin, DDXPointRec ptOldOrg, RegionPtr prgnSrc)
+ 	REGION_TRANSLATE (prgnSrc, prgnSrc,
+ 			  pWin->drawable.x - ptOldOrg.x,
+ 			  pWin->drawable.y - ptOldOrg.y);
+-	DamageDamageRegion (&pWin->drawable, prgnSrc);
++	DamageRegionPending(&pWin->drawable, prgnSrc);
+     }
+     cs->CopyWindow = pScreen->CopyWindow;
+     pScreen->CopyWindow = compCopyWindow;
+@@ -664,7 +664,7 @@ compSetRedirectBorderClip (WindowPtr pWin, RegionPtr pRegion)
+     /*
+      * Report that as damaged so it will be redrawn
+      */
+-    DamageDamageRegion (&pWin->drawable, &damage);
++    DamageRegionPending(&pWin->drawable, &damage);
+     REGION_UNINIT (pScreen, &damage);
+     /*
+      * Save the new border clip region
+diff --git a/damageext/damageext.c b/damageext/damageext.c
+index 517c72d..1a3f2d3 100755
+--- a/damageext/damageext.c
++++ b/damageext/damageext.c
+@@ -233,7 +233,7 @@ ProcDamageCreate (ClientPtr client)
+     if (pDrawable->type == DRAWABLE_WINDOW)
+     {
+ 	pRegion = &((WindowPtr) pDrawable)->borderClip;
+-	DamageDamageRegion (pDrawable, pRegion);
++	DamageRegionPending(pDrawable, pRegion);
+     }
+ 
+     return (client->noClientException);
+@@ -303,7 +303,7 @@ ProcDamageAdd (ClientPtr client)
+      * screen coordinates like damage expects.
+      */
+     REGION_TRANSLATE(pScreen, pRegion, pDrawable->x, pDrawable->y);
+-    DamageDamageRegion(pDrawable, pRegion);
++    DamageRegionPending(pDrawable, pRegion);
+     REGION_TRANSLATE(pScreen, pRegion, -pDrawable->x, -pDrawable->y);
+ 
+     return (client->noClientException);
+diff --git a/exa/exa.c b/exa/exa.c
+index 3755078..b642bbd 100644
+--- a/exa/exa.c
++++ b/exa/exa.c
+@@ -263,21 +263,6 @@ exaSetFbPitch(ExaScreenPrivPtr pExaScr, ExaPixmapPrivPtr pExaPixmap,
+                                      pExaScr->info->pixmapPitchAlign);
+ }
+ 
+-
+-static void
+-ExaDamageReport(DamagePtr pDamage, RegionPtr pReg, void *pClosure)
+-{
+-    PixmapPtr pPixmap = pClosure;
+-    ExaPixmapPriv(pPixmap);
+-    RegionPtr pDamageReg = DamageRegion(pDamage);
+-
+-    if (pExaPixmap->pendingDamage) {
+-	REGION_UNION(pScreen, pDamageReg, pDamageReg, pReg);
+-	pExaPixmap->pendingDamage = FALSE;
+-    }
+-}
+-
+-
+ /**
+  * exaCreatePixmap() creates a new pixmap.
+  *
+@@ -365,8 +350,8 @@ exaCreatePixmap(ScreenPtr pScreen, int w, int h, int depth,
+         }
+ 
+ 	/* Set up damage tracking */
+-	pExaPixmap->pDamage = DamageCreate (ExaDamageReport, NULL,
+-					    DamageReportRawRegion, TRUE,
++	pExaPixmap->pDamage = DamageCreate (NULL, NULL,
++					    DamageReportNone, TRUE,
+ 					    pScreen, pPixmap);
+ 
+ 	if (pExaPixmap->pDamage == NULL) {
+@@ -375,6 +360,8 @@ exaCreatePixmap(ScreenPtr pScreen, int w, int h, int depth,
+ 	}
+ 
+ 	DamageRegister (&pPixmap->drawable, pExaPixmap->pDamage);
++	/* This ensures that pending damage reflects the current operation. */
++	/* This is used by exa to optimize migration. */
+ 	DamageSetReportAfterOp (pExaPixmap->pDamage, TRUE);
+     }
+  
+diff --git a/exa/exa_migration.c b/exa/exa_migration.c
+index 19f5006..c5c47df 100644
+--- a/exa/exa_migration.c
++++ b/exa/exa_migration.c
+@@ -43,39 +43,6 @@
+ #endif
+ 
+ /**
+- * Returns TRUE if the pixmap has damage.
+- * EXA only migrates the parts of a destination 
+- * that are affected by rendering.
+- * It uses the current damage as indication.
+- * So anything that does not need to be updated won't be.
+- * For clarity this seperate function was made.
+- * Note that some situations don't use this, 
+- * because their calls are wrapped by the damage layer.
+- */
+-Bool
+-exaDamageDestForMigration(PixmapPtr pPix, RegionPtr region)
+-{
+-    ScreenPtr pScreen = pPix->drawable.pScreen;
+-    (void) pScreen; /* the macros don't use pScreen currently */
+-    ExaPixmapPriv (pPix);
+-    int x_offset, y_offset;
+-    RegionPtr pending_damage;
+-
+-    if (!pExaPixmap->pDamage)
+-	return FALSE;
+-
+-    exaGetDrawableDeltas(&pPix->drawable, pPix, &x_offset, &y_offset);
+-
+-    REGION_TRANSLATE(pScreen, region, x_offset, y_offset);
+-    pending_damage = DamagePendingRegion(pExaPixmap->pDamage);
+-    REGION_UNION(pScreen, pending_damage, pending_damage, region);
+-    /* Restore region as we got it. */
+-    REGION_TRANSLATE(pScreen, region, -x_offset, -y_offset);
+-
+-    return TRUE;
+-}
+-
+-/**
+  * Returns TRUE if the pixmap is not movable.  This is the case where it's a
+  * fake pixmap for the frontbuffer (no pixmap private) or it's a scratch
+  * pixmap created by some other X Server internals (the score says it's
+@@ -334,9 +301,6 @@ exaDoMoveInPixmap (ExaMigrationPtr migrate)
+     ExaScreenPriv (pScreen);
+     ExaPixmapPriv (pPixmap);
+ 
+-    if (migrate->as_dst)
+-	pExaPixmap->pendingDamage = TRUE;
+-
+     /* If we're VT-switched away, no touching card memory allowed. */
+     if (pExaScr->swappedOut)
+ 	return;
+@@ -405,9 +369,6 @@ exaDoMoveOutPixmap (ExaMigrationPtr migrate)
+     PixmapPtr pPixmap = migrate->pPix;
+     ExaPixmapPriv (pPixmap);
+ 
+-    if (migrate->as_dst)
+-	pExaPixmap->pendingDamage = TRUE;
+-
+     if (!pExaPixmap->area || exaPixmapIsPinned(pPixmap))
+ 	return;
+ 
+diff --git a/exa/exa_priv.h b/exa/exa_priv.h
+index d3bad57..00a3c9a 100644
+--- a/exa/exa_priv.h
++++ b/exa/exa_priv.h
+@@ -227,7 +227,6 @@ typedef struct {
+      * location.
+      */
+     DamagePtr	    pDamage;
+-    Bool	    pendingDamage;
+     /**
+      * The valid regions mark the valid bits (at least, as they're derived from
+      * damage, which may be overreported) of a pixmap's system and FB copies.
+@@ -499,7 +498,4 @@ exaDoMigration (ExaMigrationPtr pixmaps, int npixmaps, Bool can_accel);
+ void
+ exaPixmapSave (ScreenPtr pScreen, ExaOffscreenArea *area);
+ 
+-Bool
+-exaDamageDestForMigration(PixmapPtr pPix, RegionPtr region);
+-
+ #endif /* EXAPRIV_H */
+diff --git a/exa/exa_render.c b/exa/exa_render.c
+index 88ea29a..9f6ac3f 100644
+--- a/exa/exa_render.c
++++ b/exa/exa_render.c
+@@ -466,11 +466,11 @@ exaCompositeRects(CARD8	              op,
+ {
+     PixmapPtr pPixmap = exaGetDrawablePixmap(pDst->pDrawable);
+     ExaPixmapPriv(pPixmap);
+-    RegionRec region;
+     int n;
+     ExaCompositeRectPtr r;
+     
+     if (pExaPixmap->pDamage) {
++	RegionRec region;
+ 	int x1 = MAXSHORT;
+ 	int y1 = MAXSHORT;
+ 	int x2 = MINSHORT;
+@@ -518,7 +518,9 @@ exaCompositeRects(CARD8	              op,
+ 
+ 	REGION_INIT(pScreen, &region, &box, 1);
+     
+-	exaDamageDestForMigration(pPixmap, &region);
++	DamageRegionPending(pDst->pDrawable, &region);
++
++	REGION_UNINIT(pScreen, &region);
+     }
+     
+     /************************************************************/
+@@ -543,13 +545,10 @@ exaCompositeRects(CARD8	              op,
+ 
+     if (pExaPixmap->pDamage) {
+ 	/* Now we have to flush the damage out from pendingDamage => damage 
+-	 * Calling DamageDamageRegion has that effect. (We could pass
+-	 * in an empty region here, but we pass in the same region we
+-	 * use above; the effect is the same.)
++	 * Calling DamageRegionSubmitted has that effect.
+ 	 */
+ 
+-	DamageDamageRegion(pDst->pDrawable, &region);
+-	REGION_UNINIT(pScreen, &region);
++	DamageRegionSubmitted(pDst->pDrawable);
+     }
+ }
+ 
+@@ -1064,16 +1063,20 @@ exaTrapezoids (CARD8 op, PicturePtr pSrc, PicturePtr pDst,
+ 	DrawablePtr pDraw = pDst->pDrawable;
+ 	PixmapPtr pixmap = exaGetDrawablePixmap (pDraw);
+ 	ExaPixmapPriv (pixmap);
+-	RegionRec migration;
+ 
++	/* Damage manually, because Trapezoids expects to hit Composite normally. */
++	/* Composite is wrapped by damage, but Trapezoids isn't. */
+ 	if (pExaPixmap->pDamage) {
++	    RegionRec migration;
++
+ 	    bounds.x1 += pDraw->x;
+ 	    bounds.y1 += pDraw->y;
+ 	    bounds.x2 += pDraw->x;
+ 	    bounds.y2 += pDraw->y;
+ 
+ 	    REGION_INIT(pScreen, &migration, &bounds, 1);
+-	    exaDamageDestForMigration(pixmap, &migration);
++	    DamageRegionPending(pDraw, &migration);
++	    REGION_UNINIT(pScreen, &migration);
+ 	}
+ 
+ 	exaPrepareAccess(pDraw, EXA_PREPARE_DEST);
+@@ -1083,12 +1086,8 @@ exaTrapezoids (CARD8 op, PicturePtr pSrc, PicturePtr pDst,
+ 
+ 	exaFinishAccess(pDraw, EXA_PREPARE_DEST);
+ 
+-	/* Damage manually, because Trapezoids expects to hit Composite normally. */
+-	/* Composite is wrapped by damage, but Trapezoids isn't. */
+-	if (pExaPixmap->pDamage) {
+-	    DamageDamageRegion(pDraw, &migration);
+-	    REGION_UNINIT(pScreen, &migration);
+-	}
++	if (pExaPixmap->pDamage)
++	    DamageRegionSubmitted(pDraw);
+     }
+     else if (maskFormat)
+     {
+@@ -1168,28 +1167,28 @@ exaTriangles (CARD8 op, PicturePtr pSrc, PicturePtr pDst,
+ 	DrawablePtr pDraw = pDst->pDrawable;
+ 	PixmapPtr pixmap = exaGetDrawablePixmap (pDraw);
+ 	ExaPixmapPriv (pixmap);
+-	RegionRec migration;
+ 
++	/* Damage manually, because Triangles expects to hit Composite normally. */
++	/* Composite is wrapped by damage, but Triangles isn't. */
+ 	if (pExaPixmap->pDamage) {
++	    RegionRec migration;
++
+ 	    bounds.x1 += pDraw->x;
+ 	    bounds.y1 += pDraw->y;
+ 	    bounds.x2 += pDraw->x;
+ 	    bounds.y2 += pDraw->y;
+ 
+ 	    REGION_INIT(pScreen, &migration, &bounds, 1);
+-	    exaDamageDestForMigration(pixmap, &migration);
++	    DamageRegionPending(pDraw, &migration);
++	    REGION_UNINIT(pScreen, &migration);
+ 	}
+ 
+ 	exaPrepareAccess(pDraw, EXA_PREPARE_DEST);
+ 	(*ps->AddTriangles) (pDst, 0, 0, ntri, tris);
+ 	exaFinishAccess(pDraw, EXA_PREPARE_DEST);
+ 
+-	/* Damage manually, because Triangles expects to hit Composite normally. */
+-	/* Composite is wrapped by damage, but Triangles isn't. */
+-	if (pExaPixmap->pDamage) {
+-	    DamageDamageRegion(pDraw, &migration);
+-	    REGION_UNINIT(pScreen, &migration);
+-	}
++	if (pExaPixmap->pDamage)
++	    DamageRegionSubmitted(pDraw);
+     }
+     else if (maskFormat)
+     {
+diff --git a/glx/glxdri.c b/glx/glxdri.c
+index 52a97d4..f5bab8f 100644
+--- a/glx/glxdri.c
++++ b/glx/glxdri.c
+@@ -812,7 +812,9 @@ static void __glXReportDamage(__DRIdrawable *driDraw,
+ 
+     REGION_INIT(pDraw->pScreen, &region, (BoxPtr) rects, num_rects);
+     REGION_TRANSLATE(pScreen, &region, pDraw->x, pDraw->y);
+-    DamageDamageRegion(pDraw, &region);
++    DamageRegionPending(pDraw, &region);
++    /* This is wrong, this needs a seperate function. */
++    DamageRegionSubmitted(pDraw);
+     REGION_UNINIT(pDraw->pScreen, &region);
+ 
+     __glXleaveServer(GL_FALSE);
+diff --git a/hw/xfree86/modes/xf86Rotate.c b/hw/xfree86/modes/xf86Rotate.c
+index e2d6295..050bc66 100644
+--- a/hw/xfree86/modes/xf86Rotate.c
++++ b/hw/xfree86/modes/xf86Rotate.c
+@@ -336,7 +336,7 @@ xf86CrtcDamageShadow (xf86CrtcPtr crtc)
+     damage_box.y1 = crtc->y;
+     damage_box.y2 = crtc->y + xf86ModeHeight (&crtc->mode, crtc->rotation);
+     REGION_INIT (pScreen, &damage_region, &damage_box, 1);
+-    DamageDamageRegion (&(*pScreen->GetScreenPixmap)(pScreen)->drawable,
++    DamageRegionPending (&(*pScreen->GetScreenPixmap)(pScreen)->drawable,
+ 			&damage_region);
+     REGION_UNINIT (pScreen, &damage_region);
+ }
+diff --git a/miext/damage/damage.c b/miext/damage/damage.c
+index b9a15ee..a73a3d5 100755
+--- a/miext/damage/damage.c
++++ b/miext/damage/damage.c
+@@ -164,11 +164,11 @@ DamageReportDamage (DamagePtr pDamage, RegionPtr pDamageRegion)
+ 
+ #if DAMAGE_DEBUG_ENABLE
+ static void
+-_damageDamageRegion (DrawablePtr pDrawable, RegionPtr pRegion, Bool clip, int subWindowMode, const char *where)
+-#define damageDamageRegion(d,r,c,m) _damageDamageRegion(d,r,c,m,__FUNCTION__)
++_damageRegionPending (DrawablePtr pDrawable, RegionPtr pRegion, Bool clip, int subWindowMode, const char *where)
++#define damageRegionPending(d,r,c,m) _damageRegionPending(d,r,c,m,__FUNCTION__)
+ #else
+ static void
+-damageDamageRegion (DrawablePtr pDrawable, RegionPtr pRegion, Bool clip,
++damageRegionPending (DrawablePtr pDrawable, RegionPtr pRegion, Bool clip,
+ 			int subWindowMode)
+ #endif
+ {
+@@ -326,7 +326,7 @@ damageDamageRegion (DrawablePtr pDrawable, RegionPtr pRegion, Bool clip,
+ }
+ 
+ static void
+-damageReportPostOp (DrawablePtr pDrawable)
++damageRegionSubmitted (DrawablePtr pDrawable)
+ {
+     drawableDamage(pDrawable);
+ 
+@@ -353,9 +353,9 @@ damageDamageBox (DrawablePtr pDrawable, BoxPtr pBox, int subWindowMode)
+ 
+     REGION_INIT (pDrawable->pScreen, &region, pBox, 1);
+ #if DAMAGE_DEBUG_ENABLE
+-    _damageDamageRegion (pDrawable, &region, TRUE, subWindowMode, where);
++    _damageRegionPending (pDrawable, &region, TRUE, subWindowMode, where);
+ #else
+-    damageDamageRegion (pDrawable, &region, TRUE, subWindowMode);
++    damageRegionPending (pDrawable, &region, TRUE, subWindowMode);
+ #endif
+     REGION_UNINIT (pDrawable->pScreen, &region);
+ }
+@@ -585,7 +585,7 @@ damageComposite (CARD8      op,
+ 		       yDst,
+ 		       width,
+ 		       height);
+-    damageReportPostOp (pDst->pDrawable);
++    damageRegionSubmitted (pDst->pDrawable);
+     wrap (pScrPriv, ps, Composite, damageComposite);
+ }
+ 
+@@ -652,7 +652,7 @@ damageGlyphs (CARD8		op,
+     }
+     unwrap (pScrPriv, ps, Glyphs);
+     (*ps->Glyphs) (op, pSrc, pDst, maskFormat, xSrc, ySrc, nlist, list, glyphs);
+-    damageReportPostOp (pDst->pDrawable);
++    damageRegionSubmitted (pDst->pDrawable);
+     wrap (pScrPriv, ps, Glyphs, damageGlyphs);
+ }
+ 
+@@ -757,7 +757,7 @@ damageFillSpans(DrawablePtr pDrawable,
+     
+     (*pGC->ops->FillSpans)(pDrawable, pGC, npt, ppt, pwidth, fSorted);
+ 
+-    damageReportPostOp (pDrawable);
++    damageRegionSubmitted (pDrawable);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDrawable);
+ }
+ 
+@@ -805,7 +805,7 @@ damageSetSpans(DrawablePtr  pDrawable,
+ 	   damageDamageBox (pDrawable, &box, pGC->subWindowMode);
+     }
+     (*pGC->ops->SetSpans)(pDrawable, pGC, pcharsrc, ppt, pwidth, npt, fSorted);
+-    damageReportPostOp (pDrawable);
++    damageRegionSubmitted (pDrawable);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDrawable);
+ }
+ 
+@@ -837,7 +837,7 @@ damagePutImage(DrawablePtr  pDrawable,
+     }
+     (*pGC->ops->PutImage)(pDrawable, pGC, depth, x, y, w, h,
+ 		leftPad, format, pImage);
+-    damageReportPostOp (pDrawable);
++    damageRegionSubmitted (pDrawable);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDrawable);
+ }
+ 
+@@ -881,7 +881,7 @@ damageCopyArea(DrawablePtr   pSrc,
+ 
+     ret = (*pGC->ops->CopyArea)(pSrc, pDst,
+             pGC, srcx, srcy, width, height, dstx, dsty);
+-    damageReportPostOp (pDst);
++    damageRegionSubmitted (pDst);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDst);
+     return ret;
+ }
+@@ -927,7 +927,7 @@ damageCopyPlane(DrawablePtr	pSrc,
+ 
+     ret = (*pGC->ops->CopyPlane)(pSrc, pDst,
+ 	       pGC, srcx, srcy, width, height, dstx, dsty, bitPlane);
+-    damageReportPostOp (pDst);
++    damageRegionSubmitted (pDst);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDst);
+     return ret;
+ }
+@@ -969,7 +969,7 @@ damagePolyPoint(DrawablePtr pDrawable,
+ 	   damageDamageBox (pDrawable, &box, pGC->subWindowMode);
+     }
+     (*pGC->ops->PolyPoint)(pDrawable, pGC, mode, npt, ppt);
+-    damageReportPostOp (pDrawable);
++    damageRegionSubmitted (pDrawable);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDrawable);
+ }
+ 
+@@ -1043,7 +1043,7 @@ damagePolylines(DrawablePtr pDrawable,
+ 	   damageDamageBox (pDrawable, &box, pGC->subWindowMode);
+     }
+     (*pGC->ops->Polylines)(pDrawable, pGC, mode, npt, ppt);
+-    damageReportPostOp (pDrawable);
++    damageRegionSubmitted (pDrawable);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDrawable);
+ }
+ 
+@@ -1122,7 +1122,7 @@ damagePolySegment(DrawablePtr	pDrawable,
+ 	   damageDamageBox (pDrawable, &box, pGC->subWindowMode);
+     }
+     (*pGC->ops->PolySegment)(pDrawable, pGC, nSeg, pSeg);
+-    damageReportPostOp (pDrawable);
++    damageRegionSubmitted (pDrawable);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDrawable);
+ }
+ 
+@@ -1184,7 +1184,7 @@ damagePolyRectangle(DrawablePtr  pDrawable,
+ 	}
+     }
+     (*pGC->ops->PolyRectangle)(pDrawable, pGC, nRects, pRects);
+-    damageReportPostOp (pDrawable);
++    damageRegionSubmitted (pDrawable);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDrawable);
+ }
+ 
+@@ -1237,7 +1237,7 @@ damagePolyArc(DrawablePtr   pDrawable,
+ 	   damageDamageBox (pDrawable, &box, pGC->subWindowMode);
+     }
+     (*pGC->ops->PolyArc)(pDrawable, pGC, nArcs, pArcs);
+-    damageReportPostOp (pDrawable);
++    damageRegionSubmitted (pDrawable);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDrawable);
+ }
+ 
+@@ -1296,7 +1296,7 @@ damageFillPolygon(DrawablePtr	pDrawable,
+     }
+     
+     (*pGC->ops->FillPolygon)(pDrawable, pGC, shape, mode, npt, ppt);
+-    damageReportPostOp (pDrawable);
++    damageRegionSubmitted (pDrawable);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDrawable);
+ }
+ 
+@@ -1335,7 +1335,7 @@ damagePolyFillRect(DrawablePtr	pDrawable,
+ 	    damageDamageBox (pDrawable, &box, pGC->subWindowMode);
+     }
+     (*pGC->ops->PolyFillRect)(pDrawable, pGC, nRects, pRects);
+-    damageReportPostOp (pDrawable);
++    damageRegionSubmitted (pDrawable);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDrawable);
+ }
+ 
+@@ -1377,7 +1377,7 @@ damagePolyFillArc(DrawablePtr	pDrawable,
+ 	   damageDamageBox (pDrawable, &box, pGC->subWindowMode);
+     }
+     (*pGC->ops->PolyFillArc)(pDrawable, pGC, nArcs, pArcs);
+-    damageReportPostOp (pDrawable);
++    damageRegionSubmitted (pDrawable);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDrawable);
+ }
+ 
+@@ -1488,7 +1488,7 @@ damagePolyText8(DrawablePtr pDrawable,
+ 		    Linear8Bit, TT_POLY8);
+     else
+ 	x = (*pGC->ops->PolyText8)(pDrawable, pGC, x, y, count, chars);
+-    damageReportPostOp (pDrawable);
++    damageRegionSubmitted (pDrawable);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDrawable);
+     return x;
+ }
+@@ -1509,7 +1509,7 @@ damagePolyText16(DrawablePtr	pDrawable,
+ 		    TT_POLY16);
+     else
+ 	x = (*pGC->ops->PolyText16)(pDrawable, pGC, x, y, count, chars);
+-    damageReportPostOp (pDrawable);
++    damageRegionSubmitted (pDrawable);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDrawable);
+     return x;
+ }
+@@ -1529,7 +1529,7 @@ damageImageText8(DrawablePtr	pDrawable,
+ 		    Linear8Bit, TT_IMAGE8);
+     else
+ 	(*pGC->ops->ImageText8)(pDrawable, pGC, x, y, count, chars);
+-    damageReportPostOp (pDrawable);
++    damageRegionSubmitted (pDrawable);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDrawable);
+ }
+ 
+@@ -1549,7 +1549,7 @@ damageImageText16(DrawablePtr	pDrawable,
+ 		    TT_IMAGE16);
+     else
+ 	(*pGC->ops->ImageText16)(pDrawable, pGC, x, y, count, chars);
+-    damageReportPostOp (pDrawable);
++    damageRegionSubmitted (pDrawable);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDrawable);
+ }
+ 
+@@ -1568,7 +1568,7 @@ damageImageGlyphBlt(DrawablePtr	    pDrawable,
+ 		       nglyph, ppci, TRUE, pGC->subWindowMode);
+     (*pGC->ops->ImageGlyphBlt)(pDrawable, pGC, x, y, nglyph,
+ 					ppci, pglyphBase);
+-    damageReportPostOp (pDrawable);
++    damageRegionSubmitted (pDrawable);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDrawable);
+ }
+ 
+@@ -1586,7 +1586,7 @@ damagePolyGlyphBlt(DrawablePtr	pDrawable,
+ 		       nglyph, ppci, FALSE, pGC->subWindowMode);
+     (*pGC->ops->PolyGlyphBlt)(pDrawable, pGC, x, y, nglyph,
+ 				ppci, pglyphBase);
+-    damageReportPostOp (pDrawable);
++    damageRegionSubmitted (pDrawable);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDrawable);
+ }
+ 
+@@ -1620,7 +1620,7 @@ damagePushPixels(GCPtr		pGC,
+ 	   damageDamageBox (pDrawable, &box, pGC->subWindowMode);
+     }
+     (*pGC->ops->PushPixels)(pGC, pBitMap, pDrawable, dx, dy, xOrg, yOrg);
+-    damageReportPostOp (pDrawable);
++    damageRegionSubmitted (pDrawable);
+     DAMAGE_GC_OP_EPILOGUE(pGC, pDrawable);
+ }
+ 
+@@ -1700,12 +1700,12 @@ damageCopyWindow(WindowPtr	pWindow,
+ 	 * at the destination location.  Translate back and forth.
+ 	 */
+ 	REGION_TRANSLATE (pScreen, prgnSrc, dx, dy);
+-	damageDamageRegion (&pWindow->drawable, prgnSrc, FALSE, -1);
++	damageRegionPending (&pWindow->drawable, prgnSrc, FALSE, -1);
+ 	REGION_TRANSLATE (pScreen, prgnSrc, -dx, -dy);
+     }
+     unwrap (pScrPriv, pScreen, CopyWindow);
+     (*pScreen->CopyWindow) (pWindow, ptOldOrg, prgnSrc);
+-    damageReportPostOp (&pWindow->drawable);
++    damageRegionSubmitted (&pWindow->drawable);
+     wrap (pScrPriv, pScreen, CopyWindow, damageCopyWindow);
+ }
+ 
+@@ -1788,6 +1788,10 @@ damageCloseScreen (int i, ScreenPtr pScreen)
+     return (*pScreen->CloseScreen) (i, pScreen);
+ }
+ 
++/**
++ * Public functions for consumption outside this file.
++ */
++
+ Bool
+ DamageSetup (ScreenPtr pScreen)
+ {
+@@ -1990,16 +1994,29 @@ DamagePendingRegion (DamagePtr	    pDamage)
+ }
+ 
+ _X_EXPORT void
++DamageRegionPending (DrawablePtr pDrawable, RegionPtr pRegion)
++{
++    damageRegionPending (pDrawable, pRegion, FALSE, -1);
++}
++
++_X_EXPORT void
++DamageRegionSubmitted (DrawablePtr pDrawable)
++{
++    damageRegionSubmitted (pDrawable);
++}
++
++/* This call is very odd, i'm leaving it intact for API sake, but please don't use it. */
++_X_EXPORT void
+ DamageDamageRegion (DrawablePtr	pDrawable,
+ 		    RegionPtr	pRegion)
+ {
+-    damageDamageRegion (pDrawable, pRegion, FALSE, -1);
++    damageRegionPending (pDrawable, pRegion, FALSE, -1);
+ 
+     /* Go back and report this damage for DamagePtrs with reportAfter set, since
+      * this call isn't part of an in-progress drawing op in the call chain and
+      * the DDX probably just wants to know about it right away.
+      */
+-    damageReportPostOp (pDrawable);
++    damageRegionSubmitted (pDrawable);
+ }
+ 
+ void
+diff --git a/miext/damage/damage.h b/miext/damage/damage.h
+index 102da6e..ad9ab4c 100755
+--- a/miext/damage/damage.h
++++ b/miext/damage/damage.h
+@@ -78,6 +78,15 @@ DamageRegion (DamagePtr		    pDamage);
+ RegionPtr
+ DamagePendingRegion (DamagePtr	    pDamage);
+ 
++/* Call this function before rendering to a destination. */
++void
++DamageRegionPending (DrawablePtr pDrawable, RegionPtr pRegion);
++
++/* Call this directly after the rendering operation has been submitted. */
++void
++DamageRegionSubmitted (DrawablePtr pDrawable);
++
++/* Avoid using this call, it only exists for API compatibility. */
+ void
+ DamageDamageRegion (DrawablePtr	    pDrawable,
+ 		    const RegionPtr pRegion);
+-- 
+1.6.0.3
+

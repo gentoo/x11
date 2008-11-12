@@ -1,0 +1,30 @@
+From e8c197595951dd56cb7429518514d25d29d01784 Mon Sep 17 00:00:00 2001
+From: Maarten Maathuis <madman2003@gmail.com>
+Date: Wed, 15 Oct 2008 00:02:13 +0200
+Subject: [PATCH 33/36] exa: restore {x,y}{Src,Dst} to their original values when !done
+ (cherry picked from commit 87a016ae00feac3fbaa7e7a518076a3852d49554)
+
+---
+ exa/exa_render.c |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
+
+diff --git a/exa/exa_render.c b/exa/exa_render.c
+index a41b9b9..199af36 100644
+--- a/exa/exa_render.c
++++ b/exa/exa_render.c
+@@ -911,6 +911,12 @@ exaComposite(CARD8	op,
+ 
+ 		if (ret)
+ 		    goto done;
++
++		/* Let's be correct and restore the variables to their original state. */
++		xDst -= pDst->pDrawable->x;
++		yDst -= pDst->pDrawable->y;
++		xSrc -= pSrc->pDrawable->x;
++		ySrc -= pSrc->pDrawable->y;
+ 	    }
+ 	}
+     }
+-- 
+1.6.0.3
+
