@@ -38,6 +38,7 @@ IUSE_INPUT_DEVICES="
 	input_devices_spaceorb
 	input_devices_summa
 	input_devices_tek4957
+	input_devices_tslib
 	input_devices_ur98
 	input_devices_vmmouse
 	input_devices_void
@@ -102,9 +103,10 @@ IUSE_SERVERS="dmx kdrive xorg"
 IUSE="${IUSE_VIDEO_CARDS}
 	${IUSE_INPUT_DEVICES}
 	${IUSE_SERVERS}
-	3dfx
+	3dfx tslib
 	dri hal ipv6 minimal nptl sdl"
 RDEPEND="hal? ( sys-apps/hal )
+	tslib? ( x11-libs/tslib )
 	>=x11-libs/libXfont-1.3.3
 	>=x11-libs/xtrans-1.2.2
 	>=x11-libs/libXau-1.0.4
@@ -203,6 +205,7 @@ PDEPEND="
 		input_devices_spaceorb? ( >=x11-drivers/xf86-input-spaceorb-1.1.1 )
 		input_devices_summa? ( >=x11-drivers/xf86-input-summa-1.2.0 )
 		input_devices_tek4957? ( >=x11-drivers/xf86-input-tek4957-1.2.0 )
+		input_devices_tslib? ( x11-drivers/xf86-input-tslib )
 		input_devices_ur98? ( >=x11-drivers/xf86-input-ur98-1.1.0 )
 		input_devices_vmmouse? ( >=x11-drivers/xf86-input-vmmouse-12.5.0 )
 		input_devices_void? ( >=x11-drivers/xf86-input-void-1.1.1 )
@@ -341,6 +344,7 @@ pkg_setup() {
 		$(use_enable ipv6)
 		$(use_enable dmx)
 		$(use_enable kdrive)
+		$(use_enable tslib)
 		$(use_enable !minimal xvfb)
 		$(use_enable !minimal xnest)
 		$(use_enable !minimal xtrap)
