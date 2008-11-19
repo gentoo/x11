@@ -1,7 +1,7 @@
 From 470a0ca76448f2660a877f6daf7d49a2c32c78a3 Mon Sep 17 00:00:00 2001
 From: Dave Airlie <airlied@linux.ie>
 Date: Thu, 25 Sep 2008 15:40:19 +1000
-Subject: [PATCH 29/36] exa: make sure pixmap devPrivate.ptr is NULL at create time
+Subject: [PATCH 29/38] exa: make sure pixmap devPrivate.ptr is NULL at create time
  (cherry picked from commit 5bf3f0fd4e00f96cfebd14b58580c3c8733626fb)
 
 ---

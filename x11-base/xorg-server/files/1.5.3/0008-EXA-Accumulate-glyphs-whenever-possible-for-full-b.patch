@@ -1,7 +1,7 @@
 From 32ea6d01c55d083d9cbb45bffaa5045650831e16 Mon Sep 17 00:00:00 2001
 From: =?utf-8?q?Michel=20D=C3=A4nzer?= <michel@tungstengraphics.com>
 Date: Mon, 28 Apr 2008 21:03:12 +0200
-Subject: [PATCH 08/36] EXA: Accumulate glyphs whenever possible, for full benefits of the glyph cache.
+Subject: [PATCH 08/38] EXA: Accumulate glyphs whenever possible, for full benefits of the glyph cache.
  (cherry picked from commit a65d530040bb561ba88c5d8c71633a7c0bf11e89)
 
 ---

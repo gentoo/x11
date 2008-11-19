@@ -1,7 +1,7 @@
 From e8c197595951dd56cb7429518514d25d29d01784 Mon Sep 17 00:00:00 2001
 From: Maarten Maathuis <madman2003@gmail.com>
 Date: Wed, 15 Oct 2008 00:02:13 +0200
-Subject: [PATCH 33/36] exa: restore {x,y}{Src,Dst} to their original values when !done
+Subject: [PATCH 33/38] exa: restore {x,y}{Src,Dst} to their original values when !done
  (cherry picked from commit 87a016ae00feac3fbaa7e7a518076a3852d49554)
 
 ---

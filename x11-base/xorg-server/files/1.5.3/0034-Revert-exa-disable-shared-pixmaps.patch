@@ -1,7 +1,7 @@
 From 42aefd0e9e37a938c21fe251f70e20fb0c472b7e Mon Sep 17 00:00:00 2001
 From: Remi Cardona <remi@gentoo.org>
 Date: Fri, 24 Oct 2008 00:46:29 +0200
-Subject: [PATCH 34/36] Revert "exa: disable shared pixmaps"
+Subject: [PATCH 34/38] Revert "exa: disable shared pixmaps"
 
 For some reason, this hunk got added twice *shrug*
 

@@ -1,7 +1,7 @@
 From a81d84879d931cde150ccbafafe607da21635254 Mon Sep 17 00:00:00 2001
 From: =?utf-8?q?Michel=20D=C3=A4nzer?= <michel@tungstengraphics.com>
 Date: Mon, 28 Apr 2008 21:09:35 +0200
-Subject: [PATCH 09/36] EXA: Try to accelerate non-antialiased text via the glyph cache as well.
+Subject: [PATCH 09/38] EXA: Try to accelerate non-antialiased text via the glyph cache as well.
 
 Treat 1 bit glyphs and masks as PICT_a8 in the glyph cache. We're not able to
 accelerate them otherwise.

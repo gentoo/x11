@@ -1,7 +1,7 @@
 From edcbea795ba062ff34a54302096e5905441a3e0f Mon Sep 17 00:00:00 2001
 From: Remi Cardona <remi@gentoo.org>
 Date: Fri, 24 Oct 2008 00:11:52 +0200
-Subject: [PATCH 22/36] exa: move destination damage for internal calls to a special function
+Subject: [PATCH 22/38] exa: move destination damage for internal calls to a special function
  - This should improve clarity for someone who isn't familiar with the code.
  (cherry picked from commit 988725f32e082aee9392a71464125157a83d1e67)
 

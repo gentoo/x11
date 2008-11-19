@@ -1,7 +1,7 @@
 From 2ed5d2199628e578f3464579091fe77c60e2936a Mon Sep 17 00:00:00 2001
 From: Daniel Stone <daniel@fooishbar.org>
 Date: Tue, 29 Jul 2008 17:52:11 +0300
-Subject: [PATCH 16/36] EXA: Remove unnecessary #includes
+Subject: [PATCH 16/38] EXA: Remove unnecessary #includes
 
 There wasn't actually any font code here, so no problem.
 (cherry picked from commit e882ee7056f370e0619d137b4ec3973ecb4e3479)

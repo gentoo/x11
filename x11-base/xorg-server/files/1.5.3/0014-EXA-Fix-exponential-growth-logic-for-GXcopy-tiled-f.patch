@@ -1,7 +1,7 @@
 From 9f7a11283b36bea921cf8377bc46f9a973aebf01 Mon Sep 17 00:00:00 2001
 From: =?utf-8?q?Michel=20D=C3=A4nzer?= <michel@tungstengraphics.com>
 Date: Thu, 31 Jul 2008 10:58:52 +0200
-Subject: [PATCH 14/36] EXA: Fix exponential growth logic for GXcopy tiled fills.
+Subject: [PATCH 14/38] EXA: Fix exponential growth logic for GXcopy tiled fills.
 
 Fixes http://bugs.freedesktop.org/show_bug.cgi?id=16908 .
 (cherry picked from commit 64ebeeb5265a4c425b9397fdc86a6d81521a856e)

@@ -1,7 +1,7 @@
 From 6d841a18bf437082d87324c49244652cea853a7e Mon Sep 17 00:00:00 2001
 From: Owen Taylor <otaylor@huygens.home.fishsoup.net>
 Date: Mon, 28 Apr 2008 21:00:54 +0200
-Subject: [PATCH 03/36] EXA: Add exaCompositeRects()
+Subject: [PATCH 03/38] EXA: Add exaCompositeRects()
 
 Add a function to composite multiple independent rectangles
 from the same source to the same destination in a single

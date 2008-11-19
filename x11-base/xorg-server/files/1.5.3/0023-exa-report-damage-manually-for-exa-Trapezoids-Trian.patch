@@ -1,7 +1,7 @@
 From 5433630590da22fead82f325b0764f485b46f3ca Mon Sep 17 00:00:00 2001
 From: Maarten Maathuis <madman2003@gmail.com>
 Date: Tue, 26 Aug 2008 17:03:12 +0200
-Subject: [PATCH 23/36] exa: report damage manually for exa{Trapezoids,Triangles} when needed
+Subject: [PATCH 23/38] exa: report damage manually for exa{Trapezoids,Triangles} when needed
  - Plus a micro cleanup of unused variables.
  (cherry picked from commit de79edbd9f67762950eaac2dc79668035239897c)
 

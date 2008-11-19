@@ -1,7 +1,7 @@
 From fe6a5084f7c56b8b1771235d1a6ab7b18076e22e Mon Sep 17 00:00:00 2001
 From: Maarten Maathuis <madman2003@gmail.com>
 Date: Tue, 26 Aug 2008 13:18:58 +0200
-Subject: [PATCH 21/36] exa_glyphs: remove useless offset
+Subject: [PATCH 21/38] exa_glyphs: remove useless offset
  (cherry picked from commit ce193476808f54d946351458361c62132d81b62f)
 
 ---

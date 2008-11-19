@@ -1,7 +1,7 @@
 From a94bd85fa5064699e8c52f93d7f519a9145763c9 Mon Sep 17 00:00:00 2001
 From: Maarten Maathuis <madman2003@gmail.com>
 Date: Fri, 3 Oct 2008 22:59:40 +0200
-Subject: [PATCH 30/36] exa: remove some excessive whitespace
+Subject: [PATCH 30/38] exa: remove some excessive whitespace
  (cherry picked from commit 416870d8c9e7e383b87c8513c2296a0cb66e7ef4)
 
 ---

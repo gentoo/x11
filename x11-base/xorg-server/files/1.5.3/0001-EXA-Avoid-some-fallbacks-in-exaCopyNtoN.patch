@@ -1,7 +1,7 @@
 From 9f4a09976a0af241b75f8c50e2615a8b24f06c17 Mon Sep 17 00:00:00 2001
 From: Tilman Sauerbeck <tilman@code-monkey.de>
 Date: Wed, 16 Apr 2008 16:20:19 +0200
-Subject: [PATCH 01/36] EXA: Avoid some fallbacks in exaCopyNtoN.
+Subject: [PATCH 01/38] EXA: Avoid some fallbacks in exaCopyNtoN.
 
 In some cases we can still do the copying in hardware even if the
 dimensions of the pixmaps are out of range. This is true when the boxes

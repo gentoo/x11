@@ -1,7 +1,7 @@
 From e8ab16df9d85773e592857245f241bf1a45d99b3 Mon Sep 17 00:00:00 2001
 From: =?utf-8?q?Michel=20D=C3=A4nzer?= <michel@tungstengraphics.com>
 Date: Tue, 19 Aug 2008 11:36:12 +0200
-Subject: [PATCH 19/36] EXA: Inline Prepare/FinishAccessWindow into only caller, ChangeWindowAttributes.
+Subject: [PATCH 19/38] EXA: Inline Prepare/FinishAccessWindow into only caller, ChangeWindowAttributes.
 
 Also check the requested mask in addition to the GC state before doing work.
 (cherry picked from commit f227fbf74f0c619ecf3275cdb4c10b1a4b3a8cfc)

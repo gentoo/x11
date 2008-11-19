@@ -1,7 +1,7 @@
 From c92cc77ab5d1edb8ca8a45692446213a7c934b85 Mon Sep 17 00:00:00 2001
 From: =?utf-8?q?Michel=20D=C3=A4nzer?= <michel@tungstengraphics.com>
 Date: Thu, 31 Jul 2008 10:55:44 +0200
-Subject: [PATCH 13/36] EXA: Simplify exaFillRegionTiled() control flow.
+Subject: [PATCH 13/38] EXA: Simplify exaFillRegionTiled() control flow.
 
 Also only call REGION_TRANSLATE() when necessary.
 (cherry picked from commit 8405c25d9ddbfddb6b155a436f07ccad689e53bd)

@@ -1,7 +1,7 @@
 From 3786705dfe0b2e48e20ae972bd994bee305f8a79 Mon Sep 17 00:00:00 2001
 From: =?utf-8?q?Michel=20D=C3=A4nzer?= <michel@tungstengraphics.com>
 Date: Tue, 19 Aug 2008 11:22:40 +0200
-Subject: [PATCH 18/36] EXA: Don't use exaGlyphs if the driver doesn't provide a PrepareComposite hook.
+Subject: [PATCH 18/38] EXA: Don't use exaGlyphs if the driver doesn't provide a PrepareComposite hook.
 
 It's buggy without Composite acceleration (leading to cropped glyphs) and not
 really useful in that case anyway. The bug probably still needs to be found and

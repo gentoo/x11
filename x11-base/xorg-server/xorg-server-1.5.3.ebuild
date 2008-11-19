@@ -320,6 +320,8 @@ UPSTREAMED_PATCHES=(
 	"${FILESDIR}/1.5.3/0034-Revert-exa-disable-shared-pixmaps.patch"
 	"${FILESDIR}/1.5.3/0035-Fix-previous-cherry-pick-for-API-changes.patch"
 	"${FILESDIR}/1.5.3/0036-Fix-typos-which-caused-exaCompositeRects-to-use-an.patch"
+	"${FILESDIR}/1.5.3/0037-EXA-avoid-copy-operations-if-no-boxes-in-use.patch"
+	"${FILESDIR}/1.5.3/0038-exa-avoid-doing-prepare-done-without-intervening-co.patch"
 )
 
 PATCHES=(

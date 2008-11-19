@@ -1,7 +1,7 @@
 From b5cfc1e3ea9b14b2c74d0a01ad5cb426988e34ed Mon Sep 17 00:00:00 2001
 From: Remi Cardona <remi@gentoo.org>
 Date: Thu, 23 Oct 2008 23:53:45 +0200
-Subject: [PATCH 02/36] EXA: Use a single large glyph cache pixmap
+Subject: [PATCH 02/38] EXA: Use a single large glyph cache pixmap
 
 Add back exaGlyphs(); the new version copies the glyph images
 onto a single large glyph pixmap and draws from their to the

@@ -1,7 +1,7 @@
 From ec924ed46387d7b4205456ffcab88096f19b6174 Mon Sep 17 00:00:00 2001
 From: =?utf-8?q?Michel=20D=C3=A4nzer?= <michel@tungstengraphics.com>
 Date: Wed, 30 Jul 2008 18:30:37 +0200
-Subject: [PATCH 12/36] EXA: Optimize GXcopy tiled fills.
+Subject: [PATCH 12/38] EXA: Optimize GXcopy tiled fills.
  (cherry picked from commit a3afa6f2fb80489f7b6a88d12def09281d32ed94)
 
 ---

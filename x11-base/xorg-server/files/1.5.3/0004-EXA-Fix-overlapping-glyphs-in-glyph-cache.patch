@@ -1,7 +1,7 @@
 From cd7118e31ffcbb948584c9a5998e3b2dd158f6da Mon Sep 17 00:00:00 2001
 From: Owen Taylor <otaylor@huygens.home.fishsoup.net>
 Date: Mon, 28 Apr 2008 21:00:54 +0200
-Subject: [PATCH 04/36] EXA: Fix overlapping glyphs in glyph cache
+Subject: [PATCH 04/38] EXA: Fix overlapping glyphs in glyph cache
 
 Allocate each cache at a different vertical position in the
 per-format pixmap. Fix width/height confusion when choosing

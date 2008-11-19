@@ -1,7 +1,7 @@
 From 23d4f262fe84a8724481647394d1f08c1e4fc936 Mon Sep 17 00:00:00 2001
 From: =?utf-8?q?Michel=20D=C3=A4nzer?= <michel@tungstengraphics.com>
 Date: Sat, 8 Nov 2008 01:25:14 +0100
-Subject: [PATCH 36/36] Fix typos which caused exaCompositeRects() to use an incorrect damage region.
+Subject: [PATCH 36/38] Fix typos which caused exaCompositeRects() to use an incorrect damage region.
 
 Fixes http://bugs.freedesktop.org/show_bug.cgi?id=18065 .
 

@@ -1,7 +1,7 @@
 From a822406987532b763e0f672a7957263674247c95 Mon Sep 17 00:00:00 2001
 From: Maarten Maathuis <madman2003@gmail.com>
 Date: Tue, 26 Aug 2008 17:21:43 +0200
-Subject: [PATCH 24/36] exa: some minor cleanup
+Subject: [PATCH 24/38] exa: some minor cleanup
  - Fix compile warning
  - Order exa.h by source file that exports the function.
  - Move the function i created earlier to private headers.

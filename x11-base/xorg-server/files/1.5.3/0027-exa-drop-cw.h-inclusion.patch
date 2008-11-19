@@ -1,7 +1,7 @@
 From 4f26b2252e90b27ff3c0a5287735dfae8dfa86a2 Mon Sep 17 00:00:00 2001
 From: Dave Airlie <airlied@redhat.com>
 Date: Mon, 1 Sep 2008 09:57:25 +1000
-Subject: [PATCH 27/36] exa: drop cw.h inclusion
+Subject: [PATCH 27/38] exa: drop cw.h inclusion
 
 this doesn't seem to be needed, at least I can't see any warning without it.
 

@@ -1,7 +1,7 @@
 From aad9cf1f0ccb5f12603d29eed5c2e01b3808c119 Mon Sep 17 00:00:00 2001
 From: Owen Taylor <otaylor@huygens.home.fishsoup.net>
 Date: Mon, 28 Apr 2008 21:00:55 +0200
-Subject: [PATCH 06/36] EXA: Use UploadToScreen() for uploads to glyph cache
+Subject: [PATCH 06/38] EXA: Use UploadToScreen() for uploads to glyph cache
 
 When possible, use UploadToScreen() rather than CompositePicture()
 to upload glyphs onto the glyph cache pixmap. This avoids allocating

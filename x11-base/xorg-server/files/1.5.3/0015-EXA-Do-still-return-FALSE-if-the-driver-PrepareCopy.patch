@@ -1,7 +1,7 @@
 From 59e96ff8be1913e5a57b6558160443f5acef3157 Mon Sep 17 00:00:00 2001
 From: =?utf-8?q?Michel=20D=C3=A4nzer?= <michel@tungstengraphics.com>
 Date: Thu, 31 Jul 2008 16:54:33 +0200
-Subject: [PATCH 15/36] EXA: Do still return FALSE if the driver PrepareCopy hook failed...
+Subject: [PATCH 15/38] EXA: Do still return FALSE if the driver PrepareCopy hook failed...
 
 Thanks to Stuart Bennett for pointing out the problem on IRC.
 (cherry picked from commit 148175fb8b365dcf00b13539b3f03ce33f3df707)

@@ -1,7 +1,7 @@
 From 6eb06422d291507643f06749c24a70506cdb75ac Mon Sep 17 00:00:00 2001
 From: Owen Taylor <otaylor@huygens.home.fishsoup.net>
 Date: Mon, 28 Apr 2008 21:00:55 +0200
-Subject: [PATCH 05/36] EXA: Clean up debug messages
+Subject: [PATCH 05/38] EXA: Clean up debug messages
  (cherry picked from commit 13fd2256300b61d88b840952d838f834523f5dd7)
 
 ---

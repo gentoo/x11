@@ -1,7 +1,7 @@
 From 798aeb18b652f426d51abbd5c37824531fd54799 Mon Sep 17 00:00:00 2001
 From: =?utf-8?q?Michel=20D=C3=A4nzer?= <michel@tungstengraphics.com>
 Date: Thu, 1 May 2008 15:10:52 +0200
-Subject: [PATCH 10/36] EXA: Fall back in CompositeRects if the driver can't accelerate Composite.
+Subject: [PATCH 10/38] EXA: Fall back in CompositeRects if the driver can't accelerate Composite.
 
 Fixes http://bugs.freedesktop.org/show_bug.cgi?id=15780 .
 (cherry picked from commit 3b8d53452cd6c74d32d7759964a7cd9ee775f161)

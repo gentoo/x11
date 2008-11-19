@@ -1,7 +1,7 @@
 From c89047f19c79d0990d34b1ef1aa3d769f95c50be Mon Sep 17 00:00:00 2001
 From: Maarten Maathuis <madman2003@gmail.com>
 Date: Fri, 3 Oct 2008 23:54:10 +0200
-Subject: [PATCH 31/36] exa: remove "direct" case for exa{Trapezoids,Triangles}
+Subject: [PATCH 31/38] exa: remove "direct" case for exa{Trapezoids,Triangles}
 
 - By adding a small hack to the xserver i was able to easily test the performance of the normally rare direct case (using cairo).
 - It turned out to be 70% slower for me (large test on an otherwise idle computer), which seems enough of a reason to remove it.
