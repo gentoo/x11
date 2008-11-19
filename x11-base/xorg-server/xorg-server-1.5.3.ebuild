@@ -149,6 +149,7 @@ RDEPEND="hal? ( sys-apps/hal )
 	# liblbxutil is lbx- dependent
 DEPEND="${RDEPEND}
 	!net-dialup/dtrace
+	sys-devel/flex
 	>=x11-proto/randrproto-1.2.2
 	>=x11-proto/renderproto-0.9.3
 	>=x11-proto/fixesproto-4
