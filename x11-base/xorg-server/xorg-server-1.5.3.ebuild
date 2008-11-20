@@ -104,7 +104,7 @@ IUSE="${IUSE_VIDEO_CARDS}
 	${IUSE_INPUT_DEVICES}
 	${IUSE_SERVERS}
 	3dfx tslib
-	dri hal ipv6 minimal nptl sdl"
+	hal ipv6 minimal nptl sdl"
 RDEPEND="hal? ( sys-apps/hal )
 	tslib? ( x11-libs/tslib )
 	>=x11-libs/libXfont-1.3.3
@@ -119,7 +119,6 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=x11-libs/libXi-1.1.3
 	>=x11-libs/pixman-0.12
 	media-libs/freetype
-	>=media-libs/mesa-7.1
 	media-fonts/font-adobe-75dpi
 	media-fonts/font-misc-misc
 	media-fonts/font-cursor-misc
@@ -138,7 +137,8 @@ RDEPEND="hal? ( sys-apps/hal )
 	dmx? ( >=x11-libs/libdmx-1.0.2
 			>=x11-libs/libXfixes-4.0.3 )
 	!minimal? ( >=x11-libs/libXtst-1.0.3
-		>=x11-libs/libXres-1.0.3 )
+		>=x11-libs/libXres-1.0.3
+		>=media-libs/mesa-7.1 )
 	>=x11-libs/libxkbui-1.0.2
 	>=x11-libs/liblbxutil-1.0.1
 	kdrive? ( sdl? ( media-libs/libsdl ) )"
@@ -176,7 +176,7 @@ DEPEND="${RDEPEND}
 	>=x11-proto/xcmiscproto-1.1.2
 	>=x11-proto/glproto-1.4.9
 	dmx? ( >=x11-proto/dmxproto-2.2.2 )
-	dri? ( >=x11-proto/xf86driproto-2.0.4
+	!minimal? ( >=x11-proto/xf86driproto-2.0.4
 		>=x11-libs/libdrm-2.3 )"
 
 # Drivers
@@ -355,7 +355,8 @@ pkg_setup() {
 		$(use_enable !minimal record)
 		$(use_enable !minimal xfree86-utils)
 		$(use_enable !minimal install-libxf86config)
-		$(use_enable dri)
+		$(use_enable !minimal dri)
+		$(use_enable !minimal glx)
 		$(use_enable xorg)
 		$(use_enable nptl glx-tls)
 		$(use_enable !minimal xorgcfg)
@@ -370,10 +371,12 @@ pkg_setup() {
 		${conf_opts}"
 
 	local diemsg="You must build xorg-server and mesa with the same nptl USE setting."
-	if built_with_use media-libs/mesa nptl; then
-		use nptl || die "${diemsg}"
-	else
-		use nptl && die "${diemsg}"
+	if ! use minimal; then
+		if built_with_use media-libs/mesa nptl; then
+			use nptl || die "${diemsg}"
+		else
+			use nptl && die "${diemsg}"
+		fi
 	fi
 
 	# (#121394) Causes window corruption
