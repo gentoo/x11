@@ -1,0 +1,54 @@
+From f9f8d526a5d1dd3a4dda2958b353e411a4604a8e Mon Sep 17 00:00:00 2001
+From: =?utf-8?q?Michel=20D=C3=A4nzer?= <michel@tungstengraphics.com>
+Date: Tue, 19 Aug 2008 11:22:40 +0200
+Subject: [PATCH 21/41] EXA: Don't use exaGlyphs if the driver doesn't provide a PrepareComposite hook.
+
+It's buggy without Composite acceleration (leading to cropped glyphs) and not
+really useful in that case anyway. The bug probably still needs to be found and
+fixed for drivers that provide a PrepareComposite hook but can't accelerate
+text rendering though.
+(cherry picked from commit 825b3fe11d1b813bf8d5b24a880ed04b78ae1acf)
+---
+ exa/exa.c |   12 ++++++++----
+ 1 files changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/exa/exa.c b/exa/exa.c
+index 407bec1..4529a96 100644
+--- a/exa/exa.c
++++ b/exa/exa.c
+@@ -756,7 +756,8 @@ exaCloseScreen(int i, ScreenPtr pScreen)
+     PictureScreenPtr	ps = GetPictureScreenIfSet(pScreen);
+ #endif
+ 
+-    exaGlyphsFini(pScreen);
++    if (ps->Glyphs == exaGlyphs)
++	exaGlyphsFini(pScreen);
+ 
+     pScreen->CreateGC = pExaScr->SavedCreateGC;
+     pScreen->CloseScreen = pExaScr->SavedCloseScreen;
+@@ -936,8 +937,10 @@ exaDriverInit (ScreenPtr		pScreen,
+         pExaScr->SavedComposite = ps->Composite;
+ 	ps->Composite = exaComposite;
+ 
+-	pExaScr->SavedGlyphs = ps->Glyphs;
+-	ps->Glyphs = exaGlyphs;
++	if (pScreenInfo->PrepareComposite) {
++	    pExaScr->SavedGlyphs = ps->Glyphs;
++	    ps->Glyphs = exaGlyphs;
++	}
+ 	
+ 	pExaScr->SavedTriangles = ps->Triangles;
+ 	ps->Triangles = exaTriangles;
+@@ -1000,7 +1003,8 @@ exaDriverInit (ScreenPtr		pScreen,
+ 	}
+     }
+ 
+-    exaGlyphsInit(pScreen);
++    if (ps->Glyphs == exaGlyphs)
++	exaGlyphsInit(pScreen);
+ 
+     LogMessage(X_INFO, "EXA(%d): Driver registered support for the following"
+ 	       " operations:\n", pScreen->myNum);
+-- 
+1.6.0.4
+

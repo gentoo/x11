@@ -1,0 +1,40 @@
+From 69de7fc6707f2b867a728915070e8a5382d49608 Mon Sep 17 00:00:00 2001
+From: =?utf-8?q?Michel=20D=C3=A4nzer?= <michel@tungstengraphics.com>
+Date: Thu, 31 Jul 2008 10:58:52 +0200
+Subject: [PATCH 17/41] EXA: Fix exponential growth logic for GXcopy tiled fills.
+
+Fixes http://bugs.freedesktop.org/show_bug.cgi?id=16908 .
+(cherry picked from commit 64ebeeb5265a4c425b9397fdc86a6d81521a856e)
+---
+ exa/exa_accel.c |    7 ++++---
+ 1 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/exa/exa_accel.c b/exa/exa_accel.c
+index ea2bab7..6b3be11 100644
+--- a/exa/exa_accel.c
++++ b/exa/exa_accel.c
+@@ -1223,10 +1223,10 @@ exaFillRegionTiled (DrawablePtr	pDrawable,
+ 						planemask)) {
+ 	    for (i = 0; i < nbox; i++)
+ 	    {
+-		int width = min(pBox[i].x2 - pBox[i].x1, tileWidth);
++		int dstX = pBox[i].x1 + tileWidth;
++		int dstY = pBox[i].y1 + tileHeight;
++		int width = min(pBox[i].x2 - dstX, tileWidth);
+ 		int height = min(pBox[i].y2 - pBox[i].y1, tileHeight);
+-		int dstX = pBox[i].x1 + width;
+-		int dstY = pBox[i].y1 + height;
+ 
+ 		while (dstX < pBox[i].x2) {
+ 		    (*pExaScr->info->Copy) (pPixmap, pBox[i].x1, pBox[i].y1,
+@@ -1236,6 +1236,7 @@ exaFillRegionTiled (DrawablePtr	pDrawable,
+ 		}
+ 
+ 		width = pBox[i].x2 - pBox[i].x1;
++		height = min(pBox[i].y2 - dstY, tileHeight);
+ 
+ 		while (dstY < pBox[i].y2) {
+ 		    (*pExaScr->info->Copy) (pPixmap, pBox[i].x1, pBox[i].y1,
+-- 
+1.6.0.4
+
