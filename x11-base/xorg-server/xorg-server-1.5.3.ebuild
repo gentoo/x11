@@ -230,6 +230,7 @@ PDEPEND="
 		video_cards_neomagic? ( >=x11-drivers/xf86-video-neomagic-1.2.1 )
 		video_cards_nv? ( >=x11-drivers/xf86-video-nv-2.1.12 )
 		video_cards_nvidia? ( >=x11-drivers/nvidia-drivers-173.14.09 )
+		video_cards_fglrx? ( >=x11-drivers/ati-drivers-8.552-r2 )
 		video_cards_r128? ( >=x11-drivers/xf86-video-r128-6.8.0 )
 		video_cards_radeon? ( >=x11-drivers/xf86-video-ati-6.9.0 )
 		video_cards_radeonhd? ( >=x11-drivers/xf86-video-radeonhd-1.2.1 )
@@ -254,7 +255,6 @@ PDEPEND="
 		video_cards_xgi? ( >=x11-drivers/xf86-video-xgi-1.5.0 )
 
 		video_cards_tdfx? ( 3dfx? ( >=media-libs/glide-v3-3.10 ) )
-		!x11-drivers/ati-drivers
 
 		!x11-drivers/xf86-video-impact
 		!x11-drivers/xf86-video-imstt
