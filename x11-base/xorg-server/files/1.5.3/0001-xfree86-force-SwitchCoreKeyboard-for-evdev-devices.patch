@@ -1,7 +1,7 @@
 From 9049894d6150d5728f4232751169e7928d4f80c1 Mon Sep 17 00:00:00 2001
 From: Peter Hutterer <peter.hutterer@who-t.net>
 Date: Mon, 4 Aug 2008 17:08:36 +0930
-Subject: [PATCH 01/41] xfree86: force SwitchCoreKeyboard for evdev devices (updated).
+Subject: [PATCH 01/42] xfree86: force SwitchCoreKeyboard for evdev devices (updated).
 
 If an evdev keyboard device is added through the HAL mechanism, force a
 SwitchCoreKeyboard to load the evdev map into the VCK. This way, by the time a

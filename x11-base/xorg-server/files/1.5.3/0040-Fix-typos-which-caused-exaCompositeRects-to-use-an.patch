@@ -1,0 +1,42 @@
+From 09ce0de0cb67d9bca4daed096b81f387e2b5ddc1 Mon Sep 17 00:00:00 2001
+From: =?utf-8?q?Michel=20D=C3=A4nzer?= <michel@tungstengraphics.com>
+Date: Sat, 8 Nov 2008 01:25:14 +0100
+Subject: [PATCH 40/42] Fix typos which caused exaCompositeRects() to use an incorrect damage region.
+
+Fixes http://bugs.freedesktop.org/show_bug.cgi?id=18065 .
+
+Also, it can bail if either width or height of the bounding box is <= 0, not
+only if both of them are.
+(cherry picked from commit 21c116219cd5c6845a0955f2d88fdb5fab5c17cf)
+---
+ exa/exa_render.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/exa/exa_render.c b/exa/exa_render.c
+index 199af36..45cfff7 100644
+--- a/exa/exa_render.c
++++ b/exa/exa_render.c
+@@ -492,17 +492,17 @@ exaCompositeRects(CARD8	              op,
+ 	r = rects;
+ 	while (n--) {
+ 	    int rect_x2 = r->xDst + r->width;
+-	    int rect_y2 = r->yDst + r->width;
++	    int rect_y2 = r->yDst + r->height;
+ 
+ 	    if (r->xDst < x1) x1 = r->xDst;
+-	    if (r->xDst < y1) y1 = r->xDst;
++	    if (r->yDst < y1) y1 = r->yDst;
+ 	    if (rect_x2 > x2) x2 = rect_x2;
+ 	    if (rect_y2 > y2) y2 = rect_y2;
+ 
+ 	    r++;
+ 	}
+ 
+-	if (x2 <= x1 && y2 <= y1)
++	if (x2 <= x1 || y2 <= y1)
+ 	    return;
+ 
+ 	box.x1 = x1;
+-- 
+1.6.0.4
+

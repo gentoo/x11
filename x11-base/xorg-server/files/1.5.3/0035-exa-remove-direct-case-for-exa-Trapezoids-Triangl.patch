@@ -1,0 +1,164 @@
+From 55a20b8e3adac3e1c3cab0c9912b67172fa9fc68 Mon Sep 17 00:00:00 2001
+From: Maarten Maathuis <madman2003@gmail.com>
+Date: Fri, 3 Oct 2008 23:54:10 +0200
+Subject: [PATCH 35/42] exa: remove "direct" case for exa{Trapezoids,Triangles}
+
+- By adding a small hack to the xserver i was able to easily test the performance of the normally rare direct case (using cairo).
+- It turned out to be 70% slower for me (large test on an otherwise idle computer), which seems enough of a reason to remove it.
+- AddTraps could also use a 2nd look, but since noone is using that it's a bit hard and less useful to test.
+(cherry picked from commit a29af6465883796a6acf04b72ce812a0632b2186)
+---
+ exa/exa_render.c |   91 ++++-------------------------------------------------
+ 1 files changed, 7 insertions(+), 84 deletions(-)
+
+diff --git a/exa/exa_render.c b/exa/exa_render.c
+index c2c1df0..a41b9b9 100644
+--- a/exa/exa_render.c
++++ b/exa/exa_render.c
+@@ -1046,51 +1046,13 @@ exaTrapezoids (CARD8 op, PicturePtr pSrc, PicturePtr pDst,
+     ScreenPtr		pScreen = pDst->pDrawable->pScreen;
+     PictureScreenPtr    ps = GetPictureScreen(pScreen);
+     BoxRec		bounds;
+-    Bool		direct = op == PictOpAdd && miIsSolidAlpha (pSrc);
+ 
+-    if (maskFormat || direct) {
++    if (maskFormat) {
+ 	miTrapezoidBounds (ntrap, traps, &bounds);
+ 
+ 	if (bounds.y1 >= bounds.y2 || bounds.x1 >= bounds.x2)
+ 	    return;
+-    }
+-
+-    /*
+-     * Check for solid alpha add
+-     */
+-    if (direct)
+-    {
+-	DrawablePtr pDraw = pDst->pDrawable;
+-	PixmapPtr pixmap = exaGetDrawablePixmap (pDraw);
+-	ExaPixmapPriv (pixmap);
+-
+-	/* Damage manually, because Trapezoids expects to hit Composite normally. */
+-	/* Composite is wrapped by damage, but Trapezoids isn't. */
+-	if (pExaPixmap->pDamage) {
+-	    RegionRec migration;
+-
+-	    bounds.x1 += pDraw->x;
+-	    bounds.y1 += pDraw->y;
+-	    bounds.x2 += pDraw->x;
+-	    bounds.y2 += pDraw->y;
+-
+-	    REGION_INIT(pScreen, &migration, &bounds, 1);
+-	    DamageRegionAppend(pDraw, &migration);
+-	    REGION_UNINIT(pScreen, &migration);
+-	}
+-
+-	exaPrepareAccess(pDraw, EXA_PREPARE_DEST);
+-
+-	for (; ntrap; ntrap--, traps++)
+-	    (*ps->RasterizeTrapezoid) (pDst, traps, 0, 0);
+-
+-	exaFinishAccess(pDraw, EXA_PREPARE_DEST);
+ 
+-	if (pExaPixmap->pDamage)
+-	    DamageRegionProcessPending(pDraw);
+-    }
+-    else if (maskFormat)
+-    {
+ 	PicturePtr	pPicture;
+ 	INT16		xDst, yDst;
+ 	INT16		xRel, yRel;
+@@ -1117,9 +1079,7 @@ exaTrapezoids (CARD8 op, PicturePtr pSrc, PicturePtr pDst,
+ 			  bounds.x2 - bounds.x1,
+ 			  bounds.y2 - bounds.y1);
+ 	FreePicture (pPicture, 0);
+-    }
+-    else
+-    {
++    } else {
+ 	if (pDst->polyEdge == PolyEdgeSharp)
+ 	    maskFormat = PictureMatchFormat (pScreen, 1, PICT_a1);
+ 	else
+@@ -1150,52 +1110,17 @@ exaTriangles (CARD8 op, PicturePtr pSrc, PicturePtr pDst,
+     ScreenPtr		pScreen = pDst->pDrawable->pScreen;
+     PictureScreenPtr    ps = GetPictureScreen(pScreen);
+     BoxRec		bounds;
+-    Bool		direct = op == PictOpAdd && miIsSolidAlpha (pSrc);
+ 
+-    if (maskFormat || direct) {
++    if (maskFormat) {
+ 	miTriangleBounds (ntri, tris, &bounds);
+ 
+ 	if (bounds.y1 >= bounds.y2 || bounds.x1 >= bounds.x2)
+ 	    return;
+-    }
+ 
+-    /*
+-     * Check for solid alpha add
+-     */
+-    if (direct)
+-    {
+-	DrawablePtr pDraw = pDst->pDrawable;
+-	PixmapPtr pixmap = exaGetDrawablePixmap (pDraw);
+-	ExaPixmapPriv (pixmap);
+-
+-	/* Damage manually, because Triangles expects to hit Composite normally. */
+-	/* Composite is wrapped by damage, but Triangles isn't. */
+-	if (pExaPixmap->pDamage) {
+-	    RegionRec migration;
+-
+-	    bounds.x1 += pDraw->x;
+-	    bounds.y1 += pDraw->y;
+-	    bounds.x2 += pDraw->x;
+-	    bounds.y2 += pDraw->y;
+-
+-	    REGION_INIT(pScreen, &migration, &bounds, 1);
+-	    DamageRegionAppend(pDraw, &migration);
+-	    REGION_UNINIT(pScreen, &migration);
+-	}
+-
+-	exaPrepareAccess(pDraw, EXA_PREPARE_DEST);
+-	(*ps->AddTriangles) (pDst, 0, 0, ntri, tris);
+-	exaFinishAccess(pDraw, EXA_PREPARE_DEST);
+-
+-	if (pExaPixmap->pDamage)
+-	    DamageRegionProcessPending(pDraw);
+-    }
+-    else if (maskFormat)
+-    {
+ 	PicturePtr	pPicture;
+ 	INT16		xDst, yDst;
+ 	INT16		xRel, yRel;
+-	
++
+ 	xDst = tris[0].p1.x >> 16;
+ 	yDst = tris[0].p1.y >> 16;
+ 
+@@ -1208,21 +1133,19 @@ exaTriangles (CARD8 op, PicturePtr pSrc, PicturePtr pDst,
+ 	exaPrepareAccess(pPicture->pDrawable, EXA_PREPARE_DEST);
+ 	(*ps->AddTriangles) (pPicture, -bounds.x1, -bounds.y1, ntri, tris);
+ 	exaFinishAccess(pPicture->pDrawable, EXA_PREPARE_DEST);
+-	
++
+ 	xRel = bounds.x1 + xSrc - xDst;
+ 	yRel = bounds.y1 + ySrc - yDst;
+ 	CompositePicture (op, pSrc, pPicture, pDst,
+ 			  xRel, yRel, 0, 0, bounds.x1, bounds.y1,
+ 			  bounds.x2 - bounds.x1, bounds.y2 - bounds.y1);
+ 	FreePicture (pPicture, 0);
+-    }
+-    else
+-    {
++    } else {
+ 	if (pDst->polyEdge == PolyEdgeSharp)
+ 	    maskFormat = PictureMatchFormat (pScreen, 1, PICT_a1);
+ 	else
+ 	    maskFormat = PictureMatchFormat (pScreen, 8, PICT_a8);
+-	
++
+ 	for (; ntri; ntri--, tris++)
+ 	    exaTriangles (op, pSrc, pDst, maskFormat, xSrc, ySrc, 1, tris);
+     }
+-- 
+1.6.0.4
+

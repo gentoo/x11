@@ -1,7 +1,7 @@
 From af417c65348ba2d743a555d3647f8c5910f0f85a Mon Sep 17 00:00:00 2001
 From: Peter Hutterer <peter.hutterer@redhat.com>
 Date: Thu, 13 Nov 2008 10:17:33 +1000
-Subject: [PATCH 02/41] xfree86: AllowEmptyInput is true by default - update the xf86Info defaults.
+Subject: [PATCH 02/42] xfree86: AllowEmptyInput is true by default - update the xf86Info defaults.
 
 Also set AutoAddDevices and AutoEnableDevices to their defaults.
 
