@@ -1,5 +1,5 @@
-# 1.5 prereleases, currently require live git ebuilds
-=x11-base/xorg-server-1.4.99*
+# broken ATM (missing distfiles?)
+=app-admin/eselect-opengl-1.0.6-r2
 
 # Don't let people install these accidentally
 =media-libs/fontconfig-9999
