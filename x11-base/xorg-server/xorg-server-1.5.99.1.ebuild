@@ -1,16 +1,14 @@
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2007 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-base/xorg-server/xorg-server-1.5.2.ebuild,v 1.6 2008/10/22 15:42:26 remi Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-base/xorg-server/xorg-server-1.3.0.0.ebuild,v 1.9 2007/06/04 23:17:40 dberkholz Exp $
 
 # Must be before x-modular eclass is inherited
-SNAPSHOT="yes"
+#SNAPSHOT="yes"
 
 inherit x-modular multilib
 
 OPENGL_DIR="xorg-x11"
 
-SRC_URI="${SRC_URI}
-	http://xorg.freedesktop.org/releases/individual/xserver/${P}.tar.bz2"
 DESCRIPTION="X.Org X servers"
 KEYWORDS="~amd64 ~ia64 ~ppc ~sparc ~x86 ~x86-fbsd"
 IUSE_INPUT_DEVICES="
@@ -106,7 +104,8 @@ IUSE="${IUSE_VIDEO_CARDS}
 	3dfx tslib
 	hal ipv6 minimal nptl sdl"
 RDEPEND="hal? ( sys-apps/hal )
-	tslib? ( x11-libs/tslib )
+	tslib? ( >=x11-libs/tslib-1.0 )
+	dev-libs/openssl
 	>=x11-libs/libXfont-1.3.3
 	>=x11-libs/xtrans-1.2.2
 	>=x11-libs/libXau-1.0.4
@@ -117,7 +116,7 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=x11-libs/libXmu-1.0.3
 	>=x11-libs/libXrender-0.9.4
 	>=x11-libs/libXi-1.1.3
-	>=x11-libs/pixman-0.12
+	>=x11-libs/pixman-0.13.2
 	media-libs/freetype
 	media-fonts/font-adobe-75dpi
 	media-fonts/font-misc-misc
@@ -131,8 +130,7 @@ RDEPEND="hal? ( sys-apps/hal )
 	app-admin/eselect-opengl
 	>=x11-libs/libXaw-1.0.4
 	>=x11-libs/libXpm-3.5.7
-	>=x11-libs/libXxf86misc-1.0.1
-	>=x11-libs/libXxf86vm-1.0.2
+	>=x11-libs/libXinerama-1.0.3
 	>=x11-libs/libpciaccess-0.10.3
 	dmx? ( >=x11-libs/libdmx-1.0.2
 			>=x11-libs/libXfixes-4.0.3 )
@@ -142,36 +140,32 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=x11-libs/libxkbui-1.0.2
 	>=x11-libs/liblbxutil-1.0.1
 	kdrive? ( sdl? ( media-libs/libsdl ) )"
-	# Xres is dmx-dependent, xkbui is xorgcfg-dependent
-	# Xaw is dmx- and xorgcfg-dependent
-	# Xpm is dmx- and xorgcfg-dependent, pulls in Xt
-	# Xxf86misc and Xxf86vm are xorgcfg-dependent
+	# Xres is dmx-dependent
+	# Xaw is dmx-dependent
+	# Xpm is dmx-dependent, pulls in Xt
 	# liblbxutil is lbx- dependent
 DEPEND="${RDEPEND}
 	!net-dialup/dtrace
 	sys-devel/flex
-	>=x11-proto/randrproto-1.2.2
+	>=x11-proto/randrproto-9999
 	>=x11-proto/renderproto-0.9.3
 	>=x11-proto/fixesproto-4
 	>=x11-proto/damageproto-1.1
 	>=x11-proto/xextproto-7.0.3
 	>=x11-proto/xproto-7.0.13
 	>=x11-proto/xf86dgaproto-2.0.3
-	>=x11-proto/xf86miscproto-0.9.2
 	>=x11-proto/xf86rushproto-1.1.2
 	>=x11-proto/xf86vidmodeproto-2.2.2
-	>=x11-proto/xf86bigfontproto-1.1.2
 	>=x11-proto/compositeproto-0.4
 	>=x11-proto/recordproto-1.13.2
 	>=x11-proto/resourceproto-1.0.2
 	>=x11-proto/videoproto-2.2.2
 	>=x11-proto/scrnsaverproto-1.1.0
-	>=x11-proto/evieext-1.0.2
 	>=x11-proto/trapproto-3.4.3
 	>=x11-proto/xineramaproto-1.1.2
 	>=x11-proto/fontsproto-2.0.2
 	>=x11-proto/kbproto-1.0.3
-	>=x11-proto/inputproto-1.4.4
+	>=x11-proto/inputproto-9999
 	>=x11-proto/bigreqsproto-1.0.2
 	>=x11-proto/xcmiscproto-1.1.2
 	>=x11-proto/glproto-1.4.9
@@ -278,54 +272,10 @@ EPATCH_SUFFIX="patch"
 # Local customizations, unsuitable for upstream
 GENTOO_PATCHES=(
 	"${FILESDIR}/1.4-fpic-libxf86config.patch"
-	"${FILESDIR}/1.4-fix-kdrive-automake.patch"
 	)
 
 # These have been sent upstream
-UPSTREAMED_PATCHES=(
-	"${FILESDIR}/1.5.3/0001-xfree86-force-SwitchCoreKeyboard-for-evdev-devices.patch"
-	"${FILESDIR}/1.5.3/0002-xfree86-AllowEmptyInput-is-true-by-default-update.patch"
-	"${FILESDIR}/1.5.3/0003-xfree86-without-CONFIG_HAL-Auto-Add-Enable-Devices.patch"
-	"${FILESDIR}/1.5.3/0004-xfree86-don-t-reset-Auto-Add-Enable-Devices-use-de.patch"
-	"${FILESDIR}/1.5.3/0005-EXA-Avoid-some-fallbacks-in-exaCopyNtoN.patch"
-	"${FILESDIR}/1.5.3/0006-EXA-Use-a-single-large-glyph-cache-pixmap.patch"
-	"${FILESDIR}/1.5.3/0007-EXA-Add-exaCompositeRects.patch"
-	"${FILESDIR}/1.5.3/0008-EXA-Fix-overlapping-glyphs-in-glyph-cache.patch"
-	"${FILESDIR}/1.5.3/0009-EXA-Clean-up-debug-messages.patch"
-	"${FILESDIR}/1.5.3/0010-EXA-Use-UploadToScreen-for-uploads-to-glyph-cache.patch"
-	"${FILESDIR}/1.5.3/0011-EXA-Glyph-cache-upload-tweaks.patch"
-	"${FILESDIR}/1.5.3/0012-EXA-Accumulate-glyphs-whenever-possible-for-full-b.patch"
-	"${FILESDIR}/1.5.3/0013-EXA-Try-to-accelerate-non-antialiased-text-via-the.patch"
-	"${FILESDIR}/1.5.3/0014-EXA-Fall-back-in-CompositeRects-if-the-driver-can-t.patch"
-	"${FILESDIR}/1.5.3/0015-EXA-Only-record-damage-generated-by-rendering-opera.patch"
-	"${FILESDIR}/1.5.3/0016-EXA-Optimize-GXcopy-tiled-fills.patch"
-	"${FILESDIR}/1.5.3/0017-EXA-Simplify-exaFillRegionTiled-control-flow.patch"
-	"${FILESDIR}/1.5.3/0018-EXA-Fix-exponential-growth-logic-for-GXcopy-tiled-f.patch"
-	"${FILESDIR}/1.5.3/0019-EXA-Do-still-return-FALSE-if-the-driver-PrepareCopy.patch"
-	"${FILESDIR}/1.5.3/0020-EXA-Remove-unnecessary-includes.patch"
-	"${FILESDIR}/1.5.3/0021-EXA-Make-sure-damage-tracking-code-is-inactive-if-t.patch"
-	"${FILESDIR}/1.5.3/0022-EXA-Don-t-use-exaGlyphs-if-the-driver-doesn-t-provi.patch"
-	"${FILESDIR}/1.5.3/0023-EXA-Inline-Prepare-FinishAccessWindow-into-only-cal.patch"
-	"${FILESDIR}/1.5.3/0024-exa-remove-useless-cache-X-Y-off-from-UploadToScree.patch"
-	"${FILESDIR}/1.5.3/0025-exa_glyphs-remove-useless-offset.patch"
-	"${FILESDIR}/1.5.3/0026-exa-move-destination-damage-for-internal-calls-to-a.patch"
-	"${FILESDIR}/1.5.3/0027-exa-report-damage-manually-for-exa-Trapezoids-Trian.patch"
-	"${FILESDIR}/1.5.3/0028-exa-some-minor-cleanup.patch"
-	"${FILESDIR}/1.5.3/0029--damage-exa-sanitise-damage.patch"
-	"${FILESDIR}/1.5.3/0030-damage-choose-less-ambiguous-function-names.patch"
-	"${FILESDIR}/1.5.3/0031-exa-drop-cw.h-inclusion.patch"
-	"${FILESDIR}/1.5.3/0032-exa-disable-shared-pixmaps.patch"
-	"${FILESDIR}/1.5.3/0033-exa-make-sure-pixmap-devPrivate.ptr-is-NULL-at-crea.patch"
-	"${FILESDIR}/1.5.3/0034-exa-remove-some-excessive-whitespace.patch"
-	"${FILESDIR}/1.5.3/0035-exa-remove-direct-case-for-exa-Trapezoids-Triangl.patch"
-	"${FILESDIR}/1.5.3/0036-exa-don-t-call-composite-routines-with-no-buffer.patch"
-	"${FILESDIR}/1.5.3/0037-exa-restore-x-y-Src-Dst-to-their-original-values.patch"
-	"${FILESDIR}/1.5.3/0038-Revert-exa-disable-shared-pixmaps.patch"
-	"${FILESDIR}/1.5.3/0039-Fix-previous-cherry-pick-for-API-changes.patch"
-	"${FILESDIR}/1.5.3/0040-Fix-typos-which-caused-exaCompositeRects-to-use-an.patch"
-	"${FILESDIR}/1.5.3/0041-EXA-avoid-copy-operations-if-no-boxes-in-use.patch"
-	"${FILESDIR}/1.5.3/0042-exa-avoid-doing-prepare-done-without-intervening-co.patch"
-)
+UPSTREAMED_PATCHES=()
 
 PATCHES=(
 	"${GENTOO_PATCHES[@]}"
@@ -351,9 +301,9 @@ pkg_setup() {
 		$(use_enable dmx)
 		$(use_enable kdrive)
 		$(use_enable tslib)
+		$(use_enable minimal builtin-fonts)
 		$(use_enable !minimal xvfb)
 		$(use_enable !minimal xnest)
-		$(use_enable !minimal xtrap)
 		$(use_enable !minimal record)
 		$(use_enable !minimal xfree86-utils)
 		$(use_enable !minimal install-libxf86config)
@@ -361,10 +311,8 @@ pkg_setup() {
 		$(use_enable !minimal glx)
 		$(use_enable xorg)
 		$(use_enable nptl glx-tls)
-		$(use_enable !minimal xorgcfg)
 		$(use_enable hal config-dbus)
 		$(use_enable hal config-hal)
-		--disable-dri2
 		--sysconfdir=/etc/X11
 		--localstatedir=/var
 		--enable-install-setuid
@@ -384,8 +332,6 @@ pkg_setup() {
 	# (#121394) Causes window corruption
 	filter-flags -fweb
 
-	# Nothing else provides new enough glxtokens.h
-	ewarn "Forcing on xorg-x11 for new enough glxtokens.h..."
 	OLD_IMPLEM="$(eselect opengl show)"
 	eselect opengl set --impl-headers ${OPENGL_DIR}
 }
@@ -395,19 +341,6 @@ src_unpack() {
 	x-modular_dri_check
 	x-modular_unpack_source
 	x-modular_patch_source
-
-	# Set up kdrive servers to build
-	if use kdrive; then
-		kdrive_setup
-	fi
-
-	# Make sure eautoreconf gets run if we need the autoconf/make
-	# changes.
-	if [[ ${SNAPSHOT} != "yes" ]]; then
-		if use kdrive || use dmx; then
-			SNAPSHOT="yes"
-		fi
-	fi
 
 	if use hal; then
 		sed -i \
@@ -452,7 +385,7 @@ pkg_postinst() {
 	ewarn "Make sure your reduced blanking modelines are safe!"
 
 	echo
-	ewarn "You must rebuild all drivers if upgrading from xorg-server 1.4.1"
+	ewarn "You must rebuild all drivers if upgrading from xorg-server 1.5"
 	ewarn "or earlier, because the ABI changed. If you cannot start X because"
 	ewarn "of module version mismatch errors, this is your problem."
 
@@ -472,76 +405,6 @@ pkg_postrm() {
 			rm -rf "${ROOT}"/usr/$(get_libdir)/xorg/modules
 		fi
 	fi
-}
-
-kdrive_setup() {
-	local card real_card disable_card kdrive_fbdev kdrive_vesa
-
-	einfo "Removing unused kdrive drivers ..."
-
-	# Some kdrive servers require fbdev and vesa
-	kdrive_fbdev="radeon neomagic sis siliconmotion"
-	# Some kdrive servers require just vesa
-	kdrive_vesa="chips mach64 mga nv glint r128 via"
-
-	for card in ${IUSE_VIDEO_CARDS}; do
-		real_card=${card#video_cards_}
-
-		# Differences between VIDEO_CARDS name and kdrive server name
-		real_card=${real_card/glint/pm2}
-		real_card=${real_card/radeon/ati}
-		real_card=${real_card/%nv/nvidia}
-		real_card=${real_card/siliconmotion/smi}
-		real_card=${real_card/%sis/sis300}
-
-		disable_card=0
-
-		# Check whether it's a valid kdrive server before we waste time
-		# on the rest of this
-		if ! grep -q -o "\b${real_card}\b" "${S}"/hw/kdrive/Makefile.am; then
-			continue
-		fi
-
-		if ! use ${card}; then
-			if use x86; then
-				# Some kdrive servers require fbdev and vesa
-				for i in ${kdrive_fbdev}; do
-					if use video_cards_${i}; then
-						if [[ ${real_card} = fbdev ]] \
-							|| [[ ${real_card} = vesa ]]; then
-							continue 2 # Don't disable
-						fi
-						fi
-				done
-
-				# Some kdrive servers require just vesa
-				for i in ${kdrive_vesa}; do
-					if use video_cards_${i}; then
-						if [[ ${real_card} = vesa ]]; then
-							continue 2 # Don't disable
-						fi
-					fi
-				done
-			fi
-			disable_card=1
-		# Bug #150052
-		# fbdev is the only VIDEO_CARDS setting that works on non-x86
-		elif ! use x86 \
-			&& [[ ${real_card} != fbdev ]]; then
-			ewarn "  $real_card does not work on your architecture; disabling."
-			disable_card=1
-		fi
-
-		if [[ $disable_card = 1 ]]; then
-			ebegin "  ${real_card}"
-			sed -i \
-				-e "s:\b${real_card}\b::g" \
-				"${S}"/hw/kdrive/Makefile.am \
-				|| die "sed of ${real_card} failed"
-			eend
-		fi
-
-	done
 }
 
 dynamic_libgl_install() {
@@ -571,7 +434,6 @@ switch_opengl_implem() {
 		# Use new opengl-update that will not reset user selected
 		# OpenGL interface ...
 		echo
-#		eselect opengl set --use-old ${OPENGL_DIR}
 		eselect opengl set ${OLD_IMPLEM}
 }
 
