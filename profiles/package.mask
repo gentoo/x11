@@ -1,3 +1,6 @@
+# Beta
+=x11-base/xorg-server-1.5.99*
+
 # broken ATM (missing distfiles?)
 =app-admin/eselect-opengl-1.0.6-r2
 
