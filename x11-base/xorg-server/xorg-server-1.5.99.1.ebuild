@@ -122,7 +122,7 @@ RDEPEND="hal? ( sys-apps/hal )
 	media-fonts/font-misc-misc
 	media-fonts/font-cursor-misc
 	>=x11-misc/xbitmaps-1.0.1
-	>=x11-misc/xkeyboard-config-1.3
+	>=x11-misc/xkeyboard-config-1.4
 	>=x11-apps/iceauth-1.0.2
 	>=x11-apps/rgb-1.0.3
 	>=x11-apps/xauth-1.0.3
@@ -190,10 +190,10 @@ PDEPEND="
 		input_devices_hyperpen? ( >=x11-drivers/xf86-input-hyperpen-1.2.0 )
 		input_devices_jamstudio? ( >=x11-drivers/xf86-input-jamstudio-1.2.0 )
 		input_devices_joystick? ( >=x11-drivers/xf86-input-joystick-1.3.2 )
-		input_devices_keyboard? ( >=x11-drivers/xf86-input-keyboard-1.3.1 )
+		input_devices_keyboard? ( >=x11-drivers/xf86-input-keyboard-9999 )
 		input_devices_magellan? ( >=x11-drivers/xf86-input-magellan-1.2.0 )
 		input_devices_microtouch? ( >=x11-drivers/xf86-input-microtouch-1.2.0 )
-		input_devices_mouse? ( >=x11-drivers/xf86-input-mouse-1.3.0 )
+		input_devices_mouse? ( >=x11-drivers/xf86-input-mouse-9999 )
 		input_devices_mutouch? ( >=x11-drivers/xf86-input-mutouch-1.2.1 )
 		input_devices_palmax? ( >=x11-drivers/xf86-input-palmax-1.2.0 )
 		input_devices_penmount? ( >=x11-drivers/xf86-input-penmount-1.3.0 )
