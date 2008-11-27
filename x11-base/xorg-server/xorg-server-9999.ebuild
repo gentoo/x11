@@ -106,7 +106,8 @@ IUSE="${IUSE_VIDEO_CARDS}
 	3dfx tslib
 	hal ipv6 minimal nptl sdl"
 RDEPEND="hal? ( sys-apps/hal )
-	tslib? ( x11-libs/tslib )
+	tslib? ( >=x11-libs/tslib-1.0 )
+	dev-libs/openssl
 	>=x11-libs/libXfont-1.3.3
 	>=x11-libs/xtrans-1.2.2
 	>=x11-libs/libXau-1.0.4
@@ -117,10 +118,10 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=x11-libs/libXmu-1.0.3
 	>=x11-libs/libXrender-0.9.4
 	>=x11-libs/libXi-1.1.3
-	>=x11-libs/pixman-0.12
+	>=x11-libs/pixman-0.13.2
 	media-libs/freetype
 	>=x11-misc/xbitmaps-1.0.1
-	>=x11-misc/xkeyboard-config-1.3
+	>=x11-misc/xkeyboard-config-1.4
 	>=x11-apps/iceauth-1.0.2
 	>=x11-apps/rgb-1.0.3
 	>=x11-apps/xauth-1.0.3
@@ -128,6 +129,7 @@ RDEPEND="hal? ( sys-apps/hal )
 	app-admin/eselect-opengl
 	>=x11-libs/libXaw-1.0.4
 	>=x11-libs/libXpm-3.5.7
+	>=x11-libs/libXinerama-1.0.3
 	>=x11-libs/libpciaccess-0.10.3
 	dmx? ( >=x11-libs/libdmx-1.0.2
 			>=x11-libs/libXfixes-4.0.3 )
@@ -144,7 +146,7 @@ RDEPEND="hal? ( sys-apps/hal )
 DEPEND="${RDEPEND}
 	!net-dialup/dtrace
 	sys-devel/flex
-	>=x11-proto/randrproto-1.2.2
+	>=x11-proto/randrproto-9999
 	>=x11-proto/renderproto-0.9.3
 	>=x11-proto/fixesproto-4
 	>=x11-proto/damageproto-1.1
@@ -153,18 +155,16 @@ DEPEND="${RDEPEND}
 	>=x11-proto/xf86dgaproto-2.0.3
 	>=x11-proto/xf86rushproto-1.1.2
 	>=x11-proto/xf86vidmodeproto-2.2.2
-	>=x11-proto/xf86bigfontproto-1.1.2
 	>=x11-proto/compositeproto-0.4
 	>=x11-proto/recordproto-1.13.2
 	>=x11-proto/resourceproto-1.0.2
 	>=x11-proto/videoproto-2.2.2
 	>=x11-proto/scrnsaverproto-1.1.0
-	>=x11-proto/evieext-1.0.2
 	>=x11-proto/trapproto-3.4.3
 	>=x11-proto/xineramaproto-1.1.2
 	>=x11-proto/fontsproto-2.0.2
 	>=x11-proto/kbproto-1.0.3
-	>=x11-proto/inputproto-1.4.4
+	>=x11-proto/inputproto-9999
 	>=x11-proto/bigreqsproto-1.0.2
 	>=x11-proto/xcmiscproto-1.1.2
 	>=x11-proto/glproto-1.4.9
@@ -184,15 +184,15 @@ PDEPEND="
 		input_devices_dynapro? ( >=x11-drivers/xf86-input-dynapro-1.1.2 )
 		input_devices_elo2300? ( >=x11-drivers/xf86-input-elo2300-1.1.2 )
 		input_devices_elographics? ( >=x11-drivers/xf86-input-elographics-1.2.2 )
-		input_devices_evdev? ( >=x11-drivers/xf86-input-evdev-2.0.6 )
+		input_devices_evdev? ( >=x11-drivers/xf86-input-evdev-2.1.0 )
 		input_devices_fpit? ( >=x11-drivers/xf86-input-fpit-1.2.0 )
 		input_devices_hyperpen? ( >=x11-drivers/xf86-input-hyperpen-1.2.0 )
 		input_devices_jamstudio? ( >=x11-drivers/xf86-input-jamstudio-1.2.0 )
 		input_devices_joystick? ( >=x11-drivers/xf86-input-joystick-1.3.2 )
-		input_devices_keyboard? ( >=x11-drivers/xf86-input-keyboard-1.3.1 )
+		input_devices_keyboard? ( >=x11-drivers/xf86-input-keyboard-9999 )
 		input_devices_magellan? ( >=x11-drivers/xf86-input-magellan-1.2.0 )
 		input_devices_microtouch? ( >=x11-drivers/xf86-input-microtouch-1.2.0 )
-		input_devices_mouse? ( >=x11-drivers/xf86-input-mouse-1.3.0 )
+		input_devices_mouse? ( >=x11-drivers/xf86-input-mouse-9999 )
 		input_devices_mutouch? ( >=x11-drivers/xf86-input-mutouch-1.2.1 )
 		input_devices_palmax? ( >=x11-drivers/xf86-input-palmax-1.2.0 )
 		input_devices_penmount? ( >=x11-drivers/xf86-input-penmount-1.3.0 )
@@ -301,10 +301,8 @@ pkg_setup() {
 		$(use_enable dmx)
 		$(use_enable kdrive)
 		$(use_enable tslib)
-		$(use_enable x86 kdrive-vesa)
 		$(use_enable !minimal xvfb)
 		$(use_enable !minimal xnest)
-		$(use_enable !minimal xtrap)
 		$(use_enable !minimal record)
 		$(use_enable !minimal xfree86-utils)
 		$(use_enable !minimal install-libxf86config)
