@@ -119,9 +119,6 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=x11-libs/libXi-1.1.3
 	>=x11-libs/pixman-0.12
 	media-libs/freetype
-	media-fonts/font-adobe-75dpi
-	media-fonts/font-misc-misc
-	media-fonts/font-cursor-misc
 	>=x11-misc/xbitmaps-1.0.1
 	>=x11-misc/xkeyboard-config-1.3
 	>=x11-apps/iceauth-1.0.2
@@ -274,6 +271,7 @@ EPATCH_SUFFIX="patch"
 # Local customizations, unsuitable for upstream
 GENTOO_PATCHES=(
 	"${FILESDIR}/1.4-fpic-libxf86config.patch"
+	"${FILESDIR}/xserver-1.5.99.1-builtin-fonts.patch"
 	)
 
 # These have been sent upstream
@@ -304,7 +302,6 @@ pkg_setup() {
 		$(use_enable kdrive)
 		$(use_enable tslib)
 		$(use_enable x86 kdrive-vesa)
-		$(use_enable minimal builtin-fonts)
 		$(use_enable !minimal xvfb)
 		$(use_enable !minimal xnest)
 		$(use_enable !minimal xtrap)
@@ -322,6 +319,7 @@ pkg_setup() {
 		--enable-install-setuid
 		--with-fontdir=/usr/share/fonts
 		--with-xkb-output=/var/lib/xkb
+		--with-default-font-path=built-ins
 		${conf_opts}"
 
 	local diemsg="You must build xorg-server and mesa with the same nptl USE setting."
