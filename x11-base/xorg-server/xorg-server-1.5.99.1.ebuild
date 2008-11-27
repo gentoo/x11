@@ -118,9 +118,6 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=x11-libs/libXi-1.1.3
 	>=x11-libs/pixman-0.13.2
 	media-libs/freetype
-	media-fonts/font-adobe-75dpi
-	media-fonts/font-misc-misc
-	media-fonts/font-cursor-misc
 	>=x11-misc/xbitmaps-1.0.1
 	>=x11-misc/xkeyboard-config-1.4
 	>=x11-apps/iceauth-1.0.2
