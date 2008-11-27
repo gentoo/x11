@@ -272,6 +272,7 @@ EPATCH_SUFFIX="patch"
 # Local customizations, unsuitable for upstream
 GENTOO_PATCHES=(
 	"${FILESDIR}/1.4-fpic-libxf86config.patch"
+	"${FILESDIR}/xserver-1.5.99.1-builtin-fonts.patch"
 	)
 
 # These have been sent upstream
@@ -301,7 +302,6 @@ pkg_setup() {
 		$(use_enable dmx)
 		$(use_enable kdrive)
 		$(use_enable tslib)
-		$(use_enable minimal builtin-fonts)
 		$(use_enable !minimal xvfb)
 		$(use_enable !minimal xnest)
 		$(use_enable !minimal record)
@@ -318,6 +318,7 @@ pkg_setup() {
 		--enable-install-setuid
 		--with-fontdir=/usr/share/fonts
 		--with-xkb-output=/var/lib/xkb
+		--with-default-font-path=built-ins
 		${conf_opts}"
 
 	local diemsg="You must build xorg-server and mesa with the same nptl USE setting."
