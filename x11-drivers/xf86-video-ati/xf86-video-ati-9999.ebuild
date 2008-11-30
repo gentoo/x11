@@ -31,12 +31,6 @@ DEPEND="${RDEPEND}
 
 CONFIGURE_OPTIONS="$(use_enable dri)"
 
-pkg_setup() {
-	if use dri && ! built_with_use x11-base/xorg-server dri; then
-		die "Build x11-base/xorg-server with USE=dri."
-	fi
-}
-
 src_unpack() {
 	x-modular_specs_check
 	x-modular_server_supports_drivers_check
