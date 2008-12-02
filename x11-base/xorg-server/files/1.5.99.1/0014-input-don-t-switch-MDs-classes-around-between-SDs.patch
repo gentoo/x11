@@ -1,0 +1,295 @@
+From be4bf65d00a28cc77b939f00f115528a9024ab89 Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@redhat.com>
+Date: Fri, 28 Nov 2008 09:22:04 +1000
+Subject: [PATCH] input: don't switch MDs' classes around between SDs.
+
+Server 1.6 uses the X Input 1.x input model, where the core devices (VCP and
+VCK) do not generate XI events. They don't have to swap device classes but
+instead stay at the default number of classes at all times.
+This means we can get rid of the DeviceClassesChangedEvents as well.
+---
+ Xi/exevents.c   |   45 ---------------------------------------------
+ Xi/extinit.c    |   52 ----------------------------------------------------
+ dix/devices.c   |   20 --------------------
+ dix/getevents.c |   44 --------------------------------------------
+ mi/mieq.c       |   11 +++--------
+ 5 files changed, 3 insertions(+), 169 deletions(-)
+
+diff --git a/Xi/exevents.c b/Xi/exevents.c
+index fbd03aa..00a6b21 100644
+--- a/Xi/exevents.c
++++ b/Xi/exevents.c
+@@ -738,41 +738,6 @@ DeepCopyDeviceClasses(DeviceIntPtr from, DeviceIntPtr to)
+     }
+ }
+ 
+-/**
+- * Change MD to look like SD by copying all classes over. An event is sent to
+- * all interested clients.
+- * @param device The slave device
+- * @param dcce Pointer to the event struct.
+- */
+-static void
+-ChangeMasterDeviceClasses(DeviceIntPtr device,
+-                          deviceClassesChangedEvent *dcce)
+-{
+-    DeviceIntPtr master = device->u.master;
+-    char* classbuff;
+-
+-    if (device->isMaster)
+-        return;
+-
+-    if (!master) /* if device was set floating between SIGIO and now */
+-        return;
+-
+-    dcce->deviceid     = master->id;
+-    dcce->num_classes  = 0;
+-
+-    master->public.devicePrivate = device->public.devicePrivate;
+-
+-    DeepCopyDeviceClasses(device, master);
+-
+-    /* event is already correct size, see comment in GetPointerEvents */
+-    classbuff = (char*)&dcce[1];
+-
+-    /* we don't actually swap if there's a NullClient, swapping is done
+-     * later when event is delivered. */
+-    CopySwapClasses(NullClient, master, &dcce->num_classes, &classbuff);
+-    SendEventToAllWindows(master, XI_DeviceClassesChangedMask,
+-                          (xEvent*)dcce, 1);
+-}
+ 
+ /**
+  * Update the device state according to the data in the event.
+@@ -800,16 +765,6 @@ UpdateDeviceState(DeviceIntPtr device, xEvent* xE, int count)
+     CARD16 modifiers    = 0,
+            mask         = 0;
+ 
+-    /* This event is always the first we get, before the actual events with
+-     * the data. However, the way how the DDX is set up, "device" will
+-     * actually be the slave device that caused the event.
+-     */
+-    if (GEIsType(xE, IReqCode, XI_DeviceClassesChangedNotify))
+-    {
+-        ChangeMasterDeviceClasses(device, (deviceClassesChangedEvent*)xE);
+-        return DONT_PROCESS; /* event has been sent already */
+-    }
+-
+     /* currently no other generic event modifies the device */
+     if (xE->u.u.type == GenericEvent)
+         return DEFAULT;
+diff --git a/Xi/extinit.c b/Xi/extinit.c
+index df71ae2..0ec5342 100644
+--- a/Xi/extinit.c
++++ b/Xi/extinit.c
+@@ -126,7 +126,6 @@ Mask ExtExclusiveMasks[EMASKSIZE];
+  * Evtype is index, mask is value at index.
+  */
+ static Mask xi_filters[4] = {
+-    XI_DeviceClassesChangedMask
+ };
+ 
+ static struct dev_type
+@@ -558,53 +557,6 @@ SDevicePropertyNotifyEvent (devicePropertyNotify *from, devicePropertyNotify *to
+     swapl(&to->atom, n);
+ }
+ 
+-static void
+-SDeviceClassesChangedEvent(deviceClassesChangedEvent* from,
+-                           deviceClassesChangedEvent* to)
+-{
+-    char n;
+-    int i, j;
+-    xAnyClassPtr any;
+-
+-    *to = *from;
+-    memcpy(&to[1], &from[1], from->length * 4);
+-
+-    swaps(&to->sequenceNumber, n);
+-    swapl(&to->length, n);
+-    swapl(&to->time, n);
+-   
+-    /* now swap the actual classes */
+-    any = (xAnyClassPtr)&to[1];
+-    for (i = 0; i < to->num_classes; i++)
+-    {
+-        switch(any->class)
+-        {
+-            case KeyClass:
+-                swaps(&((xKeyInfoPtr)any)->num_keys, n);
+-                break;
+-            case ButtonClass:
+-                swaps(&((xButtonInfoPtr)any)->num_buttons, n);
+-                break;
+-            case ValuatorClass:
+-                {
+-                    xValuatorInfoPtr v = (xValuatorInfoPtr)any;
+-                    xAxisInfoPtr a = (xAxisInfoPtr)&v[1];
+-
+-                    swapl(&v->motion_buffer_size, n);
+-                    for (j = 0; j < v->num_axes; j++)
+-                    {
+-                        swapl(&a->min_value, n);
+-                        swapl(&a->max_value, n);
+-                        swapl(&a->resolution, n);
+-                        a++;
+-                    }
+-                }
+-                break;
+-        }
+-        any = (xAnyClassPtr)((char*)any + any->length);
+-    }
+-}
+-
+ /**************************************************************************
+  *
+  * Allow the specified event to have its propagation suppressed.
+@@ -1026,10 +978,6 @@ XIGEEventSwap(xGenericEvent* from, xGenericEvent* to)
+     swaps(&from->sequenceNumber, n);
+     switch(from->evtype)
+     {
+-        case XI_DeviceClassesChangedNotify:
+-            SDeviceClassesChangedEvent((deviceClassesChangedEvent*)from,
+-                                       (deviceClassesChangedEvent*)to);
+-            break;
+     }
+ }
+ 
+diff --git a/dix/devices.c b/dix/devices.c
+index f85e875..f7fef95 100644
+--- a/dix/devices.c
++++ b/dix/devices.c
+@@ -2568,26 +2568,6 @@ AttachDevice(ClientPtr client, DeviceIntPtr dev, DeviceIntPtr master)
+         for (it = inputInfo.devices; it; it = it->next)
+             if (!it->isMaster && it->u.master == oldmaster)
+                 break;
+-
+-        if (!it)  /* no dev is paired with old master */
+-        {
+-            /* XXX: reset to defaults */
+-            EventList event = { NULL, 0};
+-            char* classbuf;
+-
+-            /* Send event to clients */
+-            CreateClassesChangedEvent(&event, oldmaster, oldmaster);
+-            deviceClassesChangedEvent *dcce =
+-                (deviceClassesChangedEvent*)event.event;
+-            dcce->deviceid = oldmaster->id;
+-            dcce->num_classes = 0;
+-            classbuf = (char*)&event.event[1];
+-            CopySwapClasses(NullClient, oldmaster,
+-                    &dcce->num_classes, &classbuf);
+-            SendEventToAllWindows(oldmaster, XI_DeviceClassesChangedMask,
+-                    event.event, 1);
+-            xfree(event.event);
+-        }
+     }
+ 
+     return Success;
+diff --git a/dix/getevents.c b/dix/getevents.c
+index 620ce93..82be5e9 100644
+--- a/dix/getevents.c
++++ b/dix/getevents.c
+@@ -60,7 +60,6 @@
+ #include "exevents.h"
+ #include "exglobals.h"
+ #include "extnsionst.h"
+-#include "listdev.h" /* for sizing up DeviceClassesChangedEvent */
+ 
+ /* Maximum number of valuators, divided by six, rounded up, to get number
+  * of events. */
+@@ -117,43 +116,6 @@ key_autorepeats(DeviceIntPtr pDev, int key_code)
+               (1 << (key_code & 7)));
+ }
+ 
+-void
+-CreateClassesChangedEvent(EventList* event,
+-                          DeviceIntPtr master,
+-                          DeviceIntPtr slave)
+-{
+-    deviceClassesChangedEvent *dcce;
+-    int len = sizeof(xEvent);
+-    CARD32 ms = GetTimeInMillis();
+-    int namelen = 0; /* dummy */
+-
+-    /* XXX: ok, this is a bit weird. We need to alloc enough size for the
+-     * event so it can be filled in in POE lateron. Reason being that if
+-     * we realloc the event in POE we can get SIGABRT when we try to free
+-     * or realloc the original pointer.
+-     * We can only do it here as we don't have the EventList in the event
+-     * processing any more.
+-     */
+-    SizeDeviceInfo(slave, &namelen, &len);
+-
+-    if (event->evlen < len)
+-    {
+-        event->event = realloc(event->event, len);
+-        if (!event->event)
+-            FatalError("[dix] Cannot allocate memory for "
+-                    "DeviceClassesChangedEvent.\n");
+-        event->evlen = len;
+-    }
+-
+-    dcce = (deviceClassesChangedEvent*)event->event;
+-    dcce->type = GenericEvent;
+-    dcce->extension = IReqCode;
+-    dcce->evtype = XI_DeviceClassesChangedNotify;
+-    dcce->time = ms;
+-    dcce->new_slave = slave->id;
+-    dcce->length = (len - sizeof(xEvent))/4;
+-}
+-
+ /**
+  * Rescale the coord between the two axis ranges.
+  */
+@@ -580,12 +542,9 @@ updateFromMaster(EventListPtr events, DeviceIntPtr dev, int *num_events)
+     DeviceIntPtr master = dev->u.master;
+     if (master && master->u.lastSlave != dev)
+     {
+-        CreateClassesChangedEvent(events, master, dev);
+         updateSlaveDeviceCoords(master, dev);
+         master->u.lastSlave = dev;
+         master->last.numValuators = dev->last.numValuators;
+-        (*num_events)++;
+-        events++;
+     }
+     return events;
+ }
+@@ -1104,12 +1063,9 @@ GetProximityEvents(EventList *events, DeviceIntPtr pDev, int type,
+     master = pDev->u.master;
+     if (master && master->u.lastSlave != pDev)
+     {
+-        CreateClassesChangedEvent(events, master, pDev);
+         updateSlaveDeviceCoords(master, pDev);
+         master->u.lastSlave = pDev;
+         master->last.numValuators = pDev->last.numValuators;
+-        num_events++;
+-        events++;
+     }
+ 
+     kbp = (deviceKeyButtonPointer *) events->event;
+diff --git a/mi/mieq.c b/mi/mieq.c
+index 82f0c66..87cdfba 100644
+--- a/mi/mieq.c
++++ b/mi/mieq.c
+@@ -254,14 +254,9 @@ ChangeDeviceID(DeviceIntPtr dev, xEvent* event)
+         ((deviceValuator*)event)->deviceid = dev->id;
+     else if (type == GenericEvent)
+     {
+-        /* FIXME: need to put something into XGE to make this saner */
+-        if (GEIsType(event, IReqCode, XI_DeviceClassesChangedNotify))
+-        {
+-            // do nothing or drink a beer. your choice.
+-        } else
+-            DebugF("[mi] Unknown generic event (%d/%d), cannot change id.\n",
+-                    ((xGenericEvent*)event)->extension,
+-                    ((xGenericEvent*)event)->evtype);
++        DebugF("[mi] Unknown generic event (%d/%d), cannot change id.\n",
++                ((xGenericEvent*)event)->extension,
++                ((xGenericEvent*)event)->evtype);
+     } else
+         DebugF("[mi] Unknown event type (%d), cannot change id.\n", type);
+ }
+-- 
+1.6.0.4
+

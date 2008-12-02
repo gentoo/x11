@@ -1,0 +1,132 @@
+From f245c46d291dc22f40fb839bf21d2620091a84ef Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@redhat.com>
+Date: Fri, 28 Nov 2008 14:21:05 +1000
+Subject: [PATCH] dix: don't detach SDs during grabs.
+
+---
+ dix/events.c |   67 ----------------------------------------------------------
+ 1 files changed, 0 insertions(+), 67 deletions(-)
+
+diff --git a/dix/events.c b/dix/events.c
+index b024d9e..d7618c2 100644
+--- a/dix/events.c
++++ b/dix/events.c
+@@ -1466,51 +1466,6 @@ CheckGrabForSyncs(DeviceIntPtr thisDev, Bool thisMode, Bool otherMode)
+     ComputeFreezes();
+ }
+ 
+-/* Only ever used if a grab is called on an attached slave device. */
+-static int GrabPrivateKeyIndex;
+-static DevPrivateKey GrabPrivateKey = &GrabPrivateKeyIndex;
+-typedef struct _GrabMemoryRec {
+-    DeviceIntPtr oldmaster;
+-} GrabMemoryRec, *GrabMemoryPtr;
+-
+-/**
+- * Save the device's master device in the devPrivates. This needs to be done
+- * if a client directly grabs a slave device that is attached to a master. For
+- * the duration of the grab, the device is detached, ungrabbing re-attaches it
+- * though.
+- */
+-static void
+-SaveOldMaster(DeviceIntPtr dev)
+-{
+-    GrabMemoryPtr gm;
+-
+-    if (!(gm = xalloc(sizeof(GrabMemoryRec))))
+-    {
+-        ErrorF("[dix] Cannot allocate grab private. Grab not "
+-                "possible on device.\n");
+-        return;
+-    }
+-    gm->oldmaster = dev->u.master;
+-    dixSetPrivate(&dev->devPrivates, GrabPrivateKey, gm);
+-}
+-
+-static void
+-RestoreOldMaster(DeviceIntPtr dev)
+-{
+-    GrabMemoryPtr gm;
+-
+-    if (dev->isMaster)
+-        return;
+-
+-    gm = (GrabMemoryPtr)dixLookupPrivate(&dev->devPrivates, GrabPrivateKey);
+-    if (gm)
+-    {
+-        dev->u.master = gm->oldmaster;
+-        xfree(gm);
+-        dixSetPrivate(&dev->devPrivates, GrabPrivateKey, NULL);
+-    }
+-}
+-
+ /**
+  * Activate a pointer grab on the given device. A pointer grab will cause all
+  * core pointer events of this device to be delivered to the grabbing client only.
+@@ -1536,13 +1491,6 @@ ActivatePointerGrab(DeviceIntPtr mouse, GrabPtr grab,
+                         : mouse->spriteInfo->sprite->win;
+     Bool isPassive = autoGrab & ~ImplicitGrabMask;
+ 
+-    /* slave devices need to float for the duration of the grab. */
+-    if (!isPassive && !mouse->isMaster)
+-    {
+-        SaveOldMaster(mouse);
+-        AttachDevice(NULL, mouse, NULL);
+-    }
+-
+     if (grab->confineTo)
+     {
+ 	if (grab->confineTo->drawable.pScreen
+@@ -1577,7 +1525,6 @@ DeactivatePointerGrab(DeviceIntPtr mouse)
+ {
+     GrabPtr grab = mouse->deviceGrab.grab;
+     DeviceIntPtr dev;
+-    Bool  wasPassive= mouse->deviceGrab.fromPassiveGrab;
+ 
+     mouse->valuator->motionHintWindow = NullWindow;
+     mouse->deviceGrab.grab = NullGrab;
+@@ -1604,9 +1551,6 @@ DeactivatePointerGrab(DeviceIntPtr mouse)
+     if (grab->cursor)
+ 	FreeCursor(grab->cursor, (Cursor)0);
+ 
+-    if (!wasPassive)
+-        RestoreOldMaster(mouse);
+-
+     ComputeFreezes();
+ }
+ 
+@@ -1621,13 +1565,6 @@ ActivateKeyboardGrab(DeviceIntPtr keybd, GrabPtr grab, TimeStamp time, Bool pass
+     GrabInfoPtr grabinfo = &keybd->deviceGrab;
+     WindowPtr oldWin;
+ 
+-    /* slave devices need to float for the duration of the grab. */
+-    if (!passive && !keybd->isMaster)
+-    {
+-        SaveOldMaster(keybd);
+-        AttachDevice(NULL, keybd, NULL);
+-    }
+-
+     if (grabinfo->grab)
+ 	oldWin = grabinfo->grab->window;
+     else if (keybd->focus)
+@@ -1659,7 +1596,6 @@ DeactivateKeyboardGrab(DeviceIntPtr keybd)
+     DeviceIntPtr dev;
+     WindowPtr focusWin = keybd->focus ? keybd->focus->win
+                                            : keybd->spriteInfo->sprite->win;
+-    Bool wasPassive = keybd->deviceGrab.fromPassiveGrab;
+ 
+     if (focusWin == FollowKeyboardWin)
+ 	focusWin = inputInfo.keyboard->focus->win;
+@@ -1681,9 +1617,6 @@ DeactivateKeyboardGrab(DeviceIntPtr keybd)
+     }
+     DoFocusEvents(keybd, grab->window, focusWin, NotifyUngrab);
+ 
+-    if (!wasPassive)
+-        RestoreOldMaster(keybd);
+-
+     ComputeFreezes();
+ }
+ 
+-- 
+1.6.0.4
+

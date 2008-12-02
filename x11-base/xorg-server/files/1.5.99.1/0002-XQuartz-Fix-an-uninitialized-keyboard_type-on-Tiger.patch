@@ -1,0 +1,34 @@
+From c7c8eeaedc8dc24c3ed7930d4322eb811977536e Mon Sep 17 00:00:00 2001
+From: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date: Tue, 25 Nov 2008 20:14:37 -0800
+Subject: [PATCH] XQuartz: Fix an uninitialized keyboard_type on Tiger
+ (cherry picked from commit 27b1a5eb3482052253ebdce1a09aedf05ac1b099)
+
+---
+ hw/xquartz/quartzKeyboard.c |    3 +--
+ 1 files changed, 1 insertions(+), 2 deletions(-)
+
+diff --git a/hw/xquartz/quartzKeyboard.c b/hw/xquartz/quartzKeyboard.c
+index 1ee2382..67ed6ff 100644
+--- a/hw/xquartz/quartzKeyboard.c
++++ b/hw/xquartz/quartzKeyboard.c
+@@ -572,7 +572,7 @@ Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info) {
+ #endif
+     const void *chr_data = NULL;
+     int num_keycodes = NUM_KEYCODES;
+-    UInt32 keyboard_type = 0;
++    UInt32 keyboard_type = LMGetKbdType();
+     int i, j;
+     OSStatus err;
+     KeySym *k;
+@@ -580,7 +580,6 @@ Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info) {
+ 
+ #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
+     TISInputSourceRef currentKeyLayoutRef = TISCopyCurrentKeyboardLayoutInputSource();
+-    keyboard_type = LMGetKbdType();
+ 
+     if (currentKeyLayoutRef) {
+       currentKeyLayoutDataRef = (CFDataRef )TISGetInputSourceProperty(currentKeyLayoutRef, kTISPropertyUnicodeKeyLayoutData);
+-- 
+1.6.0.4
+

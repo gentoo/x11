@@ -1,0 +1,80 @@
+From 41471afa7774a6598344ea7b488f993a0bd32e7f Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@redhat.com>
+Date: Fri, 28 Nov 2008 14:55:15 +1000
+Subject: [PATCH] xkb: Extra sanity checks to prevent dev->key == NULL dereferencing.
+
+---
+ xkb/xkbEvents.c |   19 +++++++++++++++----
+ 1 files changed, 15 insertions(+), 4 deletions(-)
+
+diff --git a/xkb/xkbEvents.c b/xkb/xkbEvents.c
+index 67bd674..9d8ec0d 100644
+--- a/xkb/xkbEvents.c
++++ b/xkb/xkbEvents.c
+@@ -110,7 +110,7 @@ Time 		time;
+ register CARD16	changed,bState;
+ 
+     interest = kbd->xkb_interest;
+-    if (!interest)
++    if (!interest || !kbd->key || !kbd->key->xkbInfo)
+ 	return;
+     xkbi = kbd->key->xkbInfo;
+     state= &xkbi->state;
+@@ -169,6 +169,9 @@ XkbSrvInfoPtr	xkbi;
+ unsigned	time = 0,initialized;
+ CARD16		changed;
+ 
++    if (!kbd->key || !kbd->key->xkbInfo)
++        return;
++
+     xkbi = kbd->key->xkbInfo;
+     initialized= 0;
+ 
+@@ -292,7 +295,7 @@ XkbInterestPtr		interest;
+ Time 		 	time = 0;
+ 
+     interest = kbd->xkb_interest;
+-    if (!interest)
++    if (!interest || !kbd->key || !kbd->key->xkbInfo)
+ 	return;
+     xkbi = kbd->key->xkbInfo;
+  
+@@ -402,6 +405,9 @@ CARD16		pitch,duration;
+ Time 		time = 0;
+ XID		winID = 0;
+ 
++    if (!kbd->key || !kbd->key->xkbInfo)
++        return;
++
+     xkbi = kbd->key->xkbInfo;
+ 
+     if ((force||(xkbi->desc->ctrls->enabled_ctrls&XkbAudibleBellMask))&&
+@@ -617,11 +623,12 @@ XkbSrvInfoPtr	 xkbi;
+ XkbInterestPtr	 interest;
+ Time 		 time = 0;
+ 
+-    xkbi = kbd->key->xkbInfo;
+     interest = kbd->xkb_interest;
+-    if (!interest)
++    if (!interest || !kbd->key || !kbd->key->xkbInfo)
+ 	return;
+  
++    xkbi = kbd->key->xkbInfo;
++
+     initialized = 0;
+     pEv->mods= xkbi->state.mods;
+     pEv->group= xkbi->state.group;
+@@ -1004,6 +1011,10 @@ unsigned long	autoCtrls,autoValues;
+ ClientPtr	client = NULL;
+ 
+     found= False;
++
++    if (!dev->key || !dev->key->xkbInfo)
++        return found;
++
+     autoCtrls= autoValues= 0;
+     if ( dev->xkb_interest ) {
+ 	interest = dev->xkb_interest;
+-- 
+1.6.0.4
+

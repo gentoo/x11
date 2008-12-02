@@ -1,0 +1,94 @@
+From d4fb734c631a20e93da22773e676f747c9f645ba Mon Sep 17 00:00:00 2001
+From: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date: Fri, 28 Nov 2008 12:59:09 -0800
+Subject: [PATCH] XQuartz: Added option to enable/disable test extensions
+
+defaults write org.x.X11 enable_test_extensions -boolean true
+(cherry picked from commit fd4710aff3723d5f3422cf6a6530172eafc556d9)
+(cherry picked from commit 635019ad18db921fec99256294debd8571074abf)
+---
+ hw/xquartz/X11Application.h         |    1 +
+ hw/xquartz/X11Application.m         |   12 ++++++++----
+ hw/xquartz/doc/Xquartz.man.pre      |    3 +++
+ hw/xquartz/mach-startup/Makefile.am |    5 +++++
+ 4 files changed, 17 insertions(+), 4 deletions(-)
+
+diff --git a/hw/xquartz/X11Application.h b/hw/xquartz/X11Application.h
+index 1cfbe08..80aee59 100644
+--- a/hw/xquartz/X11Application.h
++++ b/hw/xquartz/X11Application.h
+@@ -92,6 +92,7 @@ extern int quartzHasRoot, quartzEnableRootless, quartzFullscreenMenu;
+ #define PREFS_APPKIT_MODIFIERS      "appkit_modifiers"
+ #define PREFS_WINDOW_ITEM_MODIFIERS "window_item_modifiers"
+ #define PREFS_ROOTLESS              "rootless"
++#define PREFS_TEST_EXTENSIONS       "enable_test_extensions"
+ #define PREFS_XP_OPTIONS            "xp_options"
+ #define PREFS_LOGIN_SHELL           "login_shell"
+ #define PREFS_CLICK_THROUGH         "wm_click_through"
+diff --git a/hw/xquartz/X11Application.m b/hw/xquartz/X11Application.m
+index 9b34426..21013d9 100644
+--- a/hw/xquartz/X11Application.m
++++ b/hw/xquartz/X11Application.m
+@@ -66,6 +66,8 @@ extern BOOL xpbproxy_init (void);
+ int X11EnableKeyEquivalents = TRUE, quartzFullscreenMenu = FALSE;
+ int quartzHasRoot = FALSE, quartzEnableRootless = TRUE;
+ 
++extern Bool noTestExtensions;
++
+ #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
+ static TISInputSourceRef last_key_layout;
+ #else
+@@ -708,14 +710,16 @@ static NSMutableArray * cfarray_to_nsarray (CFArrayRef in) {
+     }
+ 
+     X11EnableKeyEquivalents = [self prefs_get_boolean:@PREFS_KEYEQUIVS
+-                               default:X11EnableKeyEquivalents];
++                                              default:X11EnableKeyEquivalents];
+ 	
+     darwinSyncKeymap = [self prefs_get_boolean:@PREFS_SYNC_KEYMAP
+-                        default:darwinSyncKeymap];
++                                       default:darwinSyncKeymap];
+ 		
+     darwinDesiredDepth = [self prefs_get_integer:@PREFS_DEPTH
+-                          default:darwinDesiredDepth];
+-	
++                                         default:darwinDesiredDepth];
++    
++    noTestExtensions = ![self prefs_get_boolean:@PREFS_TEST_EXTENSIONS
++                                        default:FALSE];
+ }
+ 
+ /* This will end up at the end of the responder chain. */
+diff --git a/hw/xquartz/doc/Xquartz.man.pre b/hw/xquartz/doc/Xquartz.man.pre
+index a9f9a58..a442c96 100644
+--- a/hw/xquartz/doc/Xquartz.man.pre
++++ b/hw/xquartz/doc/Xquartz.man.pre
+@@ -71,6 +71,9 @@ Update the the OSX NSPasteboard when the X11 CLIPBOARD is updated.  Note that en
+ .TP 8
+ .B defaults write org.x.X11 sync_primary_on_select -boolean true
+ This option defaults to false and is provided only "for experts."  It updates the NSPasteboard whenever a new X11 selection is made (rather than requiring you to hit cmd-c to copy the selection to the NSPasteboard).  Since the X11 protocol does not require applications to send notification when they change selection, this might not work in all cases (if you run into this problem, try selecting text in another application first, then selecting the text you want).
++.TP 8
++.B defaults write org.x.X11 enable_test_extensions -boolean true
++This option defaults to false and is only accessible through the command line.  Enable this option to turn on the DEC-XTRAP, RECORD, and XTEST extensions in the server.
+ .SH OPTIONS
+ .PP
+ In addition to the normal server options described in the \fIXserver(1)\fP
+diff --git a/hw/xquartz/mach-startup/Makefile.am b/hw/xquartz/mach-startup/Makefile.am
+index 5bcd07b..65ee2fa 100644
+--- a/hw/xquartz/mach-startup/Makefile.am
++++ b/hw/xquartz/mach-startup/Makefile.am
+@@ -39,6 +39,11 @@ X11_LDFLAGS += \
+ 	-Wl,-framework,OpenGL
+ endif
+ 
++if RECORD
++X11_LDADD += \
++	$(top_builddir)/record/librecord.la
++endif
++
+ bin_PROGRAMS = Xquartz
+ 
+ dist_Xquartz_SOURCES = \
+-- 
+1.6.0.4
+

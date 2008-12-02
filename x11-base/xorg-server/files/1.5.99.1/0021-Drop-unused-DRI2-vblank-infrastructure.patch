@@ -1,0 +1,95 @@
+From 670ac5d097c64d4f09ee3861d1ff21d5d6af3fdf Mon Sep 17 00:00:00 2001
+From: =?utf-8?q?Kristian=20H=C3=B8gsberg?= <krh@redhat.com>
+Date: Mon, 1 Dec 2008 20:52:41 -0500
+Subject: [PATCH] Drop unused DRI2 vblank infrastructure.
+
+For this first iteration of DRI2 we don't have any vsync functionality
+in place yet, so back out the support in DRI2 and the protocol for now.
+---
+ hw/xfree86/dri2/dri2.c    |   24 ------------------------
+ hw/xfree86/dri2/dri2ext.c |    5 -----
+ 2 files changed, 0 insertions(+), 29 deletions(-)
+
+diff --git a/hw/xfree86/dri2/dri2.c b/hw/xfree86/dri2/dri2.c
+index 3c852a4..0f2e24b 100644
+--- a/hw/xfree86/dri2/dri2.c
++++ b/hw/xfree86/dri2/dri2.c
+@@ -66,9 +66,7 @@ typedef struct _DRI2Screen {
+     DRI2CreateBuffersProcPtr	 CreateBuffers;
+     DRI2DestroyBuffersProcPtr	 DestroyBuffers;
+     DRI2CopyRegionProcPtr	 CopyRegion;
+-    DRI2WaitProcPtr		 Wait;
+ 
+-    ClipNotifyProcPtr            ClipNotify;
+     HandleExposuresProcPtr       HandleExposures;
+ } DRI2ScreenRec, *DRI2ScreenPtr;
+ 
+@@ -251,23 +249,6 @@ DRI2Authenticate(ScreenPtr pScreen, drm_magic_t magic)
+     return TRUE;
+ }
+ 
+-static void
+-DRI2ClipNotify(WindowPtr pWin, int dx, int dy)
+-{
+-    ScreenPtr           pScreen = pWin->drawable.pScreen;
+-    DRI2ScreenPtr       ds = DRI2GetScreen(pScreen);
+-    DRI2DrawablePtr     dd = DRI2GetDrawable(&pWin->drawable);
+-
+-    if (dd && ds->lastSequence < dd->pendingSequence && ds->Wait)
+-	ds->Wait(pWin, dd->pendingSequence);
+-
+-    if (ds->ClipNotify) {
+-	pScreen->ClipNotify = ds->ClipNotify;
+-	pScreen->ClipNotify(pWin, dx, dy);
+-	pScreen->ClipNotify = DRI2ClipNotify;
+-    }
+-}
+-
+ Bool
+ DRI2ScreenInit(ScreenPtr pScreen, DRI2InfoPtr info)
+ {
+@@ -283,10 +264,6 @@ DRI2ScreenInit(ScreenPtr pScreen, DRI2InfoPtr info)
+     ds->CreateBuffers  = info->CreateBuffers;
+     ds->DestroyBuffers = info->DestroyBuffers;
+     ds->CopyRegion     = info->CopyRegion;
+-    ds->Wait           = info->Wait;
+-
+-    ds->ClipNotify              = pScreen->ClipNotify;
+-    pScreen->ClipNotify         = DRI2ClipNotify;
+ 
+     dixSetPrivate(&pScreen->devPrivates, dri2ScreenPrivateKey, ds);
+ 
+@@ -300,7 +277,6 @@ DRI2CloseScreen(ScreenPtr pScreen)
+ {
+     DRI2ScreenPtr ds = DRI2GetScreen(pScreen);
+ 
+-    pScreen->ClipNotify = ds->ClipNotify;
+     xfree(ds);
+     dixSetPrivate(&pScreen->devPrivates, dri2ScreenPrivateKey, NULL);
+ }
+diff --git a/hw/xfree86/dri2/dri2ext.c b/hw/xfree86/dri2/dri2ext.c
+index 595df73..0a1dce4 100644
+--- a/hw/xfree86/dri2/dri2ext.c
++++ b/hw/xfree86/dri2/dri2ext.c
+@@ -243,10 +243,6 @@ ProcDRI2CopyRegion(ClientPtr client)
+ 
+     REQUEST_SIZE_MATCH(xDRI2CopyRegionReq);
+ 
+-    /* No optional values supported for DRI2 2.0 protocol. */
+-    if (stuff->bitmask != 0)
+-	    return BadValue;
+-
+     if (!validDrawable(client, stuff->drawable, &pDrawable, &status))
+ 	return status;
+ 
+@@ -266,7 +262,6 @@ ProcDRI2CopyRegion(ClientPtr client)
+     rep.type = X_Reply;
+     rep.length = 0;
+     rep.sequenceNumber = client->sequence;
+-    rep.bitmask = 0;
+ 
+     WriteToClient(client, sizeof(xDRI2CopyRegionReply), &rep);
+ 
+-- 
+1.6.0.4
+

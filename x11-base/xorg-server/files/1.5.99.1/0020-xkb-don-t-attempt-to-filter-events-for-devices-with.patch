@@ -1,0 +1,50 @@
+From 862d5b2dc55e678921b3db710b2821b66d55ea2f Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@redhat.com>
+Date: Wed, 26 Nov 2008 12:20:00 +1000
+Subject: [PATCH] xkb: don't attempt to filter events for devices without key classes.
+
+Reported by Magnus Kessler.
+
+Signed-off-by: Peter Hutterer <peter.hutterer@redhat.com>
+---
+ xkb/xkbEvents.c |   10 +++++++++-
+ 1 files changed, 9 insertions(+), 1 deletions(-)
+
+diff --git a/xkb/xkbEvents.c b/xkb/xkbEvents.c
+index 9d8ec0d..4d3debb 100644
+--- a/xkb/xkbEvents.c
++++ b/xkb/xkbEvents.c
+@@ -826,7 +826,8 @@ XkbSrvInfoPtr	xkbi;
+             pXDev = inputInfo.keyboard;
+     }
+ 
+-    xkbi= pXDev->key->xkbInfo;
++    xkbi= (pXDev->key) ? pXDev->key->xkbInfo : NULL;
++
+     if ( pClient->xkbClientFlags & _XkbClientInitialized ) {
+ 	if ((xkbDebugFlags&0x10)&&
+ 		((xE[0].u.u.type==KeyPress)||(xE[0].u.u.type==KeyRelease)||
+@@ -848,6 +849,10 @@ XkbSrvInfoPtr	xkbi;
+ 	     	(_XkbIsReleaseEvent(xE[0].u.u.type)) ) {
+ 	    return False;
+ 	}
++
++        if (!xkbi)
++            return True;
++
+ 	if ((pXDev->deviceGrab.grab != NullGrab) 
+                 && pXDev->deviceGrab.fromPassiveGrab &&
+ 	    ((xE[0].u.u.type==KeyPress)||(xE[0].u.u.type==KeyRelease)||
+@@ -891,6 +896,9 @@ XkbSrvInfoPtr	xkbi;
+     else {
+ 	register CARD8 	type;
+ 
++        if (!xkbi)
++            return True;
++
+ 	for (i=0;i<nEvents;i++) {
+ 	    type= xE[i].u.u.type;
+ 	    if ((xkbDebugFlags&0x4)&&
+-- 
+1.6.0.4
+

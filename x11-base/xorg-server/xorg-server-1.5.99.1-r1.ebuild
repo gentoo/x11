@@ -133,7 +133,7 @@ RDEPEND="hal? ( sys-apps/hal )
 			>=x11-libs/libXfixes-4.0.3 )
 	!minimal? ( >=x11-libs/libXtst-1.0.3
 		>=x11-libs/libXres-1.0.3
-		>=media-libs/mesa-7.1 )
+		>=media-libs/mesa-9999 )
 	>=x11-libs/libxkbui-1.0.2
 	>=x11-libs/liblbxutil-1.0.1
 	kdrive? ( sdl? ( media-libs/libsdl ) )"
@@ -162,12 +162,13 @@ DEPEND="${RDEPEND}
 	>=x11-proto/xineramaproto-1.1.2
 	>=x11-proto/fontsproto-2.0.2
 	>=x11-proto/kbproto-1.0.3
-	>=x11-proto/inputproto-9999
+	>=x11-proto/inputproto-1.5.0
 	>=x11-proto/bigreqsproto-1.0.2
 	>=x11-proto/xcmiscproto-1.1.2
 	>=x11-proto/glproto-1.4.9
 	dmx? ( >=x11-proto/dmxproto-2.2.2 )
 	!minimal? ( >=x11-proto/xf86driproto-2.0.4
+		>=x11-proto/dri2proto-1.99.3
 		>=x11-libs/libdrm-2.3 )"
 
 # Drivers
@@ -273,7 +274,9 @@ GENTOO_PATCHES=(
 	)
 
 # These have been sent upstream
-UPSTREAMED_PATCHES=()
+UPSTREAMED_PATCHES=(
+	"${FILESDIR}"/${PV}/
+	)
 
 PATCHES=(
 	"${GENTOO_PATCHES[@]}"

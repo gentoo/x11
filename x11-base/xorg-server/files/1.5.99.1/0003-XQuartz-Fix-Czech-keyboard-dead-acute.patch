@@ -1,0 +1,25 @@
+From 202908c6139b806bc599cd74f3b68172c14aa7b5 Mon Sep 17 00:00:00 2001
+From: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date: Wed, 26 Nov 2008 12:07:52 -0800
+Subject: [PATCH] XQuartz: Fix Czech keyboard dead-acute
+ (cherry picked from commit 771df2786bc60389489f0967e705c7c95bdda085)
+
+---
+ hw/xquartz/quartzKeyboard.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/hw/xquartz/quartzKeyboard.c b/hw/xquartz/quartzKeyboard.c
+index 67ed6ff..b793bff 100644
+--- a/hw/xquartz/quartzKeyboard.c
++++ b/hw/xquartz/quartzKeyboard.c
+@@ -145,6 +145,7 @@ const static struct {
+     KeySym normal, dead;
+ } dead_keys[] = {
+     {XK_grave, XK_dead_grave},
++    {XK_apostrophe, XK_dead_acute},         /* "=" on a Czech keyboard */
+     {XK_acute, XK_dead_acute},
+     {XK_asciicircum, XK_dead_circumflex},
+     {UKEYSYM (0x2c6), XK_dead_circumflex},	/* MODIFIER LETTER CIRCUMFLEX ACCENT */
+-- 
+1.6.0.4
+
