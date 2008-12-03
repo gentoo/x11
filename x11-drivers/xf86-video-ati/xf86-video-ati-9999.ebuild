@@ -3,12 +3,9 @@
 # $Header: /var/cvsroot/gentoo-x86/x11-drivers/xf86-video-ati/xf86-video-ati-6.6.192.ebuild,v 1.1 2007/05/21 05:25:33 dberkholz Exp $
 
 # Must be before x-modular eclass is inherited
-SNAPSHOT="yes"
-XDPVER=4
+#SNAPSHOT="yes"
 
-inherit x-modular git
-
-EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/driver/${PN}"
+inherit x-modular
 
 DESCRIPTION="ATI video driver"
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
@@ -30,13 +27,3 @@ DEPEND="${RDEPEND}
 			>=x11-libs/libdrm-2 )"
 
 CONFIGURE_OPTIONS="$(use_enable dri)"
-
-src_unpack() {
-	x-modular_specs_check
-	x-modular_server_supports_drivers_check
-	x-modular_dri_check
-	git_src_unpack
-	cd ${S}
-	x-modular_patch_source
-	x-modular_reconf_source
-}
