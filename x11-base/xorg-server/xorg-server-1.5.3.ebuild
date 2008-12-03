@@ -135,7 +135,8 @@ RDEPEND="hal? ( sys-apps/hal )
 			>=x11-libs/libXfixes-4.0.3 )
 	!minimal? ( >=x11-libs/libXtst-1.0.3
 		>=x11-libs/libXres-1.0.3
-		>=media-libs/mesa-7.1 )
+		>=media-libs/mesa-7.1
+		media-fonts/font-adobe-75dpi )
 	>=x11-libs/libxkbui-1.0.2
 	>=x11-libs/liblbxutil-1.0.1
 	kdrive? ( sdl? ( media-libs/libsdl ) )"
