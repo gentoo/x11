@@ -12,7 +12,7 @@ DESCRIPTION="X.Org driver for Intel cards"
 KEYWORDS="~amd64 ~arm ~ia64 ~sh ~x86 ~x86-fbsd"
 IUSE="dri"
 
-RDEPEND=">=x11-base/xorg-server-1.5.99.1
+RDEPEND=">=x11-base/xorg-server-1.5
 	x11-libs/libXvMC"
 DEPEND="${RDEPEND}
 	x11-proto/fontsproto
