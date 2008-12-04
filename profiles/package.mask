@@ -27,6 +27,7 @@
 =x11-libs/pixman-9999
 =x11-libs/xcb-util-9999
 =x11-libs/xpyb-9999
+=x11-misc/util-macros-9999
 =x11-misc/xcb-demo-9999
 =x11-misc/xinput-9999
 =x11-proto/bigreqsproto-9999
