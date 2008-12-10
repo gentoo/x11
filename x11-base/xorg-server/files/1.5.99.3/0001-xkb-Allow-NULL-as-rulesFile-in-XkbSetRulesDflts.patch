@@ -1,4 +1,4 @@
-From f8dd8f356d2621eb896b3af5ac6b347d9a403654 Mon Sep 17 00:00:00 2001
+From 7ef9f6ba03ddb40db1b1d1cba4153db3f6b81b4e Mon Sep 17 00:00:00 2001
 From: Peter Hutterer <peter.hutterer@redhat.com>
 Date: Wed, 3 Dec 2008 15:06:37 +1000
 Subject: [PATCH] xkb: Allow NULL as rulesFile in XkbSetRulesDflts.

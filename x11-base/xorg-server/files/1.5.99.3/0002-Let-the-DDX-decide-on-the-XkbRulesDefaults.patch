@@ -1,4 +1,4 @@
-From 33009b9a46cb51123094f5fc95ada0acf7606922 Mon Sep 17 00:00:00 2001
+From ca47f082ba3664720d13c4970dc2661bc2c196fa Mon Sep 17 00:00:00 2001
 From: Donnie Berkholz <dberkholz@gentoo.org>
 Date: Wed, 3 Dec 2008 10:40:54 -0800
 Subject: [PATCH] Let the DDX decide on the XkbRulesDefaults.
@@ -35,7 +35,7 @@ index f7fef95..d89f6c3 100644
                                          CoreKeyboardBell, CoreKeyboardCtl);
          }
 diff --git a/hw/xfree86/common/xf86Config.c b/hw/xfree86/common/xf86Config.c
-index 9771008..fbe790a 100644
+index f530ec4..ad72b16 100644
 --- a/hw/xfree86/common/xf86Config.c
 +++ b/hw/xfree86/common/xf86Config.c
 @@ -1032,6 +1032,12 @@ configServerFlags(XF86ConfFlagsPtr flagsconf, XF86OptionPtr layoutopts)
