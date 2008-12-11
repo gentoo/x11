@@ -15,7 +15,7 @@ index e16d70d..4bc0c25 100644
  
  AC_PREREQ(2.57)
  AC_INIT([libxcb],
--        1.1.92,
+-        1.1.93,
 +        1.2,
          [xcb@lists.freedesktop.org])
  AC_CONFIG_SRCDIR([xcb.pc.in])

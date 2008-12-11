@@ -1,4 +1,4 @@
-# Copyright 1999-2006 Gentoo Foundation
+# Copyright 1999-2008 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 inherit x-modular
@@ -8,6 +8,7 @@ PATCHES="${FILESDIR}/xcb-*.patch"
 
 DESCRIPTION="X C-language Bindings library"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
+IUSE=""
 RDEPEND="x11-libs/libXau
 	x11-libs/libXdmcp
 	dev-libs/libpthread-stubs"
