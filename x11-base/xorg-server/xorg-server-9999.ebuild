@@ -146,7 +146,7 @@ RDEPEND="hal? ( sys-apps/hal )
 DEPEND="${RDEPEND}
 	!net-dialup/dtrace
 	sys-devel/flex
-	>=x11-proto/randrproto-1.2.99.1
+	>=x11-proto/randrproto-1.2.99.3
 	>=x11-proto/renderproto-0.9.3
 	>=x11-proto/fixesproto-4
 	>=x11-proto/damageproto-1.1
