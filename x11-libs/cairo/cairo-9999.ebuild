@@ -12,7 +12,7 @@ HOMEPAGE="http://cairographics.org/"
 LICENSE="|| ( LGPL-2.1 MPL-1.1 )"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
-IUSE="debug directfb doc glitz opengl svg X xcb"
+IUSE="cairoscript debug directfb doc glitz opengl sdl svg X xcb"
 
 # Test causes a circular depend on gtk+... since gtk+ needs cairo but test needs gtk+ so we need to block it
 RESTRICT="test"
@@ -30,7 +30,8 @@ RDEPEND="media-libs/fontconfig
 		x11-libs/libX11
 		virtual/xft )
 	xcb? (	>=x11-libs/libxcb-0.92
-		x11-libs/xcb-util )"
+		x11-libs/xcb-util )
+	sdl? ( >=media-libs/sdl-1.2 )"
 #	test? (
 #	pdf test
 #	x11-libs/pango
@@ -78,6 +79,7 @@ src_compile() {
 	econf $(use_enable X xlib) $(use_enable doc gtk-doc) \
 		$(use_enable directfb) $(use_enable xcb) \
 		$(use_enable svg) $(use_enable glitz) $(use_enable X xlib-xrender) \
+		$(use_enable cairoscript script) $(use_enable sdl) \
 		$(use_enable debug test-surfaces) --enable-pdf  --enable-png \
 		--enable-ft --enable-ps
 
