@@ -79,7 +79,7 @@ src_compile() {
 		$(use_enable directfb) $(use_enable xcb) \
 		$(use_enable svg) $(use_enable glitz) $(use_enable X xlib-xrender) \
 		$(use_enable debug test-surfaces) --enable-pdf  --enable-png \
-		--enable-freetype --enable-ps
+		--enable-ft --enable-ps
 
 	emake || die "compile failed"
 }
