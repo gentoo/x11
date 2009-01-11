@@ -28,3 +28,5 @@ DEPEND="${RDEPEND}
 			x11-libs/libX11 )"
 
 CONFIGURE_OPTIONS="$(use_enable dri)"
+
+PATCHES=("${FILESDIR}/${PV}*")
