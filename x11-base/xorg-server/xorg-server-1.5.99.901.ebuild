@@ -133,7 +133,7 @@ RDEPEND="hal? ( sys-apps/hal )
 			>=x11-libs/libXfixes-4.0.3 )
 	!minimal? ( >=x11-libs/libXtst-1.0.3
 		>=x11-libs/libXres-1.0.3
-		>=media-libs/mesa-9999 )
+		>=media-libs/mesa-7.3_rc1 )
 	>=x11-libs/libxkbui-1.0.2
 	>=x11-libs/liblbxutil-1.0.1
 	kdrive? ( sdl? ( media-libs/libsdl ) )"
@@ -274,9 +274,9 @@ GENTOO_PATCHES=(
 	)
 
 # These have been sent upstream
-UPSTREAMED_PATCHES=(
-	"${FILESDIR}"/${PV}/
-	)
+#UPSTREAMED_PATCHES=(
+#	"${FILESDIR}"/${PV}/
+#	)
 
 PATCHES=(
 	"${GENTOO_PATCHES[@]}"
