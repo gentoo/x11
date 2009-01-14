@@ -28,7 +28,7 @@ RDEPEND="media-libs/fontconfig
 	X? ( 	>=x11-libs/libXrender-0.6
 		x11-libs/libXext
 		x11-libs/libX11
-		virtual/xft )
+		x11-libs/libXft )
 	xcb? (	>=x11-libs/libxcb-0.92
 		x11-libs/xcb-util )
 	sdl? ( >=media-libs/sdl-1.2 )"
