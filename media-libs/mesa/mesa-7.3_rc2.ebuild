@@ -9,7 +9,7 @@ inherit autotools multilib flag-o-matic git portability
 OPENGL_DIR="xorg-x11"
 
 MY_PN="${PN/m/M}"
-MY_P="${MY_PN}-${PV//_}"
+MY_P="${MY_PN}-${PV/_/-}"
 MY_SRC_P="${MY_PN}Lib-${PV/_/-}"
 DESCRIPTION="OpenGL-like graphic library for Linux"
 HOMEPAGE="http://mesa3d.sourceforge.net/"
@@ -98,7 +98,11 @@ pkg_setup() {
 }
 
 src_unpack() {
-	git_src_unpack
+	if [[ $PV = 9999 ]]; then
+		git_src_unpack
+	else
+		unpack ${A}
+	fi
 	cd "${S}"
 
 	# FreeBSD 6.* doesn't have posix_memalign().
