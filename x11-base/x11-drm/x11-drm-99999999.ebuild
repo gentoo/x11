@@ -11,7 +11,6 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/git/mesa/drm"
 inherit eutils x11 linux-mod autotools git
 
 IUSE_VIDEO_CARDS="
-	video_cards_intel
 	video_cards_mach64
 	video_cards_mga
 	video_cards_nv
@@ -158,20 +157,9 @@ kernel_setup() {
 }
 
 set_vidcards() {
-	if use kernel_linux; then
-		set_kvobj
-		INTEL_VIDCARDS="i810.${KV_OBJ} i915.${KV_OBJ}"
-	elif use kernel_FreeBSD; then
-		KV_OBJ="ko"
-		# bsd does not have i810, only i915:
-		INTEL_VIDCARDS="i915.${KV_OBJ}"
-	fi
-
 	VIDCARDS=""
 
 	if [[ -n "${VIDEO_CARDS}" ]]; then
-		use video_cards_intel && \
-			VIDCARDS="${VIDCARDS} ${INTEL_VIDCARDS}"
 		use video_cards_mach64 && \
 			VIDCARDS="${VIDCARDS} mach64.${KV_OBJ}"
 		use video_cards_mga && \
