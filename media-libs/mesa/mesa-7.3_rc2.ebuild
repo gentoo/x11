@@ -205,17 +205,6 @@ src_install() {
 
 pkg_postinst() {
 	switch_opengl_implem
-
-	# We need the outer check, because xorg-server may not be installed
-	# first, and built_with_use() dies if the package isn't installed.
-	if has_version x11-base/xorg-server; then
-		if built_with_use x11-base/xorg-server nptl; then
-			ewarn "Rebuild x11-base/xorg-server without USE=nptl"
-			ewarn "or AIGLX (compiz, etc.) will not work."
-			ewarn "This is because of a bug in the Mesa NPTL assembly code"
-			ewarn "in all Mesa 7.0.x versions (Mesa 6.x is OK)."
-		fi
-	fi
 }
 
 fix_opengl_symlinks() {
