@@ -25,7 +25,8 @@ IUSE="${IUSE_VIDEO_CARDS} kernel_FreeBSD kernel_linux"
 
 # Make sure Portage does _NOT_ strip symbols.  We will do it later and make sure
 # that only we only strip stuff that are safe to strip ...
-RESTRICT="strip"
+# Tests require user intervention (see bug #236845)
+RESTRICT="strip test"
 
 S="${WORKDIR}/drm"
 PATCHVER="0.2"
