@@ -129,7 +129,6 @@ RDEPEND="hal? ( sys-apps/hal )
 	app-admin/eselect-opengl
 	>=x11-libs/libXaw-1.0.4
 	>=x11-libs/libXpm-3.5.7
-	>=x11-libs/libXinerama-1.0.3
 	>=x11-libs/libpciaccess-0.10.3
 	dmx? ( >=x11-libs/libdmx-1.0.2
 			>=x11-libs/libXfixes-4.0.3 )
@@ -161,7 +160,7 @@ DEPEND="${RDEPEND}
 	>=x11-proto/videoproto-2.2.2
 	>=x11-proto/scrnsaverproto-1.1.0
 	>=x11-proto/trapproto-3.4.3
-	>=x11-proto/xineramaproto-1.1.2
+	>=x11-proto/xineramaproto-1.1.3
 	>=x11-proto/fontsproto-2.0.2
 	>=x11-proto/kbproto-1.0.3
 	>=x11-proto/inputproto-1.9.99.6
