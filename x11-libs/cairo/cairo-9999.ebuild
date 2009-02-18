@@ -31,7 +31,7 @@ RDEPEND="media-libs/fontconfig
 		x11-libs/libXft )
 	xcb? (	>=x11-libs/libxcb-0.92
 		x11-libs/xcb-util )
-	sdl? ( >=media-libs/sdl-1.2 )"
+	sdl? ( >=media-libs/libsdl-1.2 )"
 #	test? (
 #	pdf test
 #	x11-libs/pango
