@@ -270,7 +270,6 @@ EPATCH_SUFFIX="patch"
 # Local customizations, unsuitable for upstream
 GENTOO_PATCHES=(
 	"${FILESDIR}/1.4-fpic-libxf86config.patch"
-	"${FILESDIR}/xserver-1.5.99.1-builtin-fonts.patch"
 	)
 
 # These have been sent upstream
