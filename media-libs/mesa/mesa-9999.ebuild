@@ -155,6 +155,11 @@ src_compile() {
 	# Get rid of glut includes
 	rm -f "${S}"/include/GL/glut*h
 
+	# Get rid of glew includes
+	rm -f "${S}"/usr/include/GL/glew.h
+	rm -f "${S}"/usr/include/GL/glxew.h
+	rm -f "${S}"/usr/include/GL/wglew.h
+
 	myconf="${myconf} $(use_enable motif glw)"
 
 	econf ${myconf} || die
