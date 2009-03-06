@@ -35,13 +35,6 @@ pkg_postinst() {
 
 	ewarn "libxcb-1.2 removed libxcb-xlib.so. Run xcb-rebuilder.sh to rebuild"
 	ewarn "packages that broke. revdep-rebuild may also work."
-	elog
 	ebeep 5
 	epause 5
-	elog "libxcb-1.1 added the LIBXCB_ALLOW_SLOPPY_LOCK variable to allow"
-	elog "broken applications to keep running instead of being aborted."
-	elog "Set this variable if you need to use broken packages such as Java"
-	elog "(for example, add LIBXCB_ALLOW_SLOPPY_LOCK=1 to /etc/env.d/00local"
-	elog "and run env-update)."
-	elog
 }
