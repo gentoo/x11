@@ -5,7 +5,7 @@
 # Must be before x-modular eclass is inherited
 #SNAPSHOT="yes"
 
-inherit autotools x-modular git
+inherit autotools x-modular
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/mesa/drm"
 EGIT_BOOTSTRAP="eautoreconf"
@@ -14,32 +14,20 @@ DESCRIPTION="X.Org libdrm library"
 HOMEPAGE="http://dri.freedesktop.org/"
 SRC_URI=""
 
-KEYWORDS="~alpha amd64 ~arm hppa ia64 ~mips ppc ppc64 ~s390 ~sh ~sparc x86 ~x86-fbsd"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
+
 IUSE=""
 RESTRICT="test" # see bug #236845
 
 RDEPEND=""
 DEPEND="${RDEPEND}"
 
-CONFIGURE_OPTIONS="--enable-udev"
-
-pkg_preinst() {
-	x-modular_pkg_preinst
-
-	if [[ -e ${ROOT}/usr/$(get_libdir)/libdrm.so.1 ]] ; then
-		cp -pPR "${ROOT}"/usr/$(get_libdir)/libdrm.so.{1,1.0.0} "${D}"/usr/$(get_libdir)/
-	fi
-}
+CONFIGURE_OPTIONS="--enable-udev --enable-nouveau-experimental-api"
 
 pkg_postinst() {
 	x-modular_pkg_postinst
 
-	if [[ -e ${ROOT}/usr/$(get_libdir)/libdrm.so.1 ]] ; then
-		elog "You must re-compile all packages that are linked against"
-		elog "libdrm 1 by using revdep-rebuild from gentoolkit:"
-		elog "# revdep-rebuild --library libdrm.so.1"
-		elog "After this, you can delete /usr/$(get_libdir)/libdrm.so.1"
-		elog "and /usr/$(get_libdir)/libdrm.so.1.0.0 ."
-		epause
-	fi
+	ewarn "libdrm's ABI may have changed without change in library name"
+	ewarn "Please rebuild media-libs/mesa, x11-base/xorg-server and"
+	ewarn "your video drivers in x11-drivers/*."
 }
