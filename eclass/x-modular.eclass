@@ -1,6 +1,6 @@
 # Copyright 1999-2005 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/eclass/x-modular.eclass,v 1.108 2009/03/06 21:00:00 dberkholz Exp $
+# $Header: /var/cvsroot/gentoo-x86/eclass/x-modular.eclass,v 1.105 2009/02/18 18:40:52 dberkholz Exp $
 #
 # @ECLASS: x-modular.eclass
 # @MAINTAINER:
@@ -25,6 +25,21 @@
 # mandir in x-modular_src_install() or add it back in if it's no longer
 # there. You may also want to change the SLOT.
 XDIR="/usr"
+
+EXPORTED_FUNCTIONS="src_unpack src_compile src_install pkg_preinst pkg_postinst pkg_postrm"
+
+case "${EAPI:-0}" in
+	0|1)
+		;;
+	2)
+		EXPORTED_FUNCTIONS="${EXPORTED_FUNCTIONS} src_prepare src_configure"
+		;;
+	*)
+		die "Unknown EAPI ${EAPI}"
+		;;
+esac
+
+EXPORT_FUNCTIONS ${EXPORTED_FUNCTIONS}
 
 IUSE=""
 HOMEPAGE="http://xorg.freedesktop.org/"
@@ -297,6 +312,15 @@ x-modular_reconf_source() {
 	elibtoolize
 }
 
+# @FUNCTION: x-modular_src_prepare
+# @USAGE:
+# @DESCRIPTION:
+# Prepare a package after unpacking, performing all X-related tasks.
+x-modular_src_prepare() {
+	x-modular_patch_source
+	x-modular_reconf_source
+}
+
 # @FUNCTION: x-modular_src_unpack
 # @USAGE:
 # @DESCRIPTION:
@@ -306,8 +330,7 @@ x-modular_src_unpack() {
 	x-modular_server_supports_drivers_check
 	x-modular_dri_check
 	x-modular_unpack_source
-	x-modular_patch_source
-	x-modular_reconf_source
+	has src_prepare ${EXPORTED_FUNCTIONS} || x-modular_src_prepare
 }
 
 # @FUNCTION: x-modular_font_configure
@@ -390,7 +413,7 @@ x-modular_src_make() {
 # @DESCRIPTION:
 # Compile a package, performing all X-related tasks.
 x-modular_src_compile() {
-	x-modular_src_configure
+	has src_configure ${EXPORTED_FUNCTIONS} || x-modular_src_configure
 	x-modular_src_make
 }
 
@@ -645,5 +668,3 @@ fix_font_permissions() {
 create_font_cache() {
 	font_pkg_postinst
 }
-
-EXPORT_FUNCTIONS src_unpack src_compile src_install pkg_preinst pkg_postinst pkg_postrm
