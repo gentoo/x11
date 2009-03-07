@@ -39,8 +39,6 @@ case "${EAPI:-0}" in
 		;;
 esac
 
-EXPORT_FUNCTIONS ${EXPORTED_FUNCTIONS}
-
 IUSE=""
 HOMEPAGE="http://xorg.freedesktop.org/"
 
@@ -668,3 +666,6 @@ fix_font_permissions() {
 create_font_cache() {
 	font_pkg_postinst
 }
+
+# exports must be ALLWAYS after inherit
+EXPORT_FUNCTIONS ${EXPORTED_FUNCTIONS}
