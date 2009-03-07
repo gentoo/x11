@@ -31,6 +31,14 @@ while read line; do
 				&& echo $i
 			done
 		)
+		# Python C modules
+		XCB_LIBS="${XCB_LIBS} $(
+			for i in $(find /usr/lib*/python* -name '*.so'); do
+				scanelf -n $i \
+				| grep -q xcb-xlib \
+				&& echo $i
+			done
+		)"
 		# Libtool archives (.la)
 		sed -i \
 			-e "s:[^[:space:]]*libxcb-xlib.la::g" \
