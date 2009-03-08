@@ -20,32 +20,34 @@ if ! type -p qfile >/dev/null; then
 	exit 1
 fi
 
-ebegin "Scanning for libraries requiring libxcb-xlib.so"
+if ! type -p scanelf >/dev/null; then
+	einfo "Please install app-misc/pax-utils."
+	exit 1
+fi
+
+einfo "Scanning for libraries requiring libxcb-xlib.so..."
 while read line; do
 	if [[ -d ${line} ]]; then
+		ebegin "  ${line}"
 		# Libraries (.so)
-		XCB_LIBS=$(
-			for i in "${line}"/*.so; do
-				scanelf -n $i \
-				| grep -q xcb-xlib \
-				&& echo $i
-			done
-		)
-		# Python C modules
-		XCB_LIBS="${XCB_LIBS} $(
-			for i in $(find /usr/lib*/python* -name '*.so'); do
-				scanelf -n $i \
-				| grep -q xcb-xlib \
-				&& echo $i
-			done
-		)"
+		for i in $(find "${line}" -name '*.so'); do
+			scanelf -n $i \
+			| grep -q xcb-xlib \
+			&& XCB_LIBS="${XCB_LIBS} ${i}"
+		done
 		# Libtool archives (.la)
 		sed -i \
 			-e "s:[^[:space:]]*libxcb-xlib.la::g" \
 			"${line}"/*.la 2>/dev/null
+		eend 0
 	fi
 done < /etc/ld.so.conf
-eend 0
+# Python C modules
+#for i in $(find /usr/lib*/python* -name '*.so'); do
+#	scanelf -n $i \
+#	| grep -q xcb-xlib \
+#	&& XCB_LIBS="${XCB_LIBS} ${i}"
+#done
 
 if [[ -n ${XCB_LIBS} ]]; then
 	einfo "Broken libraries:"
@@ -67,5 +69,5 @@ for pkg in ${XCB_PACKAGES}; do
 done
 
 ebegin "Rebuilding broken packages"
-${INSTALL:-emerge} -1 ${XCB_PACKAGES}
+${INSTALL:-emerge -1} ${XCB_PACKAGES}
 eend $?
