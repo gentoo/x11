@@ -17,14 +17,27 @@
 # with the other X packages, you don't need to set SRC_URI. Pretty much
 # everything else should be automatic.
 
-# @ECLASS-VARIABLE: XDIR
-# @DESCRIPTION:
-# Directory prefix to use for everything. If you want to install to a
-# non-default prefix (e.g., /opt/xorg), change XDIR. This has not been
-# recently tested. You may need to uncomment the setting of datadir and
-# mandir in x-modular_src_install() or add it back in if it's no longer
-# there. You may also want to change the SLOT.
-XDIR="/usr"
+if [[ ${PV} = 9999* ]]; then
+	GIT_ECLASS="git"
+	SNAPSHOT="yes"
+	SRC_URI=""
+fi
+
+# If we're a font package, but not the font.alias one
+FONT_ECLASS=""
+if [[ "${PN/#font-}" != "${PN}" ]] \
+	&& [[ "${CATEGORY}" = "media-fonts" ]] \
+	&& [[ "${PN}" != "font-alias" ]] \
+	&& [[ "${PN}" != "font-util" ]]; then
+	# Activate font code in the rest of the eclass
+	FONT="yes"
+
+	# Whether to inherit the font eclass
+	FONT_ECLASS="font"
+fi
+
+inherit eutils libtool multilib toolchain-funcs flag-o-matic autotools \
+	${FONT_ECLASS} ${GIT_ECLASS}
 
 EXPORTED_FUNCTIONS="src_unpack src_compile src_install pkg_preinst pkg_postinst pkg_postrm"
 
@@ -39,6 +52,18 @@ case "${EAPI:-0}" in
 		;;
 esac
 
+# exports must be ALWAYS after inherit
+EXPORT_FUNCTIONS ${EXPORTED_FUNCTIONS}
+
+# @ECLASS-VARIABLE: XDIR
+# @DESCRIPTION:
+# Directory prefix to use for everything. If you want to install to a
+# non-default prefix (e.g., /opt/xorg), change XDIR. This has not been
+# recently tested. You may need to uncomment the setting of datadir and
+# mandir in x-modular_src_install() or add it back in if it's no longer
+# there. You may also want to change the SLOT.
+XDIR="/usr"
+
 IUSE=""
 HOMEPAGE="http://xorg.freedesktop.org/"
 
@@ -48,12 +73,6 @@ if [[ -z ${SNAPSHOT} ]]; then
 # If set to 'yes' and configure.ac exists, eautoreconf will run. Set
 # before inheriting this eclass.
 	SNAPSHOT="no"
-fi
-
-if [[ ${PV} = 9999* ]]; then
-	GIT_ECLASS="git"
-	SNAPSHOT="yes"
-	SRC_URI=""
 fi
 
 # Set up SRC_URI for individual modular releases
@@ -99,18 +118,7 @@ if [[ -n "${SNAPSHOT}" ]]; then
 	WANT_AUTOMAKE="latest"
 fi
 
-# If we're a font package, but not the font.alias one
-FONT_ECLASS=""
-if [[ "${PN/#font-}" != "${PN}" ]] \
-	&& [[ "${CATEGORY}" = "media-fonts" ]] \
-	&& [[ "${PN}" != "font-alias" ]] \
-	&& [[ "${PN}" != "font-util" ]]; then
-	# Activate font code in the rest of the eclass
-	FONT="yes"
-
-	# Whether to inherit the font eclass
-	FONT_ECLASS="font"
-
+if [[ -n "${FONT}" ]]; then
 	RDEPEND="${RDEPEND}
 		media-fonts/encodings
 		x11-apps/mkfontscale
@@ -182,9 +190,6 @@ RDEPEND="${RDEPEND}
 	!<=x11-base/xorg-x11-6.9"
 # Provides virtual/x11 for temporary use until packages are ported
 #	x11-base/x11-env"
-
-inherit eutils libtool multilib toolchain-funcs flag-o-matic autotools \
-	${FONT_ECLASS} ${GIT_ECLASS}
 
 # @FUNCTION: x-modular_specs_check
 # @USAGE:
@@ -666,6 +671,3 @@ fix_font_permissions() {
 create_font_cache() {
 	font_pkg_postinst
 }
-
-# exports must be ALLWAYS after inherit
-EXPORT_FUNCTIONS ${EXPORTED_FUNCTIONS}
