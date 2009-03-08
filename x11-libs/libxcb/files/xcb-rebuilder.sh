@@ -42,12 +42,6 @@ while read line; do
 		eend 0
 	fi
 done < /etc/ld.so.conf
-# Python C modules
-#for i in $(find /usr/lib*/python* -name '*.so'); do
-#	scanelf -n $i \
-#	| grep -q xcb-xlib \
-#	&& XCB_LIBS="${XCB_LIBS} ${i}"
-#done
 
 if [[ -n ${XCB_LIBS} ]]; then
 	einfo "Broken libraries:"
