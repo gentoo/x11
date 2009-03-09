@@ -14,7 +14,7 @@
 # @THANKS TO:
 # Fernando J. Pereda <ferdy@gentoo.org>
 
-inherit base eutils
+inherit eutils
 
 EGIT="git.eclass"
 
