@@ -15,7 +15,7 @@ IUSE="dri"
 RDEPEND=">=x11-base/xorg-server-1.5
 	x11-libs/libXvMC"
 DEPEND="${RDEPEND}
-	x11-proto/dri2proto
+	>=x11-proto/dri2proto-1.99.3
 	x11-proto/fontsproto
 	x11-proto/randrproto
 	x11-proto/renderproto
