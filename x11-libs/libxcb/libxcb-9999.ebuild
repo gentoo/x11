@@ -1,6 +1,8 @@
 # Copyright 1999-2008 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
+EAPI="2"
+
 inherit x-modular
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xcb/libxcb"
@@ -15,4 +17,4 @@ RDEPEND="x11-libs/libXau
 DEPEND="${RDEPEND}
 	dev-libs/libxslt
 	>=x11-proto/xcb-proto-9999
-	>=dev-lang/python-2.5"
+	>=dev-lang/python-2.5[xml]"

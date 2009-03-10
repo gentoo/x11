@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/x11-libs/libxcb/libxcb-1.1.90.1.ebuild,v 1.1 2008/07/30 22:38:05 dberkholz Exp $
 
+EAPI="2"
+
 # Must be before x-modular eclass is inherited
 #SNAPSHOT="yes"
 
@@ -19,7 +21,8 @@ RDEPEND="x11-libs/libXau
 DEPEND="${RDEPEND}
 	doc? ( app-doc/doxygen )
 	dev-libs/libxslt
-	>=x11-proto/xcb-proto-1.4"
+	>=x11-proto/xcb-proto-1.4
+	>=dev-lang/python-2.5[xml]"
 
 CONFIGURE_OPTIONS="$(use_enable doc build-docs)
 	$(use_enable selinux xselinux)
