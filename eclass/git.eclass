@@ -127,7 +127,7 @@ EGIT_OFFLINE="${EGIT_OFFLINE:-${ESCM_OFFLINE}}"
 git_fetch() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	local EGIT_CLONE_DIR
+	local EGIT_CLONE_DIR oldsha1 cursha1
 
 	# EGIT_REPO_URI is empty.
 	[[ -z ${EGIT_REPO_URI} ]] && die "${EGIT}: EGIT_REPO_URI is empty."
@@ -165,37 +165,47 @@ git_fetch() {
 
 	if [[ ! -d ${EGIT_CLONE_DIR} ]] ; then
 		# first clone
-		einfo "git clone start -->"
-		einfo "   repository: ${EGIT_REPO_URI}"
+		elog "GIT NEW clone -->"
+		elog "   repository: 		${EGIT_REPO_URI}"
 
 		${EGIT_FETCH_CMD} ${EGIT_OPTIONS} "${EGIT_REPO_URI}" ${EGIT_PROJECT} \
 			|| die "${EGIT}: can't fetch from ${EGIT_REPO_URI}."
 
+		oldsha1=$(git rev-parse ${EGIT_BRANCH})
+		elog "   at the commit:		${oldsha1}"
+
 		# We use --bare cloning, so git doesn't do this for us.
 		git config remote.origin.url "${EGIT_REPO_URI}"
 	elif [[ -n ${EGIT_OFFLINE} ]] ; then
-		local oldsha1=$(git rev-parse ${EGIT_BRANCH})
-		einfo "git update offline mode -->"
-		einfo "   repository: ${EGIT_REPO_URI}"
-		einfo "   commit: ${oldsha1}"
+		oldsha1=$(git rev-parse ${EGIT_BRANCH})
+		elog "GIT offline update -->"
+		elog "   repository: 		${EGIT_REPO_URI}"
+		elog "   at the commit:		${oldsha1}"
 	else
 		# Git urls might change, so unconditionally set it here
 		git config remote.origin.url "${EGIT_REPO_URI}"
 
 		# fetch updates
-		einfo "git update start -->"
-		einfo "   repository: ${EGIT_REPO_URI}"
+		elog "GIT update -->"
+		elog "   repository: 		${EGIT_REPO_URI}"
 
-		local oldsha1=$(git rev-parse ${EGIT_BRANCH})
+		oldsha1=$(git rev-parse ${EGIT_BRANCH})
 
 		${EGIT_UPDATE_CMD} ${EGIT_OPTIONS} origin ${EGIT_BRANCH}:${EGIT_BRANCH} \
 			|| die "${EGIT}: can't update from ${EGIT_REPO_URI}."
 
+		cursha1=$(git rev-parse ${EGIT_BRANCH})
+
+		# write out message based on the revisions
+		if [[ ${oldsha1} != ${cursha1} ]]; then
+			elog "   updating from commit:		${oldsha1}"
+			elog "   to commit:				${cursha1}"
+		else
+			elog "   at the commit: 		${cursha1}"
+		fi
 		# piping through cat is needed to avoid a stupid Git feature
 		${EGIT_DIFFSTAT_CMD} ${oldsha1}..${EGIT_BRANCH} | cat
 	fi
-
-	einfo "   local clone: ${EGIT_STORE_DIR}/${EGIT_CLONE_DIR}"
 
 	if ${EGIT_REPACK} || ${EGIT_PRUNE} ; then
 		ebegin "Garbage collecting the repository"
@@ -203,7 +213,9 @@ git_fetch() {
 		eend $?
 	fi
 
-	einfo "   committish: ${EGIT_TREE}"
+	elog "   tree:			${EGIT_TREE}"
+	elog "   branch: 			${EGIT_BRANCH}"
+	elog "   storage directory: 	\"${EGIT_STORE_DIR}/${EGIT_CLONE_DIR}\""
 
 	# export to the ${WORKDIR}
 	mkdir -p "${S}"
