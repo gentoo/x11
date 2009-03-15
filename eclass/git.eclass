@@ -198,8 +198,8 @@ git_fetch() {
 
 		# write out message based on the revisions
 		if [[ ${oldsha1} != ${cursha1} ]]; then
-			elog "   updating from commit:		${oldsha1}"
-			elog "   to commit:				${cursha1}"
+			elog "   updating from commit:	${oldsha1}"
+			elog "   to commit:		${cursha1}"
 		else
 			elog "   at the commit: 		${cursha1}"
 		fi
