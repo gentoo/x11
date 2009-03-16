@@ -213,7 +213,7 @@ git_fetch() {
 		eend $?
 	fi
 
-	elog "   tree:			${EGIT_TREE}"
+	[[ ${EGIT_TREE} != ${EGIT_BRANCH} ]] && elog "   tree:			${EGIT_TREE}"
 	elog "   branch: 			${EGIT_BRANCH}"
 	elog "   storage directory: 	\"${EGIT_STORE_DIR}/${EGIT_CLONE_DIR}\""
 
