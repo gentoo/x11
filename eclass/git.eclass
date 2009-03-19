@@ -40,7 +40,7 @@ EGIT_STORE_DIR="${PORTAGE_ACTUAL_DISTDIR-${DISTDIR}}/git-src"
 # @ECLASS-VARIABLE: EGIT_FETCH_CMD
 # @DESCRIPTION:
 # Command for cloning the repository.
-EGIT_FETCH_CMD="git clone --bare --depth 1"
+EGIT_FETCH_CMD="git clone --bare"
 
 # @ECLASS-VARIABLE: EGIT_UPDATE_CMD
 # @DESCRIPTION:
@@ -128,6 +128,11 @@ git_fetch() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	local EGIT_CLONE_DIR oldsha1 cursha1
+
+	# if we have same branch and the tree (master) we can do --depth 1 clone
+	# which outputs into really smaller data transfers
+	[[ ${EGIT_BRANCH} = master && ${EGIT_TREE} = ${EGIT_BRANCH} ]] && \
+		EGIT_FETCH_CMD="${EGIT_FETCH_CMD} --depth 1"
 
 	# EGIT_REPO_URI is empty.
 	[[ -z ${EGIT_REPO_URI} ]] && die "${EGIT}: EGIT_REPO_URI is empty."
