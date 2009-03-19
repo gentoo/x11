@@ -129,9 +129,9 @@ git_fetch() {
 
 	local EGIT_CLONE_DIR oldsha1 cursha1
 
-	# if we have same branch and the tree (master) we can do --depth 1 clone
+	# if we have same branch and the tree we can do --depth 1 clone
 	# which outputs into really smaller data transfers
-	[[ ${EGIT_BRANCH} = master && ${EGIT_TREE} = ${EGIT_BRANCH} ]] && \
+	[[ ${EGIT_TREE} = ${EGIT_BRANCH} ]] && \
 		EGIT_FETCH_CMD="${EGIT_FETCH_CMD} --depth 1"
 
 	# EGIT_REPO_URI is empty.
