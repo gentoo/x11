@@ -3,7 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/x11-drivers/xf86-video-ati/xf86-video-ati-6.6.192.ebuild,v 1.1 2007/05/21 05:25:33 dberkholz Exp $
 
 # Must be before x-modular eclass is inherited
-#SNAPSHOT="yes"
+SNAPSHOT="yes"
 
 inherit x-modular
 
