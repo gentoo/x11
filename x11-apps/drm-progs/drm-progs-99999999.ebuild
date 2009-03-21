@@ -9,6 +9,7 @@ inherit eutils autotools git
 DESCRIPTION="X11 DRM utilities and test programs"
 HOMEPAGE="http://dri.freedesktop.org/wiki/"
 SRC_URI="http://dev.gentoo.org/~battousai/distfiles/${P}-use-system-libdrm.patch.bz2"
+EGIT_PROJECT="libdrm"
 
 LICENSE="X11"
 SLOT="0"
