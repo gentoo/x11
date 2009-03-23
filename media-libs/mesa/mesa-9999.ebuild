@@ -48,7 +48,7 @@ IUSE="${IUSE_VIDEO_CARDS}
 
 RDEPEND="app-admin/eselect-opengl
 	dev-libs/expat
-	x11-libs/libX11[xcb?]
+	x11-libs/libX11[xcb=]
 	x11-libs/libXext
 	x11-libs/libXxf86vm
 	x11-libs/libXi
