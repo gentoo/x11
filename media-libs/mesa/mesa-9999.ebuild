@@ -7,13 +7,13 @@ EAPI="2"
 EGIT_REPO_URI="git://anongit.freedesktop.org/mesa/mesa"
 
 if [[ ${PV} = 9999* ]]; then
-	inherit git
+	git_eclass="git"
 	drm_depend=">=x11-libs/libdrm-9999"
 else
 	drm_depend=">=x11-libs/libdrm-2.4.3"
 fi
 
-inherit autotools multilib flag-o-matic portability
+inherit autotools multilib flag-o-matic ${git_eclass} portability
 
 OPENGL_DIR="xorg-x11"
 
@@ -22,13 +22,18 @@ MY_P="${MY_PN}-${PV/_/-}"
 MY_SRC_P="${MY_PN}Lib-${PV/_/-}"
 DESCRIPTION="OpenGL-like graphic library for Linux"
 HOMEPAGE="http://mesa3d.sourceforge.net/"
+
+SRC_PATCHES="mirror://gentoo/${P}-gentoo-patches-01.tar.bz2"
 if [[ $PV = *_rc* ]]; then
-	SRC_URI="http://www.mesa3d.org/beta/${MY_SRC_P}.tar.gz"
+	SRC_URI="http://www.mesa3d.org/beta/${MY_SRC_P}.tar.gz
+		${SRC_PATCHES}"
 elif [[ $PV = 9999* ]]; then
 	SRC_URI=""
 else
-	SRC_URI="mirror://sourceforge/mesa3d/${MY_SRC_P}.tar.bz2"
+	SRC_URI="mirror://sourceforge/mesa3d/${MY_SRC_P}.tar.bz2
+		${SRC_PATCHES}"
 fi
+
 LICENSE="LGPL-2"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
@@ -103,6 +108,10 @@ src_unpack() {
 }
 
 src_prepare() {
+	# apply patches
+	[[ $PV = 9999* ]] || \
+		EPATCH_FORCE="yes" EPATCH_SOURCE="${WORKDIR}/patches" \
+		EPATCH_SUFFIX="patch" epatch
 	# FreeBSD 6.* doesn't have posix_memalign().
 	[[ ${CHOST} == *-freebsd6.* ]] && sed -i -e "s/-DHAVE_POSIX_MEMALIGN//" configure.ac
 
