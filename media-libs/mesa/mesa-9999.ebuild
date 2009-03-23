@@ -2,9 +2,18 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/media-libs/mesa/mesa-7.0.2.ebuild,v 1.6 2007/11/16 18:16:30 dberkholz Exp $
 
+EAPI="2"
+
 EGIT_REPO_URI="git://anongit.freedesktop.org/mesa/mesa"
 
-inherit autotools multilib flag-o-matic git portability
+if [[ ${PV} = 9999* ]]; then
+	inherit git
+	drm_depend=">=x11-libs/libdrm-9999"
+else
+	drm_depend=">=x11-libs/libdrm-2.4.3"
+fi
+
+inherit autotools multilib flag-o-matic portability
 
 OPENGL_DIR="xorg-x11"
 
@@ -46,7 +55,8 @@ IUSE="${IUSE_VIDEO_CARDS}
 	xcb
 	kernel_FreeBSD"
 
-RDEPEND="app-admin/eselect-opengl
+RDEPEND="${drm_depend}
+	app-admin/eselect-opengl
 	dev-libs/expat
 	x11-libs/libX11[xcb=]
 	x11-libs/libXext
@@ -54,7 +64,6 @@ RDEPEND="app-admin/eselect-opengl
 	x11-libs/libXi
 	x11-libs/libXmu
 	x11-libs/libXdamage
-	>=x11-libs/libdrm-9999
 	x11-libs/libICE
 	motif? ( x11-libs/openmotif )
 	doc? ( app-doc/opengl-manpages )
