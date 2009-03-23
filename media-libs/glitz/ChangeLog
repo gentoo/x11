@@ -1,8 +1,0 @@
-# ChangeLog for media-libs/glitz
-# Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
-# $Header: $
-
-  23 Mar 2009; Tomas Chvatal <scarabeus@gentoo.org> +metadata.xml,
-  glitz-9999.ebuild:
-  Sync with tree. Switch onto git from cvs.
-
