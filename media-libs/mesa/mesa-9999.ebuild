@@ -152,7 +152,7 @@ src_configure() {
 
 	# nouveau works only with gallium and intel, radeon, radeonhd can use
 	# gallium as alternative implementation (NOTE: THIS IS EXPERIMENTAL)
-	use video_cards_nouveau && ! use galium && \
+	use video_cards_nouveau && ! use gallium && \
 		echo
 		elog "Nouveau driver is availible only via gallium interface."
 		elog "Enable gallium useflag if you want to use nouveau."
