@@ -4,6 +4,7 @@
 
 #EGIT_BRANCH="vblank-rework"
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/mesa/drm"
+EGIT_PROJECT="libdrm"
 
 inherit eutils x11 linux-mod git
 
