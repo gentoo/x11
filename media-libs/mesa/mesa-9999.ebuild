@@ -39,7 +39,7 @@ SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 
 if [[ ${PV} = 9999* ]]; then
-	IUSE_VIDEO_CARDS_UNSTABLE="video_cards_noveau"
+	IUSE_VIDEO_CARDS_UNSTABLE="video_cards_nouveau"
 	IUSE_UNSTABLE="gallium"
 fi
 IUSE_VIDEO_CARDS="
@@ -150,12 +150,12 @@ src_configure() {
 	driver_enable video_cards_trident trident
 	driver_enable video_cards_via unichrome
 
-	# noveau works only with gallium and intel, radeon, radeonhd can use noveau
-	# as alternative implementation (NOTE THIS IS EXPERIMENTAL)
-	use video_cards_noveau && ! use galium && \
+	# nouveau works only with gallium and intel, radeon, radeonhd can use
+	# gallium as alternative implementation (NOTE: THIS IS EXPERIMENTAL)
+	use video_cards_nouveau && ! use galium && \
 		echo
-		elog "Noveau driver is availible only via gallium interface."
-		elog "Enable gallium useflag if you want to use noveau."
+		elog "Nouveau driver is availible only via gallium interface."
+		elog "Enable gallium useflag if you want to use nouveau."
 
 	if use gallium; then
 		echo
@@ -163,7 +163,7 @@ src_configure() {
 		elog "it only if you feel really really brave."
 		echo
 		myconf="${myconf}
-			$(use_enable video_cards_noveau gallium-nouveau)
+			$(use_enable video_cards_nouveau gallium-nouveau)
 			$(use_enable video_cards_intel gallium-intel)
 			$(use_enable video_cards_radeon gallium-radeon)
 			$(use_enable video_cards_radeonhd gallium-radeon)"
