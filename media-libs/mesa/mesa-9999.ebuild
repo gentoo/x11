@@ -1,4 +1,4 @@
-# Copyright 1999-2007 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/media-libs/mesa/mesa-7.0.2.ebuild,v 1.6 2007/11/16 18:16:30 dberkholz Exp $
 
@@ -37,6 +37,11 @@ fi
 LICENSE="LGPL-2"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
+
+if [[ ${PV} = 9999* ]]; then
+	IUSE_VIDEO_CARDS_UNSTABLE="video_cards_noveau"
+	IUSE_UNSTABLE="gallium"
+fi
 IUSE_VIDEO_CARDS="
 	video_cards_intel
 	video_cards_mach64
@@ -44,6 +49,7 @@ IUSE_VIDEO_CARDS="
 	video_cards_none
 	video_cards_r128
 	video_cards_radeon
+	video_cards_radeonhd
 	video_cards_s3virge
 	video_cards_savage
 	video_cards_sis
@@ -51,14 +57,8 @@ IUSE_VIDEO_CARDS="
 	video_cards_tdfx
 	video_cards_trident
 	video_cards_via"
-IUSE="${IUSE_VIDEO_CARDS}
-	debug
-	doc
-	pic
-	motif
-	nptl
-	xcb
-	kernel_FreeBSD"
+IUSE="${IUSE_VIDEO_CARDS} ${IUSE_VIDEO_CARDS_UNSTABLE} ${IUSE_UNSTABLE}
+	debug doc motif nptl pic xcb kernel_FreeBSD"
 
 RDEPEND="${drm_depend}
 	app-admin/eselect-opengl
@@ -122,16 +122,16 @@ src_prepare() {
 	fi
 
 	eautoreconf
+
+	# remove unwanted header files
+	# Get rid of glut includes
+	rm -f "${S}"/include/GL/glut*h
+	# Get rid of glew includes
+	rm -f "${S}"/usr/include/GL/{glew,glxew,wglew}.h
 }
 
 src_configure() {
 	local myconf
-
-	# This is where we might later change to build xlib/osmesa
-	myconf="${myconf} --with-driver=dri"
-
-	# Do we want thread-local storage (TLS)?
-	myconf="${myconf} $(use_enable nptl glx-tls)"
 
 	# Configurable DRI drivers
 	driver_enable swrast
@@ -139,7 +139,9 @@ src_configure() {
 	driver_enable video_cards_mach64 mach64
 	driver_enable video_cards_mga mga
 	driver_enable video_cards_r128 r128
+	# ATI has two implementations as video_cards that uses same stuff
 	driver_enable video_cards_radeon radeon r200 r300
+	driver_enable video_cards_radeonhd radeon r200 r300
 	driver_enable video_cards_s3virge s3v
 	driver_enable video_cards_savage savage
 	driver_enable video_cards_sis sis
@@ -147,6 +149,25 @@ src_configure() {
 	driver_enable video_cards_tdfx tdfx
 	driver_enable video_cards_trident trident
 	driver_enable video_cards_via unichrome
+
+	# noveau works only with gallium and intel, radeon, radeonhd can use noveau
+	# as alternative implementation (NOTE THIS IS EXPERIMENTAL)
+	use video_cards_noveau && ! use galium && \
+		echo
+		elog "Noveau driver is availible only via gallium interface."
+		elog "Enable gallium useflag if you want to use noveau."
+
+	if use gallium; then
+		echo
+		elog "Warning gallium interface is highly experimental so use"
+		elog "it only if you feel really really brave."
+		echo
+		myconf="${myconf}
+			$(use_enable video_cards_noveau gallium-nouveau)
+			$(use_enable video_cards_intel gallium-intel)
+			$(use_enable video_cards_radeon gallium-radeon)
+			$(use_enable video_cards_radeonhd gallium-radeon)"
+	fi
 
 	# Set drivers to everything on which we ran driver_enable()
 	myconf="${myconf} --with-dri-drivers=${DRI_DRIVERS}"
@@ -157,30 +178,24 @@ src_configure() {
 	# Sparc assembly code is not working
 	myconf="${myconf} $(use_enable !sparc asm)"
 
-	myconf="${myconf} --disable-glut"
-
-	myconf="${myconf} --without-demos"
-
-	myconf="${myconf} $(use_enable xcb)"
-
-	myconf="${myconf} $(use_enable motif glw)"
-
-	# Get rid of glut includes
-	rm -f "${S}"/include/GL/glut*h
-
-	# Get rid of glew includes
-	rm -f "${S}"/usr/include/GL/{glew,glxew,wglew}.h
-
-	econf ${myconf}
+	# --with-driver=dri|xlib|osmesa ; might get changed later to something
+	# else than dri
+	econf \
+		--with-driver=dri \
+		--disable-glut \
+		--without-demos \
+		$(use_enable gallium) \
+		$(use_enable motif glw) \
+		$(use_enable nptl glx-tls) \
+		$(use_enable xcb) \
+		${myconf}
 }
 
 src_install() {
 	dodir /usr
 	emake DESTDIR="${D}" install || die "Installation failed"
 
-	if ! use motif; then
-		rm "${D}"/usr/include/GL/GLwMDrawA.h
-	fi
+	use motif || rm "${D}"/usr/include/GL/GLwMDrawA.h
 
 	# Don't install private headers
 	rm -f "${D}"/usr/include/GL/GLw*P.h
@@ -192,14 +207,17 @@ src_install() {
 	insinto /usr/$(get_libdir)
 	# (#67729) Needs to be lib, not $(get_libdir)
 	doins "${FILESDIR}"/lib/libGLU.la
-	sed -e "s:\${libdir}:$(get_libdir):g" "${FILESDIR}"/lib/libGL.la \
+	sed \
+		-e "s:\${libdir}:$(get_libdir):g" \
+		"${FILESDIR}"/lib/libGL.la \
 		> "${D}"/usr/$(get_libdir)/opengl/xorg-x11/lib/libGL.la
 
 	# On *BSD libcs dlopen() and similar functions are present directly in
 	# libc.so and does not require linking to libdl. portability eclass takes
 	# care of finding the needed library (if needed) witht the dlopen_lib
 	# function.
-	sed -i -e 's:-ldl:'$(dlopen_lib)':g' \
+	sed -i \
+		-e 's:-ldl:'$(dlopen_lib)':g' \
 		"${D}"/usr/$(get_libdir)/libGLU.la \
 		"${D}"/usr/$(get_libdir)/opengl/xorg-x11/lib/libGL.la
 
