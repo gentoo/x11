@@ -7,13 +7,10 @@ EAPI="2"
 EGIT_REPO_URI="git://anongit.freedesktop.org/mesa/mesa"
 
 if [[ ${PV} = 9999* ]]; then
-	git_eclass="git"
-	drm_depend=">=x11-libs/libdrm-9999"
-else
-	drm_depend=">=x11-libs/libdrm-2.4.3"
+	GIT_ECLASS="git"
 fi
 
-inherit autotools multilib flag-o-matic ${git_eclass} portability
+inherit autotools multilib flag-o-matic ${GIT_ECLASS} portability
 
 OPENGL_DIR="xorg-x11"
 
@@ -60,10 +57,10 @@ IUSE_VIDEO_CARDS="
 IUSE="${IUSE_VIDEO_CARDS} ${IUSE_VIDEO_CARDS_UNSTABLE} ${IUSE_UNSTABLE}
 	debug doc motif nptl pic xcb kernel_FreeBSD"
 
-RDEPEND="${drm_depend}
+RDEPEND=">=x11-libs/libdrm-2.4.3
 	app-admin/eselect-opengl
 	dev-libs/expat
-	x11-libs/libX11[xcb=]
+	x11-libs/libX11[xcb?]
 	x11-libs/libXext
 	x11-libs/libXxf86vm
 	x11-libs/libXi
@@ -109,9 +106,12 @@ src_unpack() {
 
 src_prepare() {
 	# apply patches
-	[[ $PV = 9999* ]] || \
-		EPATCH_FORCE="yes" EPATCH_SOURCE="${WORKDIR}/patches" \
-		EPATCH_SUFFIX="patch" epatch
+	if ! [[ $PV = 9999* ]] && [[ -n ${SRC_PATCHES} ]]; then
+		EPATCH_FORCE="yes" \
+		EPATCH_SOURCE="${WORKDIR}/patches" \
+		EPATCH_SUFFIX="patch" \
+		epatch
+	fi
 	# FreeBSD 6.* doesn't have posix_memalign().
 	[[ ${CHOST} == *-freebsd6.* ]] && sed -i -e "s/-DHAVE_POSIX_MEMALIGN//" configure.ac
 
