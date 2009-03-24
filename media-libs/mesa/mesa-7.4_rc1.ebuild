@@ -137,7 +137,7 @@ src_configure() {
 	driver_enable video_cards_r128 r128
 	# ATI has two implementations as video_cards that uses same stuff
 	driver_enable video_cards_radeon radeon r200 r300
-	driver_enable video_cards_radeonhd radeon r200 r300
+	driver_enable video_cards_radeonhd r300
 	driver_enable video_cards_s3virge s3v
 	driver_enable video_cards_savage savage
 	driver_enable video_cards_sis sis
