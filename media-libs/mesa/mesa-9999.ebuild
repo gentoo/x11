@@ -184,8 +184,10 @@ src_configure() {
 		--with-driver=dri \
 		--disable-glut \
 		--without-demos \
+		$(use_enable debug) \
 		$(use_enable gallium) \
 		$(use_enable motif glw) \
+		$(use_enable motif) \
 		$(use_enable nptl glx-tls) \
 		$(use_enable xcb) \
 		${myconf}
