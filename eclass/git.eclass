@@ -281,9 +281,9 @@ git_apply_patches() {
 			debug-print "$FUNCNAME: git_autopatch: patching from ${i}"
 			epatch "${i}"
 		done
-	elif [[ $EGIT_PATCHES != "" ]]; then
+	elif [[ ${EGIT_PATCHES} != "" ]]; then
 		# no need for loop if space separated string is passed.
-		debug-print "$FUNCNAME: git_autopatch: patching from ${i}"
+		debug-print "$FUNCNAME: git_autopatch: patching from ${EGIT_PATCHES}"
 		epatch "${EGIT_PATCHES}"
 	fi
 
