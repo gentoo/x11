@@ -92,9 +92,6 @@ S="${WORKDIR}/${MY_P}"
 
 # Think about: ggi, svga, fbcon, no-X configs
 
-# another thinking: how about not compile all intel/ati implementations when we
-# can detect graphic card and choose only the required impl.
-
 pkg_setup() {
 	if use debug; then
 		append-flags -g
@@ -122,13 +119,17 @@ src_prepare() {
 		epatch
 	fi
 	# FreeBSD 6.* doesn't have posix_memalign().
-	[[ ${CHOST} == *-freebsd6.* ]] && sed -i -e "s/-DHAVE_POSIX_MEMALIGN//" configure.ac
+	[[ ${CHOST} == *-freebsd6.* ]] && \
+		sed -i -e "s/-DHAVE_POSIX_MEMALIGN//" configure.ac
 
 	eautoreconf
 
 	# remove unwanted header files
+	# Get rid of glut include
+	rm -f "${S}"/include/GL/glut.h || die "Removing glut include failed."
 	# Get rid of glew includes
-	rm -f "${S}"/include/GL/{glew,glxew,wglew}.h
+	rm -f "${S}"/include/GL/{glew,glxew,wglew}.h \
+		|| die "Removing glew includes failed."
 }
 
 src_configure() {
@@ -162,7 +163,8 @@ src_configure() {
 			elog "Enable gallium useflag if you want to use nouveau."
 			echo
 		fi
-		# state trackers, for now enable the one i want, think about this bit more...
+		# state trackers, for now enable the one i want
+		# think about this bit more...
 		myconf="${myconf} $(use_enable gallium)
 			--with-state-trackers=glx,dri2,egl"
 		if use gallium; then
