@@ -124,19 +124,11 @@ src_prepare() {
 	# FreeBSD 6.* doesn't have posix_memalign().
 	[[ ${CHOST} == *-freebsd6.* ]] && sed -i -e "s/-DHAVE_POSIX_MEMALIGN//" configure.ac
 
-	# Don't compile debug code with USE=-debug - bug #125004
-	if ! use debug; then
-	   einfo "Removing DO_DEBUG defs in dri drivers..."
-	   find src/mesa/drivers/dri -name *.[hc] -exec egrep -l "\#define\W+DO_DEBUG\W+1" {} \; | xargs sed -i -re "s/\#define\W+DO_DEBUG\W+1/\#define DO_DEBUG 0/" ;
-	fi
-
 	eautoreconf
 
 	# remove unwanted header files
-	# Get rid of glut includes
-	rm -f "${S}"/include/GL/glut*h
 	# Get rid of glew includes
-	rm -f "${S}"/usr/include/GL/{glew,glxew,wglew}.h
+	rm -f "${S}"/include/GL/{glew,glxew,wglew}.h
 }
 
 src_configure() {
@@ -209,16 +201,12 @@ src_install() {
 	dodir /usr
 	emake DESTDIR="${D}" install || die "Installation failed"
 
-	use motif || rm "${D}"/usr/include/GL/GLwMDrawA.h
-
-	# Don't install private headers
-	rm -f "${D}"/usr/include/GL/GLw*P.h
-
-	fix_opengl_symlinks
-	dynamic_libgl_install
+	_make_libgl_dynamicaly_installed
 
 	# Install libtool archives
 	insinto /usr/$(get_libdir)
+	# Should this use the -L/usr/lib instead of -L/usr/$(get_libdir)?
+	# Please confirm and update this comment or the file.
 	doins "${FILESDIR}"/lib/libGLU.la || die "doins libGLU.la failed"
 	sed \
 		-e "s:\${libdir}:$(get_libdir):g" \
@@ -231,66 +219,33 @@ src_install() {
 	# function.
 	sed -i \
 		-e 's:-ldl:'$(dlopen_lib)':g' \
-		"${D}"/usr/$(get_libdir)/libGLU.la \
-		"${D}"/usr/$(get_libdir)/opengl/xorg-x11/lib/libGL.la \
+		"${D}"/usr/$(get_libdir)/{libGLU.la,opengl/xorg-x11/lib/libGL.la} \
 		|| die "sed dlopen failed"
-
-	# libGLU doesn't get the plain .so symlink either
-	#dosym libGLU.so.1 /usr/$(get_libdir)/libGLU.so
-
-	# Figure out why libGL.so.1.5 is built (directfb), and why it's linked to
-	# as the default libGL.so.1
 }
 
 pkg_postinst() {
-	switch_opengl_implem
+	# Switch to the xorg implementation.
+	echo
+	eselect opengl set --use-old ${OPENGL_DIR}
 }
 
-fix_opengl_symlinks() {
-	# Remove invalid symlinks
-	local LINK
-	for LINK in $(find "${D}"/usr/$(get_libdir) \
-		-name libGL\.* -type l); do
-		rm -f ${LINK} || die "Removing symlink ${LINK} failed."
-	done
-	# Create required symlinks
-	if [[ ${CHOST} == *-freebsd* ]]; then
-		# FreeBSD doesn't use major.minor versioning, so the library is only
-		# libGL.so.1 and no libGL.so.1.2 is ever used there, thus only create
-		# libGL.so symlink and leave libGL.so.1 being the real thing
-		dosym libGL.so.1 /usr/$(get_libdir)/libGL.so || die "dosym failed"
-	else
-		dosym libGL.so.1.2 /usr/$(get_libdir)/libGL.so || die "dosym failed"
-		dosym libGL.so.1.2 /usr/$(get_libdir)/libGL.so.1 || die "dosym failed"
-	fi
-}
-
-dynamic_libgl_install() {
-	# next section is to setup the dynamic libGL stuff
+_make_libgl_dynamicaly_installed() {
+	# Move libGL and others from /usr/lib to /usr/lib/opengl/blah/lib
+	# because user can eselect desired GL provider.
 	ebegin "Moving libGL and friends for dynamic switching"
 		dodir /usr/$(get_libdir)/opengl/${OPENGL_DIR}/{lib,extensions,include}
 		local x 
 		for x in "${D}"/usr/$(get_libdir)/libGL.{la,a,so*}; do
 			if [ -f ${x} -o -L ${x} ]; then
-				# libGL.a cause problems with tuxracer, etc
 				mv -f ${x} "${D}"/usr/$(get_libdir)/opengl/${OPENGL_DIR}/lib
 			fi
 		done
-		# glext.h added for #54984
 		for x in "${D}"/usr/include/GL/{gl.h,glx.h,glext.h,glxext.h}; do
 			if [ -f ${x} -o -L ${x} ]; then
 				mv -f ${x} "${D}"/usr/$(get_libdir)/opengl/${OPENGL_DIR}/include
 			fi
 		done
 	eend 0
-}
-
-switch_opengl_implem() {
-		# Switch to the xorg implementation.
-		# Use new opengl-update that will not reset user selected
-		# OpenGL interface ...
-		echo
-		eselect opengl set --use-old ${OPENGL_DIR}
 }
 
 # $1 - VIDEO_CARDS flag
