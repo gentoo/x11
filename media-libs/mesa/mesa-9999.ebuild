@@ -203,7 +203,7 @@ src_install() {
 	dodir /usr
 	emake DESTDIR="${D}" install || die "Installation failed"
 
-	_make_libgl_dynamicaly_installed
+	make_libgl_dynamicaly_installed
 
 	# Install libtool archives
 	insinto /usr/$(get_libdir)
@@ -231,7 +231,7 @@ pkg_postinst() {
 	eselect opengl set --use-old ${OPENGL_DIR}
 }
 
-_make_libgl_dynamicaly_installed() {
+make_libgl_dynamicaly_installed() {
 	# Move libGL and others from /usr/lib to /usr/lib/opengl/blah/lib
 	# because user can eselect desired GL provider.
 	ebegin "Moving libGL and friends for dynamic switching"
