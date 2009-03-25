@@ -170,7 +170,9 @@ src_configure() {
 			elog "Enable gallium useflag if you want to use nouveau."
 			echo
 		fi
-		myconf="${myconf} $(use_enable gallium)"
+		# state trackers, for now enable the one i want, think about this bit more...
+		myconf="${myconf} $(use_enable gallium)
+			--with-state-trackers=glx,dri2,egl"
 		if use gallium; then
 			elog "Warning gallium interface is highly experimental so use"
 			elog "it only if you feel really really brave."
