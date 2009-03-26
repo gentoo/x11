@@ -112,7 +112,7 @@ src_unpack() {
 
 src_prepare() {
 	# apply patches
-	if [[ -n ${SRC_PATCHES} ]]; then
+	if [[ ${PV} != 9999* && -n ${SRC_PATCHES} ]]; then
 		EPATCH_FORCE="yes" \
 		EPATCH_SOURCE="${WORKDIR}/patches" \
 		EPATCH_SUFFIX="patch" \
