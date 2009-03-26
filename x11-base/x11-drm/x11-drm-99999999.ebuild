@@ -2,16 +2,43 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/x11-base/x11-drm/x11-drm-20070314.ebuild,v 1.2 2007/03/14 18:18:53 battousai Exp $
 
-#EGIT_BRANCH="vblank-rework"
+EAPI="2"
+
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/mesa/drm"
 EGIT_PROJECT="libdrm"
 
-inherit eutils x11 linux-mod git
+[[ ${PV} = 9999* ]] && GIT_ECLASS="git"
 
-IUSE_VIDEO_CARDS="
+inherit eutils x11 linux-mod ${GIT_ECLASS}
+
+DESCRIPTION="DRM Kernel Modules for X11"
+HOMEPAGE="http://dri.sf.net"
+PATCHVER="0.2"
+#SRC_PATCHES="http://dev.gentoo.org/~dberkholz/distfiles/${P}-gentoo-${PATCHVER}.tar.bz2"
+if [[ $PV = 9999* ]]; then
+	SRC_URI=""
+else
+	SRC_URI="${SRC_PATCHES}
+		mirror://gentoo/linux-drm-${PV}-kernelsource.tar.bz2"
+fi
+
+LICENSE="X11"
+SLOT="0"
+KEYWORDS="~alpha ~amd64 ~ia64 ~ppc ~x86 ~x86-fbsd"
+
+if [[ ${PV} = 9999* ]]; then
+	EXPERIMENTAL="true"
+	IUSE_VIDEO_CARDS_UNSTABLE="video_cards_nouveau"
+	IUSE_UNSTABLE=""
+	# User can also specify branch by simply adding MESA_LIVE_BRANCH="blesmrt"
+	# to the make.conf, where blesmrt is desired branch.
+	[[ -z ${DRM_LIVE_BRANCH} ]] || EGIT_BRANCH="${DRM_LIVE_BRANCH}"
+fi
+# ! IMPORTANT:
+# this is really out of sync with MESA, should we add here or remove from mesa?
+IUSE_VIDEO_CARDS="${IUSE_VIDEO_CARDS_UNSTABLE}
 	video_cards_mach64
 	video_cards_mga
-	video_cards_nouveau
 	video_cards_r128
 	video_cards_radeon
 	video_cards_radeonhd
@@ -27,29 +54,20 @@ IUSE="${IUSE_VIDEO_CARDS} kernel_FreeBSD kernel_linux"
 # Tests require user intervention (see bug #236845)
 RESTRICT="strip test"
 
+DEPEND="
+	kernel_linux? ( virtual/linux-sources )
+	kernel_FreeBSD? (
+		sys-freebsd/freebsd-sources
+		sys-freebsd/freebsd-mk-defs
+	)
+"
+RDEPEND="${DEPEND}"
+
 S="${WORKDIR}/drm"
-#PATCHVER="0.1"
-PATCHDIR="${WORKDIR}/patch"
-EXCLUDED="${WORKDIR}/excluded"
-
-DESCRIPTION="DRM Kernel Modules for X11"
-HOMEPAGE="http://dri.sf.net"
-if [ -n "${PATCHVER}" ] ; then
-	SRC_URI="http://dev.gentoo.org/~dberkholz/distfiles/${P}-gentoo-${PATCHVER}.tar.bz2"
-else
-	SRC_URI=""
-fi
-
-SLOT="0"
-LICENSE="X11"
-KEYWORDS="~alpha ~amd64 ~ia64 ~ppc ~x86 ~x86-fbsd"
-
-DEPEND="kernel_linux? ( virtual/linux-sources )
-	kernel_FreeBSD? ( sys-freebsd/freebsd-sources
-			sys-freebsd/freebsd-mk-defs )"
-RDEPEND=""
 
 pkg_setup() {
+	_set_build_type
+
 	# Setup the kernel's stuff.
 	kernel_setup
 
@@ -57,85 +75,94 @@ pkg_setup() {
 	set_vidcards
 
 	# Determine which -core dir we build in.
-	get_drm_build_dir
-
-	return 0
+	if [[ $CORE = fbsd ]]; then
+		SRC_BUILD="${S}/bsd-core"
+	else
+		SRC_BUILD="${S}/linux-core"
+	fi
 }
 
 src_unpack() {
-	git_src_unpack
+	[[ $PV = 9999* ]] && git_src_unpack || unpack ${A}
+}
+
+src_prepare() {
 	cd "${WORKDIR}"
 
-	# Apply patches if there's a patchball version number provided.
-	if [ -n "${PATCHVER}"  ]
-	then
-		unpack ${P}-gentoo-${PATCHVER}.tar.bz2
-		cd "${S}"
-
-		patch_prepare
-
-		# Apply patches
-		EPATCH_SUFFIX="patch" epatch ${PATCHDIR}
+	# Apply patches
+	if [[ ${PV} != 9999* && -n ${SRC_PATCHES} ]]; then
+		EPATCH_FORCE="yes" \
+		EPATCH_SOURCE="${WORKDIR}/patches" \
+		EPATCH_SUFFIX="patch" \
+		epatch
 	fi
 
-	src_unpack_os
+	# fix the makes for bsd/linux
+	if [[ $CORE = fbsd ]]; then
+		# Link in freebsd kernel.
+		ln -s "/usr/src/sys-${K_RV}" "${WORKDIR}/sys"
+		# SUBDIR variable gets to all Makefiles, we need it only in the main one.
+		SUBDIRS=${VIDCARDS//.ko}
+		sed -i \
+			-e "s:SUBDIR\ =.*:SUBDIR\ =\ drm ${SUBDIRS}:" \
+			"${SRC_BUILD}"/Makefile || die "Fixing SUBDIRS failed."
+	else
+		convert_to_m "${SRC_BUILD}"/Makefile
+	fi
 }
 
 src_compile() {
 	einfo "Building DRM in ${SRC_BUILD}..."
-	src_compile_os
-	einfo "DRM build finished".
+	src_compile_${CORE}
 }
 
 src_install() {
-	einfo "Installing DRM..."
 	cd "${SRC_BUILD}"
 
-	src_install_os
+	src_install_${CORE}
 
 	dodoc "${S}/linux-core/README.drm"
 }
 
 pkg_postinst() {
-	if use video_cards_sis
-	then
+	if use video_cards_sis; then
 		einfo "SiS direct rendering only works on 300 series chipsets."
 		einfo "SiS framebuffer also needs to be enabled in the kernel."
 	fi
 
-	if use video_cards_mach64
-	then
+	if use video_cards_mach64; then
 		einfo "The Mach64 DRI driver is insecure."
 		einfo "Malicious clients can write to system memory."
 		einfo "For more information, see:"
 		einfo "http://dri.freedesktop.org/wiki/ATIMach64."
 	fi
 
-	pkg_postinst_os
+	[[ ${CORE} = linux ]] && linux-mod_pkg_postinst
 }
 
 # Functions used above are defined below:
 
+_set_build_type() {
+	# here we check if we are using linux kernel or the fbsd one
+	use kernel_FreeBSD && CORE="fbsd"
+	use kernel_linux && CORE="linux"
+	! use kernel_FreeBSD && ! use kernel_linux && die "Unsupported kernel type"
+}
+
 kernel_setup() {
-	if use kernel_FreeBSD
-	then
+	if [[ ${CORE} = fbsd ]] ; then
 		K_RV=${CHOST/*-freebsd/}
-	elif use kernel_linux
-	then
+	else
 		linux-mod_pkg_setup
 
-		if kernel_is 2 4
-		then
+		if kernel_is 2 4; then
 			eerror "Upstream support for 2.4 kernels has been removed, so this package will no"
 			eerror "longer support them."
 			die "Please use in-kernel DRM or switch to a 2.6 kernel."
 		fi
-
+		linux_chkconfig_present "DRM" ||
 		linux_chkconfig_builtin "DRM" && \
 			die "Please disable or modularize DRM in the kernel config. (CONFIG_DRM = n or m)"
-
-		CONFIG_CHECK="AGP"
-		ERROR_AGP="AGP support is not enabled in your kernel config (CONFIG_AGP)"
 	fi
 }
 
@@ -147,7 +174,7 @@ set_vidcards() {
 			VIDCARDS="${VIDCARDS} mach64.${KV_OBJ}"
 		use video_cards_mga && \
 			VIDCARDS="${VIDCARDS} mga.${KV_OBJ}"
-		use video_cards_nouveau && \
+		[[ -n ${EXPERIMENTAL} ]] && use video_cards_nouveau && \
 			VIDCARDS="${VIDCARDS} nouveau.${KV_OBJ}"
 		use video_cards_r128 && \
 			VIDCARDS="${VIDCARDS} r128.${KV_OBJ}"
@@ -163,70 +190,6 @@ set_vidcards() {
 			VIDCARDS="${VIDCARDS} ffb.${KV_OBJ}"
 		use video_cards_tdfx && \
 			VIDCARDS="${VIDCARDS} tdfx.${KV_OBJ}"
-	fi
-}
-
-get_drm_build_dir() {
-	if use kernel_FreeBSD
-	then
-		SRC_BUILD="${S}/bsd-core"
-	elif kernel_is 2 6
-	then
-		SRC_BUILD="${S}/linux-core"
-	fi
-}
-
-patch_prepare() {
-	# Handle exclusions based on the following...
-	#     All trees (0**), Standard only (1**), Others (none right now)
-	#     2.4 vs. 2.6 kernels
-	if use kernel_linux
-	then
-	    kernel_is 2 6 && mv -f "${PATCHDIR}"/*kernel-2.4* "${EXCLUDED}"
-	fi
-
-	# There is only one tree being maintained now. No numeric exclusions need
-	# to be done based on DRM tree.
-}
-
-src_unpack_linux() {
-	convert_to_m "${SRC_BUILD}"/Makefile
-}
-
-src_unpack_freebsd() {
-	# Link in freebsd kernel.
-	ln -s "/usr/src/sys-${K_RV}" "${WORKDIR}/sys"
-	# SUBDIR variable gets to all Makefiles, we need it only in the main one.
-	SUBDIRS=${VIDCARDS//.ko}
-	sed -i -e "s:SUBDIR\ =.*:SUBDIR\ =\ drm ${SUBDIRS}:" "${SRC_BUILD}"/Makefile
-}
-
-src_unpack_os() {
-	if use kernel_linux; then
-		src_unpack_linux
-	elif use kernel_FreeBSD
-	then
-		src_unpack_freebsd
-	fi
-}
-
-src_compile_os() {
-	if use kernel_linux
-	then
-		src_compile_linux
-	elif use kernel_FreeBSD
-	then
-		src_compile_freebsd
-	fi
-}
-
-src_install_os() {
-	if use kernel_linux
-	then
-		src_install_linux
-	elif use kernel_FreeBSD
-	then
-		src_install_freebsd
 	fi
 }
 
@@ -249,14 +212,9 @@ src_compile_linux() {
 	BUILD_TARGETS="modules"
 	BUILD_PARAMS="DRM_MODULES='${VIDCARDS}' LINUXDIR='${KERNEL_DIR}' M='${SRC_BUILD}'"
 	ECONF_PARAMS='' S="${SRC_BUILD}" linux-mod_src_compile
-
-	if linux_chkconfig_present DRM
-	then
-		ewarn "Please disable in-kernel DRM support to use this package."
-	fi
 }
 
-src_compile_freebsd() {
+src_compile_fbsd() {
 	cd "${SRC_BUILD}"
 	# Environment CFLAGS overwrite kernel CFLAGS which is bad.
 	local svcflags=${CFLAGS}; local svldflags=${LDFLAGS}
@@ -270,13 +228,6 @@ src_compile_freebsd() {
 	export CFLAGS=${svcflags}; export LDFLAGS=${svldflags}
 }
 
-die_error() {
-	eerror "Portage could not build the DRM modules. If you see an ACCESS DENIED error,"
-	eerror "this could mean that you were using an unsupported kernel build system."
-	eerror "Only 2.6 kernels at least as new as 2.6.6 are supported."
-	die "Unable to build DRM modules."
-}
-
 src_install_linux() {
 	linux-mod_src_install
 
@@ -284,7 +235,7 @@ src_install_linux() {
 	strip_bins \/lib\/modules
 }
 
-src_install_freebsd() {
+src_install_fbsd() {
 	cd "${SRC_BUILD}"
 	dodir "/boot/modules"
 	MAKE=make \
@@ -294,11 +245,4 @@ src_install_freebsd() {
 		DESTDIR="${D}" \
 		KMODDIR="/boot/modules" \
 		|| die "Install failed."
-}
-
-pkg_postinst_os() {
-	if use kernel_linux
-	then
-		linux-mod_pkg_postinst
-	fi
 }
