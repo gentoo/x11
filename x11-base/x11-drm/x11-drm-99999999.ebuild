@@ -160,9 +160,10 @@ kernel_setup() {
 			eerror "longer support them."
 			die "Please use in-kernel DRM or switch to a 2.6 kernel."
 		fi
-		linux_chkconfig_present "DRM" ||
-		linux_chkconfig_builtin "DRM" && \
+
+		if linux_chkconfig_present "DRM" ||	linux_chkconfig_builtin "DRM" ; then
 			die "Please disable or modularize DRM in the kernel config. (CONFIG_DRM = n or m)"
+		fi
 	fi
 }
 
