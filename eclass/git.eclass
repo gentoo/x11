@@ -320,8 +320,6 @@ git_src_unpack() {
 git_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	echo ">>> Preparing source in ${S}"
 	git_apply_patches
 	git_bootstrap
-	echo ">>> Source prepared"
 }
