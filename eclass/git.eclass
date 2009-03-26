@@ -32,6 +32,12 @@ EXPORT_FUNCTIONS ${EXPORTED_FUNCTIONS}
 # We DEPEND on at least a bit recent git version
 DEPEND=">=dev-util/git-1.6"
 
+# @ECLASS-VARIABLE: EGIT_QUIET
+# @DESCRIPTION:
+# Enables user specified verbosity for the eclass elog informations.
+# The user just needs to add EGIT_QUIET="ON" to the /etc/make.conf.
+: ${EGIT_QUIET:="OFF"}
+
 # @ECLASS-VARIABLE: EGIT_STORE_DIR
 # @DESCRIPTION:
 # Storage directory for git sources.
@@ -129,6 +135,13 @@ git_fetch() {
 
 	local EGIT_CLONE_DIR oldsha1 cursha1
 
+	# choose if user wants elog or just einfo.
+	if [[ ${EGIT_QUIET} != OFF ]]; then
+		elogcmd="einfo"
+	else
+		elogcmd="elog"
+	fi
+
 	# if we have same branch and the tree we can do --depth 1 clone
 	# which outputs into really smaller data transfers
 	[[ ${EGIT_TREE} = ${EGIT_BRANCH} ]] && \
@@ -170,29 +183,29 @@ git_fetch() {
 
 	if [[ ! -d ${EGIT_CLONE_DIR} ]] ; then
 		# first clone
-		elog "GIT NEW clone -->"
-		elog "   repository: 		${EGIT_REPO_URI}"
+		${elogcmd} "GIT NEW clone -->"
+		${elogcmd} "   repository: 		${EGIT_REPO_URI}"
 
 		${EGIT_FETCH_CMD} ${EGIT_OPTIONS} "${EGIT_REPO_URI}" ${EGIT_PROJECT} \
 			|| die "${EGIT}: can't fetch from ${EGIT_REPO_URI}."
 
 		oldsha1=$(git rev-parse ${EGIT_BRANCH})
-		elog "   at the commit:		${oldsha1}"
+		${elogcmd} "   at the commit:		${oldsha1}"
 
 		# We use --bare cloning, so git doesn't do this for us.
 		git config remote.origin.url "${EGIT_REPO_URI}"
 	elif [[ -n ${EGIT_OFFLINE} ]] ; then
 		oldsha1=$(git rev-parse ${EGIT_BRANCH})
-		elog "GIT offline update -->"
-		elog "   repository: 		${EGIT_REPO_URI}"
-		elog "   at the commit:		${oldsha1}"
+		${elogcmd} "GIT offline update -->"
+		${elogcmd} "   repository: 		${EGIT_REPO_URI}"
+		${elogcmd} "   at the commit:		${oldsha1}"
 	else
 		# Git urls might change, so unconditionally set it here
 		git config remote.origin.url "${EGIT_REPO_URI}"
 
 		# fetch updates
-		elog "GIT update -->"
-		elog "   repository: 		${EGIT_REPO_URI}"
+		${elogcmd} "GIT update -->"
+		${elogcmd} "   repository: 		${EGIT_REPO_URI}"
 
 		oldsha1=$(git rev-parse ${EGIT_BRANCH})
 
@@ -203,10 +216,10 @@ git_fetch() {
 
 		# write out message based on the revisions
 		if [[ ${oldsha1} != ${cursha1} ]]; then
-			elog "   updating from commit:	${oldsha1}"
-			elog "   to commit:		${cursha1}"
+			${elogcmd} "   updating from commit:	${oldsha1}"
+			${elogcmd} "   to commit:		${cursha1}"
 		else
-			elog "   at the commit: 		${cursha1}"
+			${elogcmd} "   at the commit: 		${cursha1}"
 		fi
 		# piping through cat is needed to avoid a stupid Git feature
 		${EGIT_DIFFSTAT_CMD} ${oldsha1}..${EGIT_BRANCH} | cat
@@ -219,8 +232,8 @@ git_fetch() {
 	fi
 
 	[[ ${EGIT_TREE} != ${EGIT_BRANCH} ]] && elog "   tree:			${EGIT_TREE}"
-	elog "   branch: 			${EGIT_BRANCH}"
-	elog "   storage directory: 	\"${EGIT_STORE_DIR}/${EGIT_CLONE_DIR}\""
+	${elogcmd} "   branch: 			${EGIT_BRANCH}"
+	${elogcmd} "   storage directory: 	\"${EGIT_STORE_DIR}/${EGIT_CLONE_DIR}\""
 
 	# export to the ${WORKDIR}
 	mkdir -p "${S}"
