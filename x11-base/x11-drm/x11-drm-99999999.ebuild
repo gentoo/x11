@@ -153,16 +153,14 @@ kernel_setup() {
 	if [[ ${CORE} = fbsd ]] ; then
 		K_RV=${CHOST/*-freebsd/}
 	else
+		CONFIG_CHECK="!DRM"
+		ERROR_DRM="Please disable DRM in the kernel config. (CONFIG_DRM = n)"
 		linux-mod_pkg_setup
 
 		if kernel_is 2 4; then
 			eerror "Upstream support for 2.4 kernels has been removed, so this package will no"
 			eerror "longer support them."
 			die "Please use in-kernel DRM or switch to a 2.6 kernel."
-		fi
-
-		if linux_chkconfig_present "DRM" ||	linux_chkconfig_builtin "DRM" ; then
-			die "Please disable or modularize DRM in the kernel config. (CONFIG_DRM = n or m)"
 		fi
 	fi
 }
