@@ -237,6 +237,13 @@ git_fetch() {
 
 	# export to the ${WORKDIR}
 	mkdir -p "${S}"
+
+	# git data are used in some packages for various variables definition. So we
+	# copy also .git folder.
+	pushd "${S}" > /dev/null
+	git clone --bare ${EGIT_STORE_DIR}/${EGIT_CLONE_DIR} .git
+	popd > /dev/null
+
 	git archive --format=tar ${EGIT_TREE} | ( cd "${S}" ; tar xf - )
 
 	echo ">>> Unpacked to ${S}"
