@@ -27,7 +27,7 @@ esac
 EXPORT_FUNCTIONS ${EXPORTED_FUNCTIONS}
 
 # define some nice defaults but only if nothing is set already
-: ${HOMEPAGE:=http://git.or.cz/}
+: ${HOMEPAGE:=http://git-scm.com/}
 
 # We DEPEND on at least a bit recent git version
 DEPEND=">=dev-util/git-1.6"
