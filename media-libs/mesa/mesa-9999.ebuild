@@ -6,7 +6,15 @@ EAPI="2"
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/mesa/mesa"
 
-[[ ${PV} = 9999* ]] && GIT_ECLASS="git"
+if [[ ${PV} = 9999* ]]; then
+	GIT_ECLASS="git"
+	EXPERIMENTAL="true"
+	IUSE_VIDEO_CARDS_UNSTABLE="video_cards_nouveau"
+	IUSE_UNSTABLE="gallium"
+	# User can also specify branch by simply adding MESA_LIVE_BRANCH="blesmrt"
+	# to the make.conf, where blesmrt is desired branch.
+	[[ -z ${MESA_LIVE_BRANCH} ]] || EGIT_BRANCH="${MESA_LIVE_BRANCH}"
+fi
 
 inherit autotools multilib flag-o-matic ${GIT_ECLASS} portability
 
@@ -33,14 +41,6 @@ LICENSE="LGPL-2"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 
-if [[ ${PV} = 9999* ]]; then
-	EXPERIMENTAL="true"
-	IUSE_VIDEO_CARDS_UNSTABLE="video_cards_nouveau"
-	IUSE_UNSTABLE="gallium"
-	# User can also specify branch by simply adding MESA_LIVE_BRANCH="blesmrt"
-	# to the make.conf, where blesmrt is desired branch.
-	[[ -z ${MESA_LIVE_BRANCH} ]] || EGIT_BRANCH="${MESA_LIVE_BRANCH}"
-fi
 IUSE_VIDEO_CARDS="${IUSE_VIDEO_CARDS_UNSTABLE}
 	video_cards_intel
 	video_cards_mach64
