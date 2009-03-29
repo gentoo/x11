@@ -6,6 +6,14 @@ EAPI="2"
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/mesa/drm"
 EGIT_PROJECT="libdrm"
+if [[ ${PV} = 9999* ]]; then
+	EXPERIMENTAL="true"
+	IUSE_VIDEO_CARDS_UNSTABLE="video_cards_nouveau"
+	IUSE_UNSTABLE=""
+	# User can also specify branch by simply adding DRM_LIVE_BRANCH="blesmrt"
+	# to the make.conf, where blesmrt is desired branch.
+	[[ -z ${DRM_LIVE_BRANCH} ]] || EGIT_BRANCH="${DRM_LIVE_BRANCH}"
+fi
 
 [[ ${PV} = 9999* ]] && GIT_ECLASS="git"
 
@@ -26,14 +34,6 @@ LICENSE="X11"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~ia64 ~ppc ~x86 ~x86-fbsd"
 
-if [[ ${PV} = 9999* ]]; then
-	EXPERIMENTAL="true"
-	IUSE_VIDEO_CARDS_UNSTABLE="video_cards_nouveau"
-	IUSE_UNSTABLE=""
-	# User can also specify branch by simply adding DRM_LIVE_BRANCH="blesmrt"
-	# to the make.conf, where blesmrt is desired branch.
-	[[ -z ${DRM_LIVE_BRANCH} ]] || EGIT_BRANCH="${DRM_LIVE_BRANCH}"
-fi
 # ! IMPORTANT:
 # this is really out of sync with MESA, should we add here or remove from mesa?
 IUSE_VIDEO_CARDS="${IUSE_VIDEO_CARDS_UNSTABLE}
