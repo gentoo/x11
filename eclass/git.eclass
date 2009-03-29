@@ -142,10 +142,12 @@ git_fetch() {
 		elogcmd="elog"
 	fi
 
-	# if we have same branch and the tree we can do --depth 1 clone
-	# which outputs into really smaller data transfers
-	[[ ${EGIT_TREE} = ${EGIT_BRANCH} ]] && \
-		EGIT_FETCH_CMD="${EGIT_FETCH_CMD} --depth 1"
+	# If we have same branch and the tree we can do --depth 1 clone
+	# which outputs into really smaller data transfers.
+	# Sadly we can do shallow copy for now because quite few packages need .git
+	# folder.
+	#[[ ${EGIT_TREE} = ${EGIT_BRANCH} ]] && \
+	#	EGIT_FETCH_CMD="${EGIT_FETCH_CMD} --depth 1"
 
 	# EGIT_REPO_URI is empty.
 	[[ -z ${EGIT_REPO_URI} ]] && die "${EGIT}: EGIT_REPO_URI is empty."
