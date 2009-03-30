@@ -155,7 +155,7 @@ src_configure() {
 		# nouveau works only with gallium and intel, radeon, radeonhd can use
 		# gallium as alternative implementation (NOTE: THIS IS EXPERIMENTAL)
 		if use video_cards_nouveau && ! use gallium ; then
-			elog "Nouveau driver is availible only via gallium interface."
+			elog "Nouveau driver is available only via gallium interface."
 			elog "Enable gallium useflag if you want to use nouveau."
 			echo
 		fi
@@ -180,7 +180,7 @@ src_configure() {
 			driver_enable video_cards_radeonhd r300
 		fi
 	else
-		# backcompat, remove when galium moves out of experimental
+		# backcompat, remove when gallium moves out of experimental
 		driver_enable video_cards_intel i810 i915 i965
 		# ATI has two implementations as video_cards
 		driver_enable video_cards_radeon radeon r200 r300
