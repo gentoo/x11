@@ -14,7 +14,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86
 RDEPEND="x11-libs/libX11
 	x11-libs/libXext
 	x11-libs/libXrender
-	>=x11-proto/randrproto-1.2.99.3
+	>=x11-proto/randrproto-${PV}
 	x11-proto/xproto"
 DEPEND="${RDEPEND}
 	x11-proto/renderproto"
