@@ -65,6 +65,7 @@ RDEPEND="!<=x11-base/xorg-x11-6.9
 	!<=x11-proto/xf86driproto-2.0.3
 	app-admin/eselect-opengl
 	dev-libs/expat
+	>=media-libs/glew-1.5.1
 	>=x11-libs/libdrm-9999
 	x11-libs/libICE
 	x11-libs/libX11[xcb?]
@@ -126,7 +127,7 @@ src_prepare() {
 
 	# remove unwanted header files
 	# Get rid of glut include
-	rm -f "${S}"/include/GL/glut.h || die "Removing glut include failed."
+	rm -f "${S}"/include/GL/glut*.h || die "Removing glut include failed."
 	# Get rid of glew includes
 	rm -f "${S}"/include/GL/{glew,glxew,wglew}.h \
 		|| die "Removing glew includes failed."
