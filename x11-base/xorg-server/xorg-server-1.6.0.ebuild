@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/x11-base/xorg-server/xorg-server-1.3.0.0.ebuild,v 1.9 2007/06/04 23:17:40 dberkholz Exp $
 
+EAPI="2"
+
 # Must be before x-modular eclass is inherited
 #SNAPSHOT="yes"
 
@@ -129,11 +131,15 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=x11-libs/libXpm-3.5.7
 	>=x11-libs/libXinerama-1.0.3
 	>=x11-libs/libpciaccess-0.10.3
-	dmx? ( >=x11-libs/libdmx-1.0.2
-			>=x11-libs/libXfixes-4.0.3 )
-	!minimal? ( >=x11-libs/libXtst-1.0.3
+	dmx? (
+		>=x11-libs/libdmx-1.0.2
+		>=x11-libs/libXfixes-4.0.3
+	)
+	!minimal? (
+		>=x11-libs/libXtst-1.0.3
 		>=x11-libs/libXres-1.0.3
-		>=media-libs/mesa-7.3_rc1 )
+		>=media-libs/mesa-7.3_rc1[nptl=]
+	)
 	>=x11-libs/libxkbui-1.0.2
 	>=x11-libs/liblbxutil-1.0.1
 	kdrive? ( sdl? ( media-libs/libsdl ) )"
@@ -320,15 +326,6 @@ pkg_setup() {
 		--with-default-font-path=built-ins
 		${conf_opts}"
 
-	local diemsg="You must build xorg-server and mesa with the same nptl USE setting."
-	if ! use minimal; then
-		if built_with_use media-libs/mesa nptl; then
-			use nptl || die "${diemsg}"
-		else
-			use nptl && die "${diemsg}"
-		fi
-	fi
-
 	# (#121394) Causes window corruption
 	filter-flags -fweb
 
@@ -336,10 +333,7 @@ pkg_setup() {
 	eselect opengl set --impl-headers ${OPENGL_DIR}
 }
 
-src_unpack() {
-	x-modular_specs_check
-	x-modular_dri_check
-	x-modular_unpack_source
+src_prepare() {
 	x-modular_patch_source
 
 	if use hal; then
