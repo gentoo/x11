@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# To use something besides `emerge` to install packages, set INSTALL to 
-# that binary.
+# To use something besides `emerge` to install packages, set
+# XCB_REBUILDER_INSTALL to that binary.
 
 . /etc/init.d/functions.sh
 
@@ -25,23 +25,19 @@ if ! type -p scanelf >/dev/null; then
 	exit 1
 fi
 
+einfo "Fixing broken libtool archives (.la)"
+for i in $(qlist -a | grep "\.la$"); do
+	sed -i \
+		-e "s:[^[:space:]]*xcb-xlib[^[:space:]]*::g" \
+		"${i}" 2>/dev/null
+done
+
 einfo "Scanning for libraries requiring libxcb-xlib.so..."
-while read line; do
-	if [[ -d ${line} ]]; then
-		ebegin "  ${line}"
-		# Libraries (.so)
-		for i in $(find "${line}" -name '*.so'); do
-			scanelf -n $i \
-			| grep -q xcb-xlib \
-			&& XCB_LIBS="${XCB_LIBS} ${i}"
-		done
-		# Libtool archives (.la)
-		sed -i \
-			-e "s:[^[:space:]]*libxcb-xlib.la::g" \
-			"${line}"/*.la 2>/dev/null
-		eend 0
-	fi
-done < /etc/ld.so.conf
+for i in $(qlist -a | grep "\.so$"); do
+	scanelf -n $i \
+	| grep -q xcb-xlib \
+	&& XCB_LIBS="${XCB_LIBS} ${i}"
+done
 
 if [[ -n ${XCB_LIBS} ]]; then
 	einfo "Broken libraries:"
@@ -63,5 +59,5 @@ for pkg in ${XCB_PACKAGES}; do
 done
 
 ebegin "Rebuilding broken packages"
-${INSTALL:-emerge -1} ${XCB_PACKAGES}
+${XCB_REBUILDER_INSTALL:-emerge -1} ${XCB_PACKAGES}
 eend $?
