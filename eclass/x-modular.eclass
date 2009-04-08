@@ -320,6 +320,8 @@ x-modular_reconf_source() {
 # @DESCRIPTION:
 # Prepare a package after unpacking, performing all X-related tasks.
 x-modular_src_prepare() {
+	[[ -n ${GIT_ECLASS} ]] && has src_prepare ${EXPORTED_FUNCTIONS} \
+		&& git_src_prepare
 	x-modular_patch_source
 	x-modular_reconf_source
 }
