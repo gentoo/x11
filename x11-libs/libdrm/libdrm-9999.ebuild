@@ -10,7 +10,6 @@ EAPI="1"
 inherit autotools x-modular
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/mesa/drm"
-EGIT_BOOTSTRAP="eautoreconf"
 
 DESCRIPTION="X.Org libdrm library"
 HOMEPAGE="http://dri.freedesktop.org/"
