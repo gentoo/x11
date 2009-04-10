@@ -26,7 +26,7 @@ DEPEND="${RDEPEND}
 	x11-proto/xextproto
 	x11-proto/xproto
 	dri? ( 	x11-proto/xf86driproto
-			>=x11-libs/libdrm-2.4.5
+			>=x11-libs/libdrm-2.4.6
 			x11-libs/libX11 )"
 
 CONFIGURE_OPTIONS="$(use_enable dri)"
