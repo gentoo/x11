@@ -6,9 +6,11 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/git/mesa/drm"
 
 inherit eutils autotools git
 
+PATCHDATE="20090418"
+
 DESCRIPTION="X11 DRM utilities and test programs"
 HOMEPAGE="http://dri.freedesktop.org/wiki/"
-SRC_URI="http://dev.gentoo.org/~battousai/distfiles/${P}-use-system-libdrm.patch.bz2"
+SRC_URI="http://dev.gentoo.org/~battousai/distfiles/${P}-use-system-libdrm-${PATCHDATE}.patch.bz2"
 EGIT_PROJECT="libdrm"
 
 LICENSE="X11"
@@ -26,10 +28,10 @@ src_unpack() {
 	git_src_unpack
 
 	cd "${WORKDIR}"
-	unpack ${P}-use-system-libdrm.patch.bz2
+	unpack ${P}-use-system-libdrm-${PATCHDATE}.patch.bz2
 
 	cd "${S}"
-	epatch "${WORKDIR}"/${P}-use-system-libdrm.patch
+	epatch "${WORKDIR}"/${P}-use-system-libdrm-${PATCHDATE}.patch
 
 	eautoreconf -v --install
 }
