@@ -65,7 +65,6 @@ RDEPEND="!<=x11-base/xorg-x11-6.9
 	!<=x11-proto/xf86driproto-2.0.3
 	app-admin/eselect-opengl
 	dev-libs/expat
-	>=media-libs/glew-1.5.1
 	>=x11-libs/libdrm-9999
 	x11-libs/libICE
 	x11-libs/libX11[xcb?]
@@ -88,6 +87,8 @@ DEPEND="${RDEPEND}
 	!hppa? ( x11-proto/xf86driproto )
 	motif? ( x11-proto/printproto )
 "
+# glew depend on mesa and it is needed in runtime
+PDEPEND=">=media-libs/glew-1.5.1"
 
 S="${WORKDIR}/${MY_P}"
 
