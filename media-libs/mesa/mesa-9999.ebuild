@@ -125,10 +125,6 @@ src_prepare() {
 		sed -i -e "s/-DHAVE_POSIX_MEMALIGN//" configure.ac
 
 	eautoreconf
-
-	# remove glew headers. We preffer to use system ones
-	rm -f "${S}"/include/GL/{glew,glxew,wglew}.h \
-		|| die "Removing glew includes failed."
 }
 
 src_configure() {
@@ -209,6 +205,9 @@ src_install() {
 	# Remove redundant headers
 	# GLUT thing
 	rm -f "${D}"/usr/include/GL/glut*.h || die "Removing glut include failed."
+	# Glew includes
+	rm -f "${D}"/usr/include/GL/{glew,glxew,wglew}.h \
+		|| die "Removing glew includes failed."
 
 	# Move libGL and others from /usr/lib to /usr/lib/opengl/blah/lib
 	# because user can eselect desired GL provider.
