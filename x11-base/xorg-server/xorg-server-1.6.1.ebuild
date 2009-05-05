@@ -327,6 +327,7 @@ pkg_setup() {
 		--with-fontdir=/usr/share/fonts
 		--with-xkb-output=/var/lib/xkb
 		--with-default-font-path=built-ins
+		--without-dtrace
 		${conf_opts}"
 
 	# (#121394) Causes window corruption
