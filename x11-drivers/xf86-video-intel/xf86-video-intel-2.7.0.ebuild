@@ -27,4 +27,6 @@ DEPEND="${RDEPEND}
 			>=x11-libs/libdrm-2.4.5
 			x11-libs/libX11 )"
 
-CONFIGURE_OPTIONS="$(use_enable dri)"
+pkg_setup() {
+	CONFIGURE_OPTIONS="$(use_enable dri)"
+}
