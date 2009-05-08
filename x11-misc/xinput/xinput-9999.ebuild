@@ -10,8 +10,11 @@ inherit x-modular
 
 DESCRIPTION="Utility to set XInput device parameters"
 LICENSE="as-is"
-KEYWORDS="~amd64 ~ppc ~x86"
+KEYWORDS="~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE=""
-RDEPEND=">=x11-libs/libXi-9999"
+RDEPEND="
+	  x11-libs/libX11
+	  x11-libs/libXext
+	>=x11-libs/libXi-1.2"
 DEPEND="${RDEPEND}
-	>=x11-proto/inputproto-9999"
+	>=x11-proto/inputproto-1.5"
