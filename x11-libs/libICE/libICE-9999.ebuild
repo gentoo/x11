@@ -1,5 +1,9 @@
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/x11-libs/libICE/libICE-1.0.5.ebuild,v 1.1 2009/05/08 22:33:10 remi Exp $
+
+# Must be before x-modular eclass is inherited
+#SNAPSHOT="yes"
 
 inherit x-modular
 
@@ -12,4 +16,6 @@ RDEPEND="x11-libs/xtrans
 	x11-proto/xproto"
 DEPEND="${RDEPEND}"
 
-CONFIGURE_OPTIONS="$(use_enable ipv6)"
+pkg_setup() {
+	CONFIGURE_OPTIONS="$(use_enable ipv6)"
+}
