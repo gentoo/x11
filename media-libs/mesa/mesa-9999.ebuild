@@ -83,9 +83,8 @@ DEPEND="${RDEPEND}
 	>=x11-proto/glproto-1.4.8
 	x11-proto/inputproto
 	x11-proto/xextproto
+	x11-proto/xf86driproto
 	x11-proto/xf86vidmodeproto
-	!hppa? ( x11-proto/xf86driproto )
-	motif? ( x11-proto/printproto )
 "
 # glew depend on mesa and it is needed in runtime
 PDEPEND=">=media-libs/glew-1.5.1"
