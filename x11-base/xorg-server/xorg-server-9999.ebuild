@@ -146,7 +146,6 @@ RDEPEND="hal? ( sys-apps/hal )
 	# Xres is dmx-dependent
 	# Xaw is dmx-dependent
 	# Xpm is dmx-dependent, pulls in Xt
-	# liblbxutil is lbx- dependent
 	# xkbcomp is launched at startup but not checked by ./configure
 DEPEND="${RDEPEND}
 	!net-dialup/dtrace
