@@ -124,6 +124,7 @@ RDEPEND="hal? ( sys-apps/hal )
 	media-libs/freetype
 	>=x11-misc/xbitmaps-1.0.1
 	>=x11-misc/xkeyboard-config-1.4
+	x11-apps/xkbcomp
 	>=x11-apps/iceauth-1.0.2
 	>=x11-apps/rgb-1.0.3
 	>=x11-apps/xauth-1.0.3
@@ -148,6 +149,7 @@ RDEPEND="hal? ( sys-apps/hal )
 	# Xaw is dmx-dependent
 	# Xpm is dmx-dependent, pulls in Xt
 	# liblbxutil is lbx- dependent
+	# xkbcomp is launched at startup but not checked by ./configure
 DEPEND="${RDEPEND}
 	!net-dialup/dtrace
 	sys-devel/flex
