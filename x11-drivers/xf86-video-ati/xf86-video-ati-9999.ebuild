@@ -27,4 +27,4 @@ DEPEND="${RDEPEND}
 	x11-proto/xproto
 "
 
-CONFIGURE_OPTIONS="--with-dri"
+CONFIGURE_OPTIONS="--enable-dri"
