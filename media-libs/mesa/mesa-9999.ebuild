@@ -166,14 +166,14 @@ src_configure() {
 			elog
 			elog "Intel: works only i915."
 			elog "Nouveau: only available implementation, so no other choice"
-			elog "Radeon: not working, disabled."
+			elog "Radeon: implementation up to the r500."
 			echo
 			myconf="${myconf}
 				--with-state-trackers=glx,dri,egl
 				$(use_enable video_cards_nouveau gallium-nouveau)
-				$(use_enable video_cards_intel gallium-intel)"
-				#$(use_enable video_cards_radeon gallium-radeon)
-				#$(use_enable video_cards_radeonhd gallium-radeon)"
+				$(use_enable video_cards_intel gallium-intel)
+				$(use_enable video_cards_radeon gallium-radeon)
+				$(use_enable video_cards_radeonhd gallium-radeon)"
 		fi
 	fi
 
