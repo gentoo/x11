@@ -104,8 +104,7 @@ IUSE_SERVERS="dmx kdrive xorg"
 IUSE="${IUSE_VIDEO_CARDS}
 	${IUSE_INPUT_DEVICES}
 	${IUSE_SERVERS}
-	3dfx tslib
-	hal ipv6 minimal nptl sdl"
+	tslib hal ipv6 minimal nptl sdl"
 RDEPEND="hal? ( sys-apps/hal )
 	tslib? ( >=x11-libs/tslib-1.0 x11-proto/xcalibrateproto )
 	dev-libs/openssl
@@ -256,8 +255,6 @@ PDEPEND="
 		video_cards_vmware? ( >=x11-drivers/xf86-video-vmware-10.16.5 )
 		video_cards_voodoo? ( >=x11-drivers/xf86-video-voodoo-1.2.0 )
 		video_cards_xgi? ( >=x11-drivers/xf86-video-xgi-1.5.0 )
-
-		video_cards_tdfx? ( 3dfx? ( >=media-libs/glide-v3-3.10 ) )
 
 		!x11-drivers/xf86-video-impact
 		!x11-drivers/xf86-video-imstt
