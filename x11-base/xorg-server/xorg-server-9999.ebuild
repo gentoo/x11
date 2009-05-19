@@ -174,7 +174,7 @@ DEPEND="${RDEPEND}
 	dmx? ( >=x11-proto/dmxproto-2.2.2 )
 	!minimal? (
 		>=x11-proto/xf86driproto-2.0.4
-		>=x11-proto/dri2proto-1.99.3
+		>=x11-proto/dri2proto-2.1
 		>=x11-libs/libdrm-2.3
 	)"
 
