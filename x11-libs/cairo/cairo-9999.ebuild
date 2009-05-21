@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/x11-libs/cairo/cairo-1.8.6-r1.ebuild,v 1.7 2009/03/27 17:03:18 armin76 Exp $
 
-inherit eutils flag-o-matic libtool git
+inherit eutils flag-o-matic libtool git autotools
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/cairo"
 
@@ -66,6 +66,13 @@ src_unpack() {
 
 	# We need to run elibtoolize to ensure correct so versioning on FreeBSD
 	elibtoolize
+
+	# create dummy */Makefile.am.features and ChangeLog to make automake happy
+	> boilerplate/Makefile.am.features
+	> src/Makefile.am.features
+	touch ChangeLog
+
+	eautoreconf
 }
 
 src_compile() {
