@@ -23,6 +23,7 @@ DEPEND="${RDEPEND}
 	dev-libs/libxslt
 	>=x11-proto/xcb-proto-1.4
 	>=dev-lang/python-2.5[xml]"
+PATCHES=( "${FILESDIR}"/xcb-0000-Fix-generate_xid-BadIdChoice-X-error.patch )
 
 CONFIGURE_OPTIONS="$(use_enable doc build-docs)
 	$(use_enable selinux xselinux)
