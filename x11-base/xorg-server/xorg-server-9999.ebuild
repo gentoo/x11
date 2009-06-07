@@ -318,7 +318,6 @@ pkg_setup() {
 		$(use_enable !minimal glx)
 		$(use_enable xorg)
 		$(use_enable nptl glx-tls)
-		$(use_enable hal config-dbus)
 		$(use_enable hal config-hal)
 		--sysconfdir=/etc/X11
 		--localstatedir=/var
