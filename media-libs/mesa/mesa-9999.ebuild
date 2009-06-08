@@ -13,6 +13,7 @@ if [[ ${PV} = 9999* ]]; then
 	IUSE_UNSTABLE="gallium"
 	# User can also specify branch by simply adding MESA_LIVE_BRANCH="blesmrt"
 	# to the make.conf, where blesmrt is desired branch.
+	[[ -z ${MESA_LIVE_BRANCH} ]] || EGIT_BRANCH="${MESA_LIVE_BRANCH}"
 fi
 
 inherit autotools multilib flag-o-matic ${GIT_ECLASS} portability
@@ -126,7 +127,7 @@ src_prepare() {
 }
 
 src_configure() {
-	local myconf r600
+	local myconf
 
 	# Configurable DRI drivers
 	driver_enable swrast
@@ -135,9 +136,8 @@ src_configure() {
 	driver_enable video_cards_mga mga
 	driver_enable video_cards_r128 r128
 	# ATI has two implementations as video_cards
-	[[ -d "${S}"/src/mesa/drivers/dri/r600/ ]] && r600="r600"
-	driver_enable video_cards_radeon radeon r200 r300 ${r600}
-	driver_enable video_cards_radeonhd r300 ${r600}
+	driver_enable video_cards_radeon radeon r200 r300
+	driver_enable video_cards_radeonhd r300
 	driver_enable video_cards_s3virge s3v
 	driver_enable video_cards_savage savage
 	driver_enable video_cards_sis sis

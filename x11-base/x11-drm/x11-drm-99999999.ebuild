@@ -10,6 +10,9 @@ if [[ ${PV} = 9999* ]]; then
 	EXPERIMENTAL="true"
 	IUSE_VIDEO_CARDS_UNSTABLE="video_cards_nouveau"
 	IUSE_UNSTABLE=""
+	# User can also specify branch by simply adding DRM_LIVE_BRANCH="blesmrt"
+	# to the make.conf, where blesmrt is desired branch.
+	[[ -z ${DRM_LIVE_BRANCH} ]] || EGIT_BRANCH="${DRM_LIVE_BRANCH}"
 fi
 
 [[ ${PV} = 9999* ]] && GIT_ECLASS="git"
