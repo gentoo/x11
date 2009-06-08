@@ -11,8 +11,6 @@ if [[ ${PV} = 9999* ]]; then
 	EXPERIMENTAL="true"
 	IUSE_VIDEO_CARDS_UNSTABLE="video_cards_nouveau"
 	IUSE_UNSTABLE="gallium"
-	# User can also specify branch by simply adding MESA_LIVE_BRANCH="blesmrt"
-	# to the make.conf, where blesmrt is desired branch.
 fi
 
 inherit autotools multilib flag-o-matic ${GIT_ECLASS} portability
