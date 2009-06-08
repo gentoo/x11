@@ -1,9 +1,3 @@
-# Require kernel sources with radeon kernel-modesetting drivers
-# See http://jglisse.livejournal.com/1822.html
-~x11-drivers/xf86-video-ati-9999_p9999
-~media-libs/mesa-9999_p9999
-~x11-libs/libdrm-9999_p9999
-
 # Requires a kernel patch for .29/.30-rc2 with 965 and newer chipsets. 
 # You can get it at 
 # http://git.kernel.org/?p=linux/kernel/git/anholt/drm-intel.git;a=commitdiff_plain;h=f544847fbaf099278343f875987a983f2b913134;hp=cd97824994042b809493807ea644ba26c0c23290
