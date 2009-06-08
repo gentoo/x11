@@ -75,8 +75,12 @@ EGIT_DIFFSTAT_CMD="git --no-pager diff --stat"
 #   git+ssh://
 #   rsync://
 #   ssh://
-: ${EGIT_REPO_URI:=}
-
+eval X="$"${PN}_LIVE_REPO
+if [[ ${X} = "" ]]; then
+	: ${EGIT_REPO_URI:=}
+else
+	EGIT_REPO_URI="${X}"
+fi
 # @ECLASS-VARIABLE: EGIT_PROJECT
 # @DESCRIPTION:
 # Project name of your ebuild.
@@ -109,7 +113,12 @@ EGIT_OFFLINE="${EGIT_OFFLINE:-${ESCM_OFFLINE}}"
 # @ECLASS-VARIABLE: EGIT_BRANCH
 # @DESCRIPTION:
 # git eclass can fetch any branch in git_fetch().
-: ${EGIT_BRANCH:=master}
+eval X="$"${PN}_LIVE_BRANCH
+if [[ ${X} = "" ]]; then
+	: ${EGIT_BRANCH:=master}
+else
+	EGIT_BRANCH="${X}"
+fi
 
 # @ECLASS-VARIABLE: EGIT_TREE
 # @DESCRIPTION:
