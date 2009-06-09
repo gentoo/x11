@@ -5,7 +5,6 @@
 # Must be before x-modular eclass is inherited
 #SNAPSHOT="yes"
 
-MODULE="app"
 inherit x-modular
 
 DESCRIPTION="Utility to set XInput device parameters"
