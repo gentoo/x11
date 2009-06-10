@@ -6,7 +6,6 @@ EAPI="2"
 inherit x-modular
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xcb/libxcb"
-PATCHES="${FILESDIR}/xcb-*.patch"
 
 DESCRIPTION="X C-language Bindings library"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
