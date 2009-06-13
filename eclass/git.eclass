@@ -246,7 +246,8 @@ git_fetch() {
 			# pakcages that are up-to-date.
 			# TODO: this can lead to issues if more projects/packages use same repo
 			[[ ${LIVE_FAIL_FETCH_IF_REPO_NOT_UPDATED} = true ]] && \
-				die "Repo is up-to-date. Skipping."
+				debug-print "${FUNCNAME}: Repository \"${EGIT_REPO_URI}\" is up-to-date. Skipping." && \
+				die "${EGIT}: Repository \"${EGIT_REPO_URI}\" is up-to-date. Skipping."
 		fi
 		${EGIT_DIFFSTAT_CMD} ${oldsha1}..${EGIT_BRANCH}
 	fi
