@@ -238,6 +238,15 @@ git_fetch() {
 			${elogcmd} "   to commit:		${cursha1}"
 		else
 			${elogcmd} "   at the commit: 		${cursha1}"
+			# @ECLASS_VARIABLE: LIVE_FAIL_FETCH_IF_REPO_NOT_UPDATED
+			# @DESCRIPTION:
+			# If this variable is set to TRUE in make.conf or somewhere in
+			# enviroment the package will fail if there is no update, thus in
+			# combination with --keep-going it would lead in not-updating
+			# pakcages that are up-to-date.
+			# TODO: this can lead to issues if more projects/packages use same repo
+			[[ ${LIVE_FAIL_FETCH_IF_REPO_NOT_UPDATED} = true ]] && \
+				die "Repo is up-to-date. Skipping."
 		fi
 		${EGIT_DIFFSTAT_CMD} ${oldsha1}..${EGIT_BRANCH}
 	fi
