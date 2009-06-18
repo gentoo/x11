@@ -20,7 +20,7 @@ RDEPEND="dev-libs/libpthread-stubs"
 DEPEND="${RDEPEND}"
 RESTRICT="test" # see bug #236845
 
-CONFIGURE_OPTIONS="--enable-udev --enable-nouveau-experimental-api"
+CONFIGURE_OPTIONS="--enable-udev --enable-nouveau-experimental-api --enable-radeon-experimental-api"
 
 pkg_postinst() {
 	x-modular_pkg_postinst
