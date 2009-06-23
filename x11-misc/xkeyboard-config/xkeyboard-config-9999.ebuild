@@ -15,6 +15,7 @@ SLOT="0"
 RDEPEND="x11-apps/xkbcomp
 	!x11-misc/xkbdata"
 DEPEND="${RDEPEND}
+	sys-devel/gettext
 	dev-perl/XML-Parser"
 
 pkg_setup() {
