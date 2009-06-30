@@ -123,7 +123,12 @@ fi
 # @ECLASS-VARIABLE: EGIT_TREE
 # @DESCRIPTION:
 # git eclass can checkout any tree (commit).
-: ${EGIT_TREE:=${EGIT_BRANCH}}
+eval X="$"${PN//-/_}_LIVE_TREE
+if [[ ${X} = "" ]]; then
+	: ${EGIT_TREE:=${EGIT_BRANCH}}
+else
+	EGIT_TREE="${X}"
+fi
 
 # @ECLASS-VARIABLE: EGIT_REPACK
 # @DESCRIPTION:
@@ -227,6 +232,7 @@ git_fetch() {
 
 		oldsha1=$(git rev-parse ${EGIT_BRANCH})
 
+		${elogcmd} ${EGIT_UPDATE_CMD} ${EGIT_OPTIONS} origin ${EGIT_BRANCH}:${EGIT_BRANCH}
 		${EGIT_UPDATE_CMD} ${EGIT_OPTIONS} origin ${EGIT_BRANCH}:${EGIT_BRANCH} \
 			|| die "${EGIT}: can't update from ${EGIT_REPO_URI}."
 
