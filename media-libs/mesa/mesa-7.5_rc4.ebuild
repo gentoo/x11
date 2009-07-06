@@ -226,25 +226,6 @@ src_install() {
 			fi
 		done
 	eend $?
-
-	# Install libtool archives
-	insinto /usr/$(get_libdir)
-	# Should this use the -L/usr/lib instead of -L/usr/$(get_libdir)?
-	# Please confirm and update this comment or the file.
-	doins "${FILESDIR}"/lib/libGLU.la || die "doins libGLU.la failed"
-	sed \
-		-e "s:\${libdir}:$(get_libdir):g" \
-		"${FILESDIR}"/lib/libGL.la \
-		> "${D}"/usr/$(get_libdir)/opengl/xorg-x11/lib/libGL.la
-
-	# On *BSD libcs dlopen() and similar functions are present directly in
-	# libc.so and does not require linking to libdl. portability eclass takes
-	# care of finding the needed library (if needed) witht the dlopen_lib
-	# function.
-	sed -i \
-		-e 's:-ldl:'$(dlopen_lib)':g' \
-		"${D}"/usr/$(get_libdir)/{libGLU.la,opengl/xorg-x11/lib/libGL.la} \
-		|| die "sed dlopen failed"
 }
 
 pkg_postinst() {
