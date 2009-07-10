@@ -6,11 +6,6 @@ EAPI="2"
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/mesa/drm"
 EGIT_PROJECT="libdrm"
-if [[ ${PV} = 9999* ]]; then
-	EXPERIMENTAL="true"
-	IUSE_VIDEO_CARDS_UNSTABLE="video_cards_nouveau"
-	IUSE_UNSTABLE=""
-fi
 
 [[ ${PV} = 9999* ]] && GIT_ECLASS="git"
 
@@ -33,7 +28,7 @@ KEYWORDS="~alpha ~amd64 ~ia64 ~ppc ~x86 ~x86-fbsd"
 
 # ! IMPORTANT:
 # this is really out of sync with MESA, should we add here or remove from mesa?
-IUSE_VIDEO_CARDS="${IUSE_VIDEO_CARDS_UNSTABLE}
+IUSE_VIDEO_CARDS="
 	video_cards_mach64
 	video_cards_mga
 	video_cards_r128
@@ -170,8 +165,6 @@ set_vidcards() {
 			VIDCARDS="${VIDCARDS} mach64.${KV_OBJ}"
 		use video_cards_mga && \
 			VIDCARDS="${VIDCARDS} mga.${KV_OBJ}"
-		[[ -n ${EXPERIMENTAL} ]] && use video_cards_nouveau && \
-			VIDCARDS="${VIDCARDS} nouveau.${KV_OBJ}"
 		use video_cards_r128 && \
 			VIDCARDS="${VIDCARDS} r128.${KV_OBJ}"
 		use video_cards_radeon || use video_cards_radeonhd && \
