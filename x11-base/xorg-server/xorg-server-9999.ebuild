@@ -67,11 +67,11 @@ IUSE_VIDEO_CARDS="
 	video_cards_mach64
 	video_cards_mga
 	video_cards_neomagic
+	video_cards_newport
 	video_cards_nouveau
 	video_cards_nv
 	video_cards_r128
 	video_cards_radeon
-	video_cards_newport
 	video_cards_radeonhd
 	video_cards_rendition
 	video_cards_s3
@@ -229,10 +229,10 @@ PDEPEND="
 		video_cards_mach64? ( >=x11-drivers/xf86-video-mach64-6.8.0 )
 		video_cards_mga? ( >=x11-drivers/xf86-video-mga-1.4.9 )
 		video_cards_neomagic? ( >=x11-drivers/xf86-video-neomagic-1.2.1 )
+		video_cards_newport? ( >=x11-drivers/xf86-video-newport-0.2.2 )
 		video_cards_nouveau? ( x11-drivers/xf86-video-nouveau )
 		video_cards_nv? ( >=x11-drivers/xf86-video-nv-2.1.12 )
 		video_cards_nvidia? ( x11-drivers/nvidia-drivers )
-		video_cards_newport? ( >=x11-drivers/xf86-video-newport-0.2.2 )
 		video_cards_fglrx? ( >=x11-drivers/ati-drivers-9.6 )
 		video_cards_r128? ( >=x11-drivers/xf86-video-r128-6.8.0 )
 		video_cards_radeon? ( >=x11-drivers/xf86-video-ati-6.9.0 )
