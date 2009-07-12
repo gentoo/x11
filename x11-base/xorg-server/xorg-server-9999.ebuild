@@ -19,7 +19,6 @@ IUSE_INPUT_DEVICES="
 	input_devices_acecad
 	input_devices_aiptek
 	input_devices_citron
-	input_devices_digitaledge
 	input_devices_elo2300
 	input_devices_elographics
 	input_devices_evdev
@@ -178,7 +177,6 @@ PDEPEND="
 		input_devices_acecad? ( >=x11-drivers/xf86-input-acecad-1.2.2 )
 		input_devices_aiptek? ( >=x11-drivers/xf86-input-aiptek-1.1.1 )
 		input_devices_citron? ( >=x11-drivers/xf86-input-citron-2.2.1 )
-		input_devices_digitaledge? ( >=x11-drivers/xf86-input-digitaledge-1.1.1 )
 		input_devices_elo2300? ( >=x11-drivers/xf86-input-elo2300-1.1.2 )
 		input_devices_elographics? ( >=x11-drivers/xf86-input-elographics-1.2.2 )
 		input_devices_evdev? ( >=x11-drivers/xf86-input-evdev-2.1.0 )
