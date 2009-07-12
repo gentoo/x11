@@ -19,7 +19,6 @@ IUSE_INPUT_DEVICES="
 	input_devices_acecad
 	input_devices_aiptek
 	input_devices_citron
-	input_devices_elo2300
 	input_devices_elographics
 	input_devices_evdev
 	input_devices_fpit
@@ -30,7 +29,6 @@ IUSE_INPUT_DEVICES="
 	input_devices_mutouch
 	input_devices_penmount
 	input_devices_tslib
-	input_devices_ur98
 	input_devices_virtualbox
 	input_devices_vmmouse
 	input_devices_void
@@ -174,7 +172,6 @@ PDEPEND="
 		input_devices_acecad? ( >=x11-drivers/xf86-input-acecad-1.2.2 )
 		input_devices_aiptek? ( >=x11-drivers/xf86-input-aiptek-1.1.1 )
 		input_devices_citron? ( >=x11-drivers/xf86-input-citron-2.2.1 )
-		input_devices_elo2300? ( >=x11-drivers/xf86-input-elo2300-1.1.2 )
 		input_devices_elographics? ( >=x11-drivers/xf86-input-elographics-1.2.2 )
 		input_devices_evdev? ( >=x11-drivers/xf86-input-evdev-2.1.0 )
 		input_devices_fpit? ( >=x11-drivers/xf86-input-fpit-1.2.0 )
@@ -185,7 +182,6 @@ PDEPEND="
 		input_devices_mutouch? ( >=x11-drivers/xf86-input-mutouch-1.2.1 )
 		input_devices_penmount? ( >=x11-drivers/xf86-input-penmount-1.3.0 )
 		input_devices_tslib? ( x11-drivers/xf86-input-tslib )
-		input_devices_ur98? ( >=x11-drivers/xf86-input-ur98-1.1.0 )
 		input_devices_virtualbox? ( x11-drivers/xf86-input-virtualbox )
 		input_devices_vmmouse? ( >=x11-drivers/xf86-input-vmmouse-12.5.0 )
 		input_devices_void? ( >=x11-drivers/xf86-input-void-1.1.1 )
