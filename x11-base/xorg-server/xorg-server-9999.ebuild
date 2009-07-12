@@ -29,9 +29,6 @@ IUSE_INPUT_DEVICES="
 	input_devices_mouse
 	input_devices_mutouch
 	input_devices_penmount
-	input_devices_spaceorb
-	input_devices_summa
-	input_devices_tek4957
 	input_devices_tslib
 	input_devices_ur98
 	input_devices_virtualbox
@@ -187,9 +184,6 @@ PDEPEND="
 		input_devices_mouse? ( >=x11-drivers/xf86-input-mouse-9999 )
 		input_devices_mutouch? ( >=x11-drivers/xf86-input-mutouch-1.2.1 )
 		input_devices_penmount? ( >=x11-drivers/xf86-input-penmount-1.3.0 )
-		input_devices_spaceorb? ( >=x11-drivers/xf86-input-spaceorb-1.1.1 )
-		input_devices_summa? ( >=x11-drivers/xf86-input-summa-1.2.0 )
-		input_devices_tek4957? ( >=x11-drivers/xf86-input-tek4957-1.2.0 )
 		input_devices_tslib? ( x11-drivers/xf86-input-tslib )
 		input_devices_ur98? ( >=x11-drivers/xf86-input-ur98-1.1.0 )
 		input_devices_virtualbox? ( x11-drivers/xf86-input-virtualbox )
