@@ -27,4 +27,7 @@ DEPEND="${RDEPEND}
 	x11-proto/xproto
 "
 
-CONFIGURE_OPTIONS="--enable-dri"
+CONFIGURE_OPTIONS="
+	--enable-dri
+	--enable-shave
+"
