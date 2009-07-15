@@ -106,7 +106,7 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=x11-libs/libXmu-1.0.3
 	>=x11-libs/libXrender-0.9.4
 	>=x11-libs/libXi-1.1.3
-	>=x11-libs/pixman-0.13.2
+	>=x11-libs/pixman-0.15.14
 	media-libs/freetype
 	>=x11-misc/xbitmaps-1.0.1
 	>=x11-misc/xkeyboard-config-1.4
@@ -138,7 +138,7 @@ DEPEND="${RDEPEND}
 	!net-dialup/dtrace
 	sys-devel/flex
 	>=x11-proto/randrproto-1.2.99.3
-	>=x11-proto/renderproto-0.9.3
+	>=x11-proto/renderproto-0.11
 	>=x11-proto/fixesproto-4
 	>=x11-proto/damageproto-1.1
 	>=x11-proto/xextproto-7.0.3
@@ -155,7 +155,7 @@ DEPEND="${RDEPEND}
 	>=x11-proto/xineramaproto-1.1.3
 	>=x11-proto/fontsproto-2.0.2
 	>=x11-proto/kbproto-1.0.3
-	>=x11-proto/inputproto-1.9.99.6
+	>=x11-proto/inputproto-1.9.99.14
 	>=x11-proto/bigreqsproto-1.0.2
 	>=x11-proto/xcmiscproto-1.1.2
 	>=x11-proto/glproto-1.4.9
