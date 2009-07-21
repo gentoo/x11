@@ -83,8 +83,6 @@ DEPEND="${RDEPEND}
 	x11-proto/xf86driproto
 	x11-proto/xf86vidmodeproto
 "
-# glew depend on mesa and it is needed in runtime
-PDEPEND=">=media-libs/glew-1.5.1"
 
 S="${WORKDIR}/${MY_P}"
 
@@ -133,9 +131,8 @@ src_configure() {
 	driver_enable video_cards_mga mga
 	driver_enable video_cards_r128 r128
 	# ATI has two implementations as video_cards
-	[[ -d "${S}"/src/mesa/drivers/dri/r600/ ]] && r600="r600"
-	driver_enable video_cards_radeon radeon r200 r300 ${r600}
-	driver_enable video_cards_radeonhd r300 ${r600}
+	driver_enable video_cards_radeon radeon r200 r300 r600
+	driver_enable video_cards_radeonhd r300 r600
 	driver_enable video_cards_s3virge s3v
 	driver_enable video_cards_savage savage
 	driver_enable video_cards_sis sis
