@@ -226,6 +226,14 @@ pkg_postinst() {
 	# Switch to the xorg implementation.
 	echo
 	eselect opengl set --use-old ${OPENGL_DIR}
+
+	# info about removal of .la file
+	elog "Mesa no-longer ships the libGL.la file."
+	elog "This file was broken by design and thus removed."
+	elog "For fixing all sort of configure issues please run:"
+	elog "	lafilefixer --justfix"
+	elog "or run revdep-rebuild."
+	elog "(lafilefixer package can be found as dev-util/lafilefixer)"
 }
 
 # $1 - VIDEO_CARDS flag
