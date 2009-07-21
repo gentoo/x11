@@ -231,7 +231,7 @@ pkg_postinst() {
 	elog "Mesa no-longer ships the libGL.la file."
 	elog "This file was broken by design and thus removed."
 	elog "For fixing all sort of configure issues please run:"
-	elog "	lafilefixer --justfix"
+	elog "	lafilefixer --justfixit"
 	elog "or run revdep-rebuild."
 	elog "(lafilefixer package can be found as dev-util/lafilefixer)"
 }
