@@ -172,9 +172,7 @@ src_configure() {
 	fi
 
 	# Deactivate assembly code for pic build
-	# Sparc assembly code is not working
 	myconf="${myconf} $(use_enable !pic asm)"
-	myconf="${myconf} $(use_enable !sparc asm)"
 
 	# --with-driver=dri|xlib|osmesa ; might get changed later to something
 	# else than dri
