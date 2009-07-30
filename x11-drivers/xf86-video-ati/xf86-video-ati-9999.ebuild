@@ -10,10 +10,11 @@ inherit x-modular
 DESCRIPTION="ATI video driver"
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 SRC_URI=""
-IUSE=""
+IUSE="kms"
 
 RDEPEND=">=x11-base/xorg-server-1.2[-minimal]"
 DEPEND="${RDEPEND}
+	kms? ( >=x11-base/xorg-server-1.7[-minimal] )
 	>=x11-libs/libdrm-2
 	>=x11-misc/util-macros-1.1.3
 	x11-proto/fontsproto
@@ -27,7 +28,12 @@ DEPEND="${RDEPEND}
 	x11-proto/xproto
 "
 
-CONFIGURE_OPTIONS="
-	--enable-dri
-	--enable-shave
-"
+
+pkg_setup() {
+	CONFIGURE_OPTIONS="
+		--enable-dri
+		--enable-shave
+		$(use_enable kms)
+	"
+	x-modular_pkg_setup
+}
