@@ -139,7 +139,7 @@ DEPEND="${RDEPEND}
 	sys-devel/flex
 	>=x11-proto/randrproto-1.2.99.3
 	>=x11-proto/renderproto-0.11
-	>=x11-proto/fixesproto-4
+	>=x11-proto/fixesproto-4.1
 	>=x11-proto/damageproto-1.1
 	>=x11-proto/xextproto-7.0.99.3
 	>=x11-proto/xproto-7.0.13
