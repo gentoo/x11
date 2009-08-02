@@ -99,7 +99,7 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=x11-libs/libXfont-1.3.3
 	>=x11-libs/xtrans-1.2.2
 	>=x11-libs/libXau-1.0.4
-	>=x11-libs/libXext-1.0.5
+	>=x11-libs/libXext-1.0.4
 	>=x11-libs/libX11-1.1.5
 	>=x11-libs/libxkbfile-1.0.4
 	>=x11-libs/libXdmcp-1.0.2
@@ -173,7 +173,7 @@ PDEPEND="
 		input_devices_aiptek? ( >=x11-drivers/xf86-input-aiptek-1.1.1 )
 		input_devices_citron? ( >=x11-drivers/xf86-input-citron-2.2.1 )
 		input_devices_elographics? ( >=x11-drivers/xf86-input-elographics-1.2.2 )
-		input_devices_evdev? ( >=x11-drivers/xf86-input-evdev-9999 )
+		input_devices_evdev? ( >=x11-drivers/xf86-input-evdev-2.1.0 )
 		input_devices_fpit? ( >=x11-drivers/xf86-input-fpit-1.2.0 )
 		input_devices_hyperpen? ( >=x11-drivers/xf86-input-hyperpen-1.2.0 )
 		input_devices_joystick? ( >=x11-drivers/xf86-input-joystick-1.3.2 )
@@ -185,7 +185,7 @@ PDEPEND="
 		input_devices_virtualbox? ( x11-drivers/xf86-input-virtualbox )
 		input_devices_vmmouse? ( >=x11-drivers/xf86-input-vmmouse-12.5.0 )
 		input_devices_void? ( >=x11-drivers/xf86-input-void-1.1.1 )
-		input_devices_synaptics? ( >=x11-drivers/xf86-input-synaptics-9999 )
+		input_devices_synaptics? ( >=x11-drivers/xf86-input-synaptics-0.15.0 )
 		input_devices_wacom? ( x11-drivers/linuxwacom )
 
 		video_cards_apm? ( >=x11-drivers/xf86-video-apm-1.2.0  )
@@ -209,7 +209,7 @@ PDEPEND="
 		video_cards_nvidia? ( x11-drivers/nvidia-drivers )
 		video_cards_fglrx? ( >=x11-drivers/ati-drivers-9.6 )
 		video_cards_r128? ( >=x11-drivers/xf86-video-r128-6.8.0 )
-		video_cards_radeon? ( >=x11-drivers/xf86-video-ati-9999 )
+		video_cards_radeon? ( >=x11-drivers/xf86-video-ati-6.9.0 )
 		video_cards_radeonhd? ( >=x11-drivers/xf86-video-radeonhd-1.2.1 )
 		video_cards_rendition? ( >=x11-drivers/xf86-video-rendition-4.2.0 )
 		video_cards_s3? ( >=x11-drivers/xf86-video-s3-0.6.0 )
