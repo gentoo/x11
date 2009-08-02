@@ -318,20 +318,6 @@ pkg_setup() {
 	eselect opengl set --impl-headers ${OPENGL_DIR}
 }
 
-src_prepare() {
-	x-modular_patch_source
-
-	if use hal; then
-		sed -i \
-			-e "s:^\(dbusconfigdir = \).*\(dbus-1.*\):\1/etc/\2:g" \
-			"${S}"/config/Makefile.am \
-			|| die "failed to fix DBUS config directory"
-		SNAPSHOT="yes"
-	fi
-
-	x-modular_reconf_source
-}
-
 src_install() {
 	x-modular_src_install
 
