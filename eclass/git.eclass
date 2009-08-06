@@ -285,6 +285,10 @@ git_fetch() {
 	fi
 	debug-print "git checkout -b ${branchname} ${src}"
 	git checkout -b ${branchname} ${src} 2>&1 > /dev/null
+	debug-print "git submodule init"
+	git submodule init 2>&1 > /dev/null
+	debug-print "git submodule update"
+	git submodule update 2>&1 > /dev/null
 	popd > /dev/null
 
 	unset branchname src
