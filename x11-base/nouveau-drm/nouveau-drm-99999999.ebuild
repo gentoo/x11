@@ -16,9 +16,10 @@ KEYWORDS="~amd64 ~x86"
 
 IUSE=""
 
-DEPEND="virtual/linux-sources
+RDEPEND="virtual/linux-sources
 	!x11-base/x11-drm"
-RDEPEND="${DEPEND}"
+DEPEND="${RDEPEND}
+	dev-util/git"
 
 S=${WORKDIR}/master-compat
 
@@ -40,7 +41,10 @@ src_unpack() {
 src_compile() {
 	cd nouveau || die "cd failed"
 	set_arch_to_kernel
-	emake LINUXDIR="${KERNEL_DIR}" || die "Compiling kernel modules failed"
+	emake \
+		LINUXDIR="${KERNEL_DIR}" \
+		GIT_REVISION="$(zcat ${WORKDIR}/master-compat.tar.gz | git get-tar-commit-id)" \
+		|| die "Compiling kernel modules failed"
 }
 
 src_install() {
