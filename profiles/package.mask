@@ -1,8 +1,10 @@
 # Beta
-=x11-libs/libXext-1.0.99.4
-=x11-libs/libXtst-1.0.99.1
+=x11-libs/libX11-1.2.99*
+=x11-libs/libXi-1.2.99*
+=x11-libs/libXext-1.0.99*
+=x11-libs/libXtst-1.0.99*
 =x11-proto/fixesproto-4.1
-=x11-proto/inputproto-1.9.99.901
+=x11-proto/inputproto-1.9.99*
 =x11-proto/renderproto-0.11
 =x11-proto/xextproto-7.1.0
 
