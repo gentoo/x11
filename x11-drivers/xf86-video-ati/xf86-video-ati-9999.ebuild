@@ -12,11 +12,11 @@ KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 SRC_URI=""
 IUSE="kms"
 
-RDEPEND=">=x11-base/xorg-server-1.2[-minimal]"
+RDEPEND="x11-base/xorg-server[-minimal]"
 DEPEND="${RDEPEND}
 	kms? ( >=x11-base/xorg-server-1.7[-minimal] )
-	>=x11-libs/libdrm-2
-	>=x11-misc/util-macros-1.1.3
+	>=x11-libs/libdrm-2.4.12
+	>=x11-misc/util-macros-1.2.1
 	x11-proto/fontsproto
 	x11-proto/glproto
 	x11-proto/randrproto
@@ -35,5 +35,4 @@ pkg_setup() {
 		--enable-shave
 		$(use_enable kms)
 	"
-	x-modular_pkg_setup
 }
