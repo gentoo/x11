@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-proto/recordproto/recordproto-1.13.2.ebuild,v 1.17 2009/05/05 15:19:20 fauli Exp $
+# $Header: $
 
 # Must be before x-modular eclass is inherited
 #SNAPSHOT="yes"
