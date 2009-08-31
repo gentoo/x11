@@ -2,6 +2,7 @@
 =x11-libs/libX11-1.2.99*
 =x11-libs/libXi-1.2.99*
 =x11-libs/libXext-1.0.99*
+=x11-libs/libXinerama-1.0.99*
 =x11-libs/libXtst-1.0.99*
 =x11-proto/fixesproto-4.1
 =x11-proto/inputproto-1.9.99*
