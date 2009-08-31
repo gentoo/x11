@@ -8,7 +8,7 @@
 =x11-proto/inputproto-1.9.99*
 =x11-proto/recordproto-1.13.99*
 =x11-proto/renderproto-0.11
-=x11-proto/xextproto-7.1.0
+=x11-proto/xextproto-7.1*
 =x11-proto/xineramaproto-1.1.99*
 
 
