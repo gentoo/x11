@@ -11,7 +11,11 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/git/mesa/drm"
 
 DESCRIPTION="X.Org libdrm library"
 HOMEPAGE="http://dri.freedesktop.org/"
-SRC_URI="http://dri.freedesktop.org/${PN}/${P}.tar.gz"
+if [[ ${PV} = 9999* ]]; then
+	SRC_URI=""
+else
+        SRC_URI="http://dri.freedesktop.org/${PN}/${P}.tar.bz2"
+fi
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
 
