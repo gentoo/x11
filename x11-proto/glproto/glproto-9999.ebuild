@@ -7,7 +7,7 @@ OPENGL_DIR="xorg-x11"
 
 DESCRIPTION="X.Org GL protocol headers"
 
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64  ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
 
 RDEPEND="app-admin/eselect-opengl"
 DEPEND=""
