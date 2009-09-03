@@ -156,8 +156,8 @@ DEPEND="${RDEPEND}
 	>=x11-proto/fontsproto-2.0.2
 	>=x11-proto/kbproto-1.0.3
 	>=x11-proto/inputproto-1.9.99.902
-	>=x11-proto/bigreqsproto-1.0.2
-	>=x11-proto/xcmiscproto-1.1.2
+	>=x11-proto/bigreqsproto-1.1.0
+	>=x11-proto/xcmiscproto-1.2.0
 	>=x11-proto/glproto-1.4.9
 	dmx? ( >=x11-proto/dmxproto-2.2.2 )
 	!minimal? (
