@@ -5,6 +5,7 @@
 =x11-libs/libXinerama-1.0.99*
 =x11-libs/libXScrnSaver-1.2*
 =x11-libs/libXtst-1.0.99*
+=x11-proto/bigreqsproto-1.1*
 =x11-proto/fixesproto-4.1
 =x11-proto/inputproto-1.9.99*
 =x11-proto/recordproto-1.13.99*
