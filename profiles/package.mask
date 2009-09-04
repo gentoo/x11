@@ -27,6 +27,7 @@
 =x11-apps/xrandr-9999
 =x11-base/x11-drm-99999999
 =x11-base/xorg-server-9999
+=x11-base/xorg-drivers-9999
 =x11-drivers/xf86-input-evdev-9999
 =x11-drivers/xf86-input-keyboard-9999
 =x11-drivers/xf86-input-mouse-9999
