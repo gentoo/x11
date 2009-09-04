@@ -25,12 +25,12 @@ HOMEPAGE="http://mesa3d.sourceforge.net/"
 
 #SRC_PATCHES="mirror://gentoo/${P}-gentoo-patches-01.tar.bz2"
 if [[ $PV = *_rc* ]]; then
-	SRC_URI="http://www.mesa3d.org/beta/${MY_SRC_P}.tar.gz
+	SRC_URI="ftp://ftp.freedesktop.org/pub/mesa/beta/${MY_SRC_P}.tar.gz
 		${SRC_PATCHES}"
 elif [[ $PV = 9999* ]]; then
 	SRC_URI="${SRC_PATCHES}"
 else
-	SRC_URI="mirror://sourceforge/mesa3d/${MY_SRC_P}.tar.bz2
+	SRC_URI="ftp://ftp.freedesktop.org/pub/mesa/${MY_SRC_P}.tar.bz2
 		${SRC_PATCHES}"
 fi
 
