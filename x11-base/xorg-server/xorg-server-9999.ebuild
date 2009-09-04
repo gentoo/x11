@@ -94,7 +94,6 @@ DEPEND="${RDEPEND}
 
 PDEPEND=">=x11-base/xorg-drivers-$(get_version_component_range 1-2)[xorg=]"
 
-# Drivers
 LICENSE="${LICENSE} MIT"
 
 EPATCH_FORCE="yes"
