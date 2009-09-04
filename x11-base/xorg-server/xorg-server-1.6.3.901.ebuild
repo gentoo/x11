@@ -1,6 +1,6 @@
-# Copyright 1999-2007 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-base/xorg-server/xorg-server-1.3.0.0.ebuild,v 1.9 2007/06/04 23:17:40 dberkholz Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-base/xorg-server/xorg-server-1.6.3.901.ebuild,v 1.1 2009/08/26 13:04:21 remi Exp $
 
 EAPI="2"
 
@@ -9,7 +9,11 @@ EAPI="2"
 
 inherit x-modular multilib versionator
 
-EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/xserver"
+# keithp put this one in archive/ instead of releases/ for unknown reasons
+BASE_INDIVIDUAL_URI="http://xorg.freedesktop.org/archive/individual"
+SRC_URI="${SRC_URI}
+	${BASE_INDIVIDUAL_URI}/${MODULE}/${P}.tar.bz2"
+#	mirror://gentoo/${P}-gentoo-patches-01.tar.bz2
 
 OPENGL_DIR="xorg-x11"
 
@@ -21,17 +25,17 @@ IUSE="${IUSE_SERVERS} tslib hal ipv6 minimal nptl sdl"
 RDEPEND="hal? ( sys-apps/hal )
 	tslib? ( >=x11-libs/tslib-1.0 x11-proto/xcalibrateproto )
 	dev-libs/openssl
-	>=x11-libs/libXfont-1.3.3
-	>=x11-libs/xtrans-1.2.2
+	>=x11-libs/libXfont-1.4.0
+	>=x11-libs/xtrans-1.2.3
 	>=x11-libs/libXau-1.0.4
-	>=x11-libs/libXext-1.0.5
+	>=x11-libs/libXext-1.0.4
 	>=x11-libs/libX11-1.1.5
 	>=x11-libs/libxkbfile-1.0.4
 	>=x11-libs/libXdmcp-1.0.2
 	>=x11-libs/libXmu-1.0.3
 	>=x11-libs/libXrender-0.9.4
-	>=x11-libs/libXi-1.1.3
-	>=x11-libs/pixman-0.15.14
+	>=x11-libs/libXi-1.2.1
+	>=x11-libs/pixman-0.14.0
 	media-libs/freetype
 	>=x11-misc/xbitmaps-1.0.1
 	>=x11-misc/xkeyboard-config-1.4
@@ -41,7 +45,7 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=x11-apps/xauth-1.0.3
 	>=x11-apps/xinit-1.0.8-r3
 	>=app-admin/eselect-opengl-1.0.7
-	>=x11-libs/libXaw-1.0.4
+	>=x11-libs/libXaw-1.0.5
 	>=x11-libs/libXpm-3.5.7
 	>=x11-libs/libpciaccess-0.10.3
 	dmx? (
@@ -51,7 +55,7 @@ RDEPEND="hal? ( sys-apps/hal )
 	!minimal? (
 		>=x11-libs/libXtst-1.0.3
 		>=x11-libs/libXres-1.0.3
-		>=media-libs/mesa-7.4[nptl=]
+		>=media-libs/mesa-7.3_rc1[nptl=]
 	)
 	>=x11-libs/libxkbui-1.0.2
 	kdrive? ( sdl? ( media-libs/libsdl ) )"
@@ -62,27 +66,27 @@ RDEPEND="hal? ( sys-apps/hal )
 DEPEND="${RDEPEND}
 	!net-dialup/dtrace
 	sys-devel/flex
-	>=x11-proto/randrproto-1.2.99.3
-	>=x11-proto/renderproto-0.11
-	>=x11-proto/fixesproto-4.1
+	>=x11-proto/randrproto-1.2.99.4
+	>=x11-proto/renderproto-0.9.3
+	>=x11-proto/fixesproto-4
 	>=x11-proto/damageproto-1.1
-	>=x11-proto/xextproto-7.0.99.3
-	>=x11-proto/xproto-7.0.13
+	>=x11-proto/xextproto-7.0.4
+	>=x11-proto/xproto-7.0.14
 	>=x11-proto/xf86dgaproto-2.0.3
 	>=x11-proto/xf86rushproto-1.1.2
 	>=x11-proto/xf86vidmodeproto-2.2.2
 	>=x11-proto/compositeproto-0.4
-	>=x11-proto/recordproto-1.13.99.1
+	>=x11-proto/recordproto-1.13.2
 	>=x11-proto/resourceproto-1.0.2
 	>=x11-proto/videoproto-2.2.2
 	>=x11-proto/scrnsaverproto-1.1.0
 	>=x11-proto/trapproto-3.4.3
-	>=x11-proto/xineramaproto-1.1.3
+	>=x11-proto/xineramaproto-1.1.2
 	>=x11-proto/fontsproto-2.0.2
 	>=x11-proto/kbproto-1.0.3
-	>=x11-proto/inputproto-1.9.99.902
-	>=x11-proto/bigreqsproto-1.1.0
-	>=x11-proto/xcmiscproto-1.2.0
+	>=x11-proto/inputproto-1.5.0
+	>=x11-proto/bigreqsproto-1.0.2
+	>=x11-proto/xcmiscproto-1.1.2
 	>=x11-proto/glproto-1.4.9
 	dmx? ( >=x11-proto/dmxproto-2.2.2 )
 	!minimal? (
@@ -104,13 +108,13 @@ GENTOO_PATCHES=(
 	)
 
 # These have been sent upstream
-UPSTREAMED_PATCHES=()
+#UPSTREAMED_PATCHES=(
+#	"${WORKDIR}/patches/"
+#	)
 
 PATCHES=(
 	"${GENTOO_PATCHES[@]}"
 	"${UPSTREAMED_PATCHES[@]}"
-	# -9999 build failure
-	"${FILESDIR}/xserver-9999-fix-xextproto-include.patch"
 	)
 
 pkg_setup() {
