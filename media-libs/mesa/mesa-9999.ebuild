@@ -30,7 +30,7 @@ if [[ $PV = *_rc* ]]; then
 elif [[ $PV = 9999* ]]; then
 	SRC_URI="${SRC_PATCHES}"
 else
-	SRC_URI="ftp://ftp.freedesktop.org/pub/mesa/${MY_SRC_P}.tar.bz2
+	SRC_URI="ftp://ftp.freedesktop.org/pub/mesa/${PV}/${MY_SRC_P}.tar.bz2
 		${SRC_PATCHES}"
 fi
 
