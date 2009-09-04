@@ -91,7 +91,7 @@ DEPEND="${RDEPEND}
 		>=x11-libs/libdrm-2.3
 	)"
 
-PDEPEND=">=x11-base/xorg-drivers-$(get_version_component_range 1-2)[xorg=]"
+PDEPEND="xorg? ( >=x11-base/xorg-drivers-$(get_version_component_range 1-2) )"
 
 LICENSE="${LICENSE} MIT"
 
