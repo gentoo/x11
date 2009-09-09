@@ -109,8 +109,6 @@ UPSTREAMED_PATCHES=()
 PATCHES=(
 	"${GENTOO_PATCHES[@]}"
 	"${UPSTREAMED_PATCHES[@]}"
-	# -9999 build failure
-	"${FILESDIR}/xserver-9999-fix-xextproto-include.patch"
 	)
 
 pkg_setup() {
