@@ -30,8 +30,8 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=x11-libs/libXdmcp-1.0.2
 	>=x11-libs/libXmu-1.0.3
 	>=x11-libs/libXrender-0.9.4
-	>=x11-libs/libXi-1.1.3
-	>=x11-libs/pixman-0.15.14
+	>=x11-libs/libXi-1.2.99.1
+	>=x11-libs/pixman-0.15.20
 	media-libs/freetype
 	>=x11-misc/xbitmaps-1.0.1
 	>=x11-misc/xkeyboard-config-1.4
@@ -68,14 +68,14 @@ DEPEND="${RDEPEND}
 	>=x11-proto/damageproto-1.1
 	>=x11-proto/xextproto-7.0.99.3
 	>=x11-proto/xproto-7.0.13
-	>=x11-proto/xf86dgaproto-2.0.3
+	>=x11-proto/xf86dgaproto-2.0.99.1
 	>=x11-proto/xf86rushproto-1.1.2
-	>=x11-proto/xf86vidmodeproto-2.2.2
+	>=x11-proto/xf86vidmodeproto-2.2.99.1
 	>=x11-proto/compositeproto-0.4
 	>=x11-proto/recordproto-1.13.99.1
 	>=x11-proto/resourceproto-1.0.2
 	>=x11-proto/videoproto-2.2.2
-	>=x11-proto/scrnsaverproto-1.1.0
+	>=x11-proto/scrnsaverproto-1.1
 	>=x11-proto/trapproto-3.4.3
 	>=x11-proto/xineramaproto-1.1.3
 	>=x11-proto/fontsproto-2.0.2
@@ -88,7 +88,7 @@ DEPEND="${RDEPEND}
 	!minimal? (
 		>=x11-proto/xf86driproto-2.0.4
 		>=x11-proto/dri2proto-2.1
-		>=x11-libs/libdrm-2.3
+		>=x11-libs/libdrm-2.3.0
 	)"
 
 PDEPEND="xorg? ( >=x11-base/xorg-drivers-$(get_version_component_range 1-2) )"
