@@ -5,6 +5,7 @@
 =x11-libs/libXinerama-1.0.99*
 =x11-libs/libXScrnSaver-1.2*
 =x11-libs/libXtst-1.0.99*
+=x11-libs/libXxf86vm-1.0.99*
 =x11-proto/bigreqsproto-1.1*
 =x11-proto/fixesproto-4.1
 =x11-proto/inputproto-1.9.99*
@@ -13,6 +14,7 @@
 =x11-proto/scrnsaverproto-1.2*
 =x11-proto/xcmiscproto-1.2*
 =x11-proto/xextproto-7.1*
+=x11-proto/xf86vidmodeproto-2.2.99*
 =x11-proto/xineramaproto-1.1.99*
 
 
