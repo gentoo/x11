@@ -27,18 +27,9 @@ CONFIG_CHECK="~BACKLIGHT_CLASS_DEVICE !DRM ~FB_CFB_FILLRECT ~FB_CFB_COPYAREA ~FB
 
 pkg_setup() {
 	linux-mod_pkg_setup
-	if kernel_is lt 2 6 29; then
-		eerror "You need at least kernel 2.6.29"
+	if kernel_is lt 2 6 31; then
+		eerror "You need at least kernel 2.6.31"
 		die "Kernel too old"
-	fi
-	if kernel_is 2 6 30 && linux_chkconfig_present X86_PAT; then
-		ebegin "Checking for kernel 2.6.30 PAT bug"
-			egrep -q "ret = change_page_attr_set_clr" "${KERNEL_DIR}"/arch/x86/mm/pageattr.c
-		eend $?
-		if [[ $? -ne 0 ]] ; then
-			eerror "Your kernel has a serious PAT bug which makes CONFIG_X86_PAT dangerous."
-			die "PAT bug detected, disable X86_PAT or upgrade to newer kernel."
-		fi
 	fi
 }
 
