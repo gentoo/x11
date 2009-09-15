@@ -40,7 +40,7 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=x11-apps/rgb-1.0.3
 	>=x11-apps/xauth-1.0.3
 	>=x11-apps/xinit-1.0.8-r3
-	>=app-admin/eselect-opengl-1.0.7
+	>=app-admin/eselect-opengl-1.0.8
 	>=x11-libs/libXaw-1.0.4
 	>=x11-libs/libXpm-3.5.7
 	>=x11-libs/libpciaccess-0.10.3
@@ -223,7 +223,7 @@ dynamic_libgl_install() {
 	ebegin "Moving GL files for dynamic switching"
 		dodir /usr/$(get_libdir)/opengl/${OPENGL_DIR}/extensions
 		local x=""
-		for x in "${D}"/usr/$(get_libdir)/xorg/modules/extensions/lib{glx,dri}*; do
+		for x in "${D}"/usr/$(get_libdir)/xorg/modules/extensions/lib{glx,dri,dri2}*; do
 			if [ -f ${x} -o -L ${x} ]; then
 				mv -f ${x} "${D}"/usr/$(get_libdir)/opengl/${OPENGL_DIR}/extensions
 			fi
