@@ -49,10 +49,6 @@ src_install() {
 	DOCS="INSTALL NEWS TODO README"
 	x-modular_src_install
 
-	# Stupid new daemon, didn't work for me because of shm issues
-	newinitd "${FILESDIR}"/rc.init syndaemon
-	newconfd "${FILESDIR}"/rc.conf syndaemon
-
 	if use hal ; then
 		# Have HAL assign this driver to supported touchpads.
 		insinto /usr/share/hal/fdi/policy/10osvendor
