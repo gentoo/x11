@@ -13,6 +13,7 @@ DESCRIPTION="X.Org ScrnSaver protocol headers"
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE=""
+
 RDEPEND=""
 DEPEND="${RDEPEND}
 	!<x11-libs/libXScrnSaver-1.2
