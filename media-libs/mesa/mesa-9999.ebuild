@@ -54,7 +54,7 @@ IUSE_VIDEO_CARDS="${IUSE_VIDEO_CARDS_UNSTABLE}
 	video_cards_trident
 	video_cards_via"
 IUSE="${IUSE_VIDEO_CARDS} ${IUSE_UNSTABLE}
-	debug doc motif nptl pic xcb kernel_FreeBSD"
+	debug motif nptl pic xcb kernel_FreeBSD"
 
 # keep correct libdrm and dri2proto dep
 # keep blocks in rdepend for binpkg
@@ -71,7 +71,6 @@ RDEPEND="!<=x11-base/xorg-x11-6.9
 	x11-libs/libXmu
 	x11-libs/libXxf86vm
 	motif? ( x11-libs/openmotif )
-	doc? ( app-doc/opengl-manpages )
 "
 DEPEND="${RDEPEND}
 	dev-util/pkgconfig
