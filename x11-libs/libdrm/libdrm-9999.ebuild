@@ -5,7 +5,7 @@
 # Must be before x-modular eclass is inherited
 #SNAPSHOT="yes"
 
-inherit autotools x-modular
+inherit x-modular
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/mesa/drm"
 
