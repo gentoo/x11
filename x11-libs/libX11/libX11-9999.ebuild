@@ -8,6 +8,11 @@ EAPI="1"
 
 inherit x-modular toolchain-funcs flag-o-matic
 
+# Xorg in general prefers automake-1.11
+# libX11 master currently will build /only/ with automake-1.11
+# but autotools uses 10.2 when WANT_AUTOMAKE="latest", so:
+export WANT_AUTOMAKE="1.11"
+
 DESCRIPTION="X.Org X11 library"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64  ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE="ipv6 +xcb"
