@@ -24,13 +24,9 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=x11-libs/libXfont-1.3.3
 	>=x11-libs/xtrans-1.2.2
 	>=x11-libs/libXau-1.0.4
-	>=x11-libs/libXext-1.0.5
-	>=x11-libs/libX11-1.1.5
 	>=x11-libs/libxkbfile-1.0.4
 	>=x11-libs/libXdmcp-1.0.2
-	>=x11-libs/libXmu-1.0.3
-	>=x11-libs/libXrender-0.9.4
-	>=x11-libs/libXi-1.2.99.1
+	>=x11-libs/libpciaccess-0.10.3
 	>=x11-libs/pixman-0.15.20
 	media-libs/freetype
 	>=x11-misc/xbitmaps-1.0.1
@@ -41,24 +37,50 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=x11-apps/xauth-1.0.3
 	>=x11-apps/xinit-1.0.8-r3
 	>=app-admin/eselect-opengl-1.0.8
-	>=x11-libs/libXaw-1.0.4
-	>=x11-libs/libXpm-3.5.7
-	>=x11-libs/libpciaccess-0.10.3
 	dmx? (
+		x11-libs/libXt
 		>=x11-libs/libdmx-1.0.2
+		>=x11-libs/libX11-1.1.5
+		>=x11-libs/libXaw-1.0.4
+		>=x11-libs/libXext-1.0.5
 		>=x11-libs/libXfixes-4.0.3
+		>=x11-libs/libXi-1.2.99.1
+		>=x11-libs/libXmu-1.0.3
+		>=x11-libs/libXtst-1.0.3
 	)
 	!minimal? (
-		>=x11-libs/libXtst-1.0.3
+		>=x11-libs/libX11-1.1.5
+		>=x11-libs/libXext-1.0.5
 		>=x11-libs/libXres-1.0.3
 		>=media-libs/mesa-7.4[nptl=]
 	)
 	>=x11-libs/libxkbui-1.0.2
-	kdrive? ( sdl? ( media-libs/libsdl ) )"
+	kdrive? (
+		>=x11-libs/libXext-1.0.5
+		sdl? ( media-libs/libsdl ) )"
 	# Xres is dmx-dependent
 	# Xaw is dmx-dependent
 	# Xpm is dmx-dependent, pulls in Xt
 	# xkbcomp is launched at startup but not checked by ./configure
+
+## Deps that don't have a version in configure.ac but do here:
+# x11-proto/resourceproto
+# x11-proto/fontsproto
+# x11-libs/libXau
+# x11-libs/libXfont
+# x11-libs/libXdmcp
+# x11-libs/libXext
+# x11-libs/libX11
+# x11-libs/libXrender
+# x11-libs/libXmu
+# x11-libs/libXfixes
+# x11-libs/libXtst
+# x11-proto/xineramaproto
+# x11-proto/dmxproto
+## Deps that are larger here than in configure.ac
+# x11-libs/libpciaccess-0.8.0
+#
+
 DEPEND="${RDEPEND}
 	!net-dialup/dtrace
 	sys-devel/flex
@@ -86,7 +108,7 @@ DEPEND="${RDEPEND}
 	>=x11-proto/glproto-1.4.9
 	dmx? ( >=x11-proto/dmxproto-2.2.2 )
 	!minimal? (
-		>=x11-proto/xf86driproto-2.0.4
+		>=x11-proto/xf86driproto-2.1.0
 		>=x11-proto/dri2proto-2.1
 		>=x11-libs/libdrm-2.3.0
 	)"
