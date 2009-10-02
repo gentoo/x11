@@ -10,6 +10,14 @@
 =x11-proto/fixesproto-4.1
 =x11-proto/renderproto-0.11
 
+# 1.7
+~x11-base/xorg-server-1.7.0
+~x11-libs/libX11-1.3
+~x11-libs/libXext-1.1
+~x11-libs/libXi-1.3
+~x11-libs/libXinerama-1.1
+
+
 
 # broken ATM (missing distfiles?)
 =app-admin/eselect-opengl-1.0.6-r2
