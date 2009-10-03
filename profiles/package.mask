@@ -7,8 +7,6 @@
 =x11-libs/libXtst-1.0.99*
 =x11-libs/libXxf86vm-1.0.99*
 =x11-proto/bigreqsproto-1.1*
-=x11-proto/fixesproto-4.1
-=x11-proto/renderproto-0.11
 
 # 1.7
 ~x11-base/xorg-server-1.7.0
