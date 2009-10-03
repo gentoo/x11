@@ -62,15 +62,13 @@ setup_dm() {
 	PATH="${PATH}:$(. /etc/profile.env; echo "${ROOTPATH}")"
 
 	case "${MY_XDM}" in
-		kdm|kde|kde2|kde3)
+		kdm|kde)
 			EXE="$(which kdm)"
-			# kdm takes too long to create a pidfile for baselayout-2
-			#PIDFILE=/var/run/kdm.pid
-			PIDFILE=
+			PIDFILE=/var/run/kdm.pid
 			;;
 		kdm-*)
 			EXE="/usr/kde/${MY_XDM#kdm-}/bin/kdm"
-			PIDFILE=
+			PIDFILE=/var/run/kdm.pid
 			;;
 		entrance*)
 			EXE=/usr/sbin/entranced
