@@ -29,12 +29,13 @@ PDEPEND="!minimal? (
 	)
 "
 
-src_prepare() {
-	x-modular_patch_source
+PATCHES=(
+"${FILESDIR}/0001-make-XINITDIR-configurable-at-build-time-default-is-.patch"
+"${FILESDIR}/0002-Gentoo-specific-customizations.patch"
+)
 
-	sed -i -e "s:^XINITDIR.*:XINITDIR = \$(sysconfdir)/X11/xinit:g" "${S}/Makefile.am"
-
-	x-modular_reconf_source
+pkg_setup() {
+	CONFIGURE_OPTIONS="--with-xinitdir=/etc/X11/xinit"
 }
 
 src_install() {
@@ -44,7 +45,6 @@ src_install() {
 	exeinto /etc/X11/Sessions
 	doexe "${FILESDIR}"/Xsession || die
 	exeinto /etc/X11/xinit
-	doexe "${FILESDIR}"/xinitrc || die
 	doexe "${FILESDIR}"/xserverrc || die
 	newinitd "${FILESDIR}"/xdm.initd-3 xdm
 	newinitd "${FILESDIR}"/xdm-setup.initd-1 xdm-setup
