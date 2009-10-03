@@ -5,7 +5,6 @@
 EAPI="2"
 
 # Must be before x-modular eclass is inherited
-# This is enabled due to modified Makefile.am from the patches
 SNAPSHOT="yes"
 
 inherit x-modular pam
@@ -13,16 +12,12 @@ inherit x-modular pam
 DESCRIPTION="X Window System initializer"
 
 LICENSE="${LICENSE} GPL-2"
-KEYWORDS="alpha amd64 ~arm hppa ~ia64 ~mips ppc ppc64 ~s390 ~sh ~sparc x86 ~x86-fbsd"
-IUSE="consolekit minimal pam"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
+IUSE="minimal pam"
 
 RDEPEND="
 	x11-apps/xauth
 	x11-libs/libX11
-	consolekit? (
-		sys-auth/consolekit
-		sys-apps/dbus[X]
-	)
 "
 DEPEND="${RDEPEND}"
 PDEPEND="!minimal? (
@@ -33,14 +28,6 @@ PDEPEND="!minimal? (
 		x11-wm/twm
 	)
 "
-
-PATCHES=( "${FILESDIR}"/nolisten-tcp-and-black-background.patch
-	"${FILESDIR}"/gentoo-startx-customization-1.0.8.patch
-	"${FILESDIR}"/xinit-1.0.4-console-kit.patch )
-
-pkg_setup() {
-	CONFIGURE_OPTIONS="$(use_with consolekit)"
-}
 
 src_prepare() {
 	x-modular_patch_source
