@@ -119,9 +119,11 @@ EPATCH_FORCE="yes"
 EPATCH_SUFFIX="patch"
 
 # These have been sent upstream
-#UPSTREAMED_PATCHES=(
-#	"${WORKDIR}/patches/"
-#	)
+UPSTREAMED_PATCHES=(
+	#"${WORKDIR}/patches/"
+	# Merged for 1.7.1
+	"${FILESDIR}/0001-xkb-check-permissions-on-XKM_OUTPUT_DIR.patch"
+	)
 
 PATCHES=(
 	"${UPSTREAMED_PATCHES[@]}"
