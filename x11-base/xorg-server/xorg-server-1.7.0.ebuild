@@ -1,6 +1,6 @@
-# Copyright 1999-2007 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-base/xorg-server/xorg-server-1.3.0.0.ebuild,v 1.9 2007/06/04 23:17:40 dberkholz Exp $
+# $Header: $
 
 EAPI="2"
 
@@ -82,7 +82,7 @@ RDEPEND="hal? ( sys-apps/hal )
 #
 
 DEPEND="${RDEPEND}
-	!net-dialup/dtrace
+	!!net-dialup/dtrace
 	sys-devel/flex
 	>=x11-proto/randrproto-1.2.99.3
 	>=x11-proto/renderproto-0.11
@@ -115,21 +115,15 @@ DEPEND="${RDEPEND}
 
 PDEPEND="xorg? ( >=x11-base/xorg-drivers-$(get_version_component_range 1-2) )"
 
-LICENSE="${LICENSE} MIT"
-
 EPATCH_FORCE="yes"
 EPATCH_SUFFIX="patch"
 
-# Local customizations, unsuitable for upstream
-GENTOO_PATCHES=(
-	"${FILESDIR}/1.4-fpic-libxf86config.patch"
-	)
-
 # These have been sent upstream
-UPSTREAMED_PATCHES=()
+#UPSTREAMED_PATCHES=(
+#	"${WORKDIR}/patches/"
+#	)
 
 PATCHES=(
-	"${GENTOO_PATCHES[@]}"
 	"${UPSTREAMED_PATCHES[@]}"
 	)
 
@@ -193,15 +187,8 @@ src_install() {
 
 	server_based_install
 
-	# Install video mode files for system-config-display
-	insinto /usr/share/xorg
-	doins hw/xfree86/common/{extra,vesa}modes \
-		|| die "couldn't install extra modes"
-
-	# Bug #151421 - this file is not built with USE="minimal"
-	# Bug #151670 - this file is also not build if USE="-xorg"
 	if ! use minimal &&	use xorg; then
-		# Install xorg.conf.example
+		# Install xorg.conf.example (see bugs #151421 and #151670)
 		insinto /etc/X11
 		doins hw/xfree86/xorg.conf.example \
 			|| die "couldn't install xorg.conf.example"
@@ -211,14 +198,8 @@ src_install() {
 pkg_postinst() {
 	switch_opengl_implem
 
-	# Bug #135544
-	ewarn "Users of reduced blanking now need:"
-	ewarn "   Option \"ReducedBlanking\""
-	ewarn "In the relevant Monitor section(s)."
-	ewarn "Make sure your reduced blanking modelines are safe!"
-
 	echo
-	ewarn "You must rebuild all drivers if upgrading from xorg-server 1.5"
+	ewarn "You must rebuild all drivers if upgrading from xorg-server 1.6"
 	ewarn "or earlier, because the ABI changed. If you cannot start X because"
 	ewarn "of module version mismatch errors, this is your problem."
 
