@@ -5,7 +5,7 @@ inherit git autotools
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xkeyboard-config"
 DESCRIPTION="X keyboard configuration database"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64  ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
 HOMEPAGE="http://www.freedesktop.org/wiki/Software/XKeyboardConfig"
 SRC_URI=""
 
