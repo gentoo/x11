@@ -1,5 +1,5 @@
 # Beta
-=x11-misc/xinput-1.4.99*
+=x11-apps/xinput-1.4.99*
 =x11-libs/libXtst-1.0.99*
 =x11-libs/libXxf86vm-1.0.99*
 =x11-drivers/xf86-input-evdev-2.2.99*
