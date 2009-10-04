@@ -13,7 +13,7 @@ DESCRIPTION="X Window System initializer"
 
 LICENSE="${LICENSE} GPL-2"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
-IUSE="minimal pam"
+IUSE="+minimal pam"
 
 RDEPEND="
 	x11-apps/xauth
@@ -30,8 +30,8 @@ PDEPEND="!minimal? (
 "
 
 PATCHES=(
-"${FILESDIR}/0001-make-XINITDIR-configurable-at-build-time-default-is-.patch"
-"${FILESDIR}/0002-Gentoo-specific-customizations.patch"
+	"${FILESDIR}/0001-make-XINITDIR-configurable-at-build-time-default-is-.patch"
+	"${FILESDIR}/0002-Gentoo-specific-customizations.patch"
 )
 
 pkg_setup() {
@@ -46,9 +46,9 @@ src_install() {
 	doexe "${FILESDIR}"/Xsession || die
 	exeinto /etc/X11/xinit
 	doexe "${FILESDIR}"/xserverrc || die
-	newinitd "${FILESDIR}"/xdm.initd-3 xdm
-	newinitd "${FILESDIR}"/xdm-setup.initd-1 xdm-setup
-	newconfd "${FILESDIR}"/xdm.confd-1 xdm
+	newinitd "${FILESDIR}"/xdm.initd-4 xdm || die
+	newinitd "${FILESDIR}"/xdm-setup.initd-1 xdm-setup || die
+	newconfd "${FILESDIR}"/xdm.confd-2 xdm || die
 	newpamd "${FILESDIR}"/xserver.pamd xserver
 }
 
