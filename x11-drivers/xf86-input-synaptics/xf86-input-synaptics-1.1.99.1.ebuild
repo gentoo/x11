@@ -6,7 +6,7 @@ inherit toolchain-funcs eutils x-modular
 
 DESCRIPTION="Driver for Synaptics touchpads"
 HOMEPAGE="http://cgit.freedesktop.org/xorg/driver/xf86-input-synaptics/"
-KEYWORDS="amd64 ~ppc ~ppc64 ~x86"
+KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
 LICENSE="MIT"
 IUSE="hal"
 RDEPEND="
