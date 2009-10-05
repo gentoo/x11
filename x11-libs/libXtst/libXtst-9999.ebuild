@@ -9,11 +9,9 @@ DESCRIPTION="X.Org Xtst library"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE=""
 
-RDEPEND="x11-libs/libX11
+RDEPEND=">=x11-libs/libX11-1.3
 	x11-proto/recordproto
-	x11-libs/libXext"
+	>=x11-libs/libXext-1.1"
 DEPEND="${RDEPEND}
-	~app-text/docbook-xml-dtd-4.1.2
-	app-text/xmlto
-	>=x11-proto/xextproto-7.0.99.3
-	x11-proto/inputproto"
+	>=x11-proto/xextproto-7.1.1
+	>=x11-proto/inputproto-2.0"
