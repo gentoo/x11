@@ -24,7 +24,7 @@ SLOT="0"
 
 RDEPEND="x11-apps/xkbcomp"
 DEPEND="${RDEPEND}
-	sys-devel/gettext
+	>=dev-util/intltool-0.30
 	dev-perl/XML-Parser"
 
 src_prepare() {
