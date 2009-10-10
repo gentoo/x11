@@ -12,15 +12,13 @@ IUSE="hal"
 RDEPEND="
 	>=x11-base/xorg-server-1.7.0
 	>=x11-libs/libXext-1.1
-	>=x11-libs/libXtst-1.0.99.2
+	>=x11-libs/libXtst-1.1
 	hal? ( sys-apps/hal )"
 DEPEND="${RDEPEND}
 	!x11-drivers/synaptics
 	>=x11-proto/inputproto-2.0
 	>=sys-apps/sed-4"
 
-# Needs to be rebuild when migrating to xorg-server 1.6 to enable properties
-# support
 src_install() {
 	DOCS="INSTALL NEWS TODO README"
 	x-modular_src_install
