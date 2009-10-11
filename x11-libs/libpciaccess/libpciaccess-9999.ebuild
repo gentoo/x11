@@ -2,9 +2,6 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-# Must be before x-modular eclass is inherited
-#SNAPSHOT="yes"
-
 inherit x-modular
 
 DESCRIPTION="Library providing generic access to the PCI bus and devices"

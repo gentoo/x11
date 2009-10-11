@@ -2,9 +2,6 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-# Must be before x-modular eclass is inherited
-#SNAPSHOT="yes"
-
 inherit x-modular toolchain-funcs versionator
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/pixman"

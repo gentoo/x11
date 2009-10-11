@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-libs/glitz/glitz-0.5.6.ebuild,v 1.9 2006/12/01 18:44:45 gustavoz Exp $
+# $Header: $
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/${PN}"
 EGIT_BOOTSTRAP="eautoreconf"

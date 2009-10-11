@@ -1,8 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-
-# Must be before x-modular eclass is inherited
-#SNAPSHOT="yes"
+# $Header: $
 
 EAPI="1"
 
@@ -14,6 +12,7 @@ inherit x-modular toolchain-funcs flag-o-matic
 export WANT_AUTOMAKE="1.11"
 
 DESCRIPTION="X.Org X11 library"
+
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE="ipv6 +xcb"
 

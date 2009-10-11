@@ -4,10 +4,6 @@
 
 EAPI="2"
 
-# Must be before x-modular eclass is inherited
-SNAPSHOT="yes"
-GIT_ECLASS="git"
-
 inherit x-modular
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/nouveau/${PN}"
@@ -16,7 +12,6 @@ DESCRIPTION="Nouveau video driver"
 HOMEPAGE="http://nouveau.freedesktop.org/"
 SRC_URI=""
 
-LICENSE="MIT"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
