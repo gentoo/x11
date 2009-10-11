@@ -17,12 +17,10 @@ RDEPEND="x11-libs/xtrans
 DEPEND="${RDEPEND}
 	x11-proto/fontcacheproto"
 
-CONFIGURE_OPTIONS="$(use_enable ipv6)
-	--with-encodingsdir=/usr/share/fonts/encodings"
-
 pkg_setup() {
-	# No such function yet
-	# x-modular_pkg_setup
+	CONFIGURE_OPTIONS="$(use_enable ipv6)
+		--with-bzip2
+		--with-encodingsdir=/usr/share/fonts/encodings"
 
 	# (#125465) Broken with Bdirect support
 	filter-flags -Wl,-Bdirect
