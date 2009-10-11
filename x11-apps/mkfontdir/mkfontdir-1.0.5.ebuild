@@ -9,7 +9,7 @@ inherit x-modular
 
 DESCRIPTION="create an index of X font files in a directory"
 
-KEYWORDS="alpha amd64 arm hppa ~ia64 ~m68k ~mips ppc ppc64 ~s390 ~sh sparc x86 ~x86-fbsd"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE=""
 RDEPEND="x11-apps/mkfontscale"
 DEPEND="${RDEPEND}"
