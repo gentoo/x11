@@ -14,13 +14,12 @@ RDEPEND="x11-libs/xtrans
 	x11-proto/xproto
 	x11-proto/fontsproto
 	>=media-libs/freetype-2"
-DEPEND="${RDEPEND}
-	x11-proto/fontcacheproto"
+DEPEND="${RDEPEND}"
 
 pkg_setup() {
 	CONFIGURE_OPTIONS="$(use_enable ipv6)
 		--with-bzip2
-		--with-encodingsdir=/usr/share/fonts/encodings"
+		--disable-devel-docs"
 
 	# (#125465) Broken with Bdirect support
 	filter-flags -Wl,-Bdirect
