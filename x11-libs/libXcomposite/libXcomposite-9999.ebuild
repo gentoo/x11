@@ -7,7 +7,7 @@ inherit x-modular
 DESCRIPTION="X.Org Xcomposite library"
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
-IUSE=""
+IUSE="doc"
 
 RDEPEND="x11-libs/libX11
 	x11-libs/libXfixes
@@ -15,4 +15,4 @@ RDEPEND="x11-libs/libX11
 	>=x11-proto/compositeproto-0.4
 	x11-proto/xproto"
 DEPEND="${RDEPEND}
-	app-text/xmlto"
+	doc? ( app-text/xmlto )"
