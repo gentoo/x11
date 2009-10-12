@@ -8,6 +8,7 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/xorg/font/util"
 DESCRIPTION="X.Org font utilities"
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
+IUSE=""
 
 RDEPEND=""
 DEPEND="${RDEPEND}"
