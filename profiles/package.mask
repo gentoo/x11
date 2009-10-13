@@ -10,6 +10,7 @@
 =media-libs/fontconfig-9999
 =media-libs/glitz-9999
 =media-libs/mesa-9999
+=x11-apps/xev-9999
 =x11-apps/xinput-9999
 =x11-apps/xrandr-9999
 =x11-apps/xwininfo-9999
