@@ -13,4 +13,5 @@ RDEPEND="x11-libs/libX11
 	x11-libs/libXt
 	x11-libs/libXext"
 DEPEND="${RDEPEND}
+	sys-devel/gettext
 	x11-proto/xproto"
