@@ -22,7 +22,7 @@
 =x11-drivers/xf86-input-mouse-9999
 =x11-drivers/xf86-input-synaptics-9999
 =x11-drivers/xf86-video-ati-9999
-=x11-drivers/xf86-video-intel-9999*
+=x11-drivers/xf86-video-intel-9999
 =x11-libs/cairo-9999
 =x11-libs/libdmx-9999
 =x11-libs/libdrm-9999
@@ -109,5 +109,4 @@
 =x11-proto/xf86vidmodeproto-9999
 =x11-proto/xineramaproto-9999
 =x11-proto/xproto-9999
-=x11-proto/xproxymanagementprotocol-9999
 =x11-wm/compiz-9999
