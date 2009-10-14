@@ -25,7 +25,6 @@
 =x11-drivers/xf86-input-keyboard-9999
 =x11-drivers/xf86-input-mouse-9999
 =x11-drivers/xf86-video-ati-9999
-=x11-drivers/xf86-video-ati-9999_pre12
 =x11-drivers/xf86-video-intel-9999*
 =x11-libs/cairo-9999
 =x11-libs/libX11-9999
