@@ -30,7 +30,6 @@ PDEPEND="!minimal? (
 "
 
 PATCHES=(
-	"${FILESDIR}/0001-make-XINITDIR-configurable-at-build-time-default-is-.patch"
 	"${FILESDIR}/0002-Gentoo-specific-customizations.patch"
 )
 
