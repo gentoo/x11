@@ -13,8 +13,8 @@ IUSE="ipv6 +xcb"
 
 RDEPEND=">=x11-libs/xtrans-1.2.3
 	x11-proto/kbproto
-	>=x11-proto/xproto-9999
-	xcb? ( >=x11-libs/libxcb-9999 )
+	>=x11-proto/xproto-7.0.15
+	xcb? ( >=x11-libs/libxcb-1.2 )
 	!xcb? (
 		x11-libs/libXau
 		x11-libs/libXdmcp
