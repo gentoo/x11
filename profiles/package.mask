@@ -1,5 +1,4 @@
 # Beta
-=x11-drivers/xf86-input-evdev-2.2.99*
 =x11-drivers/xf86-input-joystick-1.4.99*
 
 # Don't let people install these accidentally
