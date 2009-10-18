@@ -26,8 +26,7 @@ DEPEND="${RDEPEND}
 		x11-proto/xcmiscproto
 	)
 	x11-proto/inputproto
-	x11-proto/xextproto
-	>=x11-misc/util-macros-1.3"
+	x11-proto/xextproto"
 
 pkg_setup() {
 	CONFIGURE_OPTIONS="$(use_enable ipv6)
