@@ -5,8 +5,10 @@
 inherit x-modular
 
 DESCRIPTION="query configuration information of DRI drivers"
+
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE=""
+
 RDEPEND="x11-libs/libX11
 	virtual/opengl"
 DEPEND="${RDEPEND}
