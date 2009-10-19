@@ -6,14 +6,16 @@ inherit x-modular
 
 DESCRIPTION="X.Org Xaw library"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
-IUSE=""
+IUSE="doc"
 
 RDEPEND="x11-libs/libX11
 	x11-libs/libXt
 	x11-libs/libXmu
 	x11-libs/libXpm
 	x11-proto/xproto"
-DEPEND="${RDEPEND}"
+DEPEND="${RDEPEND}
+	doc? ( sys-apps/groff )
+	"
 
 pkg_setup() {
 	# No such function yet
@@ -23,4 +25,9 @@ pkg_setup() {
 	filter-flags -Wl,-Bdirect
 	filter-ldflags -Bdirect
 	filter-ldflags -Wl,-Bdirect
+}
+
+src_configure() {
+	CONFIGURE_OPTIONS="$(use_enable doc docs)"
+	x-modular_src_configure
 }
