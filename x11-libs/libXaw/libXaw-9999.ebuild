@@ -16,8 +16,7 @@ RDEPEND="x11-libs/libX11
 	x11-libs/libXpm
 	x11-proto/xproto"
 DEPEND="${RDEPEND}
-	doc? ( sys-apps/groff )
-	"
+	doc? ( sys-apps/groff )"
 
 pkg_setup() {
 	# No such function yet
@@ -27,9 +26,6 @@ pkg_setup() {
 	filter-flags -Wl,-Bdirect
 	filter-ldflags -Bdirect
 	filter-ldflags -Wl,-Bdirect
-}
 
-src_configure() {
 	CONFIGURE_OPTIONS="$(use_enable doc docs)"
-	x-modular_src_configure
 }
