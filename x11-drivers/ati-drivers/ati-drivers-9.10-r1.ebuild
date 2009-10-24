@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-drivers/ati-drivers/ati-drivers-9.9-r2.ebuild,v 1.5 2009/10/22 10:49:06 scarabeus Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-drivers/ati-drivers/ati-drivers-9.10.ebuild,v 1.1 2009/10/24 15:09:42 scarabeus Exp $
 
 EAPI="2"
 
@@ -20,17 +20,17 @@ fi
 IUSE="debug +modules multilib"
 
 LICENSE="AMD GPL-2 QPL-1.0 as-is"
-KEYWORDS="amd64 x86"
+KEYWORDS="~amd64 ~x86"
 SLOT="1"
 
 RDEPEND="
+	!>=media-libs/mesa-7.6
 	!x11-drivers/ati-drivers:0
 	!x11-apps/ati-drivers-extra
-	>=app-admin/eselect-opengl-1.0.8
-	>=media-libs/mesa-7.6
+	>=app-admin/eselect-opengl-1.0.7
 	sys-power/acpid
 	x11-apps/xauth
-	>=x11-base/xorg-server-1.6.3.901-r2
+	>=x11-base/xorg-server-1.5.3-r7
 	x11-libs/libXinerama
 	x11-libs/libXrandr
 	multilib? ( app-emulation/emul-linux-x86-xlibs )
@@ -201,7 +201,7 @@ pkg_setup() {
 	elog "r600 chipset and newer."
 	elog "This represent the ATI Radeon HD series at this moment."
 	elog
-	elog "If your card is older one, usage of ${CATEGORY}/xf86-video-ati"
+	elog "If your card is older then usage of ${CATEGORY}/xf86-video-ati"
 	elog "as replacement is highly recommended. Rather than staying with"
 	elog "old versions of this driver."
 	elog "For migration informations please reffer to:"
@@ -233,9 +233,6 @@ src_prepare() {
 				|| die "Failed to enable debug output."
 		fi
 	fi
-
-	# Kernel patches
-	kernel_is ge 2 6 31 && epatch "${FILESDIR}"/kernel/2.6.31-fglrx_find_task_by_vpid.patch
 
 	# These are the userspace utilities that we also have source for.
 	# We rebuild these later.
