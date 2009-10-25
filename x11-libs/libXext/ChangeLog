@@ -1,7 +1,0 @@
-# ChangeLog for x11-libs/libXext
-# Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
-# $Header: $
-
-  25 Oct 2009; Tomáš Chvátal <scarabeus@gentoo.org> libXext-9999.ebuild:
-  Sync with tree.
-
