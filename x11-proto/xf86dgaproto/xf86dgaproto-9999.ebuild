@@ -9,5 +9,5 @@ DESCRIPTION="X.Org XF86DGA protocol headers"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE=""
 
-RDEPEND=""
+RDEPEND="!<x11-libs/libXxf86dga-1.0.99.1"
 DEPEND="${RDEPEND}"
