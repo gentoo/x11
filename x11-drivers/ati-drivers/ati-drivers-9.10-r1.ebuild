@@ -24,6 +24,7 @@ KEYWORDS="~amd64 ~x86"
 SLOT="1"
 
 RDEPEND="
+	!>=x11-base/xorg-server-1.7.0
 	>=media-libs/mesa-7.6
 	!x11-drivers/ati-drivers:0
 	!x11-apps/ati-drivers-extra
