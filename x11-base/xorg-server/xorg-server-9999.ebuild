@@ -39,7 +39,7 @@ RDEPEND="hal? ( sys-apps/hal )
 	>=app-admin/eselect-opengl-1.0.8
 	dmx? (
 		x11-libs/libXt
-		>=x11-libs/libdmx-1.0.2
+		>=x11-libs/libdmx-1.0.99.1
 		>=x11-libs/libX11-1.1.5
 		>=x11-libs/libXaw-1.0.4
 		>=x11-libs/libXext-1.0.5
@@ -106,7 +106,7 @@ DEPEND="${RDEPEND}
 	>=x11-proto/bigreqsproto-1.1.0
 	>=x11-proto/xcmiscproto-1.2.0
 	>=x11-proto/glproto-1.4.9
-	dmx? ( >=x11-proto/dmxproto-2.2.2 )
+	dmx? ( >=x11-proto/dmxproto-2.2.99.1 )
 	!minimal? (
 		>=x11-proto/xf86driproto-2.1.0
 		>=x11-proto/dri2proto-2.1
