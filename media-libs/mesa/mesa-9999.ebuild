@@ -59,7 +59,7 @@ IUSE="${IUSE_VIDEO_CARDS}
 # keep blocks in rdepend for binpkg
 RDEPEND="!<=x11-base/xorg-x11-6.9
 	!<=x11-proto/xf86driproto-2.0.3
-	app-admin/eselect-opengl
+	>=app-admin/eselect-opengl-1.0.9
 	dev-libs/expat
 	>=x11-libs/libdrm-9999
 	x11-libs/libICE
@@ -221,14 +221,6 @@ pkg_postinst() {
 	# Switch to the xorg implementation.
 	echo
 	eselect opengl set --use-old ${OPENGL_DIR}
-
-	# info about removal of .la file
-	elog "Mesa no-longer ships the libGL.la file."
-	elog "This file was broken by design and thus removed."
-	elog "For fixing all sort of configure issues please run:"
-	elog "	lafilefixer --justfixit"
-	elog "or run revdep-rebuild."
-	elog "(lafilefixer package can be found as dev-util/lafilefixer)"
 }
 
 # $1 - VIDEO_CARDS flag
