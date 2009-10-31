@@ -28,10 +28,9 @@ DEPEND="${RDEPEND}
 	x11-proto/xproto"
 
 pkg_postinst() {
-	if ! has_version x11-base/nouveau-drm \
-		 || has_version  x11-base/x11-drm[video_cards_nouveau]; then
+	if ! has_version x11-base/nouveau-drm; then
 		ewarn "Nouveau DRM not detected. If you want any kind of"
 		ewarn "acceleration with nouveau, emerge nouveau-drm or"
-		ewarn "x11-drm with VIDEO_CARDS=\"nouveau\""
+		ewarn "install the nouveau/linux-2.6 kernel."
 	fi
 }
