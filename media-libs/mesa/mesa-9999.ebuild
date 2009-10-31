@@ -158,7 +158,7 @@ src_configure() {
 		elog "Radeon: implementation up to the r500."
 		echo
 		myconf="${myconf}
-			--with-state-trackers=glx,dri,egl
+			--with-state-trackers=glx,dri,egl,xorg
 			$(use_enable video_cards_nouveau gallium-nouveau)
 			$(use_enable video_cards_intel gallium-intel)"
 		if ! use video_cards_radeon && ! use video_cards_radeonhd; then
