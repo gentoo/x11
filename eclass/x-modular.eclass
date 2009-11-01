@@ -120,6 +120,8 @@ if [[ -n "${SNAPSHOT}" ]]; then
 fi
 
 if [[ -n "${FONT}" ]]; then
+	DEPEND="${DEPEND}
+		media-fonts/font-util-1.1.1-r1"
 	RDEPEND="${RDEPEND}
 		media-fonts/encodings
 		x11-apps/mkfontscale
