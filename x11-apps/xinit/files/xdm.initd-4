@@ -46,8 +46,10 @@ depend() {
 	# (#139824) Start after ypbind and autofs for network authentication
 	# (#145219 #180163) Could use lirc mouse as input device
 	# (#70689 comment #92) Start after consolefont to avoid display corruption
+	# (#291269) Start after quota, since some dm need readable home
 	after bootmisc consolefont modules netmount
 	after readahead-list ypbind autofs openvpn gpm lircmd
+	after quota
 	before alsasound
 
 	# Start before X
