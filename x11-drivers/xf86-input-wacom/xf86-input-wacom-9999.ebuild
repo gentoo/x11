@@ -7,7 +7,8 @@ inherit x-modular
 DESCRIPTION="Driver for Wacom tablets and drawing devices"
 LICENSE="GPL-2"
 EGIT_REPO_URI="git://anongit.freedesktop.org/~whot/xf86-input-wacom"
-SRC_URI=""
+[[ ${PV} != 9999* ]] && \
+	SRC_URI="http://people.freedesktop.org/~whot/${PN}/${P}.tar.bz2"
 
 KEYWORDS="~amd64 ~x86"
 IUSE=""
