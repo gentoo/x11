@@ -37,7 +37,48 @@
 # 04 March 2002
 
 
-# Start X Font Server before X
+hald_depend() {
+	if [ "${NEEDS_HALD}" = "yes" ]; then
+		need hald
+	elif [ "${NEEDS_HALD}" = "no" ]; then
+		use hald
+	else
+		local found=0
+		# search paths according to xorg.conf man page
+		for xorgconf in "${XORGCONFIG}" "/etc/X11/${XORGCONFIG}" \
+				/etc/X11/xorg.conf{-4,} /etc/xorg.conf \
+				"/usr/etc/X11/xorg.conf.$(hostname)" \
+				/usr/etc/X11/xorg.conf{-4,} \
+				"/usr/lib/X11/xorg.conf.$(hostname)" \
+				/usr/lib/X11/xorg.conf{-4,}
+		do
+			if [ -f "${xorgconf}" ]; then
+				# we found the config file
+				found=1
+
+				# check if AutoAddDevices has been disabled
+				if grep -Eiq '^[[:blank:]]*Option[[:blank:]]+"AutoAddDevices"[[:blank:]]+"(0|off|false|no)"' "${xorgconf}"; then
+					# there might be another ServerLayout section which requires hald
+					use hald
+				else
+					need hald
+				fi
+
+				# baselayout-2 only
+				[ -f /lib/librc.so -o -f /etc/init.d/sysfs -o -f /libexec/rc/version ] \
+					&& config "${xorgconf}"
+
+				# process only the first existing file in the search list
+				break
+			fi
+		done
+
+		# if no configuration file was found, we must depend
+		# on hald for automatic discovery of input devices
+		[ ${found} -eq 0 ] && need hald
+	fi
+}
+
 depend() {
 	need localmount xdm-setup
 
@@ -53,7 +94,9 @@ depend() {
 	before alsasound
 
 	# Start before X
-	use acpid consolekit hald xfs
+	use acpid consolekit xfs
+
+	hald_depend
 }
 
 setup_dm() {
@@ -115,7 +158,7 @@ setup_dm() {
 # Check to see if something is defined on our VT
 vtstatic() {
 	if [ -e /etc/inittab ] ; then
-		grep -Eq "^[^#]+.*\<tty$1\>" /etc/inittab 
+		grep -Eq "^[^#]+.*\<tty$1\>" /etc/inittab
 	elif [ -e /etc/ttys ] ; then
 		grep -q "^ttyv$(($1 - 1))" /etc/ttys
 	else
@@ -126,15 +169,16 @@ vtstatic() {
 start() {
 	local EXE= NAME= PIDFILE=
 	setup_dm
-	
+
 	if [ -f /etc/init.d/.noxdm -o -f /tmp/.noxdm ] ; then
 		einfo "Skipping ${EXE}, /etc/init.d/.noxdm or /tmp/.noxdm found"
 		rm /etc/init.d/.noxdm /tmp/.noxdm
 		return 0
 	fi
-	
+
 	ebegin "Setting up ${EXE##*/}"
-	#save the prefered DM
+
+	# save the prefered DM
 	save_options "service" "${EXE}"
 	save_options "name"    "${NAME}"
 	save_options "pidfile" "${PIDFILE}"
@@ -151,7 +195,7 @@ start() {
 			fi
 		fi
 	fi
-	
+
 	/etc/X11/startDM.sh
 	eend 0
 }
@@ -191,11 +235,11 @@ stop() {
 		if type chvt >/dev/null 2>/dev/null ; then
 			chvt "${curvt}"
 		else
-			vidcontrol -s "$((${curvt} + 1))"	
+			vidcontrol -s "$((${curvt} + 1))"
 		fi
 	fi
+
 	eend ${retval} "Error stopping ${myservice}"
-	
 	return ${retval}
 }
 
