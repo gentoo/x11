@@ -30,7 +30,7 @@ PDEPEND="!minimal? (
 "
 
 PATCHES=(
-	"${FILESDIR}/0002-Gentoo-specific-customizations.patch"
+	"${FILESDIR}/0001-Gentoo-specific-customizations.patch"
 )
 
 pkg_setup() {
