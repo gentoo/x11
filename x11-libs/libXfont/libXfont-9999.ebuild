@@ -13,7 +13,8 @@ RDEPEND="x11-libs/xtrans
 	x11-libs/libfontenc
 	x11-proto/xproto
 	x11-proto/fontsproto
-	>=media-libs/freetype-2"
+	>=media-libs/freetype-2
+	app-arch/bzip2"
 DEPEND="${RDEPEND}"
 
 pkg_setup() {
