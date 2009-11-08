@@ -65,8 +65,7 @@ hald_depend() {
 				fi
 
 				# baselayout-2 only
-				[ -f /lib/librc.so -o -f /etc/init.d/sysfs -o -f /libexec/rc/version ] \
-					&& config "${xorgconf}"
+				[ ! -n "${RC_UNAME}" ] && config "${xorgconf}"
 
 				# process only the first existing file in the search list
 				break
@@ -170,9 +169,9 @@ start() {
 	local EXE= NAME= PIDFILE=
 	setup_dm
 
-	if [ -f /etc/init.d/.noxdm -o -f /tmp/.noxdm ] ; then
-		einfo "Skipping ${EXE}, /etc/init.d/.noxdm or /tmp/.noxdm found"
-		rm /etc/init.d/.noxdm /tmp/.noxdm
+	if [ -f /etc/.noxdm ] ; then
+		einfo "Skipping ${EXE}, /etc/.noxdm found"
+		rm /etc/.noxdm
 		return 0
 	fi
 

@@ -9,6 +9,6 @@ depend() {
 
 start() {
 	if get_bootparam "nox" ; then
-		touch /tmp/.noxdm
+		touch /etc/.noxdm
 	fi
 }
