@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit x-modular flag-o-matic
+inherit x-modular flag-o-matic toolchain-funcs
 
 DESCRIPTION="X.Org Xt library"
 
@@ -23,4 +23,8 @@ pkg_setup() {
 	filter-flags -Wl,-Bdirect
 	filter-ldflags -Bdirect
 	filter-ldflags -Wl,-Bdirect
+
+	if tc-is-cross-compiler; then
+		export CFLAGS_FOR_BUILD="${BUILD_CFLAGS}"
+	fi
 }
