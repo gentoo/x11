@@ -11,5 +11,4 @@ IUSE=""
 
 RDEPEND=""
 DEPEND="${RDEPEND}
-	media-libs/fontconfig
-	x11-apps/ttmkfdir"
+	media-libs/fontconfig"
