@@ -83,7 +83,7 @@ DEPEND="${RDEPEND}
 	x11-proto/xextproto
 	x11-proto/xf86driproto
 	x11-proto/xf86vidmodeproto
-	gallium? ( <xextproto-7.0.99 )
+	gallium? ( <x11-proto/xextproto-7.0.99 )
 "
 
 S="${WORKDIR}/${MY_P}"
