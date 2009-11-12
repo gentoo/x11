@@ -71,6 +71,9 @@ RDEPEND="!<=x11-base/xorg-x11-6.9
 	x11-libs/libXxf86vm
 	motif? ( x11-libs/openmotif )
 "
+
+# Gallium needs older xextproto due to bug #292690 (fixed in git master already)
+
 DEPEND="${RDEPEND}
 	dev-util/pkgconfig
 	x11-misc/makedepend
@@ -80,6 +83,7 @@ DEPEND="${RDEPEND}
 	x11-proto/xextproto
 	x11-proto/xf86driproto
 	x11-proto/xf86vidmodeproto
+	gallium? ( <xextproto-7.0.99 )
 "
 
 S="${WORKDIR}/${MY_P}"
