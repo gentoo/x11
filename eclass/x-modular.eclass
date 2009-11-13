@@ -115,6 +115,13 @@ if [[ -n "${SNAPSHOT}" ]]; then
 	DEPEND="${DEPEND}
 		>=sys-devel/libtool-1.5
 		>=sys-devel/m4-1.4"
+	# util-macros and font-util are needed for autoreconf
+	if [[ "${PN/util-macros}" = "${PN}" ]]; then
+		DEPEND="${DEPEND} >=x11-misc/util-macros-1.3.0"
+		if [[ "${PN/font-util}" = "${PN}" ]]; then
+			DEPEND="${DEPEND} >=media-fonts/font-util-1.1.1-r1"
+		fi
+	fi
 	WANT_AUTOCONF="latest"
 	WANT_AUTOMAKE="latest"
 fi
@@ -184,12 +191,6 @@ fi
 
 DEPEND="${DEPEND}
 	>=dev-util/pkgconfig-0.18"
-
-if [[ "${PN/util-macros}" = "${PN}" ]]; then
-	DEPEND="${DEPEND}
-		>=x11-misc/util-macros-0.99.2
-		>=sys-devel/binutils-2.16.1-r3"
-fi
 
 RDEPEND="${RDEPEND}
 	!<=x11-base/xorg-x11-6.9"
