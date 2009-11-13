@@ -59,7 +59,7 @@ IUSE="${IUSE_VIDEO_CARDS}
 # keep blocks in rdepend for binpkg
 RDEPEND="!<=x11-base/xorg-x11-6.9
 	!<=x11-proto/xf86driproto-2.0.3
-	>=app-admin/eselect-opengl-1.0.9
+	>=app-admin/eselect-opengl-1.1.1-r1
 	dev-libs/expat
 	>=x11-libs/libdrm-9999
 	x11-libs/libICE
