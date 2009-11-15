@@ -39,7 +39,6 @@ IUSE_VIDEO_CARDS="
 	video_cards_i740
 	video_cards_intel
 	video_cards_impact
-	video_cards_imstt
 	video_cards_mach64
 	video_cards_mga
 	video_cards_neomagic
@@ -67,7 +66,6 @@ IUSE_VIDEO_CARDS="
 	video_cards_trident
 	video_cards_tseng
 	video_cards_v4l
-	video_cards_vermilion
 	video_cards_vesa
 	video_cards_via
 	video_cards_virtualbox
