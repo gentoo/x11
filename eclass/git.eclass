@@ -120,14 +120,14 @@ else
 	EGIT_BRANCH="${X}"
 fi
 
-# @ECLASS-VARIABLE: EGIT_TREE
+# @ECLASS-VARIABLE: EGIT_COMMIT
 # @DESCRIPTION:
-# git eclass can checkout any tree (commit).
-eval X="\$${PN//[-+]/_}_LIVE_TREE"
+# git eclass can checkout any commit.
+eval X="\$${PN//[-+]/_}_LIVE_COMMIT"
 if [[ ${X} = "" ]]; then
-	: ${EGIT_TREE:=${EGIT_BRANCH}}
+	: ${EGIT_COMMIT:=${EGIT_BRANCH}}
 else
-	EGIT_TREE="${X}"
+	EGIT_COMMIT="${X}"
 fi
 
 # @ECLASS-VARIABLE: EGIT_REPACK
@@ -171,8 +171,13 @@ git_fetch() {
 	# which outputs into really smaller data transfers.
 	# Sadly we can do shallow copy for now because quite a few packages need .git
 	# folder.
-	#[[ ${EGIT_TREE} = ${EGIT_BRANCH} ]] && \
+	#[[ ${EGIT_COMMIT} = ${EGIT_BRANCH} ]] && \
 	#	EGIT_FETCH_CMD="${EGIT_FETCH_CMD} --depth 1"
+	if [[ ! -z ${EGIT_TREE} ]] ; then
+		EGIT_COMMIT=${EGIT_TREE}
+		ewarn "QA: usage of deprecated EGIT_TREE variable detected."
+		ewarn "QA: use EGIT_COMMIT variable instead."
+	fi
 
 	# EGIT_REPO_URI is empty.
 	[[ -z ${EGIT_REPO_URI} ]] && die "${EGIT}: EGIT_REPO_URI is empty."
@@ -292,7 +297,7 @@ git_fetch() {
 	# export the git version
 	export EGIT_VERSION="${cursha1}"
 
-	[[ ${EGIT_TREE} != ${EGIT_BRANCH} ]] && elog "   tree:			${EGIT_TREE}"
+	[[ ${EGIT_COMMIT} != ${EGIT_BRANCH} ]] && elog "   tree:			${EGIT_COMMIT}"
 	${elogcmd} "   branch: 			${EGIT_BRANCH}"
 	${elogcmd} "   storage directory: 	\"${EGIT_STORE_DIR}/${EGIT_CLONE_DIR}\""
 
@@ -304,9 +309,9 @@ git_fetch() {
 	# set correct branch and the tree ebuild specified
 	pushd "${S}" > /dev/null
 	local branchname=branch-${EGIT_BRANCH} src=origin/${EGIT_BRANCH}
-	if [[ ${EGIT_TREE} != ${EGIT_BRANCH} ]]; then
-		branchname=tree-${EGIT_TREE}
-		src=${EGIT_TREE}
+	if [[ ${EGIT_COMMIT} != ${EGIT_BRANCH} ]]; then
+		branchname=tree-${EGIT_COMMIT}
+		src=${EGIT_COMMIT}
 	fi
 	debug-print "git checkout -b ${branchname} ${src}"
 	git checkout -b ${branchname} ${src} 2>&1 > /dev/null
