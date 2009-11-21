@@ -258,8 +258,8 @@ git_fetch() {
 		
 		oldsha1=$(git rev-parse ${EGIT_BRANCH})
 
-		debug-print "${EGIT_UPDATE_CMD} ${EGIT_OPTIONS} origin ${EGIT_BRANCH}:${EGIT_BRANCH}"
-		${EGIT_UPDATE_CMD} ${EGIT_OPTIONS} origin ${EGIT_BRANCH}:${EGIT_BRANCH} \
+		debug-print "${EGIT_UPDATE_CMD} ${EGIT_OPTIONS}"
+		${EGIT_UPDATE_CMD} ${EGIT_OPTIONS} \
 			|| die "${EGIT}: can't update from ${EGIT_REPO_URI}."
 
 		git_sumbodules
