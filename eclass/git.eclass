@@ -175,8 +175,8 @@ git_fetch() {
 	#	EGIT_FETCH_CMD="${EGIT_FETCH_CMD} --depth 1"
 	if [[ ! -z ${EGIT_TREE} ]] ; then
 		EGIT_COMMIT=${EGIT_TREE}
-		ewarn "QA: usage of deprecated EGIT_TREE variable detected."
-		ewarn "QA: use EGIT_COMMIT variable instead."
+		eqawarn "Usage of deprecated EGIT_TREE variable detected."
+		eqawarn "Use EGIT_COMMIT variable instead."
 	fi
 
 	# EGIT_REPO_URI is empty.
@@ -235,14 +235,14 @@ git_fetch() {
 			|| die "${EGIT}: can't fetch from ${EGIT_REPO_URI}."
 		
 		pushd "${GIT_DIR}" &> /dev/null
-		cursha1=$(git rev-parse ${EGIT_BRANCH})
+		cursha1=$(git rev-parse origin/${EGIT_BRANCH})
 		${elogcmd} "   at the commit:		${cursha1}"
 
 		git_sumbodules
 		popd &> /dev/null
 	elif [[ -n ${EGIT_OFFLINE} ]] ; then
 		pushd "${GIT_DIR}" &> /dev/null
-		cursha1=$(git rev-parse ${EGIT_BRANCH})
+		cursha1=$(git rev-parse origin/${EGIT_BRANCH})
 		${elogcmd} "GIT offline update -->"
 		${elogcmd} "   repository: 		${EGIT_REPO_URI}"
 		${elogcmd} "   at the commit:		${cursha1}"
@@ -256,14 +256,14 @@ git_fetch() {
 		${elogcmd} "GIT update -->"
 		${elogcmd} "   repository: 		${EGIT_REPO_URI}"
 		
-		oldsha1=$(git rev-parse ${EGIT_BRANCH})
+		oldsha1=$(git rev-parse origin/${EGIT_BRANCH})
 
 		debug-print "${EGIT_UPDATE_CMD} ${EGIT_OPTIONS}"
 		${EGIT_UPDATE_CMD} ${EGIT_OPTIONS} \
 			|| die "${EGIT}: can't update from ${EGIT_REPO_URI}."
 
 		git_sumbodules
-		cursha1=$(git rev-parse ${EGIT_BRANCH})
+		cursha1=$(git rev-parse origin/${EGIT_BRANCH})
 
 		# write out message based on the revisions
 		if [[ ${oldsha1} != ${cursha1} ]]; then
@@ -282,7 +282,7 @@ git_fetch() {
 				debug-print "${FUNCNAME}: Repository \"${EGIT_REPO_URI}\" is up-to-date. Skipping." && \
 				die "${EGIT}: Repository \"${EGIT_REPO_URI}\" is up-to-date. Skipping."
 		fi
-		${EGIT_DIFFSTAT_CMD} ${oldsha1}..${EGIT_BRANCH}
+		${EGIT_DIFFSTAT_CMD} ${oldsha1}..origin/${EGIT_BRANCH}
 		popd &> /dev/null
 	fi
 	
