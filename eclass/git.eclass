@@ -52,7 +52,7 @@ DEPEND=">=dev-util/git-1.6"
 # @ECLASS-VARIABLE: EGIT_UPDATE_CMD
 # @DESCRIPTION:
 # Git fetch command.
-EGIT_UPDATE_CMD="git pull"
+EGIT_UPDATE_CMD="git pull -f -u"
 
 # @ECLASS-VARIABLE: EGIT_DIFFSTAT_CMD
 # @DESCRIPTION:
