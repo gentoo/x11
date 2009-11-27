@@ -9,7 +9,7 @@ inherit x-modular toolchain-funcs flag-o-matic
 DESCRIPTION="X.Org X11 library"
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
-IUSE="ipv6 test +xcb"
+IUSE="doc ipv6 test +xcb"
 
 RDEPEND=">=x11-libs/xtrans-1.2.3
 	x11-proto/kbproto
@@ -20,6 +20,10 @@ RDEPEND=">=x11-libs/xtrans-1.2.3
 		x11-libs/libXdmcp
 	)"
 DEPEND="${RDEPEND}
+	doc? (
+		app-text/ghostscript-gpl
+		sys-apps/groff
+	)
 	test? ( dev-lang/perl )
 	x11-proto/xf86bigfontproto
 	xcb? (
@@ -30,7 +34,7 @@ DEPEND="${RDEPEND}
 	x11-proto/xextproto"
 
 pkg_setup() {
-	CONFIGURE_OPTIONS="$(use_enable ipv6)
+	CONFIGURE_OPTIONS="$(use_enable doc specs) $(use_enable ipv6)
 		$(use_with xcb) $(use_with test perl)"
 	# xorg really doesn't like xlocale disabled.
 	# $(use_enable nls xlocale)
