@@ -26,7 +26,7 @@ DEPEND="${RDEPEND}
 	)
 	test? ( dev-lang/perl )
 	x11-proto/xf86bigfontproto
-	xcb? (
+	!xcb? (
 		x11-proto/bigreqsproto
 		x11-proto/xcmiscproto
 	)
