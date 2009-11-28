@@ -177,7 +177,7 @@ pkg_setup() {
 	fi
 
 	OLD_IMPLEM="$(eselect opengl show)"
-	eselect opengl set --impl-headers ${OPENGL_DIR}
+	eselect opengl set ${OPENGL_DIR}
 }
 
 src_install() {
