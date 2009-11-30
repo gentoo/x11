@@ -54,7 +54,7 @@ IUSE="${IUSE_VIDEO_CARDS}
 
 # keep correct libdrm and dri2proto dep
 # keep blocks in rdepend for binpkg
-RDEPEND="!<=x11-base/xorg-x11-6.9
+RDEPEND="!<x11-base/xorg-server-1.7
 	!<=x11-proto/xf86driproto-2.0.3
 	>=app-admin/eselect-opengl-1.1.1-r2
 	dev-libs/expat
@@ -74,8 +74,7 @@ DEPEND="${RDEPEND}
 	>=x11-proto/dri2proto-1.99.3
 	>=x11-proto/glproto-1.4.8
 	x11-proto/inputproto
-	x11-proto/xextproto
-	gallium? ( >=x11-proto/xextproto-7.0.99.1 )
+	>=x11-proto/xextproto-7.0.99.1
 	x11-proto/xf86driproto
 	x11-proto/xf86vidmodeproto
 "
