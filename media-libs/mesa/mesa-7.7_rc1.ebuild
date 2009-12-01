@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-libs/mesa/mesa-7.0.2.ebuild,v 1.6 2007/11/16 18:16:30 dberkholz Exp $
+# $Header: $
 
 EAPI="2"
 
@@ -18,18 +18,15 @@ OPENGL_DIR="xorg-x11"
 
 MY_PN="${PN/m/M}"
 MY_P="${MY_PN}-${PV/_/-}"
-MY_SRC_P="${MY_PN}Lib-${PV/_/-}"
+MY_SRC_P="${MY_PN}Lib-${PV/_/-}-devel"
 DESCRIPTION="OpenGL-like graphic library for Linux"
 HOMEPAGE="http://mesa3d.sourceforge.net/"
 
 #SRC_PATCHES="mirror://gentoo/${P}-gentoo-patches-01.tar.bz2"
-if [[ $PV = *_rc* ]]; then
-	SRC_URI="ftp://ftp.freedesktop.org/pub/mesa/beta/${MY_SRC_P}.tar.gz
-		${SRC_PATCHES}"
-elif [[ $PV = 9999* ]]; then
+if [[ $PV = 9999* ]]; then
 	SRC_URI="${SRC_PATCHES}"
 else
-	SRC_URI="ftp://ftp.freedesktop.org/pub/mesa/${PV}/${MY_SRC_P}.tar.bz2
+	SRC_URI="ftp://ftp.freedesktop.org/pub/mesa/${PV/_rc*/}/${MY_SRC_P}.tar.bz2
 		${SRC_PATCHES}"
 fi
 
@@ -57,11 +54,11 @@ IUSE="${IUSE_VIDEO_CARDS}
 
 # keep correct libdrm and dri2proto dep
 # keep blocks in rdepend for binpkg
-RDEPEND="!<=x11-base/xorg-x11-6.9
+RDEPEND="!<x11-base/xorg-server-1.7
 	!<=x11-proto/xf86driproto-2.0.3
 	>=app-admin/eselect-opengl-1.1.1-r2
 	dev-libs/expat
-	>=x11-libs/libdrm-2.4.14
+	>=x11-libs/libdrm-9999
 	x11-libs/libICE
 	x11-libs/libX11[xcb?]
 	x11-libs/libXdamage
@@ -71,19 +68,15 @@ RDEPEND="!<=x11-base/xorg-x11-6.9
 	x11-libs/libXxf86vm
 	motif? ( x11-libs/openmotif )
 "
-
-# Gallium needs older xextproto due to bug #292690 (fixed in git master already)
-
 DEPEND="${RDEPEND}
 	dev-util/pkgconfig
 	x11-misc/makedepend
 	>=x11-proto/dri2proto-1.99.3
 	>=x11-proto/glproto-1.4.8
 	x11-proto/inputproto
-	x11-proto/xextproto
+	>=x11-proto/xextproto-7.0.99.1
 	x11-proto/xf86driproto
 	x11-proto/xf86vidmodeproto
-	gallium? ( <x11-proto/xextproto-7.0.99 )
 "
 
 S="${WORKDIR}/${MY_P}"
