@@ -17,7 +17,8 @@ inherit autotools multilib flag-o-matic ${GIT_ECLASS} portability
 OPENGL_DIR="xorg-x11"
 
 MY_PN="${PN/m/M}"
-MY_P="${MY_PN}-${PV/_/-}"
+MY_PV="${PV/rc*/devel}"
+MY_P="${MY_PN}-${MY_PV/_/-}"
 MY_SRC_P="${MY_PN}Lib-${PV/_/-}-devel"
 DESCRIPTION="OpenGL-like graphic library for Linux"
 HOMEPAGE="http://mesa3d.sourceforge.net/"
@@ -98,6 +99,7 @@ src_unpack() {
 }
 
 src_prepare() {
+	echo "WORKDIRECTORY+ ${S}"
 	# apply patches
 	if [[ ${PV} != 9999* && -n ${SRC_PATCHES} ]]; then
 		EPATCH_FORCE="yes" \
