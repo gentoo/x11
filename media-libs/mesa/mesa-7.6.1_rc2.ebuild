@@ -17,7 +17,7 @@ inherit autotools multilib flag-o-matic ${GIT_ECLASS} portability
 OPENGL_DIR="xorg-x11"
 
 MY_PN="${PN/m/M}"
-MY_P="${MY_PN}-${PV/_/-}"
+MY_P="${MY_PN}-${PV/_*/}"
 MY_SRC_P="${MY_PN}Lib-${PV/_/-}"
 DESCRIPTION="OpenGL-like graphic library for Linux"
 HOMEPAGE="http://mesa3d.sourceforge.net/"
@@ -58,7 +58,7 @@ RDEPEND="!<x11-base/xorg-server-1.7
 	!<=x11-proto/xf86driproto-2.0.3
 	>=app-admin/eselect-opengl-1.1.1-r2
 	dev-libs/expat
-	>=x11-libs/libdrm-2.4.13
+	>=x11-libs/libdrm-2.4.15
 	x11-libs/libICE
 	x11-libs/libX11[xcb?]
 	x11-libs/libXdamage
