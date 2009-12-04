@@ -4,9 +4,11 @@
 
 inherit x-modular
 
-EGIT_REPO_URI="git://anongit.freedesktop.org/git/xcb/proto"
 DESCRIPTION="X C-language Bindings protocol headers"
 HOMEPAGE="http://xcb.freedesktop.org/"
+EGIT_REPO_URI="git://anongit.freedesktop.org/git/xcb/proto"
+[[ ${PV} != 9999* ]] && \
+	SRC_URI="http://xcb.freedesktop.org/dist/${P}.tar.bz2"
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE=""
