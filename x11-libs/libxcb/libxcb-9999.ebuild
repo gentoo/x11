@@ -21,7 +21,7 @@ RDEPEND="x11-libs/libXau
 DEPEND="${RDEPEND}
 	doc? ( app-doc/doxygen )
 	dev-libs/libxslt
-	>=x11-proto/xcb-proto-1.5
+	>=x11-proto/xcb-proto-1.6
 	>=dev-lang/python-2.5[xml]"
 
 pkg_setup() {
