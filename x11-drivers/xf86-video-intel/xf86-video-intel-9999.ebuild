@@ -10,7 +10,7 @@ KEYWORDS="~amd64 ~ia64 ~x86 ~x86-fbsd"
 IUSE="dri"
 
 RDEPEND=">=x11-base/xorg-server-1.6
-	>=x11-libs/libdrm-2.4.11
+	>=x11-libs/libdrm-2.4.16
 	x11-libs/libpciaccess
 	x11-libs/libXext
 	x11-libs/libXfixes
