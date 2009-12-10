@@ -175,6 +175,12 @@ pkg_setup() {
 			filter-flags -fstack-protector
 		fi
 	fi
+
+	# detect if we should inform user about ebuild breakage
+	if ! has_version "xorg-server" ||
+			has_version "<xorg-server-$(get_version_component_range 1-2)"; then
+		INFO="yes"
+	fi
 }
 
 src_configure() {
@@ -209,18 +215,20 @@ src_install() {
 }
 
 pkg_postinst() {
-	echo
-	ewarn "You must rebuild all drivers if upgrading from xorg-server 1.6"
-	ewarn "or earlier, because the ABI changed. If you cannot start X because"
-	ewarn "of module version mismatch errors, this is your problem."
+	if [[ ${INFO} = yes ]]; then
+		echo
+		ewarn "You must rebuild all drivers if upgrading from <xorg-server-$(get_version_component_range 1-2)"
+		ewarn "because the ABI changed. If you cannot start X because"
+		ewarn "of module version mismatch errors, this is your problem."
 
-	echo
-	ewarn "You can generate a list of all installed packages in the x11-drivers"
-	ewarn "category using this command:"
-	ewarn "emerge portage-utils; qlist -I -C x11-drivers/"
+		echo
+		ewarn "You can generate a list of all installed packages in the x11-drivers"
+		ewarn "category using this command:"
+		ewarn "emerge portage-utils; qlist -I -C x11-drivers/"
 
-	ebeep 5
-	epause 10
+		ebeep 5
+		epause 10
+	fi
 }
 
 pkg_postrm() {
