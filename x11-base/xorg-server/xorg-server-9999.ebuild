@@ -175,9 +175,22 @@ pkg_setup() {
 			filter-flags -fstack-protector
 		fi
 	fi
+}
 
+src_configure() {
+	# this is required only for configure and build time
 	OLD_IMPLEM="$(eselect opengl show)"
-	eselect opengl set ${OPENGL_DIR}
+	[[ $(eselect opengl show) != ${OPENGL_DIR} ]] && eselect opengl set ${OPENGL_DIR}
+	x-modular_src_configure
+}
+
+src_compile() {
+	emake # no die here intentional
+	if [[ $? != 0 ]]; then
+		[[ $(eselect opengl show) != ${OPENGL_DIR} ]] && eselect opengl set ${OLD_IMPLEM}
+		die "Compilation failed"
+	fi
+	[[ $(eselect opengl show) != ${OPENGL_DIR} ]] && eselect opengl set ${OLD_IMPLEM}
 }
 
 src_install() {
@@ -196,8 +209,6 @@ src_install() {
 }
 
 pkg_postinst() {
-	switch_opengl_implem
-
 	echo
 	ewarn "You must rebuild all drivers if upgrading from xorg-server 1.6"
 	ewarn "or earlier, because the ABI changed. If you cannot start X because"
@@ -241,14 +252,6 @@ server_based_install() {
 			"${D}"/usr/$(get_libdir)/pkgconfig/xorg-server.pc \
 			"${D}"/usr/share/man/man1/Xserver.1x
 	fi
-}
-
-switch_opengl_implem() {
-		# Switch to the xorg implementation.
-		# Use new opengl-update that will not reset user selected
-		# OpenGL interface ...
-		echo
-		eselect opengl set ${OLD_IMPLEM}
 }
 
 ensure_a_server_is_building() {
