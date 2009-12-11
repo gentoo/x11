@@ -177,8 +177,8 @@ pkg_setup() {
 	fi
 
 	# detect if we should inform user about ebuild breakage
-	if ! has_version "xorg-server" ||
-			has_version "<xorg-server-$(get_version_component_range 1-2)"; then
+	if ! has_version "x11-base/xorg-server" ||
+			has_version "<x11-base/xorg-server-$(get_version_component_range 1-2)"; then
 		INFO="yes"
 	fi
 }
