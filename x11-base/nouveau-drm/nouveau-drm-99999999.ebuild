@@ -27,12 +27,9 @@ CONFIG_CHECK="~AGP ~BACKLIGHT_CLASS_DEVICE ~DEBUG_FS !DRM ~FB_CFB_FILLRECT ~FB_C
 
 pkg_setup() {
 	linux-mod_pkg_setup
-	if kernel_is lt 2 6 32; then
-		eerror "You need at least kernel 2.6.32"
-		die "Kernel too old"
-	else
-		elog "Nouveau DRM is based on the latest development kernels. Upgrade"
-		elog "to a newer kernel if the build fails."
+	if ! kernel_is eq 2 6 32; then
+		eerror "You need kernel 2.6.32 for nouveau-drm, for newer kernels please use integrated DRM"
+		die "Incompatible kernel version"
 	fi
 }
 
@@ -55,4 +52,9 @@ src_compile() {
 src_install() {
 	insinto /lib/modules/${KV_FULL}/${PN}
 	doins drivers/gpu/drm/{*/,}*.ko || die "doins failed"
+}
+
+pkg_postinst() {
+	elog "Nouveau kernel modules use external firmware files now. Get them from"
+	elog "http://cgit.freedesktop.org/nouveau/linux-2.6/tree/firmware/nouveau"
 }
