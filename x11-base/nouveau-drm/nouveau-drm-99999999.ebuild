@@ -17,7 +17,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 RDEPEND="virtual/linux-sources
-	!x11-base/x11-drm"
+	x11-drivers/nouveau-firmware"
 DEPEND="${RDEPEND}
 	dev-util/git"
 
@@ -52,9 +52,4 @@ src_compile() {
 src_install() {
 	insinto /lib/modules/${KV_FULL}/${PN}
 	doins drivers/gpu/drm/{*/,}*.ko || die "doins failed"
-}
-
-pkg_postinst() {
-	elog "Nouveau kernel modules use external firmware files now. Get them from"
-	elog "http://cgit.freedesktop.org/nouveau/linux-2.6/tree/firmware/nouveau"
 }
