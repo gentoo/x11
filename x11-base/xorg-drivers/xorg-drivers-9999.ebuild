@@ -143,13 +143,10 @@ PDEPEND="
 	!x11-drivers/xf86-input-penmount
 	!x11-drivers/xf86-video-cyrix
 	!x11-drivers/xf86-video-impact
-	!x11-drivers/xf86-video-imstt
 	!x11-drivers/xf86-video-nsc
 	!x11-drivers/xf86-video-sunbw2
 	!x11-drivers/xf86-video-suncg14
 	!x11-drivers/xf86-video-suncg3
 	!x11-drivers/xf86-video-suncg6
 	!x11-drivers/xf86-video-suntcx
-	!x11-drivers/xf86-video-vermilion
-	!x11-drivers/xf86-video-vga
 "
