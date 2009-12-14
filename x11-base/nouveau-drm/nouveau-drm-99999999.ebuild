@@ -10,7 +10,7 @@ DESCRIPTION="Nouveau DRM Kernel Modules for X11"
 HOMEPAGE="http://nouveau.freedesktop.org/"
 SRC_URI=""
 
-LICENSE="X11"
+LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 

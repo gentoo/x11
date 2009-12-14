@@ -21,7 +21,7 @@ inherit eutils autotools libtool toolchain-funcs ${git_eclass} flag-o-matic
 DESCRIPTION="A library for configuring and customizing font access"
 HOMEPAGE="http://fontconfig.org/"
 
-LICENSE="fontconfig"
+LICENSE="MIT"
 SLOT="1.0"
 KEYWORDS=""
 IUSE="doc"
