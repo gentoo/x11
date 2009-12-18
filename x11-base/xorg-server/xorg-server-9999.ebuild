@@ -186,17 +186,17 @@ pkg_setup() {
 src_configure() {
 	# this is required only for configure and build time
 	OLD_IMPLEM="$(eselect opengl show)"
-	[[ $(eselect opengl show) != ${OPENGL_DIR} ]] && eselect opengl set ${OPENGL_DIR}
+	[[ ${OLD_IMPLEM} != ${OPENGL_DIR} ]] && eselect opengl set ${OPENGL_DIR}
 	x-modular_src_configure
 }
 
 src_compile() {
 	emake # no die here intentional
 	if [[ $? != 0 ]]; then
-		[[ $(eselect opengl show) != ${OPENGL_DIR} ]] && eselect opengl set ${OLD_IMPLEM}
+		[[ ${OLD_IMPLEM} != ${OPENGL_DIR} ]] && eselect opengl set ${OLD_IMPLEM}
 		die "Compilation failed"
 	fi
-	[[ $(eselect opengl show) != ${OPENGL_DIR} ]] && eselect opengl set ${OLD_IMPLEM}
+	[[ ${OLD_IMPLEM} != ${OPENGL_DIR} ]] && eselect opengl set ${OLD_IMPLEM}
 }
 
 src_install() {
