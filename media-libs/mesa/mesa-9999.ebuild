@@ -121,18 +121,6 @@ src_configure() {
 	driver_enable video_cards_tdfx tdfx
 	driver_enable video_cards_via unichrome
 
-	# nouveau works only with gallium 
-	if use video_cards_nouveau && ! use gallium ; then
-		elog "Nouveau driver is available only via gallium interface."
-		elog "Enable gallium useflag if you want to use nouveau."
-		echo
-	fi
-	if use video_cards_nouveau && ! use gallium ; then
-		elog "SVGA driver is available only via gallium interface."
-		elog "Enable gallium useflag if you want to use SVGA."
-		echo
-	fi
-
 	myconf="${myconf} $(use_enable gallium)"
 	if use gallium; then
 		elog "Intel: works only i915."
@@ -148,6 +136,11 @@ src_configure() {
 			myconf="${myconf} --enable-gallium-radeon"
 		else
 			myconf="${myconf} --disable-gallium-radeon"
+		fi
+	else
+		if use video_cards_nouveau || use video_cards_svga; then
+			elog "SVGA and nouveau drivers are available only via gallium interface."
+			elog "Enable gallium useflag if you want to use them."
 		fi
 	fi
 
@@ -211,13 +204,13 @@ driver_enable() {
 	case $# in
 		# for enabling unconditionally
 		1)
-			DRI_DRIVERS="${DRI_DRIVERS},$1"
+			DRI_DRIVERS+=",$1"
 			;;
 		*)
 			if use $1; then
 				shift
 				for i in $@; do
-					DRI_DRIVERS="${DRI_DRIVERS},${i}"
+					DRI_DRIVERS+=",${i}"
 				done
 			fi
 			;;
