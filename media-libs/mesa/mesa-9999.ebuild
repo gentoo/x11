@@ -9,7 +9,6 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/mesa/mesa"
 if [[ ${PV} = 9999* ]]; then
 	GIT_ECLASS="git"
 	EXPERIMENTAL="true"
-	IUSE_VIDEO_CARDS_UNSTABLE="video_cards_nouveau"
 fi
 
 inherit autotools multilib flag-o-matic ${GIT_ECLASS} portability
@@ -34,12 +33,11 @@ LICENSE="LGPL-2"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 
-VIDEO_CARDS="intel mach64 mga none r128 radeon radeonhd savage sis sunffb svga tdfx via"
-
+VIDEO_CARDS="intel mach64 mga none nouveau r128 radeon radeonhd savage sis sunffb svga tdfx via"
 for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
 done
-IUSE_VIDEO_CARDS+=" ${IUSE_VIDEO_CARDS_UNSTABLE}"
+
 IUSE="${IUSE_VIDEO_CARDS}
 	debug +gallium motif +nptl pic selinux +xcb kernel_FreeBSD"
 
