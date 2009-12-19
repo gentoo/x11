@@ -34,7 +34,7 @@ LICENSE="LGPL-2"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 
-VIDEO_CARDS="intel max64 mga none r128 radeon radeonhd savage sis sunffb svga tdfx via"
+VIDEO_CARDS="intel mach64 mga none r128 radeon radeonhd savage sis sunffb svga tdfx via"
 
 for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
@@ -146,7 +146,7 @@ src_configure() {
 
 	# --with-driver=dri|xlib|osmesa || do we need osmesa?
 	econf \
-		--disable-option-checking
+		--disable-option-checking \
 		--with-driver=dri \
 		--disable-glut \
 		--without-demos \
@@ -155,8 +155,7 @@ src_configure() {
 		$(use_enable motif) \
 		$(use_enable nptl glx-tls) \
 		$(use_enable xcb) \
-		$(use_enable !pic asm)
-		$(use_enable pic)
+		$(use_enable !pic asm) \
 		--with-dri-drivers=${DRI_DRIVERS} \
 		${myconf}
 }
