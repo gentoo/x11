@@ -13,8 +13,7 @@ IUSE=""
 
 RDEPEND=">=x11-base/xorg-server-1.6.3[-minimal]"
 DEPEND="${RDEPEND}
-	>=x11-libs/libdrm-2.4.12
-	>=x11-misc/util-macros-1.2.1
+	>=x11-libs/libdrm-2.4.17
 	x11-proto/fontsproto
 	x11-proto/glproto
 	x11-proto/randrproto
@@ -29,5 +28,5 @@ pkg_setup() {
 	CONFIGURE_OPTIONS="
 		--enable-dri
 		--enable-kms
-		--enable-shave"
+	"
 }
