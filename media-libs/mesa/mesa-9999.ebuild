@@ -121,9 +121,12 @@ src_configure() {
 
 	myconf="${myconf} $(use_enable gallium)"
 	if use gallium; then
-		elog "Intel: works only i915."
-		elog "Nouveau: only available implementation, so no other choice"
-		elog "Radeon: implementation up to the r500."
+		elog "You have enabled gallium infrastructure."
+		elog "This infrastructure currently support these drivers:"
+		elog "    Intel: works only i915."
+		elog "    Nouveau: only available implementation, so no other choice"
+		elog "    Radeon: implementation up to the r500."
+		elog "    Svga: VMWare Virtual GPU driver."
 		echo
 		myconf="${myconf}
 			--with-state-trackers=glx,dri,egl,xorg
