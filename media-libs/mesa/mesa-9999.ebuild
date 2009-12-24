@@ -43,10 +43,11 @@ IUSE="${IUSE_VIDEO_CARDS}
 
 # keep correct libdrm and dri2proto dep
 # keep blocks in rdepend for binpkg
-RDEPEND="!<x11-base/xorg-server-1.7
+RDEPEND="
 	!<=x11-proto/xf86driproto-2.0.3
 	>=app-admin/eselect-opengl-1.1.1-r2
 	dev-libs/expat
+	>=x11-base/xorg-server-1.7[-minimal]
 	>=x11-libs/libdrm-2.4.17
 	x11-libs/libICE
 	x11-libs/libX11[xcb?]
