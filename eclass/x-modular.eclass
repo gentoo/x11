@@ -436,13 +436,13 @@ x-modular_src_compile() {
 x-modular_src_install() {
 	# Install everything to ${XDIR}
 	if [[ ${CATEGORY} = x11-proto ]]; then
-		make \
+		emake \
 			${PN/proto/}docdir=/usr/share/doc/${PF} \
 			DESTDIR="${D}" \
 			install \
 			|| die
 	else
-		make \
+		emake \
 			docdir=/usr/share/doc/${PF} \
 			DESTDIR="${D}" \
 			install \
