@@ -391,8 +391,6 @@ x-modular_src_install() {
 	fi
 
 	[[ -n ${FONT} ]] && remove_font_metadata
-
-	[[ -n "${DRIVER}" ]] && install_driver_hwdata
 }
 
 # @FUNCTION: x-modular_pkg_postinst
@@ -423,38 +421,37 @@ x-modular_pkg_postrm() {
 # @DESCRIPTION:
 # Get rid of font directories that only contain generated files
 cleanup_fonts() {
-	local ALLOWED_FILES="encodings.dir fonts.alias fonts.cache-1 fonts.dir fonts.scale"
-	for DIR in ${FONT_DIR}; do
-		unset KEEP_FONTDIR
-		REAL_DIR=${ROOT}usr/share/fonts/${DIR}
+	local allowed_files="encodings.dir fonts.alias fonts.cache-1 fonts.dir fonts.scale"
+	local real_dir=${ROOT}usr/share/fonts/${FONT_DIR}
+	local fle allowed_file
 
-		ebegin "Checking ${REAL_DIR} for useless files"
-		pushd ${REAL_DIR} &> /dev/null
-		for FILE in *; do
-			unset MATCH
-			for ALLOWED_FILE in ${ALLOWED_FILES}; do
-				if [[ ${FILE} = ${ALLOWED_FILE} ]]; then
-					# If it's allowed, then move on to the next file
-					MATCH="yes"
-					break
-				fi
-			done
-			# If we found a match in allowed files, move on to the next file
-			if [[ -n ${MATCH} ]]; then
-				continue
+	unset KEEP_FONTDIR
+
+	einfo "Checking ${real_dir} for useless files"
+	pushd ${real_dir} &> /dev/null
+	for fle in *; do
+		unset MATCH
+		for allowed_file in ${allowed_files}; do
+			if [[ ${fle} = ${allowed_file} ]]; then
+				# If it's allowed, then move on to the next file
+				MATCH="yes"
+				break
 			fi
-			# If we get this far, there wasn't a match in the allowed files
-			KEEP_FONTDIR="yes"
-			# We don't need to check more files if we're already keeping it
-			break
 		done
-		popd &> /dev/null
-		# If there are no files worth keeping, then get rid of the dir
-		if [[ -z "${KEEP_FONTDIR}" ]]; then
-			rm -rf ${REAL_DIR}
+		# If we found a match in allowed files, move on to the next file
+		if [[ -n ${MATCH} ]]; then
+			continue
 		fi
-		eend 0
+		# If we get this far, there wasn't a match in the allowed files
+		KEEP_FONTDIR="yes"
+		# We don't need to check more files if we're already keeping it
+		break
 	done
+	popd &> /dev/null
+	# If there are no files worth keeping, then get rid of the dir
+	if [[ -z "${KEEP_FONTDIR}" ]]; then
+		rm -rf ${real_dir}
+	fi
 }
 
 # @FUNCTION: setup_fonts
@@ -462,12 +459,6 @@ cleanup_fonts() {
 # @DESCRIPTION:
 # Generates needed files for fonts and fixes font permissions
 setup_fonts() {
-	if [[ ! -n "${FONT_DIR}" ]]; then
-		msg="FONT_DIR is empty. The ebuild should set it to at least one subdir of /usr/share/fonts."
-		eerror "${msg}"
-		die "${msg}"
-	fi
-
 	create_fonts_scale
 	create_fonts_dir
 	create_font_cache
@@ -479,39 +470,10 @@ setup_fonts() {
 # Don't let the package install generated font files that may overlap
 # with other packages. Instead, they're generated in pkg_postinst().
 remove_font_metadata() {
-	local DIR
-	for DIR in ${FONT_DIR}; do
-		if [[ "${DIR}" != "Speedo" ]] && \
-			[[ "${DIR}" != "CID" ]] ; then
-			# Delete font metadata files
-			# fonts.scale, fonts.dir, fonts.cache-1
-			rm -f "${D}"/usr/share/fonts/${DIR}/fonts.{scale,dir,cache-1}
-		fi
-	done
-}
-
-# @FUNCTION: install_driver_hwdata
-# @USAGE:
-# @DESCRIPTION:
-# Installs device-to-driver mappings for system-config-display and
-# anything else that uses hwdata.
-install_driver_hwdata() {
-	insinto /usr/share/hwdata/videoaliases
-	for i in "${FILESDIR}"/*.xinf; do
-		# We need this for the case when none exist,
-		# so *.xinf doesn't expand
-		if [[ -e $i ]]; then
-			doins $i
-		fi
-	done
-}
-
-# @FUNCTION: discover_font_dirs
-# @USAGE:
-# @DESCRIPTION:
-# Deprecated. Sets up the now-unused FONT_DIRS variable.
-discover_font_dirs() {
-	FONT_DIRS="${FONT_DIR}"
+	if [[ ${FONT_DIR} != Speedo && ${FONT_DIR} != CID ]]; then
+		einfo "Removing font metadata"
+		rm -rf "${D}"/usr/share/fonts/${FONT_DIR}/fonts.{scale,dir,cache-1}
+	fi
 }
 
 # @FUNCTION: create_fonts_scale
@@ -519,26 +481,13 @@ discover_font_dirs() {
 # @DESCRIPTION:
 # Create fonts.scale file, used by the old server-side fonts subsystem.
 create_fonts_scale() {
-	ebegin "Creating fonts.scale files"
-		local x
-		for DIR in ${FONT_DIR}; do
-			x=${ROOT}/usr/share/fonts/${DIR}
-			[[ -z "$(ls ${x}/)" ]] && continue
-			[[ "$(ls ${x}/)" = "fonts.cache-1" ]] && continue
-
-			# Only generate .scale files if truetype, opentype or type1
-			# fonts are present ...
-
-			# NOTE: There is no way to regenerate Speedo/CID fonts.scale
-			# <dberkholz@gentoo.org> 2 August 2004
-			if [[ "${x/encodings}" = "${x}" ]] \
-				&& [[ -n "$(find ${x} -iname '*.[pot][ft][abcf]' -print)" ]]; then
-				mkfontscale \
-					-a "${ROOT}"/usr/share/fonts/encodings/encodings.dir \
-					-- ${x}
-			fi
-		done
-	eend 0
+	if [[ ${DIR} != Speedo && ${DIR} != CID ]]; then
+		ebegin "Generating font.scale"
+			mkfontscale \
+				-a "${ROOT}/usr/share/fonts/encodings/encodings.dir" \
+				-- "${ROOT}/usr/share/fonts/${FONT_DIR}"
+		eend $?
+	fi
 }
 
 # @FUNCTION: create_fonts_dir
@@ -546,20 +495,12 @@ create_fonts_scale() {
 # @DESCRIPTION:
 # Create fonts.dir file, used by the old server-side fonts subsystem.
 create_fonts_dir() {
-	ebegin "Generating fonts.dir files"
-		for DIR in ${FONT_DIR}; do
-			x=${ROOT}/usr/share/fonts/${DIR}
-			[[ -z "$(ls ${x}/)" ]] && continue
-			[[ "$(ls ${x}/)" = "fonts.cache-1" ]] && continue
-
-			if [[ "${x/encodings}" = "${x}" ]]; then
-				mkfontdir \
-					-e "${ROOT}"/usr/share/fonts/encodings \
-					-e "${ROOT}"/usr/share/fonts/encodings/large \
-					-- ${x}
-			fi
-		done
-	eend 0
+	ebegin "Generating fonts.dir"
+			mkfontdir \
+				-e "${ROOT}"/usr/share/fonts/encodings \
+				-e "${ROOT}"/usr/share/fonts/encodings/large \
+				-- "${ROOT}/usr/share/fonts/${FONT_DIR}"
+	eend $?
 }
 
 # @FUNCTION: create_font_cache
