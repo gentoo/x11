@@ -52,6 +52,7 @@ RDEPEND="hal? ( sys-apps/hal )
 		>=x11-libs/libX11-1.1.5
 		>=x11-libs/libXext-1.0.5
 		>=x11-libs/libXres-1.0.3
+		>=media-libs/mesa-7.4[nptl=]
 	)
 	>=x11-libs/libxkbui-1.0.2
 	kdrive? (
@@ -112,8 +113,7 @@ DEPEND="${RDEPEND}
 		>=x11-libs/libdrm-2.3.0
 	)"
 
-PDEPEND="xorg? ( >=x11-base/xorg-drivers-$(get_version_component_range 1-2) )
-	!minimal? ( >=media-libs/mesa-7.4[nptl=] )"
+PDEPEND="xorg? ( >=x11-base/xorg-drivers-$(get_version_component_range 1-2) )"
 
 EPATCH_FORCE="yes"
 EPATCH_SUFFIX="patch"
