@@ -44,10 +44,10 @@ IUSE="${IUSE_VIDEO_CARDS}
 # keep correct libdrm and dri2proto dep
 # keep blocks in rdepend for binpkg
 RDEPEND="
+	!<x11-base/xorg-server-1.7
 	!<=x11-proto/xf86driproto-2.0.3
 	>=app-admin/eselect-opengl-1.1.1-r2
 	dev-libs/expat
-	>=x11-base/xorg-server-1.7[-minimal]
 	>=x11-libs/libdrm-2.4.17
 	x11-libs/libICE
 	x11-libs/libX11[xcb?]
@@ -130,7 +130,7 @@ src_configure() {
 		elog "    Svga: VMWare Virtual GPU driver."
 		echo
 		myconf="${myconf}
-			--with-state-trackers=glx,dri,egl,xorg
+			--with-state-trackers=glx,dri,egl
 			$(use_enable video_cards_svga gallium-svga)
 			$(use_enable video_cards_nouveau gallium-nouveau)
 			$(use_enable video_cards_intel gallium-intel)"
