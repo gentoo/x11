@@ -167,22 +167,10 @@ DEPEND+=" >=dev-util/pkgconfig-0.23"
 has dri ${IUSE//+} && DEPEND+=" dri? ( >=x11-base/xorg-server-1.6.3.901-r2[-minimal] )"
 [[ -n "${DRIVER}" ]] && DEPEND+=" x11-base/xorg-server[xorg]"
 
-# @FUNCTION: x-modular_specs_check
-# @USAGE:
-# @DESCRIPTION:
-# Make any necessary changes related to gcc specs (generally hardened)
-x-modular_specs_check() {
-	if [[ ${PN} = xorg-server || -n ${DRIVER} ]]; then
-		append-ldflags -Wl,-z,lazy
-		# (#116698) breaks loading
-		filter-ldflags -Wl,-z,now
-	fi
-}
-
 # @FUNCTION: x-modular_src_unpack
 # @USAGE:
 # @DESCRIPTION:
-# Simply unpack source code. Nothing else.
+# Simply unpack source code.
 x-modular_src_unpack() {
 	if [[ -n ${GIT_ECLASS} ]]; then
 		git_src_unpack
@@ -269,7 +257,7 @@ x-modular_font_configure() {
 # Set up CFLAGS for a debug build
 x-modular_flags_setup() {
 	if [[ -n ${DEBUGGABLE} ]]; then
-		if use debug; then
+		if has debug ${IUSE//+} && use debug; then
 			strip-flags
 			append-flags -g
 		fi
@@ -277,6 +265,13 @@ x-modular_flags_setup() {
 
 	# Win32 require special define
 	[[ ${CHOST} == *-winnt* ]] && append-flags -DWIN32 -D__STDC__
+
+	# hardened dependant ldflags
+	if [[ ${PN} = xorg-server || -n ${DRIVER} ]]; then
+		append-ldflags -Wl,-z,lazy
+		# (#116698) breaks loading
+		filter-ldflags -Wl,-z,now
+	fi
 }
 
 # @FUNCTION: x-modular_src_configure
@@ -284,9 +279,8 @@ x-modular_flags_setup() {
 # @DESCRIPTION:
 # Perform any necessary pre-configuration steps, then run configure
 x-modular_src_configure() {
-	[[ -n "${FONT}" ]] && x-modular_font_configure
-	x-modular_specs_check
 	x-modular_flags_setup
+	[[ -n "${FONT}" ]] && x-modular_font_configure
 
 # @VARIABLE: CONFIGURE_OPTIONS
 # @DESCRIPTION:
@@ -417,7 +411,7 @@ cleanup_fonts() {
 setup_fonts() {
 	create_fonts_scale
 	create_fonts_dir
-	create_font_cache
+	font_pkg_postinst
 }
 
 # @FUNCTION: remove_font_metadata
@@ -457,13 +451,4 @@ create_fonts_dir() {
 				-e "${EROOT}"/usr/share/fonts/encodings/large \
 				-- "${EROOT}/usr/share/fonts/${FONT_DIR}"
 	eend $?
-}
-
-# @FUNCTION: create_font_cache
-# @USAGE:
-# @DESCRIPTION:
-# Create fonts.cache-1 files, used by the new client-side fonts
-# subsystem.
-create_font_cache() {
-	font_pkg_postinst
 }
