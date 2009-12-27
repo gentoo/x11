@@ -1,22 +1,31 @@
-# Copyright 1999-2007 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/eclass/font.eclass,v 1.47 2009/10/11 11:44:42 maekke Exp $
+# $Header: $
 
 # @ECLASS: font.eclass
 # @MAINTAINER:
 # fonts@gentoo.org
-#
+
+# Author: Tomáš Chvátal <scarabeus@gentoo.org>
 # Author: foser <foser@gentoo.org>
 # @BLURB: Eclass to make font installation uniform
 
 inherit eutils
 
-
 EXPORT_FUNCTIONS pkg_setup src_install pkg_postinst pkg_postrm
 
-#
-# Variable declarations
-#
+# Prefix compat
+case ${EAPI:-0} in
+	0|1|2)
+		if ! use prefix; then
+	    	EPREFIX=
+		    ED=${D}
+			EROOT=${ROOT}
+			[[ ${EROOT} = */ ]] || EROOT+="/"
+		fi
+		;;
+esac
+
 
 # @ECLASS-VARIABLE: FONT_SUFFIX
 # @DESCRIPTION:
@@ -36,7 +45,7 @@ FONT_PN=${FONT_PN:-${PN}}
 # @ECLASS-VARIABLE: FONTDIR
 # @DESCRIPTION:
 # This is where the fonts are installed
-FONTDIR=${FONTDIR:-/usr/share/fonts/${FONT_PN}}
+FONTDIR=${FONTDIR:-${EPREFIX}/usr/share/fonts/${FONT_PN}}
 
 # @ECLASS-VARIABLE: FONT_CONF
 # @DESCRIPTION:
@@ -50,27 +59,26 @@ DOCS=${DOCS:-}
 
 IUSE="X"
 
-DEPEND="X? ( x11-apps/mkfontdir
-			media-fonts/encodings )
-		media-libs/fontconfig"
-
-#
-# Public functions
-#
+DEPEND="X? (
+		x11-apps/mkfontdir
+		media-fonts/encodings
+	)
+	media-libs/fontconfig"
 
 # @FUNCTION: font_xfont_config
 # @DESCRIPTION:
 # Creates the Xfont files.
 font_xfont_config() {
 	# create Xfont files
-	if use X ; then
-		einfo "Creating fonts.scale & fonts.dir ..."
-		rm -f "${D}${FONTDIR}"/fonts.{dir,scale}
-		mkfontscale "${D}${FONTDIR}"
+	if has X ${IUSE//+} && use X ; then
+		ebegin "Creating fonts.scale & fonts.dir"
+		rm -f "${ED}${FONTDIR}"/fonts.{dir,scale}
+		mkfontscale "${ED}${FONTDIR}"
 		mkfontdir \
-			-e /usr/share/fonts/encodings \
-			-e /usr/share/fonts/encodings/large \
-			"${D}${FONTDIR}"
+			-e ${EPREFIX}/usr/share/fonts/encodings \
+			-e ${EPREFIX}/usr/share/fonts/encodings/large \
+			"${ED}${FONTDIR}"
+		eend $?
 		if [ -e "${FONT_S}/fonts.alias" ] ; then
 			doins "${FONT_S}/fonts.alias"
 		fi
@@ -81,11 +89,10 @@ font_xfont_config() {
 # @DESCRIPTION:
 # Creates the fontconfig cache if necessary.
 font_xft_config() {
-	if ! has_version '>=media-libs/fontconfig-2.4'; then
-		# create fontconfig cache
-		einfo "Creating fontconfig cache ..."
-		fc-cache -sf "${D}${FONTDIR}"
-	fi
+	# create fontconfig cache
+	ebegin "Creating fontconfig cache"
+	fc-cache -sf "${ED}${FONTDIR}"
+	eend $?
 }
 
 # @FUNCTION: font_fontconfig
@@ -94,22 +101,16 @@ font_xft_config() {
 font_fontconfig() {
 	local conffile
 	if [[ -n ${FONT_CONF[@]} ]]; then
-		if has_version '>=media-libs/fontconfig-2.4'; then
-			insinto /etc/fonts/conf.avail/
-			for conffile in "${FONT_CONF[@]}"; do
-				[[ -e  ${conffile} ]] && doins ${conffile}
-			done
-		fi
+		insinto /etc/fonts/conf.avail/
+		for conffile in "${FONT_CONF[@]}"; do
+			[[ -e  ${conffile} ]] && doins ${conffile}
+		done
 	fi
 }
 
-#
-# Public inheritable functions
-#
-
 # @FUNCTION: font_src_install
 # @DESCRIPTION:
-# The font src_install function, which is exported.
+# The font src_install function.
 font_src_install() {
 	local suffix commondoc
 
@@ -128,7 +129,7 @@ font_src_install() {
 	font_fontconfig
 
 	cd "${S}"
-	dodoc ${DOCS} 2> /dev/null
+	dodoc ${DOCS} || die "docs installation failed"
 
 	# install common docs
 	for commondoc in COPYRIGHT README{,.txt} NEWS AUTHORS BUGS ChangeLog FONTLOG.txt; do
@@ -138,7 +139,7 @@ font_src_install() {
 
 # @FUNCTION: font_pkg_setup
 # @DESCRIPTION:
-# The font pkg_setup function, which is exported.
+# The font pkg_setup function.
 font_pkg_setup() {
 	# make sure we get no collisions
 	# setup is not the nicest place, but preinst doesn't cut it
@@ -147,10 +148,10 @@ font_pkg_setup() {
 
 # @FUNCTION: font_pkg_postinst
 # @DESCRIPTION:
-# The font pkg_postinst function, which is exported.
+# The font pkg_postinst function.
 font_pkg_postinst() {
 	# unreadable font files = fontconfig segfaults
-	find "${ROOT}"usr/share/fonts/ -type f '!' -perm 0644 -print0 \
+	find "${EROOT}"usr/share/fonts/ -type f '!' -perm 0644 -print0 \
 		| xargs -0 chmod -v 0644 2>/dev/null
 
 	if [[ -n ${FONT_CONF[@]} ]]; then
@@ -160,7 +161,7 @@ font_pkg_postinst() {
 			elog "The following fontconfig configuration files have been installed:"
 			elog
 			for conffile in "${FONT_CONF[@]}"; do
-				if [[ -e ${ROOT}etc/fonts/conf.avail/$(basename ${conffile}) ]]; then
+				if [[ -e ${EROOT}etc/fonts/conf.avail/$(basename ${conffile}) ]]; then
 					elog "  $(basename ${conffile})"
 				fi
 			done
@@ -169,13 +170,11 @@ font_pkg_postinst() {
 			echo
 		fi
 	fi
-
-	if has_version '>=media-libs/fontconfig-2.4'; then
-		if [[ ${ROOT} == "/" ]]; then
-			ebegin "Updating global fontcache"
-			fc-cache -fs
-			eend $?
-		fi
+	
+	if [[ ${EROOT} == "/" ]]; then
+		ebegin "Updating global fontcache"
+		fc-cache -fs
+		eend $?
 	fi
 }
 
@@ -184,14 +183,12 @@ font_pkg_postinst() {
 # The font pkg_postrm function, which is exported.
 font_pkg_postrm() {
 	# unreadable font files = fontconfig segfaults
-	find "${ROOT}"usr/share/fonts/ -type f '!' -perm 0644 -print0 \
+	find "${EROOT}"usr/share/fonts/ -type f '!' -perm 0644 -print0 \
 		| xargs -0 chmod -v 0644 2>/dev/null
 
-	if has_version '>=media-libs/fontconfig-2.4'; then
-		if [[ ${ROOT} == "/" ]]; then
-			ebegin "Updating global fontcache"
-			fc-cache -fs
-			eend $?
-		fi
+	if [[ ${EROOT} == "/" ]]; then
+		ebegin "Updating global fontcache"
+		fc-cache -fs
+		eend $?
 	fi
 }

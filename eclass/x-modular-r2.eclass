@@ -5,6 +5,9 @@
 # @ECLASS: x-modular-r2.eclass
 # @MAINTAINER:
 # x11@gentoo.org
+
+# Author: Tomáš Chvátal <scarabeus@gentoo.org>
+# Author: Donnie Berkholz <dberkholz@gentoo.org>
 # @BLURB: Reduces code duplication in the modularized X11 ebuilds.
 # @DESCRIPTION:
 # This eclass makes trivial X ebuilds possible for apps, fonts, drivers,
