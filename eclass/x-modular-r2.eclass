@@ -222,7 +222,7 @@ x-modular-r2_reconf_source() {
 # @DESCRIPTION:
 # Prepare a package after unpacking, performing all X-related tasks.
 x-modular-r2_src_prepare() {
-	git_src_prepare
+	[[ -n ${GIT_ECLASS} ]] && git_src_prepare
 	x-modular-r2_patch_source
 	x-modular-r2_reconf_source
 }
