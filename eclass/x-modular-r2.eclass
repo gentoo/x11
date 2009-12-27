@@ -63,7 +63,7 @@ EXPORT_FUNCTIONS ${EXPORTED_FUNCTIONS}
 # Directory prefix to use for everything. If you want to install to a
 # non-default prefix (e.g., /opt/xorg), change XDIR. This has not been
 # recently tested. You may need to uncomment the setting of datadir and
-# mandir in x-modular_src_install() or add it back in if it's no longer
+# mandir in x-modular-r2_src_install() or add it back in if it's no longer
 # there. You may also want to change the SLOT.
 XDIR="${EPREFIX}/usr"
 
@@ -170,11 +170,11 @@ DEPEND+=" >=dev-util/pkgconfig-0.23"
 has dri ${IUSE//+} && DEPEND+=" dri? ( >=x11-base/xorg-server-1.6.3.901-r2[-minimal] )"
 [[ -n "${DRIVER}" ]] && DEPEND+=" x11-base/xorg-server[xorg]"
 
-# @FUNCTION: x-modular_src_unpack
+# @FUNCTION: x-modular-r2_src_unpack
 # @USAGE:
 # @DESCRIPTION:
 # Simply unpack source code.
-x-modular_src_unpack() {
+x-modular-r2_src_unpack() {
 	if [[ -n ${GIT_ECLASS} ]]; then
 		git_src_unpack
 	else
@@ -184,11 +184,11 @@ x-modular_src_unpack() {
 	[[ -n ${FONT_OPTIONS} ]] && einfo "Detected font directory: ${FONT_DIR}"
 }
 
-# @FUNCTION: x-modular_patch_source
+# @FUNCTION: x-modular-r2_patch_source
 # @USAGE:
 # @DESCRIPTION:
 # Apply all patches
-x-modular_patch_source() {
+x-modular-r2_patch_source() {
 	# Use standardized names and locations with bulk patching
 	# Patch directory is ${WORKDIR}/patch
 	# See epatch() in eutils.eclass for more documentation
@@ -199,11 +199,11 @@ x-modular_patch_source() {
 	epatch_user
 }
 
-# @FUNCTION: x-modular_reconf_source
+# @FUNCTION: x-modular-r2_reconf_source
 # @USAGE:
 # @DESCRIPTION:
 # Run eautoreconf if necessary, and run elibtoolize.
-x-modular_reconf_source() {
+x-modular-r2_reconf_source() {
 	[[ "${SNAPSHOT}" = "yes" && -e "./configure.ac" ]] && eautoreconf
 	case ${CHOST} in
 		*-interix* | *-aix* | *-winnt*)
@@ -217,21 +217,21 @@ x-modular_reconf_source() {
 	esac
 }
 
-# @FUNCTION: x-modular_src_prepare
+# @FUNCTION: x-modular-r2_src_prepare
 # @USAGE:
 # @DESCRIPTION:
 # Prepare a package after unpacking, performing all X-related tasks.
-x-modular_src_prepare() {
+x-modular-r2_src_prepare() {
 	git_src_prepare
-	x-modular_patch_source
-	x-modular_reconf_source
+	x-modular-r2_patch_source
+	x-modular-r2_reconf_source
 }
 
-# @FUNCTION: x-modular_font_configure
+# @FUNCTION: x-modular-r2_font_configure
 # @USAGE:
 # @DESCRIPTION:
 # If a font package, perform any necessary configuration steps
-x-modular_font_configure() {
+x-modular-r2_font_configure() {
 	if has nls ${IUSE//+} && ! use nls; then
 		FONT_OPTIONS+="
 			--disable-iso8859-2
@@ -258,7 +258,7 @@ x-modular_font_configure() {
 # @USAGE:
 # @DESCRIPTION:
 # Set up CFLAGS for a debug build
-x-modular_flags_setup() {
+x-modular-r2_flags_setup() {
 	if [[ -n ${DEBUGGABLE} ]]; then
 		if has debug ${IUSE//+} && use debug; then
 			strip-flags
@@ -277,13 +277,13 @@ x-modular_flags_setup() {
 	fi
 }
 
-# @FUNCTION: x-modular_src_configure
+# @FUNCTION: x-modular-r2_src_configure
 # @USAGE:
 # @DESCRIPTION:
 # Perform any necessary pre-configuration steps, then run configure
-x-modular_src_configure() {
-	x-modular_flags_setup
-	[[ -n "${FONT}" ]] && x-modular_font_configure
+x-modular-r2_src_configure() {
+	x-modular-r2_flags_setup
+	[[ -n "${FONT}" ]] && x-modular-r2_font_configure
 
 # @VARIABLE: CONFIGURE_OPTIONS
 # @DESCRIPTION:
@@ -298,20 +298,20 @@ CONFIGURE_OPTIONS=${CONFIGURE_OPTIONS:=""}
 	fi
 }
 
-# @FUNCTION: x-modular_src_compile
+# @FUNCTION: x-modular-r2_src_compile
 # @USAGE:
 # @DESCRIPTION:
 # Compile a package, performing all X-related tasks.
-x-modular_src_compile() {
+x-modular-r2_src_compile() {
 	base_src_compile
 }
 
-# @FUNCTION: x-modular_src_install
+# @FUNCTION: x-modular-r2_src_install
 # @USAGE:
 # @DESCRIPTION:
 # Install a built package to ${ED}, performing any necessary steps.
 # Creates a ChangeLog from git if using live ebuilds.
-x-modular_src_install() {
+x-modular-r2_src_install() {
 	# Install everything to ${XDIR}
 	if [[ ${CATEGORY} = x11-proto ]]; then
 		emake \
@@ -352,21 +352,21 @@ x-modular_src_install() {
 	[[ -n ${FONT} ]] && remove_font_metadata
 }
 
-# @FUNCTION: x-modular_pkg_postinst
+# @FUNCTION: x-modular-r2_pkg_postinst
 # @USAGE:
 # @DESCRIPTION:
 # Run X-specific post-installation tasks on the live filesystem. The
 # only task right now is some setup for font packages.
-x-modular_pkg_postinst() {
+x-modular-r2_pkg_postinst() {
 	[[ -n "${FONT}" ]] && setup_fonts
 }
 
-# @FUNCTION: x-modular_pkg_postrm
+# @FUNCTION: x-modular-r2_pkg_postrm
 # @USAGE:
 # @DESCRIPTION:
 # Run X-specific post-removal tasks on the live filesystem. The only
 # task right now is some cleanup for font packages.
-x-modular_pkg_postrm() {
+x-modular-r2_pkg_postrm() {
 	if [[ -n "${FONT}" ]]; then
 		cleanup_fonts
 		font_pkg_postrm
