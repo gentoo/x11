@@ -1,2 +1,2 @@
-# Migrate everything to eapi2 or later.
+# Migrate everything to eapi2 or later and to x-modular-r2.
 # Drop fontconfig depend from fonts (done by eclass)
