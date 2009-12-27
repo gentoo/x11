@@ -20,14 +20,3 @@ DEPEND="${RDEPEND}
 	>=x11-misc/util-macros-1.3.0"
 
 ECONF_SOURCE="${S}"
-
-src_compile() {
-	mkdir "${S}"/build
-	cd "${S}"/build
-	x-modular-r2_src_compile
-}
-
-src_install() {
-	cd "${S}"/build
-	x-modular-r2_src_install
-}
