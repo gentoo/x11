@@ -1,10 +1,10 @@
 # Copyright 1999-2005 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/eclass/x-modular.eclass,v 1.116 2009/10/31 23:08:25 dirtyepic Exp $
+# $Header: $
 #
-# @ECLASS: x-modular.eclass
+# @ECLASS: x-modular-r2.eclass
 # @MAINTAINER:
-# Donnie Berkholz <dberkholz@gentoo.org>, x11@gentoo.org
+# x11@gentoo.org
 # @BLURB: Reduces code duplication in the modularized X11 ebuilds.
 # @DESCRIPTION:
 # This eclass makes trivial X ebuilds possible for apps, fonts, drivers,
@@ -67,13 +67,11 @@ XDIR="${EPREFIX}/usr"
 IUSE=""
 HOMEPAGE="http://xorg.freedesktop.org/"
 
-if [[ -z ${SNAPSHOT} ]]; then
 # @ECLASS-VARIABLE: SNAPSHOT
 # @DESCRIPTION:
 # If set to 'yes' and configure.ac exists, eautoreconf will run. Set
 # before inheriting this eclass.
-	SNAPSHOT="no"
-fi
+SNAPSHOT=${SNAPSHOT:="no"}
 
 # Set up SRC_URI for individual modular releases
 BASE_INDIVIDUAL_URI="http://xorg.freedesktop.org/releases/individual"
@@ -127,16 +125,14 @@ if [[ -n "${FONT}" ]]; then
 		x11-apps/mkfontscale
 		x11-apps/mkfontdir"
 	PDEPEND+=" media-fonts/font-alias"
-	# Wrap in `if` so ebuilds can set it too
-	if [[ -z ${FONT_DIR} ]]; then
-# @ECLASS-VARIABLE: FONT_DIR
-# @DESCRIPTION:
-# If you're creating a font package and the suffix of PN is not equal to
-# the subdirectory of /usr/share/fonts/ it should install into, set
-# FONT_DIR to that directory or directories. Set before inheriting this
-# eclass.
-		FONT_DIR=${PN##*-}
-	fi
+
+	# @ECLASS-VARIABLE: FONT_DIR
+	# @DESCRIPTION:
+	# If you're creating a font package and the suffix of PN is not equal to
+	# the subdirectory of /usr/share/fonts/ it should install into, set
+	# FONT_DIR to that directory or directories. Set before inheriting this
+	# eclass.
+	FONT_DIR=${FONTDIR:=${PN##*-}}
 
 	# Fix case of font directories
 	FONT_DIR=${FONT_DIR/ttf/TTF}
@@ -145,15 +141,9 @@ if [[ -n "${FONT}" ]]; then
 	FONT_DIR=${FONT_DIR/speedo/Speedo}
 
 	# Set up configure options, wrapped so ebuilds can override if need be
-	if [[ -z ${FONT_OPTIONS} ]]; then
-		FONT_OPTIONS="--with-fontdir=\"${EPREFIX}/usr/share/fonts/${FONT_DIR}\""
-	fi
+	[[ -z ${FONT_OPTIONS} ]] && FONT_OPTIONS="--with-fontdir=\"${EPREFIX}/usr/share/fonts/${FONT_DIR}\""
 
-	if [[ -n ${FONT} ]]; then
-		if [[ ${PN##*-} = misc || ${PN##*-} = 75dpi || ${PN##*-} = 100dpi || ${PN##*-} = cyrillic ]]; then
-			IUSE+=" nls"
-		fi
-	fi
+	[[ ${PN##*-} = misc || ${PN##*-} = 75dpi || ${PN##*-} = 100dpi || ${PN##*-} = cyrillic ]] && IUSE+=" nls"
 fi
 
 # If we're a driver package, then enable DRIVER case
@@ -174,11 +164,9 @@ fi
 DEPEND+=" >=dev-util/pkgconfig-0.23"
 
 # Check deps on xorg-server
-if has dri ${IUSE//+}; then
-	DEPEND+=" dri? ( >=x11-base/xorg-server-1.6.3.901-r2[-minimal] )"
-fi
-
+has dri ${IUSE//+} && DEPEND+=" dri? ( >=x11-base/xorg-server-1.6.3.901-r2[-minimal] )"
 [[ -n "${DRIVER}" ]] && DEPEND+=" x11-base/xorg-server[xorg]"
+
 # @FUNCTION: x-modular_specs_check
 # @USAGE:
 # @DESCRIPTION:
@@ -191,21 +179,18 @@ x-modular_specs_check() {
 	fi
 }
 
-# @FUNCTION: x-modular_unpack_source
+# @FUNCTION: x-modular_src_unpack
 # @USAGE:
 # @DESCRIPTION:
 # Simply unpack source code. Nothing else.
-x-modular_unpack_source() {
+x-modular_src_unpack() {
 	if [[ -n ${GIT_ECLASS} ]]; then
 		git_src_unpack
 	else
 		unpack ${A}
 	fi
-	cd "${S}"
 
-	if [[ -n ${FONT_OPTIONS} ]]; then
-		einfo "Detected font directory: ${FONT_DIR}"
-	fi
+	[[ -n ${FONT_OPTIONS} ]] && einfo "Detected font directory: ${FONT_DIR}"
 }
 
 # @FUNCTION: x-modular_patch_source
@@ -218,10 +203,7 @@ x-modular_patch_source() {
 	# See epatch() in eutils.eclass for more documentation
 	EPATCH_SUFFIX=${EPATCH_SUFFIX:=patch}
 
-	if [[ -d "${EPATCH_SOURCE}" ]] ; then
-		epatch
-	fi
-
+	[[ -d "${EPATCH_SOURCE}" ]] && epatch
 	base_src_prepare
 	epatch_user
 }
@@ -254,41 +236,30 @@ x-modular_src_prepare() {
 	x-modular_reconf_source
 }
 
-# @FUNCTION: x-modular_src_unpack
-# @USAGE:
-# @DESCRIPTION:
-# Unpack a package, performing all X-related tasks.
-x-modular_src_unpack() {
-	x-modular_specs_check
-	x-modular_unpack_source
-}
-
 # @FUNCTION: x-modular_font_configure
 # @USAGE:
 # @DESCRIPTION:
 # If a font package, perform any necessary configuration steps
 x-modular_font_configure() {
-	if [[ -n "${FONT}" ]]; then
-		if has nls ${IUSE//+} && ! use nls; then
-			FONT_OPTIONS+="
-				--disable-iso8859-2
-				--disable-iso8859-3
-				--disable-iso8859-4
-				--disable-iso8859-5
-				--disable-iso8859-6
-				--disable-iso8859-7
-				--disable-iso8859-8
-				--disable-iso8859-9
-				--disable-iso8859-10
-				--disable-iso8859-11
-				--disable-iso8859-12
-				--disable-iso8859-13
-				--disable-iso8859-14
-				--disable-iso8859-15
-				--disable-iso8859-16
-				--disable-jisx0201
-				--disable-koi8-r"
-		fi
+	if has nls ${IUSE//+} && ! use nls; then
+		FONT_OPTIONS+="
+			--disable-iso8859-2
+			--disable-iso8859-3
+			--disable-iso8859-4
+			--disable-iso8859-5
+			--disable-iso8859-6
+			--disable-iso8859-7
+			--disable-iso8859-8
+			--disable-iso8859-9
+			--disable-iso8859-10
+			--disable-iso8859-11
+			--disable-iso8859-12
+			--disable-iso8859-13
+			--disable-iso8859-14
+			--disable-iso8859-15
+			--disable-iso8859-16
+			--disable-jisx0201
+			--disable-koi8-r"
 	fi
 }
 
@@ -313,15 +284,14 @@ x-modular_flags_setup() {
 # @DESCRIPTION:
 # Perform any necessary pre-configuration steps, then run configure
 x-modular_src_configure() {
-	x-modular_font_configure
+	[[ -n "${FONT}" ]] && x-modular_font_configure
+	x-modular_specs_check
 	x-modular_flags_setup
 
 # @VARIABLE: CONFIGURE_OPTIONS
 # @DESCRIPTION:
 # Any options to pass to configure
-[[ -n ${CONFIGURE_OPTIONS} ]]
-
-	# If prefix isn't set here, .pc files cause problems
+CONFIGURE_OPTIONS=${CONFIGURE_OPTIONS:=""}
 	if [[ -x ${ECONF_SOURCE:-.}/configure ]]; then
 		econf --prefix=${XDIR} \
 			--datadir=${XDIR}/share \
@@ -351,19 +321,19 @@ x-modular_src_install() {
 			${PN/proto/}docdir=${EPREFIX}/usr/share/doc/${PF} \
 			DESTDIR="${ED}" \
 			install \
-			|| die
+			|| die "emake install failed"
 	else
 		emake \
 			docdir=${EPREFIX}/usr/share/doc/${PF} \
 			DESTDIR="${ED}" \
 			install \
-			|| die
+			|| die "emake install failed"
 	fi
 
 	if [[ -n ${GIT_ECLASS} ]]; then
-		pushd "${EGIT_STORE_DIR}/${EGIT_CLONE_DIR}"
+		pushd "${EGIT_STORE_DIR}/${EGIT_CLONE_DIR}" > /dev/null
 		git log ${GIT_TREE} > "${S}"/ChangeLog
-		popd
+		popd > /dev/null
 	fi
 
 	if [[ -e ${S}/ChangeLog ]]; then
@@ -429,9 +399,7 @@ cleanup_fonts() {
 			fi
 		done
 		# If we found a match in allowed files, move on to the next file
-		if [[ -n ${MATCH} ]]; then
-			continue
-		fi
+		[[ -n ${MATCH} ]] && continue
 		# If we get this far, there wasn't a match in the allowed files
 		KEEP_FONTDIR="yes"
 		# We don't need to check more files if we're already keeping it
@@ -439,9 +407,7 @@ cleanup_fonts() {
 	done
 	popd &> /dev/null
 	# If there are no files worth keeping, then get rid of the dir
-	if [[ -z "${KEEP_FONTDIR}" ]]; then
-		rm -rf ${real_dir}
-	fi
+	[[ -z "${KEEP_FONTDIR}" ]] && rm -rf ${real_dir}
 }
 
 # @FUNCTION: setup_fonts
