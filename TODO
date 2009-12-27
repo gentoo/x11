@@ -1,0 +1,2 @@
+# Migrate everything to eapi2 or later.
+# Drop fontconfig depend from fonts (done by eclass)
