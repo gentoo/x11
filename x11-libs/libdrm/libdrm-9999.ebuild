@@ -25,7 +25,7 @@ DEPEND="${RDEPEND}"
 CONFIGURE_OPTIONS="--enable-udev --enable-nouveau-experimental-api --enable-radeon-experimental-api"
 
 pkg_postinst() {
-	x-modular_pkg_postinst
+	x-modular-r2_pkg_postinst
 
 	ewarn "libdrm's ABI may have changed without change in library name"
 	ewarn "Please rebuild media-libs/mesa, x11-base/xorg-server and"

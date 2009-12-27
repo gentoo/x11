@@ -17,9 +17,6 @@ RDEPEND="x11-libs/libX11
 DEPEND="${RDEPEND}"
 
 pkg_setup() {
-	# No such function yet
-	# x-modular_pkg_setup
-
 	# (#125465) Broken with Bdirect support
 	filter-flags -Wl,-Bdirect
 	filter-ldflags -Bdirect

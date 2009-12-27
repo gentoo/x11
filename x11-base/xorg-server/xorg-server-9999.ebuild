@@ -183,7 +183,7 @@ src_configure() {
 	# this is required only for configure and build time
 	OLD_IMPLEM="$(eselect opengl show)"
 	[[ ${OLD_IMPLEM} != ${OPENGL_DIR} ]] && eselect opengl set ${OPENGL_DIR}
-	x-modular_src_configure
+	x-modular-r2_src_configure
 }
 
 src_compile() {
@@ -196,7 +196,7 @@ src_compile() {
 }
 
 src_install() {
-	x-modular_src_install
+	x-modular-r2_src_install
 
 	dynamic_libgl_install
 

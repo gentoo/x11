@@ -20,7 +20,7 @@ DEPEND="${RDEPEND}
 "
 
 pkg_postinst() {
-	x-modular_pkg_postinst
+	x-modular-r2_pkg_postinst
 
 	ewarn "Some special keys and keyboard layouts may stop working."
 	ewarn "To fix them, recompile xorg-server."

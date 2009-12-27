@@ -16,12 +16,12 @@ RDEPEND="app-admin/eselect-opengl"
 DEPEND=""
 
 src_install() {
-	x-modular_src_install
+	x-modular-r2_src_install
 	dynamic_libgl_install
 }
 
 pkg_postinst() {
-	x-modular_pkg_postinst
+	x-modular-r2_pkg_postinst
 	switch_opengl_implem
 }
 

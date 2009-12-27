@@ -27,7 +27,7 @@ pkg_setup() {
 }
 
 src_install() {
-	x-modular_src_install
+	x-modular-r2_src_install
 
 	if use hal; then
 		insinto /usr/share/hal/fdi/policy/10osvendor
@@ -36,7 +36,7 @@ src_install() {
 }
 
 pkg_postinst() {
-	x-modular_pkg_postinst
+	x-modular-r2_pkg_postinst
 
 	if ! linux_chkconfig_present TABLET_USB_WACOM \
 	|| ! linux_chkconfig_present INPUT_EVDEV; then

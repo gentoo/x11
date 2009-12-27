@@ -16,6 +16,6 @@ RDEPEND=">=x11-libs/libXrandr-1.3
 DEPEND="${RDEPEND}"
 
 src_install() {
-	x-modular_src_install
+	x-modular-r2_src_install
 	rm -f "${D}"/usr/bin/xkeystone
 }

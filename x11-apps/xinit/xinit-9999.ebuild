@@ -34,7 +34,7 @@ pkg_setup() {
 }
 
 src_install() {
-	x-modular_src_install
+	x-modular-r2_src_install
 	exeinto /etc/X11
 	doexe "${FILESDIR}"/chooser.sh "${FILESDIR}"/startDM.sh || die
 	exeinto /etc/X11/Sessions
@@ -51,7 +51,7 @@ src_install() {
 }
 
 pkg_postinst() {
-	x-modular_pkg_postinst
+	x-modular-r2_pkg_postinst
 	ewarn "If you use startx to start X instead of a login manager like gdm/kdm,"
 	ewarn "you can set the XSESSION variable to anything in /etc/X11/Sessions/ or"
 	ewarn "any executable. When you run startx, it will run this as the login session."

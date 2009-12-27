@@ -16,7 +16,7 @@ RDEPEND="${DEPEND}"
 CONFIGURE_OPTIONS="--with-pciids-path=/usr/share/misc"
 
 src_install() {
-	x-modular_src_install
+	x-modular-r2_src_install
 	if ! use minimal; then
 		dobin src/.libs/scanpci || die
 	fi

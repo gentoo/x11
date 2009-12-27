@@ -40,8 +40,7 @@ pkg_setup() {
 }
 
 src_compile() {
-	x-modular_src_configure
 	# [Cross-Compile Love] Disable {C,LD}FLAGS and redefine CC= for 'makekeys'
 	( filter-flags -m* ; cd src/util && make CC=$(tc-getBUILD_CC) CFLAGS="${CFLAGS}" LDFLAGS="" clean all)
-	x-modular_src_make
+	x-modular-r2_src_compile
 }

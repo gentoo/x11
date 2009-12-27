@@ -24,10 +24,10 @@ ECONF_SOURCE="${S}"
 src_compile() {
 	mkdir "${S}"/build
 	cd "${S}"/build
-	x-modular_src_compile
+	x-modular-r2_src_compile
 }
 
 src_install() {
 	cd "${S}"/build
-	x-modular_src_install
+	x-modular-r2_src_install
 }
