@@ -35,10 +35,17 @@ if [[ ${PN} == font* \
 	FONT_ECLASS="font"
 fi
 
-inherit eutils libtool multilib toolchain-funcs flag-o-matic autotools \
+inherit eutils base libtool multilib toolchain-funcs flag-o-matic autotools \
 	${FONT_ECLASS} ${GIT_ECLASS}
 
 EXPORTED_FUNCTIONS="src_unpack src_compile src_install pkg_preinst pkg_postinst pkg_postrm"
+
+if [[ ${EAPI:-0} == 2 ]] && ! use prefix; then
+	EPREFIX=
+	ED=${D}
+	EROOT=${ROOT}
+	[[ ${EROOT} = */ ]] || EROOT+="/"
+fi
 
 case "${EAPI:-0}" in
 	2|3) EXPORTED_FUNCTIONS="${EXPORTED_FUNCTIONS} src_prepare src_configure" ;;
@@ -55,7 +62,7 @@ EXPORT_FUNCTIONS ${EXPORTED_FUNCTIONS}
 # recently tested. You may need to uncomment the setting of datadir and
 # mandir in x-modular_src_install() or add it back in if it's no longer
 # there. You may also want to change the SLOT.
-XDIR="/usr"
+XDIR="${EPREFIX}/usr"
 
 IUSE=""
 HOMEPAGE="http://xorg.freedesktop.org/"
@@ -139,7 +146,7 @@ if [[ -n "${FONT}" ]]; then
 
 	# Set up configure options, wrapped so ebuilds can override if need be
 	if [[ -z ${FONT_OPTIONS} ]]; then
-		FONT_OPTIONS="--with-fontdir=\"/usr/share/fonts/${FONT_DIR}\""
+		FONT_OPTIONS="--with-fontdir=\"${EPREFIX}/usr/share/fonts/${FONT_DIR}\""
 	fi
 
 	if [[ -n ${FONT} ]]; then
@@ -151,7 +158,6 @@ fi
 
 # If we're a driver package, then enable DRIVER case
 [[ ${PN} == xf86-video-* || ${PN} == xf86-input-* ]] && DRIVER="yes"
-fi
 
 # Debugging -- ignore packages that can't be built with debugging
 if [[ -z ${FONT} \
@@ -210,30 +216,14 @@ x-modular_patch_source() {
 	# Use standardized names and locations with bulk patching
 	# Patch directory is ${WORKDIR}/patch
 	# See epatch() in eutils.eclass for more documentation
-	if [[ -z "${EPATCH_SUFFIX}" ]] ; then
-		EPATCH_SUFFIX="patch"
-	fi
+	EPATCH_SUFFIX=${EPATCH_SUFFIX:=patch}
 
-# @VARIABLE: PATCHES
-# @DESCRIPTION:
-# If you have any patches to apply, set PATCHES to their locations and epatch
-# will apply them. It also handles epatch-style bulk patches, if you know how to
-# use them and set the correct variables. If you don't, read eutils.eclass.
-	if [[ ${#PATCHES[@]} -gt 1 ]]; then
-		for x in "${PATCHES[@]}"; do
-			epatch "${x}"
-		done
-	elif [[ -n "${PATCHES}" ]]; then
-		for x in ${PATCHES}; do
-			epatch "${x}"
-		done
-	# For non-default directory bulk patching
-	elif [[ -n "${PATCH_LOC}" ]] ; then
-		epatch ${PATCH_LOC}
-	# For standard bulk patching
-	elif [[ -d "${EPATCH_SOURCE}" ]] ; then
+	if [[ -d "${EPATCH_SOURCE}" ]] ; then
 		epatch
 	fi
+
+	base_src_prepare
+	epatch_user
 }
 
 # @FUNCTION: x-modular_reconf_source
@@ -242,9 +232,16 @@ x-modular_patch_source() {
 # Run eautoreconf if necessary, and run elibtoolize.
 x-modular_reconf_source() {
 	[[ "${SNAPSHOT}" = "yes" && -e "./configure.ac" ]] && eautoreconf
-
-	# Fix shared lib issues on MIPS, FBSD, etc etc
-	elibtoolize
+	case ${CHOST} in
+		*-interix* | *-aix* | *-winnt*)
+			# some hosts need full eautoreconf
+			eautoreconf
+			;;
+		*)
+			# Fix shared lib issues on MIPS, FBSD, etc etc
+			elibtoolize
+			;;
+	esac
 }
 
 # @FUNCTION: x-modular_src_prepare
@@ -295,17 +292,20 @@ x-modular_font_configure() {
 	fi
 }
 
-# @FUNCTION: x-modular_debug_setup
+# @FUNCTION: x-modular_flags_setup
 # @USAGE:
 # @DESCRIPTION:
 # Set up CFLAGS for a debug build
-x-modular_debug_setup() {
+x-modular_flags_setup() {
 	if [[ -n ${DEBUGGABLE} ]]; then
 		if use debug; then
 			strip-flags
 			append-flags -g
 		fi
 	fi
+
+	# Win32 require special define
+	[[ ${CHOST} == *-winnt* ]] && append-flags -DWIN32 -D__STDC__
 }
 
 # @FUNCTION: x-modular_src_configure
@@ -314,7 +314,7 @@ x-modular_debug_setup() {
 # Perform any necessary pre-configuration steps, then run configure
 x-modular_src_configure() {
 	x-modular_font_configure
-	x-modular_debug_setup
+	x-modular_flags_setup
 
 # @VARIABLE: CONFIGURE_OPTIONS
 # @DESCRIPTION:
@@ -331,39 +331,31 @@ x-modular_src_configure() {
 	fi
 }
 
-# @FUNCTION: x-modular_src_make
-# @USAGE:
-# @DESCRIPTION:
-# Run make.
-x-modular_src_make() {
-	emake || die "emake failed"
-}
-
 # @FUNCTION: x-modular_src_compile
 # @USAGE:
 # @DESCRIPTION:
 # Compile a package, performing all X-related tasks.
 x-modular_src_compile() {
-	x-modular_src_make
+	base_src_compile
 }
 
 # @FUNCTION: x-modular_src_install
 # @USAGE:
 # @DESCRIPTION:
-# Install a built package to ${D}, performing any necessary steps.
+# Install a built package to ${ED}, performing any necessary steps.
 # Creates a ChangeLog from git if using live ebuilds.
 x-modular_src_install() {
 	# Install everything to ${XDIR}
 	if [[ ${CATEGORY} = x11-proto ]]; then
 		emake \
-			${PN/proto/}docdir=/usr/share/doc/${PF} \
-			DESTDIR="${D}" \
+			${PN/proto/}docdir=${EPREFIX}/usr/share/doc/${PF} \
+			DESTDIR="${ED}" \
 			install \
 			|| die
 	else
 		emake \
-			docdir=/usr/share/doc/${PF} \
-			DESTDIR="${D}" \
+			docdir=${EPREFIX}/usr/share/doc/${PF} \
+			DESTDIR="${ED}" \
 			install \
 			|| die
 	fi
@@ -385,8 +377,8 @@ x-modular_src_install() {
 	fi
 
 	# Don't install libtool archives for server modules
-	if [[ -e "${D}/usr/$(get_libdir)/xorg/modules" ]]; then
-		find "${D}"/usr/$(get_libdir)/xorg/modules -name '*.la' \
+	if [[ -e "${ED}/usr/$(get_libdir)/xorg/modules" ]]; then
+		find "${ED}"/usr/$(get_libdir)/xorg/modules -name '*.la' \
 			| xargs rm -f
 	fi
 
@@ -399,9 +391,7 @@ x-modular_src_install() {
 # Run X-specific post-installation tasks on the live filesystem. The
 # only task right now is some setup for font packages.
 x-modular_pkg_postinst() {
-	if [[ -n "${FONT}" ]]; then
-		setup_fonts
-	fi
+	[[ -n "${FONT}" ]] && setup_fonts
 }
 
 # @FUNCTION: x-modular_pkg_postrm
@@ -422,7 +412,7 @@ x-modular_pkg_postrm() {
 # Get rid of font directories that only contain generated files
 cleanup_fonts() {
 	local allowed_files="encodings.dir fonts.alias fonts.cache-1 fonts.dir fonts.scale"
-	local real_dir=${ROOT}usr/share/fonts/${FONT_DIR}
+	local real_dir=${EROOT}usr/share/fonts/${FONT_DIR}
 	local fle allowed_file
 
 	unset KEEP_FONTDIR
@@ -472,7 +462,7 @@ setup_fonts() {
 remove_font_metadata() {
 	if [[ ${FONT_DIR} != Speedo && ${FONT_DIR} != CID ]]; then
 		einfo "Removing font metadata"
-		rm -rf "${D}"/usr/share/fonts/${FONT_DIR}/fonts.{scale,dir,cache-1}
+		rm -rf "${ED}"/usr/share/fonts/${FONT_DIR}/fonts.{scale,dir,cache-1}
 	fi
 }
 
@@ -484,8 +474,8 @@ create_fonts_scale() {
 	if [[ ${DIR} != Speedo && ${DIR} != CID ]]; then
 		ebegin "Generating font.scale"
 			mkfontscale \
-				-a "${ROOT}/usr/share/fonts/encodings/encodings.dir" \
-				-- "${ROOT}/usr/share/fonts/${FONT_DIR}"
+				-a "${EROOT}/usr/share/fonts/encodings/encodings.dir" \
+				-- "${EROOT}/usr/share/fonts/${FONT_DIR}"
 		eend $?
 	fi
 }
@@ -497,9 +487,9 @@ create_fonts_scale() {
 create_fonts_dir() {
 	ebegin "Generating fonts.dir"
 			mkfontdir \
-				-e "${ROOT}"/usr/share/fonts/encodings \
-				-e "${ROOT}"/usr/share/fonts/encodings/large \
-				-- "${ROOT}/usr/share/fonts/${FONT_DIR}"
+				-e "${EROOT}"/usr/share/fonts/encodings \
+				-e "${EROOT}"/usr/share/fonts/encodings/large \
+				-- "${EROOT}/usr/share/fonts/${FONT_DIR}"
 	eend $?
 }
 
