@@ -155,20 +155,18 @@ font_pkg_postinst() {
 		| xargs -0 chmod -v 0644 2>/dev/null
 
 	if [[ -n ${FONT_CONF[@]} ]]; then
-		if has_version '>=media-libs/fontconfig-2.4'; then
-			local conffile
-			echo
-			elog "The following fontconfig configuration files have been installed:"
-			elog
-			for conffile in "${FONT_CONF[@]}"; do
-				if [[ -e ${EROOT}etc/fonts/conf.avail/$(basename ${conffile}) ]]; then
-					elog "  $(basename ${conffile})"
-				fi
-			done
-			elog
-			elog "Use \`eselect fontconfig\` to enable/disable them."
-			echo
-		fi
+		local conffile
+		echo
+		elog "The following fontconfig configuration files have been installed:"
+		elog
+		for conffile in "${FONT_CONF[@]}"; do
+			if [[ -e ${EROOT}etc/fonts/conf.avail/$(basename ${conffile}) ]]; then
+				elog "  $(basename ${conffile})"
+			fi
+		done
+		elog
+		elog "Use \`eselect fontconfig\` to enable/disable them."
+		echo
 	fi
 	
 	if [[ ${EROOT} == "/" ]]; then
