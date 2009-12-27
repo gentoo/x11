@@ -41,7 +41,7 @@ fi
 inherit eutils base libtool multilib toolchain-funcs flag-o-matic autotools \
 	${FONT_ECLASS} ${GIT_ECLASS}
 
-EXPORTED_FUNCTIONS="src_unpack src_compile src_install pkg_preinst pkg_postinst pkg_postrm"
+EXPORTED_FUNCTIONS="src_unpack src_compile src_install pkg_postinst pkg_postrm"
 
 if [[ ${EAPI:-0} == 2 ]] && ! use prefix; then
 	EPREFIX=
