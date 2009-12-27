@@ -15,7 +15,7 @@ RDEPEND="x11-libs/libXrender
 	x11-libs/libXext
 	x11-proto/xproto
 	media-libs/freetype
-	>=media-libs/fontconfig-2.2"
+	media-libs/fontconfig"
 DEPEND="${RDEPEND}"
 
 pkg_setup() {

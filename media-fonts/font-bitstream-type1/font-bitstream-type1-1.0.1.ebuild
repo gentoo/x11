@@ -11,5 +11,4 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~spar
 IUSE=""
 
 RDEPEND=""
-DEPEND="${RDEPEND}
-	media-libs/fontconfig"
+DEPEND="${RDEPEND}"
