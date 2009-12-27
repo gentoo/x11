@@ -114,7 +114,7 @@ font_fontconfig() {
 font_src_install() {
 	local suffix commondoc
 
-	cd "${FONT_S}"
+	pushd "${FONT_S}" > /dev/null
 
 	insinto "${FONTDIR}"
 
@@ -128,7 +128,8 @@ font_src_install() {
 	font_xft_config
 	font_fontconfig
 
-	cd "${S}"
+	popd > /dev/null
+
 	dodoc ${DOCS} || die "docs installation failed"
 
 	# install common docs
