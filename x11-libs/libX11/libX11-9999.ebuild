@@ -2,9 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
-
-inherit x-modular toolchain-funcs flag-o-matic
+EAPI=2
+inherit x-modular-r2 toolchain-funcs flag-o-matic
 
 DESCRIPTION="X.Org X11 library"
 

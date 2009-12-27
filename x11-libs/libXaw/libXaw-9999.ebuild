@@ -2,9 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
-
-inherit x-modular
+EAPI=2
+inherit x-modular-r2
 
 DESCRIPTION="X.Org Xaw library"
 

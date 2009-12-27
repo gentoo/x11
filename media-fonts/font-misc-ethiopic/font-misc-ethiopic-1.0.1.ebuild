@@ -4,7 +4,8 @@
 
 FONT_DIR="TTF OTF"
 
-inherit x-modular
+EAPI=2
+inherit x-modular-r2
 
 DESCRIPTION="Miscellaneous Ethiopic fonts"
 

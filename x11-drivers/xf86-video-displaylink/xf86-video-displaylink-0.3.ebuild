@@ -2,7 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit x-modular
+EAPI=2
+inherit x-modular-r2
 
 DESCRIPTION="xf86 displaylink driver"
 HOMEPAGE="http://libdlo.freedesktop.org/wiki/xf86-driver-displaylink"

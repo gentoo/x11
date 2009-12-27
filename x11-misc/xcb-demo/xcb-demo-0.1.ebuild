@@ -5,7 +5,8 @@
 # Must be before x-modular eclass is inherited
 #SNAPSHOT="yes"
 
-inherit x-modular
+EAPI=2
+inherit x-modular-r2
 
 DESCRIPTION="X C-language Bindings demos"
 SRC_URI="http://xcb.freedesktop.org/dist/${P}.tar.bz2"

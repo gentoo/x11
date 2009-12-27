@@ -2,7 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit x-modular
+EAPI=2
+inherit x-modular-r2
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/proto/evieproto"
 DESCRIPTION="X.Org EvIE protocol headers"

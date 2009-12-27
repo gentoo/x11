@@ -3,8 +3,7 @@
 # $Header: $
 
 EAPI=2
-
-inherit x-modular
+inherit x-modular-r2
 
 DESCRIPTION="ATI video driver"
 

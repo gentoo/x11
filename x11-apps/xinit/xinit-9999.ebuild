@@ -3,11 +3,7 @@
 # $Header: $
 
 EAPI="2"
-
-# Must be before x-modular eclass is inherited
-SNAPSHOT="yes"
-
-inherit x-modular pam
+inherit x-modular-r2 pam
 
 DESCRIPTION="X Window System initializer"
 

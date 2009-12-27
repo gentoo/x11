@@ -2,7 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit x-modular toolchain-funcs versionator
+EAPI=2
+inherit x-modular-r2 toolchain-funcs versionator
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/pixman"
 DESCRIPTION="Low-level pixel manipulation routines"

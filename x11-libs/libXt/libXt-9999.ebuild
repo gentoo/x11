@@ -2,7 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit x-modular flag-o-matic toolchain-funcs
+EAPI=2
+inherit x-modular-r2 flag-o-matic toolchain-funcs
 
 DESCRIPTION="X.Org Xt library"
 

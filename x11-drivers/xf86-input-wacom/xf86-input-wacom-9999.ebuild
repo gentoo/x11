@@ -3,8 +3,7 @@
 # $Header: $
 
 EAPI="2"
-
-inherit linux-info x-modular
+inherit linux-info x-modular-r2
 
 DESCRIPTION="Driver for Wacom tablets and drawing devices"
 LICENSE="GPL-2"
