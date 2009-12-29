@@ -41,15 +41,13 @@ fi
 inherit eutils base libtool multilib toolchain-funcs flag-o-matic autotools \
 	${FONT_ECLASS} ${GIT_ECLASS}
 
-EXPORTED_FUNCTIONS="src_unpack src_compile src_install pkg_postinst pkg_postrm"
-
 if [[ ${EAPI:-0} == 2 ]] && ! use prefix; then
 	EPREFIX=
-	ED=${D}
 	EROOT=${ROOT}
 	[[ ${EROOT} = */ ]] || EROOT+="/"
 fi
 
+EXPORTED_FUNCTIONS="src_unpack src_compile src_install pkg_postinst pkg_postrm"
 case "${EAPI:-0}" in
 	2|3) EXPORTED_FUNCTIONS="${EXPORTED_FUNCTIONS} src_prepare src_configure" ;;
 	*) DEPEND="EAPI-UNSUPPORTED" ;;
@@ -309,20 +307,20 @@ x-modular-r2_src_compile() {
 # @FUNCTION: x-modular-r2_src_install
 # @USAGE:
 # @DESCRIPTION:
-# Install a built package to ${ED}, performing any necessary steps.
+# Install a built package to ${D}, performing any necessary steps.
 # Creates a ChangeLog from git if using live ebuilds.
 x-modular-r2_src_install() {
 	# Install everything to ${XDIR}
 	if [[ ${CATEGORY} == x11-proto ]]; then
 		emake \
 			${PN/proto/}docdir=${EPREFIX}/usr/share/doc/${PF} \
-			DESTDIR="${ED}" \
+			DESTDIR="${D%/}${EPREFIX}/" \
 			install \
 			|| die "emake install failed"
 	else
 		emake \
 			docdir=${EPREFIX}/usr/share/doc/${PF} \
-			DESTDIR="${ED}" \
+			DESTDIR="${D%/}${EPREFIX}/" \
 			install \
 			|| die "emake install failed"
 	fi
@@ -344,8 +342,8 @@ x-modular-r2_src_install() {
 	fi
 
 	# Don't install libtool archives for server modules
-	if [[ -e "${ED}/usr/$(get_libdir)/xorg/modules" ]]; then
-		find "${ED}"/usr/$(get_libdir)/xorg/modules -name '*.la' \
+	if [[ -e "${D%/}${EPREFIX}/usr/$(get_libdir)/xorg/modules" ]]; then
+		find "${D%/}${EPREFIX}/usr/$(get_libdir)/xorg/modules" -name '*.la' \
 			| xargs rm -f
 	fi
 
