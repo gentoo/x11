@@ -14,19 +14,6 @@ inherit eutils
 
 EXPORT_FUNCTIONS pkg_setup src_install pkg_postinst pkg_postrm
 
-# Prefix compat
-case ${EAPI:-0} in
-	0|1|2)
-		if ! use prefix; then
-			EPREFIX=
-			ED=${D}
-			EROOT=${ROOT}
-			[[ ${EROOT} = */ ]] || EROOT+="/"
-		fi
-		;;
-esac
-
-
 # @ECLASS-VARIABLE: FONT_SUFFIX
 # @DESCRIPTION:
 # Space delimited list of font suffixes to install
@@ -145,6 +132,18 @@ font_pkg_setup() {
 	# make sure we get no collisions
 	# setup is not the nicest place, but preinst doesn't cut it
 	[[ -e "${FONTDIR}/fonts.cache-1" ]] && rm -f "${FONTDIR}/fonts.cache-1"
+
+	# Prefix compat
+	case ${EAPI:-0} in
+		0|1|2)
+			if ! use prefix; then
+				EPREFIX=
+				ED=${D}
+				EROOT=${ROOT}
+				[[ ${EROOT} = */ ]] || EROOT+="/"
+			fi
+			;;
+	esac
 }
 
 # @FUNCTION: font_pkg_postinst

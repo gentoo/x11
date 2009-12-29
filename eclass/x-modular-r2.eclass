@@ -41,12 +41,6 @@ fi
 inherit eutils base libtool multilib toolchain-funcs flag-o-matic autotools \
 	${FONT_ECLASS} ${GIT_ECLASS}
 
-if [[ ${EAPI:-0} == 2 ]] && ! use prefix; then
-	EPREFIX=
-	EROOT=${ROOT}
-	[[ ${EROOT} = */ ]] || EROOT+="/"
-fi
-
 EXPORTED_FUNCTIONS="src_unpack src_compile src_install pkg_postinst pkg_postrm"
 case "${EAPI:-0}" in
 	2|3) EXPORTED_FUNCTIONS="${EXPORTED_FUNCTIONS} src_prepare src_configure" ;;
@@ -167,6 +161,16 @@ DEPEND+=" >=dev-util/pkgconfig-0.23"
 # Check deps on xorg-server
 has dri ${IUSE//+} && DEPEND+=" dri? ( >=x11-base/xorg-server-1.6.3.901-r2[-minimal] )"
 [[ -n "${DRIVER}" ]] && DEPEND+=" x11-base/xorg-server[xorg]"
+
+
+x-modular-r2_pkg_setup() {
+	# Prefix support
+	if [[ ${EAPI:-0} == 2 ]] && ! use prefix; then
+		EPREFIX=
+		EROOT=${ROOT}
+		[[ ${EROOT} = */ ]] || EROOT+="/"
+	fi
+}
 
 # @FUNCTION: x-modular-r2_src_unpack
 # @USAGE:

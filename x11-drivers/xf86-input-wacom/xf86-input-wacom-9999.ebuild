@@ -22,6 +22,7 @@ DEPEND="${RDEPEND}
 
 pkg_setup() {
 	linux-info_pkg_setup
+	x-modular-r2_pkg_setup
 
 	CONFIGURE_OPTIONS="$(use_enable debug)"
 }

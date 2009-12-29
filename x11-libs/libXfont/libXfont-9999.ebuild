@@ -19,6 +19,7 @@ RDEPEND="x11-libs/xtrans
 DEPEND="${RDEPEND}"
 
 pkg_setup() {
+	x-modular-r2_pkg_setup
 	CONFIGURE_OPTIONS="$(use_enable ipv6)
 		--with-bzip2
 		--disable-devel-docs"

@@ -28,5 +28,6 @@ DEPEND="${RDEPEND}
 	       x11-proto/glproto )"
 
 pkg_setup() {
+	x-modular-r2_pkg_setup
 	CONFIGURE_OPTIONS="$(use_enable dri)"
 }

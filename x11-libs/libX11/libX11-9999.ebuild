@@ -33,6 +33,7 @@ DEPEND="${RDEPEND}
 	x11-proto/xextproto"
 
 pkg_setup() {
+	x-modular-r2_pkg_setup
 	CONFIGURE_OPTIONS="$(use_enable doc specs) $(use_enable ipv6)
 		$(use_with xcb) $(use_with test perl)"
 	# xorg really doesn't like xlocale disabled.

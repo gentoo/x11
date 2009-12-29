@@ -21,5 +21,6 @@ DEPEND="${RDEPEND}
 DOCS="NEWS README"
 
 pkg_setup() {
+	x-modular-r2_pkg_setup
 	CONFIGURE_OPTIONS="$(use_enable selinux xselinux)"
 }

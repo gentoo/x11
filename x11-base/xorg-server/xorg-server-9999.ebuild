@@ -124,6 +124,8 @@ PATCHES=(
 	)
 
 pkg_setup() {
+	x-modular-r2_pkg_setup
+
 	use minimal || ensure_a_server_is_building
 
 	# SDL only available in kdrive build

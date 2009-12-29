@@ -17,13 +17,17 @@ DEPEND="${RDEPEND}
 	x11-proto/glproto"
 
 pkg_setup() {
+	x-modular-r2_pkg_setup
+
 	# Bug #138920
 	ewarn "Forcing on xorg-x11 for header sanity..."
 	OLD_IMPLEM="$(eselect opengl show)"
-	eselect opengl set --impl-headers xorg-x11
+	eselect opengl set xorg-x11
 }
 
 pkg_postinst() {
+	x-modular-r2_pkg_postinst
+
 	echo
 	eselect opengl set ${OLD_IMPLEM}
 }

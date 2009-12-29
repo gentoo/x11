@@ -30,6 +30,7 @@ PATCHES=(
 )
 
 pkg_setup() {
+	x-modular-r2_pkg_setup
 	CONFIGURE_OPTIONS="--with-xinitdir=/etc/X11/xinit"
 }
 

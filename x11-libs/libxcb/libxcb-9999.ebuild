@@ -24,6 +24,7 @@ DEPEND="${RDEPEND}
 	>=dev-lang/python-2.5[xml]"
 
 pkg_setup() {
+	x-modular-r2_pkg_setup
 	CONFIGURE_OPTIONS="$(use_enable doc build-docs)
 		$(use_enable selinux)
 		--enable-xinput"
