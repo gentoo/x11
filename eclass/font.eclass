@@ -18,8 +18,8 @@ EXPORT_FUNCTIONS pkg_setup src_install pkg_postinst pkg_postrm
 case ${EAPI:-0} in
 	0|1|2)
 		if ! use prefix; then
-	    	EPREFIX=
-		    ED=${D}
+			EPREFIX=
+			ED=${D}
 			EROOT=${ROOT}
 			[[ ${EROOT} = */ ]] || EROOT+="/"
 		fi
