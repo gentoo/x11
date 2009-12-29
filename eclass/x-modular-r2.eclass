@@ -162,7 +162,10 @@ DEPEND+=" >=dev-util/pkgconfig-0.23"
 has dri ${IUSE//+} && DEPEND+=" dri? ( >=x11-base/xorg-server-1.6.3.901-r2[-minimal] )"
 [[ -n "${DRIVER}" ]] && DEPEND+=" x11-base/xorg-server[xorg]"
 
-
+# @FUNCTION: x-modular-r2_pkg_setup
+# @USAGE:
+# @DESCRIPTION:
+# Setup prefix compat
 x-modular-r2_pkg_setup() {
 	# Prefix support
 	if [[ ${EAPI:-0} == 2 ]] && ! use prefix; then
