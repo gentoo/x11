@@ -116,8 +116,8 @@ if [[ -n ${SNAPSHOT} ]]; then
 		>=sys-devel/libtool-2.2.6a
 		sys-devel/m4"
 	# These 2 versions MUST BE STABLE
-	[[ ${PN} = "util-macros" ]] && DEPEND+=" >=x11-misc/util-macros-1.3.0"
-	[[ ${PN} = "font-util" ]] && DEPEND+=" >=media-fonts/font-util-1.1.1-r1"
+	[[ ${PN} == util-macros ]] || DEPEND+=" >=x11-misc/util-macros-1.3.0"
+	[[ ${PN} == font-util ]] || DEPEND+=" >=media-fonts/font-util-1.1.1-r1"
 	WANT_AUTOCONF="latest"
 	WANT_AUTOMAKE="latest"
 fi
@@ -204,11 +204,11 @@ x-modular-r2_patch_source() {
 # @DESCRIPTION:
 # Run eautoreconf if necessary, and run elibtoolize.
 x-modular-r2_reconf_source() {
-	[[ "${SNAPSHOT}" = "yes" && -e "./configure.ac" ]] && eautoreconf
+	[[ ${SNAPSHOT} == yes && -e "./configure.ac" ]] && eautoreconf
 	case ${CHOST} in
 		*-interix* | *-aix* | *-winnt*)
 			# some hosts need full eautoreconf
-			eautoreconf
+			[[ -e "./configure.ac" ]] && eautoreconf || ewarn "Unable to autoreconf the configure script. Things may fail."
 			;;
 		*)
 			# Fix shared lib issues on MIPS, FBSD, etc etc
@@ -313,7 +313,7 @@ x-modular-r2_src_compile() {
 # Creates a ChangeLog from git if using live ebuilds.
 x-modular-r2_src_install() {
 	# Install everything to ${XDIR}
-	if [[ ${CATEGORY} = x11-proto ]]; then
+	if [[ ${CATEGORY} == x11-proto ]]; then
 		emake \
 			${PN/proto/}docdir=${EPREFIX}/usr/share/doc/${PF} \
 			DESTDIR="${ED}" \
