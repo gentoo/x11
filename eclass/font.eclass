@@ -19,7 +19,6 @@ case ${EAPI:-0} in
 	0|1|2)
 		if ! use prefix; then
 			EPREFIX=
-			ED=${D}
 			EROOT=${ROOT}
 			[[ ${EROOT} = */ ]] || EROOT+="/"
 		fi
@@ -72,12 +71,12 @@ font_xfont_config() {
 	# create Xfont files
 	if has X ${IUSE//+} && use X ; then
 		ebegin "Creating fonts.scale & fonts.dir"
-		rm -f "${ED}${FONTDIR}"/fonts.{dir,scale}
-		mkfontscale "${ED}${FONTDIR}"
+		rm -f "${D}${FONTDIR}"/fonts.{dir,scale}
+		mkfontscale "${D}${FONTDIR}"
 		mkfontdir \
 			-e ${EPREFIX}/usr/share/fonts/encodings \
 			-e ${EPREFIX}/usr/share/fonts/encodings/large \
-			"${ED}${FONTDIR}"
+			"${D}${FONTDIR}"
 		eend $?
 		if [ -e "${FONT_S}/fonts.alias" ] ; then
 			doins "${FONT_S}/fonts.alias"
@@ -91,7 +90,7 @@ font_xfont_config() {
 font_xft_config() {
 	# create fontconfig cache
 	ebegin "Creating fontconfig cache"
-	fc-cache -sf "${ED}${FONTDIR}"
+	fc-cache -sf "${D}${FONTDIR}"
 	eend $?
 }
 
