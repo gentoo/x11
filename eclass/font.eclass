@@ -19,6 +19,7 @@ case ${EAPI:-0} in
 	0|1|2)
 		if ! use prefix; then
 			EPREFIX=
+			ED=${D}
 			EROOT=${ROOT}
 			[[ ${EROOT} = */ ]] || EROOT+="/"
 		fi
@@ -44,7 +45,7 @@ FONT_PN=${FONT_PN:-${PN}}
 # @ECLASS-VARIABLE: FONTDIR
 # @DESCRIPTION:
 # This is where the fonts are installed
-FONTDIR=${FONTDIR:-${EPREFIX}/usr/share/fonts/${FONT_PN}}
+FONTDIR=${FONTDIR:-/usr/share/fonts/${FONT_PN}}
 
 # @ECLASS-VARIABLE: FONT_CONF
 # @DESCRIPTION:
@@ -71,12 +72,12 @@ font_xfont_config() {
 	# create Xfont files
 	if has X ${IUSE//+} && use X ; then
 		ebegin "Creating fonts.scale & fonts.dir"
-		rm -f "${D}${FONTDIR}"/fonts.{dir,scale}
-		mkfontscale "${D}${FONTDIR}"
+		rm -f "${ED}${FONTDIR}"/fonts.{dir,scale}
+		mkfontscale "${ED}${FONTDIR}"
 		mkfontdir \
 			-e ${EPREFIX}/usr/share/fonts/encodings \
 			-e ${EPREFIX}/usr/share/fonts/encodings/large \
-			"${D}${FONTDIR}"
+			"${ED}${FONTDIR}"
 		eend $?
 		if [ -e "${FONT_S}/fonts.alias" ] ; then
 			doins "${FONT_S}/fonts.alias"
@@ -90,7 +91,7 @@ font_xfont_config() {
 font_xft_config() {
 	# create fontconfig cache
 	ebegin "Creating fontconfig cache"
-	fc-cache -sf "${D}${FONTDIR}"
+	fc-cache -sf "${ED}${FONTDIR}"
 	eend $?
 }
 
