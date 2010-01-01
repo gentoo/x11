@@ -117,7 +117,7 @@ font_src_install() {
 
 	popd > /dev/null
 
-	dodoc ${DOCS} || die "docs installation failed"
+	[[ -n ${DOCS} ]] && { dodoc ${DOCS} || die "docs installation failed" ; }
 
 	# install common docs
 	for commondoc in COPYRIGHT README{,.txt} NEWS AUTHORS BUGS ChangeLog FONTLOG.txt; do
