@@ -103,7 +103,7 @@ fi
 : ${LICENSE=MIT}
 
 # Set up shared dependencies
-if [[ -n ${SNAPSHOT} ]]; then
+if [[ ${SNAPSHOT} != no ]]; then
 	DEPEND+="
 		>=sys-devel/libtool-2.2.6a
 		sys-devel/m4"
@@ -209,7 +209,7 @@ x-modular-r2_patch_source() {
 # @DESCRIPTION:
 # Run eautoreconf if necessary, and run elibtoolize.
 x-modular-r2_reconf_source() {
-	[[ ${SNAPSHOT} == yes && -e "./configure.ac" ]] && eautoreconf
+	[[ ${SNAPSHOT} != no && -e "./configure.ac" ]] && eautoreconf
 	case ${CHOST} in
 		*-interix* | *-aix* | *-winnt*)
 			# some hosts need full eautoreconf
