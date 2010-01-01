@@ -57,7 +57,7 @@ EXPORT_FUNCTIONS ${EXPORTED_FUNCTIONS}
 # recently tested. You may need to uncomment the setting of datadir and
 # mandir in x-modular-r2_src_install() or add it back in if it's no longer
 # there. You may also want to change the SLOT.
-XDIR="${EPREFIX}/usr"
+: ${XDIR:="${EPREFIX}/usr"}
 
 IUSE=""
 HOMEPAGE="http://xorg.freedesktop.org/"
@@ -66,7 +66,7 @@ HOMEPAGE="http://xorg.freedesktop.org/"
 # @DESCRIPTION:
 # If set to 'yes' and configure.ac exists, eautoreconf will run. Set
 # before inheriting this eclass.
-SNAPSHOT=${SNAPSHOT:="no"}
+: ${SNAPSHOT:="no"}
 
 # Set up SRC_URI for individual modular releases
 BASE_INDIVIDUAL_URI="http://xorg.freedesktop.org/releases/individual"
@@ -92,15 +92,15 @@ fi
 if [[ -n ${GIT_ECLASS} ]]; then
 	EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/${MODULE}/${PN}"
 else
-	SRC_URI="${SRC_URI} ${BASE_INDIVIDUAL_URI}/${MODULE}/${P}.tar.bz2"
+	SRC_URI+=" ${BASE_INDIVIDUAL_URI}/${MODULE}/${P}.tar.bz2"
 fi
 
-SLOT="0"
+: ${SLOT:=0}
 
 # Set the license for the package. This can be overridden by setting
 # LICENSE after the inherit. Nearly all FreeDesktop-hosted X packages
 # are under the MIT license. (This is what Red Hat does in their rpms)
-LICENSE="MIT"
+: ${LICENSE=MIT}
 
 # Set up shared dependencies
 if [[ -n ${SNAPSHOT} ]]; then
