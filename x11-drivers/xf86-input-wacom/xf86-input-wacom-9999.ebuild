@@ -39,7 +39,8 @@ src_install() {
 pkg_postinst() {
 	x-modular-r2_pkg_postinst
 
-	if ! linux_chkconfig_present TABLET_USB_WACOM \
+	if ! linux_config_exists \
+	|| ! linux_chkconfig_present TABLET_USB_WACOM \
 	|| ! linux_chkconfig_present INPUT_EVDEV; then
 		echo
 		ewarn "If you use a USB Wacom tablet, you need to enable support in your kernel"
