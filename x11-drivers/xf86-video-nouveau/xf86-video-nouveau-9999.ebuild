@@ -15,7 +15,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 RDEPEND=">=x11-base/xorg-server-1.5.3[-minimal]
-	>=x11-libs/libdrm-2.4.16"
+	>=x11-libs/libdrm-2.4.18"
 
 DEPEND="${RDEPEND}
 	x11-proto/fontsproto
