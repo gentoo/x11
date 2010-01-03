@@ -209,13 +209,13 @@ x-modular-r2_patch_source() {
 # @DESCRIPTION:
 # Run eautoreconf if necessary, and run elibtoolize.
 x-modular-r2_reconf_source() {
-	[[ ${SNAPSHOT} != no && -e "./configure.ac" ]] && eautoreconf
 	case ${CHOST} in
 		*-interix* | *-aix* | *-winnt*)
 			# some hosts need full eautoreconf
 			[[ -e "./configure.ac" ]] && eautoreconf || ewarn "Unable to autoreconf the configure script. Things may fail."
 			;;
 		*)
+			[[ ${SNAPSHOT} != no && -e "./configure.ac" ]] && eautoreconf
 			# Fix shared lib issues on MIPS, FBSD, etc etc
 			elibtoolize
 			;;
