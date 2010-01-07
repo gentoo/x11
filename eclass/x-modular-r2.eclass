@@ -144,7 +144,7 @@ fi
 # If we're a driver package, then enable DRIVER case
 [[ ${PN} == xf86-video-* || ${PN} == xf86-input-* ]] && DRIVER="yes"
 
-# Debugging -- ignore packages that can't be built with debugging
+# Add static-libs useflag where usefull.
 if [[ ${FONT} == no \
 		&& ${CATEGORY} != app-doc \
 		&& ${CATEGORY} != x11-proto \
@@ -152,8 +152,7 @@ if [[ ${FONT} == no \
 		&& ${PN} != xbitmaps \
 		&& ${PN} != xorg-cf-files \
 		&& ${PN/xcursor} = ${PN} ]]; then
-	DEBUGGABLE="yes"
-	IUSE+=" debug static-libs"
+	IUSE+=" static-libs"
 fi
 
 DEPEND+=" >=dev-util/pkgconfig-0.23"
@@ -264,13 +263,6 @@ x-modular-r2_font_configure() {
 # @DESCRIPTION:
 # Set up CFLAGS for a debug build
 x-modular-r2_flags_setup() {
-	if [[ -n ${DEBUGGABLE} ]]; then
-		if has debug ${IUSE//+} && use debug; then
-			strip-flags
-			append-flags -g
-		fi
-	fi
-
 	# Win32 require special define
 	[[ ${CHOST} == *-winnt* ]] && append-flags -DWIN32 -D__STDC__
 
