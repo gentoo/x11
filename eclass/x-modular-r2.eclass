@@ -114,7 +114,7 @@ if [[ ${SNAPSHOT} != no ]]; then
 	WANT_AUTOMAKE="latest"
 fi
 
-if [[ -n "${FONT}" ]]; then
+if [[ ${FONT} == yes ]]; then
 	DEPEND+=" >=media-fonts/font-util-1.1.1-r1"
 	RDEPEND+=" media-fonts/encodings
 		x11-apps/mkfontscale
@@ -145,7 +145,7 @@ fi
 [[ ${PN} == xf86-video-* || ${PN} == xf86-input-* ]] && DRIVER="yes"
 
 # Add static-libs useflag where usefull.
-if [[ ${FONT} == no \
+if [[ ${FONT} != yes \
 		&& ${CATEGORY} != app-doc \
 		&& ${CATEGORY} != x11-proto \
 		&& ${PN} != util-macros \
