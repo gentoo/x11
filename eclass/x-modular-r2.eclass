@@ -153,7 +153,7 @@ if [[ -z ${FONT} \
 		&& ${PN} != xorg-cf-files \
 		&& ${PN/xcursor} = ${PN} ]]; then
 	DEBUGGABLE="yes"
-	IUSE+=" debug"
+	IUSE+=" debug static-libs"
 fi
 
 DEPEND+=" >=dev-util/pkgconfig-0.23"
@@ -287,19 +287,24 @@ x-modular-r2_flags_setup() {
 # @DESCRIPTION:
 # Perform any necessary pre-configuration steps, then run configure
 x-modular-r2_src_configure() {
+	local myopts=""
+
 	x-modular-r2_flags_setup
 	[[ -n "${FONT}" ]] && x-modular-r2_font_configure
 
 # @VARIABLE: CONFIGURE_OPTIONS
 # @DESCRIPTION:
 # Any options to pass to configure
-CONFIGURE_OPTIONS=${CONFIGURE_OPTIONS:=""}
+	CONFIGURE_OPTIONS=${CONFIGURE_OPTIONS:=""}
 	if [[ -x ${ECONF_SOURCE:-.}/configure ]]; then
+		if has static-libs ${IUSE//+}; then
+			myopts+=" $(use_enable static-libs static)"
+		fi
 		econf --prefix=${XDIR} \
 			--datadir=${XDIR}/share \
 			${FONT_OPTIONS} \
-			${DRIVER_OPTIONS} \
-			${CONFIGURE_OPTIONS}
+			${CONFIGURE_OPTIONS} \
+			${myopts}
 	fi
 }
 
