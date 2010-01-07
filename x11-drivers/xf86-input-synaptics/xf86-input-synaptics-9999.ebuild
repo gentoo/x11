@@ -21,7 +21,7 @@ DEPEND="${RDEPEND}
 	>=sys-apps/sed-4"
 
 src_install() {
-	DOCS="INSTALL TODO README"
+	DOCS="TODO README"
 	x-modular-r2_src_install
 
 	if use hal ; then
