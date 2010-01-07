@@ -145,7 +145,7 @@ fi
 [[ ${PN} == xf86-video-* || ${PN} == xf86-input-* ]] && DRIVER="yes"
 
 # Debugging -- ignore packages that can't be built with debugging
-if [[ -z ${FONT} \
+if [[ ${FONT} == no \
 		&& ${CATEGORY} != app-doc \
 		&& ${CATEGORY} != x11-proto \
 		&& ${PN} != util-macros \
