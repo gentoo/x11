@@ -17,22 +17,22 @@ EXPORT_FUNCTIONS pkg_setup src_install pkg_postinst pkg_postrm
 # @ECLASS-VARIABLE: FONT_SUFFIX
 # @DESCRIPTION:
 # Space delimited list of font suffixes to install
-: ${FONT_SUFFIX:-}
+: ${FONT_SUFFIX:=}
 
 # @ECLASS-VARIABLE: FONT_S
 # @DESCRIPTION:
 # Dir containing the fonts
-: ${FONT_S=${S}}
+: ${FONT_S:=${S}}
 
 # @ECLASS-VARIABLE: FONT_PN
 # @DESCRIPTION:
 # Last part of $FONTDIR
-: ${FONT_PN:-${PN}}
+: ${FONT_PN:=${PN}}
 
 # @ECLASS-VARIABLE: FONTDIR
 # @DESCRIPTION:
 # This is where the fonts are installed
-: ${FONTDIR:-/usr/share/fonts/${FONT_PN}}
+: ${FONTDIR:=/usr/share/fonts/${FONT_PN}}
 
 # @ECLASS-VARIABLE: FONT_CONF
 # @DESCRIPTION:
