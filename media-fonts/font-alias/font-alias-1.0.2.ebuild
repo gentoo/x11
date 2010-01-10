@@ -15,5 +15,4 @@ IUSE=""
 RDEPEND=""
 DEPEND="${RDEPEND}
 	x11-apps/mkfontscale
-	>=media-fonts/font-util-1.1.1-r1
-	>=x11-misc/util-macros-1.3.0"
+	>=media-fonts/font-util-1.1.1-r1"
