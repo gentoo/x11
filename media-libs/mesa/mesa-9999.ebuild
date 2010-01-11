@@ -61,8 +61,8 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	dev-util/pkgconfig
 	x11-misc/makedepend
-	>=x11-proto/dri2proto-1.99.3
-	>=x11-proto/glproto-1.4.8
+	>=x11-proto/dri2proto-2
+	>=x11-proto/glproto-1.4.11
 	x11-proto/inputproto
 	>=x11-proto/xextproto-7.0.99.1
 	x11-proto/xf86driproto
