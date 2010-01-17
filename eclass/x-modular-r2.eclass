@@ -167,7 +167,7 @@ has dri ${IUSE//+} && DEPEND+=" dri? ( >=x11-base/xorg-server-1.6.3.901-r2[-mini
 # @DESCRIPTION:
 # Setup prefix compat
 x-modular-r2_pkg_setup() {
-	[[ ${FONT} != yes ]] && font_pkg_setup
+	[[ ${FONT} == yes ]] && font_pkg_setup
 	# Prefix support
 	if [[ ${EAPI:-0} == 2 ]] && ! use prefix; then
 		EPREFIX=
