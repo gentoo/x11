@@ -1,4 +1,4 @@
-# Copyright 1999-2005 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 #
@@ -57,7 +57,7 @@ EXPORT_FUNCTIONS ${EXPORTED_FUNCTIONS}
 # recently tested. You may need to uncomment the setting of datadir and
 # mandir in x-modular-r2_src_install() or add it back in if it's no longer
 # there. You may also want to change the SLOT.
-: ${XDIR:="${EPREFIX}/usr"}
+: ${XDIR:=/usr}
 
 IUSE=""
 HOMEPAGE="http://xorg.freedesktop.org/"
@@ -294,8 +294,8 @@ x-modular-r2_src_configure() {
 		if has static-libs ${IUSE//+}; then
 			myopts+=" $(use_enable static-libs static)"
 		fi
-		econf --prefix=${XDIR} \
-			--datadir=${XDIR}/share \
+		econf --prefix="${EPREFIX}"${XDIR} \
+			--datadir="${EPREFIX}"${XDIR}/share \
 			${FONT_OPTIONS} \
 			${CONFIGURE_OPTIONS} \
 			${myopts}
@@ -320,13 +320,13 @@ x-modular-r2_src_install() {
 	if [[ ${CATEGORY} == x11-proto ]]; then
 		emake \
 			${PN/proto/}docdir=${EPREFIX}/usr/share/doc/${PF} \
-			DESTDIR="${D%/}${EPREFIX}/" \
+			DESTDIR="${D}" \
 			install \
 			|| die "emake install failed"
 	else
 		emake \
 			docdir=${EPREFIX}/usr/share/doc/${PF} \
-			DESTDIR="${D%/}${EPREFIX}/" \
+			DESTDIR="${D}" \
 			install \
 			|| die "emake install failed"
 	fi

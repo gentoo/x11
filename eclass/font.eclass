@@ -1,4 +1,4 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -168,8 +168,8 @@ font_pkg_postinst() {
 		elog "Use \`eselect fontconfig\` to enable/disable them."
 		echo
 	fi
-	
-	if [[ ${EROOT} == "/" ]]; then
+
+	if [[ ${ROOT} == / ]]; then
 		ebegin "Updating global fontcache"
 		fc-cache -fs
 		eend $?
@@ -184,7 +184,7 @@ font_pkg_postrm() {
 	find "${EROOT}"usr/share/fonts/ -type f '!' -perm 0644 -print0 \
 		| xargs -0 chmod -v 0644 2>/dev/null
 
-	if [[ ${EROOT} == "/" ]]; then
+	if [[ ${ROOT} == / ]]; then
 		ebegin "Updating global fontcache"
 		fc-cache -fs
 		eend $?
