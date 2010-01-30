@@ -71,6 +71,10 @@ DEPEND="${RDEPEND}
 
 S="${WORKDIR}/${MY_P}"
 
+# It is slow without texrels, if someone wants slow
+# mesa without texrels +pic use is worth shot
+QA_EXECSTACK="usr/lib*/opengl/xorg-x11/lib/libGL.so*"
+
 # Think about: ggi, svga, fbcon, no-X configs
 
 pkg_setup() {
