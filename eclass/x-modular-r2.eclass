@@ -43,7 +43,7 @@ inherit eutils base libtool multilib toolchain-funcs flag-o-matic autotools \
 
 EXPORTED_FUNCTIONS="src_unpack src_compile src_install pkg_postinst pkg_postrm"
 case "${EAPI:-0}" in
-	2|3) EXPORTED_FUNCTIONS="${EXPORTED_FUNCTIONS} src_prepare src_configure" ;;
+	3) EXPORTED_FUNCTIONS="${EXPORTED_FUNCTIONS} src_prepare src_configure" ;;
 	*) DEPEND="EAPI-UNSUPPORTED" ;;
 esac
 
@@ -127,7 +127,7 @@ if [[ ${FONT} == yes ]]; then
 	# the subdirectory of /usr/share/fonts/ it should install into, set
 	# FONT_DIR to that directory or directories. Set before inheriting this
 	# eclass.
-	FONT_DIR=${PN##*-}
+	[[ -z ${FONT_DIR}]] && FONT_DIR=${PN##*-}
 
 	# Fix case of font directories
 	FONT_DIR=${FONT_DIR/ttf/TTF}
@@ -168,12 +168,6 @@ has dri ${IUSE//+} && DEPEND+=" dri? ( >=x11-base/xorg-server-1.6.3.901-r2[-mini
 # Setup prefix compat
 x-modular-r2_pkg_setup() {
 	[[ ${FONT} == yes ]] && font_pkg_setup
-	# Prefix support
-	if [[ ${EAPI:-0} == 2 ]] && ! use prefix; then
-		EPREFIX=
-		EROOT=${ROOT}
-		[[ ${EROOT} = */ ]] || EROOT+="/"
-	fi
 }
 
 # @FUNCTION: x-modular-r2_src_unpack
