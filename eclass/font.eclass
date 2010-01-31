@@ -32,7 +32,7 @@ EXPORT_FUNCTIONS pkg_setup src_install pkg_postinst pkg_postrm
 # @ECLASS-VARIABLE: FONTDIR
 # @DESCRIPTION:
 # This is where the fonts are installed
-: ${FONTDIR:=/usr/share/fonts/${FONT_PN}}
+: ${FONTDIR:-/usr/share/fonts/${FONT_PN}}
 
 # @ECLASS-VARIABLE: FONT_CONF
 # @DESCRIPTION:
