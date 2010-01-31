@@ -127,7 +127,7 @@ if [[ ${FONT} == yes ]]; then
 	# the subdirectory of /usr/share/fonts/ it should install into, set
 	# FONT_DIR to that directory or directories. Set before inheriting this
 	# eclass.
-	[[ -z ${FONT_DIR}]] && FONT_DIR=${PN##*-}
+	[[ -z ${FONT_DIR} ]] && FONT_DIR=${PN##*-}
 
 	# Fix case of font directories
 	FONT_DIR=${FONT_DIR/ttf/TTF}
