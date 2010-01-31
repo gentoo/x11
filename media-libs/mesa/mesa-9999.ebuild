@@ -168,7 +168,6 @@ src_configure() {
 }
 
 src_install() {
-	dodir /usr
 	emake DESTDIR="${D}" install || die "Installation failed"
 
 	# Remove redundant headers
