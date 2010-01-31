@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI=3
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/mesa/mesa"
 
@@ -74,6 +74,7 @@ S="${WORKDIR}/${MY_P}"
 # It is slow without texrels, if someone wants slow
 # mesa without texrels +pic use is worth shot
 QA_EXECSTACK="usr/lib*/opengl/xorg-x11/lib/libGL.so*"
+QA_WX_LOAD="usr/lib*/opengl/xorg-x11/lib/libGL.so*"
 
 # Think about: ggi, svga, fbcon, no-X configs
 

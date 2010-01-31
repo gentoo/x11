@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
+EAPI=3
 inherit x-modular-r2
 
 DESCRIPTION="X.Org the Institute of Software, Academia Sinica (chinese) fonts"

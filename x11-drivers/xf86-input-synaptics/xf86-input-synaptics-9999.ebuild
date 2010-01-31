@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
+EAPI=3
 inherit linux-info x-modular-r2
 
 DESCRIPTION="Driver for Synaptics touchpads"
