@@ -128,6 +128,7 @@ font_src_install() {
 # @FUNCTION: font_pkg_setup
 # @DESCRIPTION:
 # The font pkg_setup function.
+# Collision portection and Prefix compat for eapi < 3.
 font_pkg_setup() {
 	# make sure we get no collisions
 	# setup is not the nicest place, but preinst doesn't cut it
@@ -149,6 +150,7 @@ font_pkg_setup() {
 # @FUNCTION: font_pkg_postinst
 # @DESCRIPTION:
 # The font pkg_postinst function.
+# Update global font cache and fix permissions.
 font_pkg_postinst() {
 	# unreadable font files = fontconfig segfaults
 	find "${EROOT}"usr/share/fonts/ -type f '!' -perm 0644 -print0 \
@@ -178,7 +180,8 @@ font_pkg_postinst() {
 
 # @FUNCTION: font_pkg_postrm
 # @DESCRIPTION:
-# The font pkg_postrm function, which is exported.
+# The font pkg_postrm function.
+# Updates global font cache
 font_pkg_postrm() {
 	# unreadable font files = fontconfig segfaults
 	find "${EROOT}"usr/share/fonts/ -type f '!' -perm 0644 -print0 \
