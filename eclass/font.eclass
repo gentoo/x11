@@ -50,7 +50,7 @@ DEPEND="X? (
 		x11-apps/mkfontdir
 		media-fonts/encodings
 	)
-	media-libs/fontconfig"
+	>=media-libs/fontconfig-2.4.0"
 
 # @FUNCTION: font_xfont_config
 # @DESCRIPTION:
