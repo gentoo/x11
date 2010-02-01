@@ -72,16 +72,6 @@ font_xfont_config() {
 	fi
 }
 
-# @FUNCTION: font_xft_config
-# @DESCRIPTION:
-# Creates the fontconfig cache if necessary.
-font_xft_config() {
-	# create fontconfig cache
-	ebegin "Creating fontconfig cache"
-	fc-cache -sf "${ED}${FONTDIR}"
-	eend $?
-}
-
 # @FUNCTION: font_fontconfig
 # @DESCRIPTION:
 # Installs the fontconfig config files of FONT_CONF.
@@ -112,7 +102,6 @@ font_src_install() {
 	rm -f fonts.{dir,scale} encodings.dir
 
 	font_xfont_config
-	font_xft_config
 	font_fontconfig
 
 	popd > /dev/null
