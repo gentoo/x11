@@ -119,10 +119,6 @@ font_src_install() {
 # The font pkg_setup function.
 # Collision portection and Prefix compat for eapi < 3.
 font_pkg_setup() {
-	# make sure we get no collisions
-	# setup is not the nicest place, but preinst doesn't cut it
-	[[ -e "${FONTDIR}/fonts.cache-1" ]] && rm -f "${FONTDIR}/fonts.cache-1"
-
 	# Prefix compat
 	case ${EAPI:-0} in
 		0|1|2)
@@ -134,6 +130,10 @@ font_pkg_setup() {
 			fi
 			;;
 	esac
+
+	# make sure we get no collisions
+	# setup is not the nicest place, but preinst doesn't cut it
+	[[ -e "${EROOT}/${FONTDIR}/fonts.cache-1" ]] && rm -f "${EROOT}/${FONTDIR}/fonts.cache-1"
 }
 
 # @FUNCTION: font_pkg_postinst
