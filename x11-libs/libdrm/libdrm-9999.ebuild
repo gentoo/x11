@@ -22,10 +22,8 @@ RESTRICT="test" # see bug #236845
 RDEPEND="dev-libs/libpthread-stubs"
 DEPEND="${RDEPEND}"
 
-CONFIGURE_OPTIONS="--enable-udev --enable-nouveau-experimental-api"
-# Fails to build on ARM if dev-libs/libatomic_ops is installed
-use arm && CONFIGURE_OPTIONS="${CONFIGURE_OPTIONS} --disable-intel --disable-radeon"
-
+# Fails to build on ARM if dev-libs/libatomic_ops is installed, bug 297630
+CONFIGURE_OPTIONS="--enable-udev --enable-nouveau-experimental-api $(use_enable !arm intel) $(use_enable !arm radeon)"
 
 pkg_postinst() {
 	x-modular-r2_pkg_postinst
