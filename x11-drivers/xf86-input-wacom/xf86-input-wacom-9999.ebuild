@@ -1,4 +1,4 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -7,16 +7,18 @@ inherit linux-info x-modular-r2
 
 DESCRIPTION="Driver for Wacom tablets and drawing devices"
 LICENSE="GPL-2"
-EGIT_REPO_URI="git://anongit.freedesktop.org/~whot/xf86-input-wacom"
+EGIT_REPO_URI="git://linuxwacom.git.sourceforge.net/gitroot/linuxwacom/${PN}"
 [[ ${PV} != 9999* ]] && \
-	SRC_URI="http://people.freedesktop.org/~whot/${PN}/${P}.tar.bz2"
+	SRC_URI="mirror://sourceforge/linuxwacom/files/${PN}/${P}.tar.bz2"
 
 KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
 IUSE="hal debug"
 
-RDEPEND=">=x11-base/xorg-server-1.6
+COMMON_DEPEND=">=x11-base/xorg-server-1.6
 	hal? ( sys-apps/hal )"
-DEPEND="${RDEPEND}
+RDEPEND="${COMMON_DEPEND}
+	!x11-drivers/linuxwacom"
+DEPEND="${COMMON_DEPEND}
 	x11-proto/inputproto
 	x11-proto/xproto"
 
@@ -29,6 +31,7 @@ pkg_setup() {
 
 src_install() {
 	x-modular-r2_src_install
+	rm -r "${D}/usr/share/hal"
 
 	if use hal; then
 		insinto /usr/share/hal/fdi/policy/10osvendor
