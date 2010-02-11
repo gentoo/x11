@@ -148,6 +148,7 @@ fi
 if [[ ${FONT} != yes \
 		&& ${CATEGORY} != app-doc \
 		&& ${CATEGORY} != x11-proto \
+		&& ${CATEGORY} != x11-drivers \
 		&& ${CATEGORY} != media-fonts \
 		&& ${PN} != util-macros \
 		&& ${PN} != xbitmaps \
