@@ -1,4 +1,4 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -34,7 +34,7 @@ pkg_postinst() {
 			ewarn "enable CONFIG_DRM_NOUVEAU in the kernel."
 		fi
 	fi
-	if ! has_version x11-base/nouveau-firmware; then
+	if ! has_version x11-drivers/nouveau-firmware; then
 		ewarn "Nouveau firmware not detected, for acceleration on NV50 (G80)"
 		ewarn "and newer chipsets, emerge x11-drivers/nouveau-firmware."
 	fi
