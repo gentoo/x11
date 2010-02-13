@@ -1,21 +1,20 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
-inherit linux-info x-modular-r2
-
-EGIT_REPO_URI="git://anongit.freedesktop.org/git/nouveau/${PN}"
+EAPI=2
+SNAPSHOT="yes"
+inherit linux-info x-modular
 
 DESCRIPTION="Nouveau video driver"
 HOMEPAGE="http://nouveau.freedesktop.org/"
-SRC_URI=""
+SRC_URI="http://dev.gentoo.org/~chithanh/${PN}/${P}.tar.bz2"
 
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 RDEPEND=">=x11-base/xorg-server-1.7[-minimal]
-	>=x11-libs/libdrm-2.4.18"
+	>=x11-libs/libdrm-2.4.18_pre"
 
 DEPEND="${RDEPEND}
 	x11-proto/fontsproto
@@ -27,7 +26,7 @@ DEPEND="${RDEPEND}
 	x11-proto/xproto"
 
 pkg_postinst() {
-	x-modular-r2_pkg_postinst
+	x-modular_pkg_postinst
 	if ! has_version x11-base/nouveau-drm; then
 		if ! linux_config_exists || ! linux_chkconfig_present DRM_NOUVEAU; then
 			ewarn "Nouveau DRM not detected. If you want any kind of"
