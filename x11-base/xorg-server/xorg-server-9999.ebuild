@@ -223,9 +223,6 @@ pkg_postinst() {
 		ewarn "You can generate a list of all installed packages in the x11-drivers"
 		ewarn "category using this command:"
 		ewarn "emerge portage-utils; qlist -I -C x11-drivers/"
-
-		ebeep 5
-		epause 10
 	fi
 }
 
