@@ -13,7 +13,7 @@ DESCRIPTION="X.Org X servers"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 
 IUSE_SERVERS="dmx kdrive xorg"
-IUSE="${IUSE_SERVERS} tslib hal ipv6 minimal nptl sdl"
+IUSE="${IUSE_SERVERS} tslib hal udev ipv6 minimal nptl sdl"
 RDEPEND="hal? ( sys-apps/hal )
 	tslib? ( >=x11-libs/tslib-1.0 x11-proto/xcalibrateproto )
 	dev-libs/openssl
@@ -156,6 +156,7 @@ pkg_setup() {
 		$(use_enable xorg)
 		$(use_enable nptl glx-tls)
 		$(use_enable hal config-hal)
+		$(use_enable udev config-udev)
 		--sysconfdir=/etc/X11
 		--localstatedir=/var
 		--enable-install-setuid
