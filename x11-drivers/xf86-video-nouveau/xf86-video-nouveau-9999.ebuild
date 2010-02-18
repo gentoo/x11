@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit linux-info xorg-2
+inherit linux-info x-modular-r2
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/nouveau/${PN}"
 
@@ -27,7 +27,7 @@ DEPEND="${RDEPEND}
 	x11-proto/xproto"
 
 pkg_postinst() {
-	xorg-2_pkg_postinst
+	x-modular-r2_pkg_postinst
 	if ! has_version x11-base/nouveau-drm; then
 		if ! linux_config_exists || ! linux_chkconfig_present DRM_NOUVEAU; then
 			ewarn "Nouveau DRM not detected. If you want any kind of"

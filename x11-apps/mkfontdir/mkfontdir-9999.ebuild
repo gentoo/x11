@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit xorg-2
+inherit x-modular-r2
 
 DESCRIPTION="create an index of X font files in a directory"
 

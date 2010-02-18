@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit xorg-2
+inherit x-modular-r2
 
 DESCRIPTION="ATI video driver"
 
@@ -24,7 +24,7 @@ DEPEND="${RDEPEND}
 	x11-proto/xproto"
 
 pkg_setup() {
-	xorg-2_pkg_setup
+	x-modular-r2_pkg_setup
 	CONFIGURE_OPTIONS="
 		--enable-dri
 		--enable-kms

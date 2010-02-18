@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit xorg-2 multilib versionator
+inherit x-modular-r2 multilib versionator
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/xserver"
 
@@ -125,7 +125,7 @@ PATCHES=(
 	)
 
 pkg_setup() {
-	xorg-2_pkg_setup
+	x-modular-r2_pkg_setup
 
 	use minimal || ensure_a_server_is_building
 
@@ -187,7 +187,7 @@ src_configure() {
 	# this is required only for configure and build time
 	OLD_IMPLEM="$(eselect opengl show)"
 	[[ ${OLD_IMPLEM} != ${OPENGL_DIR} ]] && eselect opengl set ${OPENGL_DIR}
-	xorg-2_src_configure
+	x-modular-r2_src_configure
 }
 
 src_compile() {
@@ -200,7 +200,7 @@ src_compile() {
 }
 
 src_install() {
-	xorg-2_src_install
+	x-modular-r2_src_install
 
 	dynamic_libgl_install
 

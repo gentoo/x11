@@ -5,7 +5,7 @@
 FONT_DIR="OTF"
 
 EAPI=3
-inherit xorg-2
+inherit x-modular-r2
 
 DESCRIPTION="X.Org Syriac fonts"
 

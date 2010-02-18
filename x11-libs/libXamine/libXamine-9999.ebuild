@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit xorg-2
+inherit x-modular-r2
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xcb/libXamine"
 DESCRIPTION="Protocol analysis library for the X Window System protocol"

@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit xorg-2
+inherit x-modular-r2
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/mesa/drm"
 
@@ -26,11 +26,11 @@ pkg_setup() {
 	# Fails to build on ARM if dev-libs/libatomic_ops is installed, bug 297630
 	CONFIGURE_OPTIONS="--enable-udev --enable-nouveau-experimental-api $(use_enable !arm intel) $(use_enable !arm radeon)"
 
-	xorg-2_pkg_setup
+	x-modular-r2_pkg_setup
 }
 
 pkg_postinst() {
-	xorg-2_pkg_postinst
+	x-modular-r2_pkg_postinst
 
 	ewarn "libdrm's ABI may have changed without change in library name"
 	ewarn "Please rebuild media-libs/mesa, x11-base/xorg-server and"

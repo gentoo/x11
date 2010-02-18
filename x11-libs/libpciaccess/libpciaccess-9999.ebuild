@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit xorg-2
+inherit x-modular-r2
 
 DESCRIPTION="Library providing generic access to the PCI bus and devices"
 
@@ -16,7 +16,7 @@ RDEPEND="${DEPEND}"
 CONFIGURE_OPTIONS="--with-pciids-path=/usr/share/misc"
 
 src_install() {
-	xorg-2_src_install
+	x-modular-r2_src_install
 	if ! use minimal; then
 		dobin src/.libs/scanpci || die
 	fi

@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit xorg-2
+inherit x-modular-r2
 
 DESCRIPTION="X.Org Xi library"
 
@@ -20,7 +20,7 @@ DEPEND="${RDEPEND}
 "
 
 pkg_postinst() {
-	xorg-2_pkg_postinst
+	x-modular-r2_pkg_postinst
 
 	ewarn "Some special keys and keyboard layouts may stop working."
 	ewarn "To fix them, recompile xorg-server."

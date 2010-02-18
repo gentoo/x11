@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit xorg-2
+inherit x-modular-r2
 
 OPENGL_DIR="xorg-x11"
 
@@ -16,12 +16,12 @@ RDEPEND="app-admin/eselect-opengl"
 DEPEND=""
 
 src_install() {
-	xorg-2_src_install
+	x-modular-r2_src_install
 	dynamic_libgl_install
 }
 
 pkg_postinst() {
-	xorg-2_pkg_postinst
+	x-modular-r2_pkg_postinst
 	switch_opengl_implem
 }
 

@@ -3,7 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/media-fonts/font-util/font-util-1.1.1.ebuild,v 1.1 2009/10/12 17:18:59 remi Exp $
 
 EAPI=3
-inherit xorg-2
+inherit x-modular-r2
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/xorg/font/util"
 DESCRIPTION="X.Org font utilities"

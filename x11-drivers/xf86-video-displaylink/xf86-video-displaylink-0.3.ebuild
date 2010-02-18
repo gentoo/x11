@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit xorg-2
+inherit x-modular-r2
 
 DESCRIPTION="xf86 displaylink driver"
 HOMEPAGE="http://libdlo.freedesktop.org/wiki/xf86-driver-displaylink"
