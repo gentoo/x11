@@ -357,7 +357,7 @@ xorg-2_src_install() {
 # Run X-specific post-installation tasks on the live filesystem. The
 # only task right now is some setup for font packages.
 xorg-2_pkg_postinst() {
-	[[ -n "${FONT}" ]] && setup_fonts
+	[[ -n ${FONT} ]] && setup_fonts
 }
 
 # @FUNCTION: xorg-2_pkg_postrm
@@ -366,7 +366,7 @@ xorg-2_pkg_postinst() {
 # Run X-specific post-removal tasks on the live filesystem. The only
 # task right now is some cleanup for font packages.
 xorg-2_pkg_postrm() {
-	if [[ -n "${FONT}" ]]; then
+	if [[ -n ${FONT} ]]; then
 		cleanup_fonts
 		font_pkg_postrm
 	fi
