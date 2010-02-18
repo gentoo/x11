@@ -261,7 +261,7 @@ xorg-2_font_configure() {
 # Set up CFLAGS for a debug build
 xorg-2_flags_setup() {
 	# Win32 require special define
-	[[ ${CHOST} == *-winnt* ]] && append-flags -DWIN32 -D__STDC__
+	[[ ${CHOST} == *-winnt* ]] && append-cppflags -DWIN32 -D__STDC__
 }
 
 # @FUNCTION: xorg-2_src_configure
