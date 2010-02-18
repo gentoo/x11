@@ -262,13 +262,6 @@ xorg-2_font_configure() {
 xorg-2_flags_setup() {
 	# Win32 require special define
 	[[ ${CHOST} == *-winnt* ]] && append-flags -DWIN32 -D__STDC__
-
-	# hardened dependant ldflags
-	if [[ ${PN} = xorg-server || -n ${DRIVER} ]]; then
-		append-ldflags -Wl,-z,lazy
-		# (#116698) breaks loading
-		filter-ldflags -Wl,-z,now
-	fi
 }
 
 # @FUNCTION: xorg-2_src_configure
