@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit x-modular-r2
+inherit xorg-2
 
 DESCRIPTION="primitive command line interface to RandR extension"
 
@@ -16,6 +16,6 @@ RDEPEND=">=x11-libs/libXrandr-1.3
 DEPEND="${RDEPEND}"
 
 src_install() {
-	x-modular-r2_src_install
+	xorg-2_src_install
 	rm -f "${D}"/usr/bin/xkeystone
 }

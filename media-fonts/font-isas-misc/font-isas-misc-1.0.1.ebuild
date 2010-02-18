@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit x-modular-r2
+inherit xorg-2
 
 DESCRIPTION="X.Org the Institute of Software, Academia Sinica (chinese) fonts"
 

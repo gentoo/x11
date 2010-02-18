@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit x-modular-r2 toolchain-funcs flag-o-matic
+inherit xorg-2 toolchain-funcs flag-o-matic
 
 DESCRIPTION="X.Org X11 library"
 
@@ -33,7 +33,7 @@ DEPEND="${RDEPEND}
 	x11-proto/xextproto"
 
 pkg_setup() {
-	x-modular-r2_pkg_setup
+	xorg-2_pkg_setup
 	CONFIGURE_OPTIONS="$(use_enable doc specs) $(use_enable ipv6)
 		$(use_with xcb) $(use_with test perl)"
 	# xorg really doesn't like xlocale disabled.
@@ -43,5 +43,5 @@ pkg_setup() {
 src_compile() {
 	# [Cross-Compile Love] Disable {C,LD}FLAGS and redefine CC= for 'makekeys'
 	( filter-flags -m* ; cd src/util && make CC=$(tc-getBUILD_CC) CFLAGS="${CFLAGS}" LDFLAGS="" clean all)
-	x-modular-r2_src_compile
+	xorg-2_src_compile
 }

@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit x-modular-r2
+inherit xorg-2
 
 DESCRIPTION="query configuration information of DRI drivers"
 
@@ -17,7 +17,7 @@ DEPEND="${RDEPEND}
 	x11-proto/glproto"
 
 pkg_setup() {
-	x-modular-r2_pkg_setup
+	xorg-2_pkg_setup
 
 	# Bug #138920
 	ewarn "Forcing on xorg-x11 for header sanity..."
@@ -26,7 +26,7 @@ pkg_setup() {
 }
 
 pkg_postinst() {
-	x-modular-r2_pkg_postinst
+	xorg-2_pkg_postinst
 
 	echo
 	eselect opengl set ${OLD_IMPLEM}

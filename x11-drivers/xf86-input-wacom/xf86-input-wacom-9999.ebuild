@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit linux-info x-modular-r2
+inherit linux-info xorg-2
 
 DESCRIPTION="Driver for Wacom tablets and drawing devices"
 LICENSE="GPL-2"
@@ -24,13 +24,13 @@ DEPEND="${COMMON_DEPEND}
 
 pkg_setup() {
 	linux-info_pkg_setup
-	x-modular-r2_pkg_setup
+	xorg-2_pkg_setup
 
 	CONFIGURE_OPTIONS="$(use_enable debug)"
 }
 
 src_install() {
-	x-modular-r2_src_install
+	xorg-2_src_install
 	rm -r "${D}/usr/share/hal"
 
 	if use hal; then
@@ -40,7 +40,7 @@ src_install() {
 }
 
 pkg_postinst() {
-	x-modular-r2_pkg_postinst
+	xorg-2_pkg_postinst
 
 	if ! linux_config_exists \
 	|| ! linux_chkconfig_present TABLET_USB_WACOM \

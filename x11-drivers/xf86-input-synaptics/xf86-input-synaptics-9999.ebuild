@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit linux-info x-modular-r2
+inherit linux-info xorg-2
 
 DESCRIPTION="Driver for Synaptics touchpads"
 HOMEPAGE="http://cgit.freedesktop.org/xorg/driver/xf86-input-synaptics/"
@@ -22,7 +22,7 @@ DEPEND="${RDEPEND}
 
 src_install() {
 	DOCS="TODO README"
-	x-modular-r2_src_install
+	xorg-2_src_install
 
 	if use hal ; then
 		insinto /usr/share/hal/fdi/policy/10osvendor
@@ -31,7 +31,7 @@ src_install() {
 }
 
 pkg_postinst() {
-	x-modular-r2_pkg_postinst
+	xorg-2_pkg_postinst
 	# Just a friendly warning
 	if linux_config_exists; then
 		if ! linux_chkconfig_present INPUT_EVDEV; then

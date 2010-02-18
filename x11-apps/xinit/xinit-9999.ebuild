@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit x-modular-r2 pam
+inherit xorg-2 pam
 
 DESCRIPTION="X Window System initializer"
 
@@ -30,12 +30,12 @@ PATCHES=(
 )
 
 pkg_setup() {
-	x-modular-r2_pkg_setup
+	xorg-2_pkg_setup
 	CONFIGURE_OPTIONS="--with-xinitdir=/etc/X11/xinit"
 }
 
 src_install() {
-	x-modular-r2_src_install
+	xorg-2_src_install
 	exeinto /etc/X11
 	doexe "${FILESDIR}"/chooser.sh "${FILESDIR}"/startDM.sh || die
 	exeinto /etc/X11/Sessions
@@ -52,7 +52,7 @@ src_install() {
 }
 
 pkg_postinst() {
-	x-modular-r2_pkg_postinst
+	xorg-2_pkg_postinst
 	ewarn "If you use startx to start X instead of a login manager like gdm/kdm,"
 	ewarn "you can set the XSESSION variable to anything in /etc/X11/Sessions/ or"
 	ewarn "any executable. When you run startx, it will run this as the login session."

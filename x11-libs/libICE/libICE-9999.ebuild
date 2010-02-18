@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit x-modular-r2
+inherit xorg-2
 
 DESCRIPTION="X.Org ICE library"
 
@@ -15,6 +15,6 @@ RDEPEND="x11-libs/xtrans
 DEPEND="${RDEPEND}"
 
 pkg_setup() {
-	x-modular-r2_pkg_setup
+	xorg-2_pkg_setup
 	CONFIGURE_OPTIONS="$(use_enable ipv6)"
 }

@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit x-modular-r2 flag-o-matic
+inherit xorg-2 flag-o-matic
 
 DESCRIPTION="X.Org Xft library"
 
@@ -19,7 +19,7 @@ RDEPEND="x11-libs/libXrender
 DEPEND="${RDEPEND}"
 
 pkg_setup() {
-	x-modular-r2_pkg_setup
+	xorg-2_pkg_setup
 	# (#125465) Broken with Bdirect support
 	filter-flags -Wl,-Bdirect
 	filter-ldflags -Bdirect
