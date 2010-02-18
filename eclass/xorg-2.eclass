@@ -211,9 +211,8 @@ xorg-2_reconf_source() {
 			[[ -e "./configure.ac" ]] && eautoreconf || ewarn "Unable to autoreconf the configure script. Things may fail."
 			;;
 		*)
-			[[ ${SNAPSHOT} != no && -e "./configure.ac" ]] && eautoreconf
-			# Fix shared lib issues on MIPS, FBSD, etc etc
-			elibtoolize
+			# elibtoolize required for BSD
+			[[ ${SNAPSHOT} != no && -e "./configure.ac" ]] && eautoreconf || elibtoolize
 			;;
 	esac
 }
