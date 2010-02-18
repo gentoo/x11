@@ -332,7 +332,7 @@ xorg-2_src_install() {
 		popd > /dev/null
 	fi
 
-	if [[ -e ${S}/ChangeLog ]]; then
+	if [[ -e "${S}"/ChangeLog ]]; then
 		dodoc "${S}"/ChangeLog
 	fi
 # @VARIABLE: DOCS
