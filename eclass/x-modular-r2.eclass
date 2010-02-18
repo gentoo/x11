@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 #
-# @ECLASS: xorg-2.eclass
+# @ECLASS: x-modular-r2.eclass
 # @MAINTAINER:
 # x11@gentoo.org
 
@@ -55,7 +55,7 @@ EXPORT_FUNCTIONS ${EXPORTED_FUNCTIONS}
 # Directory prefix to use for everything. If you want to install to a
 # non-default prefix (e.g., /opt/xorg), change XDIR. This has not been
 # recently tested. You may need to uncomment the setting of datadir and
-# mandir in xorg-2_src_install() or add it back in if it's no longer
+# mandir in x-modular-r2_src_install() or add it back in if it's no longer
 # there. You may also want to change the SLOT.
 : ${XDIR:=/usr}
 
@@ -163,19 +163,19 @@ DEPEND+=" >=dev-util/pkgconfig-0.23"
 has dri ${IUSE//+} && DEPEND+=" dri? ( >=x11-base/xorg-server-1.6.3.901-r2[-minimal] )"
 [[ -n "${DRIVER}" ]] && DEPEND+=" x11-base/xorg-server[xorg]"
 
-# @FUNCTION: xorg-2_pkg_setup
+# @FUNCTION: x-modular-r2_pkg_setup
 # @USAGE:
 # @DESCRIPTION:
 # Setup prefix compat
-xorg-2_pkg_setup() {
+x-modular-r2_pkg_setup() {
 	[[ ${FONT} == yes ]] && font_pkg_setup
 }
 
-# @FUNCTION: xorg-2_src_unpack
+# @FUNCTION: x-modular-r2_src_unpack
 # @USAGE:
 # @DESCRIPTION:
 # Simply unpack source code.
-xorg-2_src_unpack() {
+x-modular-r2_src_unpack() {
 	if [[ -n ${GIT_ECLASS} ]]; then
 		git_src_unpack
 	else
@@ -185,11 +185,11 @@ xorg-2_src_unpack() {
 	[[ -n ${FONT_OPTIONS} ]] && einfo "Detected font directory: ${FONT_DIR}"
 }
 
-# @FUNCTION: xorg-2_patch_source
+# @FUNCTION: x-modular-r2_patch_source
 # @USAGE:
 # @DESCRIPTION:
 # Apply all patches
-xorg-2_patch_source() {
+x-modular-r2_patch_source() {
 	# Use standardized names and locations with bulk patching
 	# Patch directory is ${WORKDIR}/patch
 	# See epatch() in eutils.eclass for more documentation
@@ -200,11 +200,11 @@ xorg-2_patch_source() {
 	epatch_user
 }
 
-# @FUNCTION: xorg-2_reconf_source
+# @FUNCTION: x-modular-r2_reconf_source
 # @USAGE:
 # @DESCRIPTION:
 # Run eautoreconf if necessary, and run elibtoolize.
-xorg-2_reconf_source() {
+x-modular-r2_reconf_source() {
 	case ${CHOST} in
 		*-interix* | *-aix* | *-winnt*)
 			# some hosts need full eautoreconf
@@ -218,21 +218,21 @@ xorg-2_reconf_source() {
 	esac
 }
 
-# @FUNCTION: xorg-2_src_prepare
+# @FUNCTION: x-modular-r2_src_prepare
 # @USAGE:
 # @DESCRIPTION:
 # Prepare a package after unpacking, performing all X-related tasks.
-xorg-2_src_prepare() {
+x-modular-r2_src_prepare() {
 	[[ -n ${GIT_ECLASS} ]] && git_src_prepare
-	xorg-2_patch_source
-	xorg-2_reconf_source
+	x-modular-r2_patch_source
+	x-modular-r2_reconf_source
 }
 
-# @FUNCTION: xorg-2_font_configure
+# @FUNCTION: x-modular-r2_font_configure
 # @USAGE:
 # @DESCRIPTION:
 # If a font package, perform any necessary configuration steps
-xorg-2_font_configure() {
+x-modular-r2_font_configure() {
 	if has nls ${IUSE//+} && ! use nls; then
 		FONT_OPTIONS+="
 			--disable-iso8859-2
@@ -259,7 +259,7 @@ xorg-2_font_configure() {
 # @USAGE:
 # @DESCRIPTION:
 # Set up CFLAGS for a debug build
-xorg-2_flags_setup() {
+x-modular-r2_flags_setup() {
 	# Win32 require special define
 	[[ ${CHOST} == *-winnt* ]] && append-flags -DWIN32 -D__STDC__
 
@@ -271,15 +271,15 @@ xorg-2_flags_setup() {
 	fi
 }
 
-# @FUNCTION: xorg-2_src_configure
+# @FUNCTION: x-modular-r2_src_configure
 # @USAGE:
 # @DESCRIPTION:
 # Perform any necessary pre-configuration steps, then run configure
-xorg-2_src_configure() {
+x-modular-r2_src_configure() {
 	local myopts=""
 
-	xorg-2_flags_setup
-	[[ -n "${FONT}" ]] && xorg-2_font_configure
+	x-modular-r2_flags_setup
+	[[ -n "${FONT}" ]] && x-modular-r2_font_configure
 
 # @VARIABLE: CONFIGURE_OPTIONS
 # @DESCRIPTION:
@@ -297,20 +297,20 @@ xorg-2_src_configure() {
 	fi
 }
 
-# @FUNCTION: xorg-2_src_compile
+# @FUNCTION: x-modular-r2_src_compile
 # @USAGE:
 # @DESCRIPTION:
 # Compile a package, performing all X-related tasks.
-xorg-2_src_compile() {
+x-modular-r2_src_compile() {
 	base_src_compile
 }
 
-# @FUNCTION: xorg-2_src_install
+# @FUNCTION: x-modular-r2_src_install
 # @USAGE:
 # @DESCRIPTION:
 # Install a built package to ${D}, performing any necessary steps.
 # Creates a ChangeLog from git if using live ebuilds.
-xorg-2_src_install() {
+x-modular-r2_src_install() {
 	# Install everything to ${XDIR}
 	if [[ ${CATEGORY} == x11-proto ]]; then
 		emake \
@@ -351,21 +351,21 @@ xorg-2_src_install() {
 	[[ -n ${FONT} ]] && remove_font_metadata
 }
 
-# @FUNCTION: xorg-2_pkg_postinst
+# @FUNCTION: x-modular-r2_pkg_postinst
 # @USAGE:
 # @DESCRIPTION:
 # Run X-specific post-installation tasks on the live filesystem. The
 # only task right now is some setup for font packages.
-xorg-2_pkg_postinst() {
+x-modular-r2_pkg_postinst() {
 	[[ -n "${FONT}" ]] && setup_fonts
 }
 
-# @FUNCTION: xorg-2_pkg_postrm
+# @FUNCTION: x-modular-r2_pkg_postrm
 # @USAGE:
 # @DESCRIPTION:
 # Run X-specific post-removal tasks on the live filesystem. The only
 # task right now is some cleanup for font packages.
-xorg-2_pkg_postrm() {
+x-modular-r2_pkg_postrm() {
 	if [[ -n "${FONT}" ]]; then
 		cleanup_fonts
 		font_pkg_postrm
