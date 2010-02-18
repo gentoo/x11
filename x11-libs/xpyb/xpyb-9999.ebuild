@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit x-modular-r2
+inherit xorg-2
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xcb/xpyb"
 #SRC_URI="http://xcb.freedesktop.org/dist/${P}.tar.bz2"
@@ -21,6 +21,6 @@ DEPEND="${RDEPEND}
 DOCS="NEWS README"
 
 pkg_setup() {
-	x-modular-r2_pkg_setup
+	xorg-2_pkg_setup
 	CONFIGURE_OPTIONS="$(use_enable selinux xselinux)"
 }

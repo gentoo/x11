@@ -6,7 +6,7 @@
 #SNAPSHOT="yes"
 
 EAPI=3
-inherit x-modular-r2
+inherit xorg-2
 
 DESCRIPTION="X C-language Bindings demos"
 SRC_URI="http://xcb.freedesktop.org/dist/${P}.tar.bz2"

@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit x-modular-r2
+inherit xorg-2
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/proto/evieproto"
 DESCRIPTION="X.Org EvIE protocol headers"

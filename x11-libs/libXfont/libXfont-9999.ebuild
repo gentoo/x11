@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit x-modular-r2 flag-o-matic
+inherit xorg-2 flag-o-matic
 
 DESCRIPTION="X.Org Xfont library"
 
@@ -19,7 +19,7 @@ RDEPEND="x11-libs/xtrans
 DEPEND="${RDEPEND}"
 
 pkg_setup() {
-	x-modular-r2_pkg_setup
+	xorg-2_pkg_setup
 	CONFIGURE_OPTIONS="$(use_enable ipv6)
 		--with-bzip2
 		--disable-devel-docs"

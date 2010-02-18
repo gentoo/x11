@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit x-modular-r2
+inherit xorg-2
 
 DESCRIPTION="X C-language Bindings sample implementations"
 HOMEPAGE="http://xcb.freedesktop.org/"
@@ -20,7 +20,7 @@ DEPEND="${RDEPEND}
 	test? ( >=dev-libs/check-0.9.4 )"
 
 pkg_postinst() {
-	x-modular-r2_pkg_postinst
+	xorg-2_pkg_postinst
 
 	echo
 	ewarn "Library names have changed since earlier versions of xcb-util;"

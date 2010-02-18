@@ -6,7 +6,7 @@
 #SNAPSHOT="yes"
 
 EAPI=3
-inherit x-modular-r2
+inherit xorg-2
 
 DESCRIPTION="X.Org font encodings"
 

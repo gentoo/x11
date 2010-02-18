@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit x-modular-r2
+inherit xorg-2
 
 DESCRIPTION="Generic Linux input driver"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86"

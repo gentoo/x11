@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit x-modular-r2
+inherit xorg-2
 
 DESCRIPTION="X C-language Bindings library"
 HOMEPAGE="http://xcb.freedesktop.org/"
@@ -24,7 +24,7 @@ DEPEND="${RDEPEND}
 	>=dev-lang/python-2.5[xml]"
 
 pkg_setup() {
-	x-modular-r2_pkg_setup
+	xorg-2_pkg_setup
 	CONFIGURE_OPTIONS="$(use_enable doc build-docs)
 		$(use_enable selinux)
 		--enable-xinput"

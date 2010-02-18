@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit x-modular-r2
+inherit xorg-2
 
 DESCRIPTION="X.Org xproto protocol headers"
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/proto/x11proto"
