@@ -107,15 +107,15 @@ if [[ ${SNAPSHOT} != no ]]; then
 	DEPEND+="
 		>=sys-devel/libtool-2.2.6a
 		sys-devel/m4"
-	# These 2 versions MUST BE STABLE
+	# This MUST BE STABLE
 	[[ ${PN} == util-macros ]] || DEPEND+=" >=x11-misc/util-macros-1.3.0"
-	[[ ${PN} == font-util ]] || DEPEND+=" >=media-fonts/font-util-1.1.1-r1"
 	WANT_AUTOCONF="latest"
 	WANT_AUTOMAKE="latest"
 fi
 
 if [[ ${FONT} == yes ]]; then
-	DEPEND+=" >=media-fonts/font-util-1.1.1-r1"
+	# This MUST BE STABLE
+	[[ ${PN} != "font-util" ]] && DEPEND+=" >=media-fonts/font-util-1.1.1-r1"
 	RDEPEND+=" media-fonts/encodings
 		x11-apps/mkfontscale
 		x11-apps/mkfontdir"
