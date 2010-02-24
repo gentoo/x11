@@ -427,7 +427,7 @@ remove_font_metadata() {
 # @DESCRIPTION:
 # Create fonts.scale file, used by the old server-side fonts subsystem.
 create_fonts_scale() {
-	if [[ ${DIR} != Speedo && ${DIR} != CID ]]; then
+	if [[ ${FONT_DIR} != Speedo && ${FONT_DIR} != CID ]]; then
 		ebegin "Generating font.scale"
 			mkfontscale \
 				-a "${EROOT}/usr/share/fonts/encodings/encodings.dir" \
