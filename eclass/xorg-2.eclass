@@ -339,7 +339,7 @@ xorg-2_src_install() {
 	# Don't install libtool archives for server modules
 	if [[ -e "${D%/}${EPREFIX}/usr/$(get_libdir)/xorg/modules" ]]; then
 		find "${D%/}${EPREFIX}/usr/$(get_libdir)/xorg/modules" -name '*.la' \
-			| xargs rm -f
+			-exec rm -f {} ';'
 	fi
 
 	[[ -n ${FONT} ]] && remove_font_metadata
