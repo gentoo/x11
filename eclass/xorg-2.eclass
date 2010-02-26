@@ -50,15 +50,6 @@ esac
 # exports must be ALWAYS after inherit
 EXPORT_FUNCTIONS ${EXPORTED_FUNCTIONS}
 
-# @ECLASS-VARIABLE: XDIR
-# @DESCRIPTION:
-# Directory prefix to use for everything. If you want to install to a
-# non-default prefix (e.g., /opt/xorg), change XDIR. This has not been
-# recently tested. You may need to uncomment the setting of datadir and
-# mandir in xorg-2_src_install() or add it back in if it's no longer
-# there. You may also want to change the SLOT.
-: ${XDIR:=/usr}
-
 IUSE=""
 HOMEPAGE="http://xorg.freedesktop.org/"
 
@@ -283,8 +274,7 @@ xorg-2_src_configure() {
 		if has static-libs ${IUSE//+}; then
 			myopts+=" $(use_enable static-libs static)"
 		fi
-		econf --prefix="${EPREFIX}"${XDIR} \
-			--datadir="${EPREFIX}"${XDIR}/share \
+		econf \
 			${FONT_OPTIONS} \
 			${CONFIGURE_OPTIONS} \
 			${myopts}
@@ -305,19 +295,16 @@ xorg-2_src_compile() {
 # Install a built package to ${D}, performing any necessary steps.
 # Creates a ChangeLog from git if using live ebuilds.
 xorg-2_src_install() {
-	# Install everything to ${XDIR}
 	if [[ ${CATEGORY} == x11-proto ]]; then
 		emake \
 			${PN/proto/}docdir=${EPREFIX}/usr/share/doc/${PF} \
 			DESTDIR="${D}" \
-			install \
-			|| die "emake install failed"
+			install || die "emake install failed"
 	else
 		emake \
 			docdir=${EPREFIX}/usr/share/doc/${PF} \
 			DESTDIR="${D}" \
-			install \
-			|| die "emake install failed"
+			install || die "emake install failed"
 	fi
 
 	if [[ -n ${GIT_ECLASS} ]]; then
