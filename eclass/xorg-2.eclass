@@ -23,7 +23,7 @@
 GIT_ECLASS=""
 if [[ ${PV} == *9999* ]]; then
 	GIT_ECLASS="git"
-	SNAPSHOT="yes"
+	XORG_EAUTORECONF="yes"
 	SRC_URI=""
 fi
 
@@ -53,11 +53,11 @@ EXPORT_FUNCTIONS ${EXPORTED_FUNCTIONS}
 IUSE=""
 HOMEPAGE="http://xorg.freedesktop.org/"
 
-# @ECLASS-VARIABLE: SNAPSHOT
+# @ECLASS-VARIABLE: XORG_EAUTORECONF
 # @DESCRIPTION:
 # If set to 'yes' and configure.ac exists, eautoreconf will run. Set
 # before inheriting this eclass.
-: ${SNAPSHOT:="no"}
+: ${XORG_EAUTORECONF:="no"}
 
 # Set up SRC_URI for individual modular releases
 BASE_INDIVIDUAL_URI="http://xorg.freedesktop.org/releases/individual"
@@ -94,7 +94,7 @@ fi
 : ${LICENSE=MIT}
 
 # Set up shared dependencies
-if [[ ${SNAPSHOT} != no ]]; then
+if [[ ${XORG_EAUTORECONF} != no ]]; then
 	DEPEND+="
 		>=sys-devel/libtool-2.2.6a
 		sys-devel/m4"
@@ -203,7 +203,7 @@ xorg-2_reconf_source() {
 			;;
 		*)
 			# elibtoolize required for BSD
-			[[ ${SNAPSHOT} != no && -e "./configure.ac" ]] && eautoreconf || elibtoolize
+			[[ ${XORG_EAUTORECONF} != no && -e "./configure.ac" ]] && eautoreconf || elibtoolize
 			;;
 	esac
 }
