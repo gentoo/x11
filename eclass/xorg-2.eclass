@@ -99,7 +99,7 @@ if [[ ${XORG_EAUTORECONF} != no ]]; then
 		>=sys-devel/libtool-2.2.6a
 		sys-devel/m4"
 	# This MUST BE STABLE
-	[[ ${PN} == util-macros ]] || DEPEND+=" >=x11-misc/util-macros-1.3.0"
+	[[ ${PN} == util-macros ]] || DEPEND+=" >=x11-misc/util-macros-1.5.0"
 	WANT_AUTOCONF="latest"
 	WANT_AUTOMAKE="latest"
 fi
