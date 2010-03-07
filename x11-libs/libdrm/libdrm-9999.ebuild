@@ -24,7 +24,7 @@ DEPEND="${RDEPEND}"
 
 pkg_setup() {
 	# Fails to build on ARM if dev-libs/libatomic_ops is installed, bug 297630
-	CONFIGURE_OPTIONS="--enable-udev --enable-nouveau-experimental-api $(use_enable !arm intel) $(use_enable !arm radeon)"
+	CONFIGURE_OPTIONS="--enable-udev --enable-nouveau-experimental-api --enable-vmwgfx-experimental-api $(use_enable !arm intel) $(use_enable !arm radeon)"
 
 	xorg-2_pkg_setup
 }
