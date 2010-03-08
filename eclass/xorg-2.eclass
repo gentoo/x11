@@ -100,13 +100,13 @@ if [[ ${XORG_EAUTORECONF} != no ]]; then
 		sys-devel/m4"
 	# This MUST BE STABLE
 	[[ ${PN} == util-macros ]] || DEPEND+=" >=x11-misc/util-macros-1.5.0"
+	# Required even by xorg-server
+	[[ ${PN} == "font-util" ]] || DEPEND+=" >=media-fonts/font-util-1.1.1-r1"
 	WANT_AUTOCONF="latest"
 	WANT_AUTOMAKE="latest"
 fi
 
 if [[ ${FONT} == yes ]]; then
-	# This MUST BE STABLE
-	[[ ${PN} != "font-util" ]] && DEPEND+=" >=media-fonts/font-util-1.1.1-r1"
 	RDEPEND+=" media-fonts/encodings
 		x11-apps/mkfontscale
 		x11-apps/mkfontdir"
