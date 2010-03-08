@@ -18,7 +18,6 @@ DEPEND="${RDEPEND}
 	x11-proto/randrproto
 	x11-proto/videoproto
 	x11-proto/xextproto
-	x11-proto/xineramaproto
 	x11-proto/xf86driproto
 	x11-proto/xf86miscproto
 	x11-proto/xproto"
