@@ -3,7 +3,8 @@
 # $Header: $
 
 EAPI=3
-inherit xorg-2
+
+inherit linux-info xorg-2
 
 DESCRIPTION="X.Org driver for Intel cards"
 
@@ -15,13 +16,13 @@ RDEPEND=">=x11-base/xorg-server-1.6
 	x11-libs/libpciaccess
 	x11-libs/libXext
 	x11-libs/libXfixes
-	x11-libs/libXvMC"
+	x11-libs/libXvMC
+	>=x11-libs/libxcb-1.5"
 DEPEND="${RDEPEND}
 	>=x11-proto/dri2proto-1.99.3
 	x11-proto/fontsproto
 	x11-proto/randrproto
 	x11-proto/renderproto
-	x11-proto/xineramaproto
 	x11-proto/xextproto
 	x11-proto/xproto
 	dri? ( x11-proto/xf86driproto
@@ -29,5 +30,20 @@ DEPEND="${RDEPEND}
 
 pkg_setup() {
 	xorg-2_pkg_setup
-	CONFIGURE_OPTIONS="$(use_enable dri)"
+	CONFIGURE_OPTIONS="$(use_enable dri) --enable-xvmc"
+}
+
+pkg_postinst() {
+	if linux_config_exists \
+		&& ! linux_chkconfig_present CONFIG_DRM_I915_KMS; then
+		echo
+		ewarn "This driver requires KMS support in your kernel"
+		ewarn "  Device Drivers --->"
+		ewarn "    Graphics support --->"
+		ewarn "      Direct Rendering Manager (XFree86 4.1.0 and higher DRI support)  --->"
+		ewarn "      <*>   Intel 830M, 845G, 852GM, 855GM, 865G (i915 driver)  --->"
+		ewarn "              i915 driver"
+		ewarn "      [*]       Enable modesetting on intel by default"
+		echo
+	fi
 }
