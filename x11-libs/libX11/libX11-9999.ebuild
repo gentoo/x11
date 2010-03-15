@@ -35,7 +35,7 @@ DEPEND="${RDEPEND}
 pkg_setup() {
 	xorg-2_pkg_setup
 	CONFIGURE_OPTIONS="$(use_enable doc specs) $(use_enable ipv6)
-		$(use_with xcb) $(use_with test perl)"
+		$(use_with xcb)"
 	# xorg really doesn't like xlocale disabled.
 	# $(use_enable nls xlocale)
 }
