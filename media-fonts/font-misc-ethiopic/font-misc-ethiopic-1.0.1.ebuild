@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-FONT_DIR="TTF OTF"
+FONT_DIR="OTF"
 
 EAPI=3
 inherit xorg-2
@@ -16,4 +16,4 @@ RDEPEND=""
 DEPEND="${RDEPEND}
 	x11-apps/bdftopcf"
 
-FONT_OPTIONS="--with-ttf-fontdir=/usr/share/fonts/TTF --with-otf-fontdir=/usr/share/fonts/OTF"
+FONT_OPTIONS="--with-otf-fontdir=${EPREFIX}usr/share/fonts/OTF"
