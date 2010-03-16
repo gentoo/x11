@@ -11,13 +11,17 @@ if [[ ${PV} = 9999* ]]; then
 	EXPERIMENTAL="true"
 fi
 
-inherit autotools multilib flag-o-matic ${GIT_ECLASS} portability
+inherit base autotools multilib flag-o-matic versionator ${GIT_ECLASS}
 
 OPENGL_DIR="xorg-x11"
 
 MY_PN="${PN/m/M}"
 MY_P="${MY_PN}-${PV/_/-}"
 MY_SRC_P="${MY_PN}Lib-${PV/_/-}"
+
+FOLDER=$(get_version_component_range 1-2)
+[[ ${PV/_rc*/} == ${PV} ]] || FOLDER+="/RC"
+
 DESCRIPTION="OpenGL-like graphic library for Linux"
 HOMEPAGE="http://mesa3d.sourceforge.net/"
 
@@ -25,7 +29,7 @@ HOMEPAGE="http://mesa3d.sourceforge.net/"
 if [[ $PV = 9999* ]]; then
 	SRC_URI="${SRC_PATCHES}"
 else
-	SRC_URI="ftp://ftp.freedesktop.org/pub/mesa/${PV/_rc*/}/${MY_SRC_P}.tar.bz2
+	SRC_URI="ftp://ftp.freedesktop.org/pub/mesa/${FOLDER}/${MY_SRC_P}.tar.bz2
 		${SRC_PATCHES}"
 fi
 
@@ -72,7 +76,7 @@ DEPEND="${RDEPEND}
 S="${WORKDIR}/${MY_P}"
 
 # It is slow without texrels, if someone wants slow
-# mesa without texrels +pic use is worth shot
+# mesa without texrels +pic use is worth the shot
 QA_EXECSTACK="usr/lib*/opengl/xorg-x11/lib/libGL.so*"
 QA_WX_LOAD="usr/lib*/opengl/xorg-x11/lib/libGL.so*"
 
@@ -89,7 +93,7 @@ pkg_setup() {
 }
 
 src_unpack() {
-	[[ $PV = 9999* ]] && git_src_unpack || unpack ${A}
+	[[ $PV = 9999* ]] && git_src_unpack || base_src_unpack
 }
 
 src_prepare() {
@@ -101,14 +105,19 @@ src_prepare() {
 		epatch
 	fi
 	# FreeBSD 6.* doesn't have posix_memalign().
-	[[ ${CHOST} == *-freebsd6.* ]] && \
-		sed -i -e "s/-DHAVE_POSIX_MEMALIGN//" configure.ac
+	if [[ ${CHOST} == *-freebsd6.* ]]; then
+		sed -i \
+			-e "s/-DHAVE_POSIX_MEMALIGN//" \
+			configure.ac || die
+	fi
+
+	base_src_prepare
 
 	eautoreconf
 }
 
 src_configure() {
-	local myconf r600
+	local myconf
 
 	# Configurable DRI drivers
 	driver_enable swrast
@@ -168,7 +177,7 @@ src_configure() {
 }
 
 src_install() {
-	emake DESTDIR="${D}" install || die "Installation failed"
+	base_src_install
 
 	# Remove redundant headers
 	# GLUT thing
