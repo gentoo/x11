@@ -1,26 +1,30 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit eutils flag-o-matic libtool git autotools
+EAPI=2
 
-EGIT_REPO_URI="git://anongit.freedesktop.org/git/cairo"
+if [[ ${PV} == *9999 ]]; then
+	EGIT_REPO_URI="git://anongit.freedesktop.org/git/cairo"
+	GIT_ECLASS="git"
+fi
+
+inherit eutils flag-o-matic autotools ${GIT_ECLASS}
 
 DESCRIPTION="A vector graphics library with cross-device output support"
 HOMEPAGE="http://cairographics.org/"
-SRC_URI=""
+[[ ${PV} == *9999 ]] || SRC_URI="http://cairographics.org/releases/${P}.tar.gz"
 
 LICENSE="|| ( LGPL-2.1 MPL-1.1 )"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
-IUSE="cleartype debug directfb doc glitz opengl svg X xcb"
+KEYWORDS="alpha amd64 arm hppa ia64 ~mips ppc ppc64 s390 sh sparc x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
+IUSE="aqua cleartype debug directfb doc glitz opengl +svg X xcb"
 
 # Test causes a circular depend on gtk+... since gtk+ needs cairo but test needs gtk+ so we need to block it
 RESTRICT="test"
 
 RDEPEND="media-libs/fontconfig
 	>=media-libs/freetype-2.1.9
-	media-libs/libpng
 	sys-libs/zlib
 	media-libs/libpng
 	>=x11-libs/pixman-0.12.0
@@ -41,41 +45,39 @@ RDEPEND="media-libs/fontconfig
 #	pdf test
 #	x11-libs/pango
 #	>=x11-libs/gtk+-2.0
-#	>=app-text/poppler-bindings-0.9.2
+#	>=app-text/poppler-bindings-0.9.2[gtk]
 #	ps test
-#	virtual/ghostscript
+#	app-text/ghostscript-gpl
 #	svg test
 #	>=x11-libs/gtk+-2.0
 #	>=gnome-base/librsvg-2.15.0
 
 DEPEND="${RDEPEND}
 	>=dev-util/pkgconfig-0.19
+	>=sys-devel/libtool-2
 	doc? (
 		>=dev-util/gtk-doc-1.6
 		~app-text/docbook-xml-dtd-4.2
 	)
-	X? ( x11-proto/renderproto )
-	xcb? ( x11-proto/xcb-proto )"
+	X? ( x11-proto/renderproto )"
 
-src_unpack() {
-	git_src_unpack
-	cd "${S}"
-
+src_prepare() {
 	# ClearType-like patches applied by ArchLinux
-	use cleartype && epatch "${FILESDIR}"/cairo-1.2.4-lcd-cleartype-like.diff
+	use cleartype && epatch "${FILESDIR}"/${PN}-1.2.4-lcd-cleartype-like.diff
+
+	epatch "${FILESDIR}"/${PN}-1.8.8-interix.patch \
+		"${FILESDIR}"/${PN}-1.8.8-libpng14.patch
 
 	# We need to run elibtoolize to ensure correct so versioning on FreeBSD
-	elibtoolize
-
-	# create dummy */Makefile.am.features and ChangeLog to make automake happy
-	> boilerplate/Makefile.am.features
-	> src/Makefile.am.features
-	touch ChangeLog
-
+	# upgraded to an eautoreconf for the above interix patch.
 	eautoreconf
 }
 
-src_compile() {
+src_configure() {
+	[[ ${CHOST} == *-interix* ]] && append-flags -D_REENTRANT
+	# http://bugs.freedesktop.org/show_bug.cgi?id=15463
+	[[ ${CHOST} == *-solaris* ]] && append-flags -D_POSIX_PTHREAD_SEMANTICS
+
 	#gets rid of fbmmx.c inlining warnings
 	append-flags -finline-limit=1200
 
@@ -83,19 +85,27 @@ src_compile() {
 		export glitz_LIBS=$(pkg-config --libs glitz-glx)
 	fi
 
-	econf $(use_enable X xlib) $(use_enable doc gtk-doc) \
-		$(use_enable directfb) $(use_enable xcb) \
-		$(use_enable svg) $(use_enable glitz) $(use_enable X xlib-xrender) \
-		$(use_enable debug test-surfaces) --enable-pdf  --enable-png \
-		--enable-ft --enable-ps \
-		|| die "configure failed"
-
-	emake || die "compile failed"
+	econf \
+		$(use_enable X xlib) \
+		$(use_enable X xlib-xrender) \
+		$(use_enable aqua quartz) \
+		$(use_enable aqua quartz-image) \
+		$(use_enable debug test-surfaces) \
+		$(use_enable directfb) \
+		$(use_enable doc gtk-doc) \
+		$(use_enable glitz) \
+		$(use_enable xcb) \
+		$(use_enable svg) \
+		--enable-pdf \
+		--enable-png \
+		--enable-ft \
+		--enable-ps
 }
 
 src_install() {
-	emake -j1 DESTDIR="${D}" install || die "Installation failed"
-	dodoc AUTHORS ChangeLog NEWS README
+	# parallel make install fails
+	make DESTDIR="${D}" install || die "Installation failed"
+	dodoc AUTHORS ChangeLog NEWS README || die
 }
 
 pkg_postinst() {
