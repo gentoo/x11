@@ -63,7 +63,7 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.8.8-interix.patch \
-		"${FILESDIR}"/${PN}-1.8.8-libpng14.patch
+		"${FILESDIR}"/${P}-libpng14.patch
 
 	# We need to run elibtoolize to ensure correct so versioning on FreeBSD
 	# upgraded to an eautoreconf for the above interix patch.
