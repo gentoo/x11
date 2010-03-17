@@ -19,7 +19,7 @@ IUSE=""
 RDEPEND="virtual/linux-sources
 	x11-drivers/nouveau-firmware"
 DEPEND="${RDEPEND}
-	dev-util/git"
+	dev-vcs/git"
 
 S=${WORKDIR}/master
 
