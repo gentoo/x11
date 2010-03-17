@@ -65,6 +65,12 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.8.8-interix.patch \
 		"${FILESDIR}"/${P}-libpng14.patch
 
+	# Slightly messed build system YAY
+	touch boilerplate/Makefile.am.features
+	touch src/Makefile.am.features
+	touch ChangeLog
+
+
 	# We need to run elibtoolize to ensure correct so versioning on FreeBSD
 	# upgraded to an eautoreconf for the above interix patch.
 	eautoreconf
