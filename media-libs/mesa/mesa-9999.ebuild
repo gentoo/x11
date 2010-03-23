@@ -37,7 +37,7 @@ LICENSE="LGPL-2"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 
-VIDEO_CARDS="intel mach64 mga none nouveau r128 radeon radeonhd savage sis sunffb svga tdfx via"
+VIDEO_CARDS="intel mach64 mga none nouveau r128 radeon radeonhd savage sis svga tdfx via"
 for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
 done
@@ -130,7 +130,6 @@ src_configure() {
 	driver_enable video_cards_radeonhd r300 r600
 	driver_enable video_cards_savage savage
 	driver_enable video_cards_sis sis
-	driver_enable video_cards_sunffb ffb
 	driver_enable video_cards_tdfx tdfx
 	driver_enable video_cards_via unichrome
 
