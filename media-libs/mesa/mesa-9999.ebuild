@@ -111,6 +111,7 @@ src_prepare() {
 			configure.ac || die
 	fi
 
+	[[ $PV = 9999* ]] && git_src_prepare
 	base_src_prepare
 
 	eautoreconf
