@@ -35,7 +35,7 @@ pkg_setup() {
 
 pkg_postinst() {
 	if linux_config_exists \
-		&& ! linux_chkconfig_present CONFIG_DRM_I915_KMS; then
+		&& ! linux_chkconfig_present DRM_I915_KMS; then
 		echo
 		ewarn "This driver requires KMS support in your kernel"
 		ewarn "  Device Drivers --->"
