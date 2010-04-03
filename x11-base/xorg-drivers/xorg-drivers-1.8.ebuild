@@ -17,6 +17,7 @@ IUSE_INPUT_DEVICES="
 	input_devices_joystick
 	input_devices_keyboard
 	input_devices_mouse
+	input_devices_penmount
 	input_devices_tslib
 	input_devices_virtualbox
 	input_devices_vmmouse
@@ -85,6 +86,7 @@ PDEPEND="
 	input_devices_joystick?    ( x11-drivers/xf86-input-joystick )
 	input_devices_keyboard?    ( x11-drivers/xf86-input-keyboard )
 	input_devices_mouse?       ( x11-drivers/xf86-input-mouse )
+	input_devices_penmount?    ( x11-drivers/xf86-input-penmount )
 	input_devices_tslib?       ( x11-drivers/xf86-input-tslib )
 	input_devices_virtualbox?  ( x11-drivers/xf86-input-virtualbox )
 	input_devices_vmmouse?     ( x11-drivers/xf86-input-vmmouse )
@@ -140,7 +142,6 @@ PDEPEND="
 	!x11-drivers/xf86-input-fpit
 	!x11-drivers/xf86-input-hyperpen
 	!x11-drivers/xf86-input-mutouch
-	!x11-drivers/xf86-input-penmount
 	!x11-drivers/xf86-video-cyrix
 	!x11-drivers/xf86-video-impact
 	!x11-drivers/xf86-video-nsc
