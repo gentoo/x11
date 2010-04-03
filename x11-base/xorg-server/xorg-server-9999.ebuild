@@ -27,7 +27,6 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	>=x11-libs/libXdmcp-1.0.2
 	>=x11-libs/libXfont-1.3.3
 	>=x11-libs/libxkbfile-1.0.4
-	>=x11-libs/libxkbui-1.0.2
 	>=x11-libs/pixman-0.15.20
 	>=x11-libs/xtrans-1.2.2
 	>=x11-misc/xbitmaps-1.0.1
@@ -55,31 +54,8 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	)
 	tslib? ( >=x11-libs/tslib-1.0 x11-proto/xcalibrateproto )
 	udev? ( sys-fs/udev[extras] )"
-	# Xres is dmx-dependent
-	# Xaw is dmx-dependent
-	# Xpm is dmx-dependent, pulls in Xt
-	# xkbcomp is launched at startup but not checked by ./configure
-
-## Deps that don't have a version in configure.ac but do here:
-# x11-proto/resourceproto
-# x11-proto/fontsproto
-# x11-libs/libXau
-# x11-libs/libXfont
-# x11-libs/libXdmcp
-# x11-libs/libXext
-# x11-libs/libX11
-# x11-libs/libXrender
-# x11-libs/libXmu
-# x11-libs/libXfixes
-# x11-libs/libXtst
-# x11-proto/xineramaproto
-# x11-proto/dmxproto
-## Deps that are larger here than in configure.ac
-# x11-libs/libpciaccess-0.8.0
-#
 
 DEPEND="${RDEPEND}
-	!!net-dialup/dtrace
 	sys-devel/flex
 	>=x11-proto/bigreqsproto-1.1.0
 	>=x11-proto/compositeproto-0.4
