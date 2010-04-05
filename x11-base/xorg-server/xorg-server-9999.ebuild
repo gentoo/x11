@@ -56,6 +56,7 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	udev? ( sys-fs/udev[extras] )"
 
 DEPEND="${RDEPEND}
+	!!net-dialup/dtrace
 	sys-devel/flex
 	>=x11-proto/bigreqsproto-1.1.0
 	>=x11-proto/compositeproto-0.4
