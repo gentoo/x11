@@ -13,7 +13,7 @@ DESCRIPTION="X.Org X servers"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 
 IUSE_SERVERS="dmx kdrive xorg"
-IUSE="${IUSE_SERVERS} tslib ipv6 minimal nptl sdl udev"
+IUSE="${IUSE_SERVERS} hal ipv6 minimal nptl sdl tslib +udev"
 RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	dev-libs/openssl
 	media-libs/freetype
@@ -43,6 +43,7 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 		>=x11-libs/libXres-1.0.3
 		>=x11-libs/libXtst-1.0.3
 	)
+	hal? ( sys-apps/hal )
 	kdrive? (
 		>=x11-libs/libXext-1.0.5
 		sdl? ( media-libs/libsdl )
@@ -102,6 +103,8 @@ PATCHES=(
 	)
 
 pkg_setup() {
+	local myconf
+
 	xorg-2_pkg_setup
 
 	use minimal || ensure_a_server_is_building
@@ -111,6 +114,25 @@ pkg_setup() {
 		conf_opts="${conf_opts} --enable-xsdl"
 	else
 		conf_opts="${conf_opts} --disable-xsdl"
+	fi
+
+	# HAL shebang
+	if use hal; then
+		ewarn "Usage of hal is strongly discouraged. Please migrate to udev."
+		ewarn "From next major release on the hal support will be fully disabled."
+	fi
+	if use hal && use udev; then
+		ewarn "Both hal and udev flags are enabled."
+		ewarn "Enabling only udev!"
+		myconf="
+			$(use_enable udev config-udev)
+			--disable-config-hal
+		"
+	else
+		myconf="
+			$(use_enable hal config-hal)
+			$(use_enable udev config-udev)
+		"
 	fi
 
 	# localstatedir is used for the log location; we need to override the default
@@ -133,13 +155,12 @@ pkg_setup() {
 		$(use_enable !minimal glx)
 		$(use_enable xorg)
 		$(use_enable nptl glx-tls)
-		$(use_enable udev config-udev)
+		${myconf}
 		--sysconfdir=/etc/X11
 		--localstatedir=/var
 		--enable-install-setuid
 		--with-fontdir=/usr/share/fonts
 		--with-xkb-output=/var/lib/xkb
-		--disable-config-hal
 		--without-dtrace
 		${conf_opts}"
 
