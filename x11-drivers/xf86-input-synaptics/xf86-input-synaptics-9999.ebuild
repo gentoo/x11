@@ -33,15 +33,14 @@ src_install() {
 pkg_postinst() {
 	xorg-2_pkg_postinst
 	# Just a friendly warning
-	if linux_config_exists; then
-		if ! linux_chkconfig_present INPUT_EVDEV; then
-			echo
-			ewarn "This driver requires event interface support in your kernel"
-			ewarn "  Device Drivers --->"
-			ewarn "    Input device support --->"
-			ewarn "      <*>     Event interface"
-			echo
-		fi
+	if linux_config_exists \
+			|| ! linux_chkconfig_present INPUT_EVDEV; then
+		echo
+		ewarn "This driver requires event interface support in your kernel"
+		ewarn "  Device Drivers --->"
+		ewarn "    Input device support --->"
+		ewarn "      <*>     Event interface"
+		echo
 	fi
 	if use hal ; then
 		elog "If you want to modify Synaptics settings, please create an fdi file in:"
