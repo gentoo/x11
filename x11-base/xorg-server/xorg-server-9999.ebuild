@@ -13,7 +13,7 @@ DESCRIPTION="X.Org X servers"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 
 IUSE_SERVERS="dmx kdrive xorg"
-IUSE="${IUSE_SERVERS} tslib ipv6 minimal nptl sdl +udev"
+IUSE="${IUSE_SERVERS} doc tslib ipv6 minimal nptl +udev"
 RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	dev-libs/openssl
 	media-libs/freetype
@@ -81,6 +81,7 @@ DEPEND="${RDEPEND}
 	>=x11-proto/xineramaproto-1.1.3
 	>=x11-proto/xproto-7.0.13
 	dmx? ( >=x11-proto/dmxproto-2.2.99.1 )
+	doc? ( app-doc/doxygen )
 	!minimal? (
 		>=x11-proto/xf86driproto-2.1.0
 		>=x11-proto/dri2proto-2.1
@@ -134,13 +135,15 @@ pkg_setup() {
 		$(use_enable xorg)
 		$(use_enable nptl glx-tls)
 		$(use_enable udev config-udev)
+		$(use_with doc doxygen)
 		--sysconfdir=/etc/X11
 		--localstatedir=/var
 		--enable-install-setuid
-		--with-fontdir=/usr/share/fonts
+		--with-fontrootdir=/usr/share/fonts
 		--with-xkb-output=/var/lib/xkb
 		--disable-config-hal
 		--without-dtrace
+		--with-os-vendor=Gentoo
 		${conf_opts}"
 
 	# (#121394) Causes window corruption
