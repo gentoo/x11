@@ -3,8 +3,8 @@
 # $Header: $
 
 EAPI=3
+XORG_EAUTORECONF="yes"
 inherit xorg-2 multilib versionator
-
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/xserver"
 
 OPENGL_DIR="xorg-x11"
@@ -95,9 +95,10 @@ EPATCH_FORCE="yes"
 EPATCH_SUFFIX="patch"
 
 # These have been sent upstream
-#UPSTREAMED_PATCHES=(
+UPSTREAMED_PATCHES=(
 #	"${WORKDIR}/patches/"
-#	)
+	"${FILESDIR}"/1.8.0-no-hardcoded-etc.patch
+	)
 
 PATCHES=(
 	"${UPSTREAMED_PATCHES[@]}"
