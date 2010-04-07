@@ -95,13 +95,13 @@ EPATCH_FORCE="yes"
 EPATCH_SUFFIX="patch"
 
 # These have been sent upstream
-UPSTREAMED_PATCHES=(
+#UPSTREAMED_PATCHES=(
 #	"${WORKDIR}/patches/"
-	"${FILESDIR}"/1.8.0-no-hardcoded-etc.patch
-	)
+#	)
 
 PATCHES=(
 	"${UPSTREAMED_PATCHES[@]}"
+	"${FILESDIR}"/1.8.0-no-hardcoded-etc.patch
 	)
 
 pkg_setup() {
