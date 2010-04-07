@@ -19,7 +19,7 @@ index eed7454..2e468cf 100644
  libconfig_la_LIBADD = $(UDEV_LIBS)
  
 -xorgconfddir = $(prefix)/etc/X11/$(XF86CONFIGDIR)
-+xorgconfddir = $(sysconfdir)/X11/$(XF86CONFIGDIR)
++xorgconfddir = $(sysconfdir)/$(XF86CONFIGDIR)
  xorgconfd_DATA = 10-evdev.conf
  
  else
