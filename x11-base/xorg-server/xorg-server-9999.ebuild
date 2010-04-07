@@ -100,6 +100,8 @@ EPATCH_SUFFIX="patch"
 
 PATCHES=(
 	"${UPSTREAMED_PATCHES[@]}"
+	"${FILESDIR}"/${PN}-disable-acpi.patch
+	"${FILESDIR}"/1.8.0-no-hardcoded-etc.patch
 	)
 
 pkg_setup() {
