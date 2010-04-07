@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-inherit xorg-2
+inherit xorg-2 flag-o-matic
 
 DESCRIPTION="X.Org Xpm library"
 
@@ -16,3 +16,12 @@ RDEPEND="x11-libs/libX11
 DEPEND="${RDEPEND}
 	sys-devel/gettext
 	x11-proto/xproto"
+
+src_compile() {
+	# the gettext configure check and code in sxpm are incorrect; they assume
+	# gettext being in libintl, whereas Solaris has gettext by default
+	# resulting in libintl not being added to LIBS
+	[[ ${CHOST} == *-solaris* ]] && append-libs -lintl
+	xorg-2_src_compile
+}
+
