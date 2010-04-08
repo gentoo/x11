@@ -103,6 +103,7 @@ PATCHES=(
 	"${UPSTREAMED_PATCHES[@]}"
 	"${FILESDIR}"/${PN}-disable-acpi.patch
 	"${FILESDIR}"/${PV}-no-hardcoded-etc.patch
+	"${FILESDIR}"/${PV}-match-only-sane-devices.patch
 	)
 
 pkg_setup() {
