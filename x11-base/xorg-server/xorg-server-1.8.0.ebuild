@@ -215,7 +215,7 @@ src_install() {
 	cp "${FILESDIR}"/xdm.initd "${T}"
 	if use hal && ! use udev; then
 		sed -i \
-			-e "s/@HALD_DEPEND@/need hal/g" \
+			-e "s/@HALD_DEPEND@/need hald/g" \
 			"${T}"/xdm.initd \
 			|| die "sed failed"
 	else
