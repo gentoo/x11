@@ -1,7 +1,7 @@
 #!/sbin/runscript
 # Copyright 1999-2004 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License, v2
-# $Header: /var/cvsroot/gentoo-x86/x11-apps/xinit/files/xdm.initd-4,v 1.1 2009/11/14 14:18:43 scarabeus Exp $
+# $Header: $
 
 # This is here to serve as a note to myself, and future developers.
 #
@@ -36,48 +36,6 @@
 # aka Azarah
 # 04 March 2002
 
-
-hald_depend() {
-	if [ "${NEEDS_HALD}" = "yes" ]; then
-		need hald
-	elif [ "${NEEDS_HALD}" = "no" ]; then
-		use hald
-	else
-		local found=0
-		# search paths according to xorg.conf man page
-		for xorgconf in "${XORGCONFIG}" "/etc/X11/${XORGCONFIG}" \
-				/etc/X11/xorg.conf{-4,} /etc/xorg.conf \
-				"/usr/etc/X11/xorg.conf.$(hostname)" \
-				/usr/etc/X11/xorg.conf{-4,} \
-				"/usr/lib/X11/xorg.conf.$(hostname)" \
-				/usr/lib/X11/xorg.conf{-4,}
-		do
-			if [ -f "${xorgconf}" ]; then
-				# we found the config file
-				found=1
-
-				# check if AutoAddDevices has been disabled
-				if grep -Eiq '^[[:blank:]]*Option[[:blank:]]+"AutoAddDevices"[[:blank:]]+"(0|off|false|no)"' "${xorgconf}"; then
-					# there might be another ServerLayout section which requires hald
-					use hald
-				else
-					need hald
-				fi
-
-				# baselayout-2 only
-				[ ! -n "${RC_UNAME}" ] && config "${xorgconf}"
-
-				# process only the first existing file in the search list
-				break
-			fi
-		done
-
-		# if no configuration file was found, we must depend
-		# on hald for automatic discovery of input devices
-		[ ${found} -eq 0 ] && need hald
-	fi
-}
-
 depend() {
 	need localmount xdm-setup
 
@@ -93,9 +51,8 @@ depend() {
 	before alsasound
 
 	# Start before X
-	use acpid consolekit xfs
-
-	hald_depend
+	use consolekit xfs
+	@HALD_DEPEND@
 }
 
 setup_dm() {

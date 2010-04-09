@@ -20,7 +20,6 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	>=x11-apps/iceauth-1.0.2
 	>=x11-apps/rgb-1.0.3
 	>=x11-apps/xauth-1.0.3
-	>=x11-apps/xinit-1.0.8-r3
 	x11-apps/xkbcomp
 	>=x11-libs/libpciaccess-0.10.3
 	>=x11-libs/libXau-1.0.4
@@ -88,7 +87,9 @@ DEPEND="${RDEPEND}
 		>=x11-libs/libdrm-2.3.0
 	)"
 
-PDEPEND="xorg? ( >=x11-base/xorg-drivers-$(get_version_component_range 1-2) )"
+PDEPEND="
+	>=x11-apps/xinit-1.2.1-r1
+	xorg? ( >=x11-base/xorg-drivers-$(get_version_component_range 1-2) )"
 
 EPATCH_FORCE="yes"
 EPATCH_SUFFIX="patch"
@@ -194,6 +195,14 @@ src_install() {
 		doins hw/xfree86/xorg.conf.example \
 			|| die "couldn't install xorg.conf.example"
 	fi
+
+	# install the xdm.init
+	cp "${FILESDIR}"/xdm.initd "${T}"
+	sed -i \
+		-e "/@HALD_DEPEND@/ d" \
+		"${T}"/xdm.initd \
+		|| die "sed failed"
+	newinitd "${T}"/xdm.initd xdm || die "initd file install failed"
 }
 
 pkg_postinst() {

@@ -1,9 +1,10 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/x11-apps/xinit/xinit-1.2.1.ebuild,v 1.1 2010/03/17 15:41:39 scarabeus Exp $
 
-EAPI=3
-inherit xorg-2 pam
+EAPI="2"
+
+inherit x-modular pam
 
 DESCRIPTION="X Window System initializer"
 
@@ -17,9 +18,9 @@ RDEPEND="
 	x11-libs/libX11
 "
 DEPEND="${RDEPEND}"
-PDEPEND="!minimal? (
+PDEPEND="x11-apps/xrdb
+	!minimal? (
 		x11-apps/xclock
-		x11-apps/xrdb
 		x11-apps/xsm
 		x11-terms/xterm
 		x11-wm/twm
@@ -31,12 +32,11 @@ PATCHES=(
 )
 
 pkg_setup() {
-	xorg-2_pkg_setup
 	CONFIGURE_OPTIONS="--with-xinitdir=/etc/X11/xinit"
 }
 
 src_install() {
-	xorg-2_src_install
+	x-modular_src_install
 
 	exeinto /etc/X11
 	doexe "${FILESDIR}"/chooser.sh "${FILESDIR}"/startDM.sh || die
@@ -53,7 +53,7 @@ src_install() {
 }
 
 pkg_postinst() {
-	xorg-2_pkg_postinst
+	x-modular_pkg_postinst
 	ewarn "If you use startx to start X instead of a login manager like gdm/kdm,"
 	ewarn "you can set the XSESSION variable to anything in /etc/X11/Sessions/ or"
 	ewarn "any executable. When you run startx, it will run this as the login session."
