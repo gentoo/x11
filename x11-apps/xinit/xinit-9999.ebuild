@@ -1,4 +1,4 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -13,7 +13,7 @@ IUSE="+minimal pam"
 
 RDEPEND="
 	x11-apps/xauth
-	>=x11-base/xorg-server-1.8.0
+	>=x11-base/xorg-server-1.8.0-r1
 	x11-libs/libX11
 "
 DEPEND="${RDEPEND}"
@@ -44,9 +44,6 @@ src_install() {
 	doexe "${FILESDIR}"/Xsession || die
 	exeinto /etc/X11/xinit
 	doexe "${FILESDIR}"/xserverrc || die
-	newinitd "${FILESDIR}"/xdm-setup.initd-1 xdm-setup || die
-	newconfd "${FILESDIR}"/xdm.confd-3 xdm || die
-	# xdm.initd is installed by xorg-server
 	newpamd "${FILESDIR}"/xserver.pamd xserver
 	exeinto /etc/X11/xinit/xinitrc.d/
 	doexe "${FILESDIR}/00-xhost"
