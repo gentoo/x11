@@ -42,7 +42,7 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 		>=x11-libs/libXres-1.0.3
 		>=x11-libs/libXtst-1.0.3
 	)
-	hal? ( sys-apps/hal )
+	!udev? ( hal? ( sys-apps/hal ) )
 	kdrive? (
 		>=x11-libs/libXext-1.0.5
 		sdl? ( media-libs/libsdl )
