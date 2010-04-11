@@ -174,6 +174,12 @@ pkg_setup() {
 		fi
 	fi
 
+	# Incompatible with GCC 3.x CPP, bug #314615
+	if [[ $(gcc-major-version) -lt 4 ]]; then
+		ewarn "GCC 3.x C preprocessor may cause build failures. Use GCC 4.x"
+		ewarn "or set CPP=cpp-4.3.4 (replace with the actual installed version)"
+	fi
+
 	# detect if we should inform user about ebuild breakage
 	if ! has_version "x11-base/xorg-server" ||
 			has_version "<x11-base/xorg-server-$(get_version_component_range 1-2)"; then
