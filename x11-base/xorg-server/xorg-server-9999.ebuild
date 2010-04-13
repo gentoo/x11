@@ -166,17 +166,17 @@ pkg_setup() {
 src_configure() {
 	# this is required only for configure and build time
 	OLD_IMPLEM="$(eselect opengl show)"
-	[[ ${OLD_IMPLEM} != ${OPENGL_DIR} ]] && eselect opengl set ${OPENGL_DIR}
+	[[ ${OLD_IMPLEM} != ${OPENGL_DIR} ]] && ( addwrite "${ROOT}"; eselect opengl set ${OLD_IMPLEM}; )
 	xorg-2_src_configure
 }
 
 src_compile() {
 	emake # no die here intentional
 	if [[ $? != 0 ]]; then
-		[[ ${OLD_IMPLEM} != ${OPENGL_DIR} ]] && eselect opengl set ${OLD_IMPLEM}
+		[[ ${OLD_IMPLEM} != ${OPENGL_DIR} ]] && ( addwrite "${ROOT}"; eselect opengl set ${OLD_IMPLEM}; )
 		die "Compilation failed"
 	fi
-	[[ ${OLD_IMPLEM} != ${OPENGL_DIR} ]] && eselect opengl set ${OLD_IMPLEM}
+	[[ ${OLD_IMPLEM} != ${OPENGL_DIR} ]] && ( addwrite "${ROOT}"; eselect opengl set ${OLD_IMPLEM}; )
 }
 
 src_install() {
