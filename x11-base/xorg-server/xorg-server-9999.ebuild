@@ -165,6 +165,8 @@ pkg_setup() {
 
 src_configure() {
 	# this is required only for configure and build time
+	# we need to ensure having enough glxtokens
+	# the subshell is needed so the addwrite is not shared in rest of that phase
 	OLD_IMPLEM="$(eselect opengl show)"
 	[[ ${OLD_IMPLEM} != ${OPENGL_DIR} ]] && ( addwrite "${ROOT}"; eselect opengl set ${OLD_IMPLEM}; )
 	xorg-2_src_configure
