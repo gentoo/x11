@@ -44,7 +44,6 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	)
 	kdrive? (
 		>=x11-libs/libXext-1.0.5
-		sdl? ( media-libs/libsdl )
 	)
 	!minimal? (
 		>=x11-libs/libX11-1.1.5
@@ -108,13 +107,6 @@ pkg_setup() {
 	xorg-2_pkg_setup
 
 	use minimal || ensure_a_server_is_building
-
-	# SDL only available in kdrive build
-	if use kdrive && use sdl; then
-		conf_opts="${conf_opts} --enable-xsdl"
-	else
-		conf_opts="${conf_opts} --disable-xsdl"
-	fi
 
 	# localstatedir is used for the log location; we need to override the default
 	# from ebuild.sh
