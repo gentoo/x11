@@ -168,7 +168,7 @@ src_configure() {
 	# we need to ensure having enough glxtokens
 	# the subshell is needed so the addwrite is not shared in rest of that phase
 	OLD_IMPLEM="$(eselect opengl show)"
-	[[ ${OLD_IMPLEM} != ${OPENGL_DIR} ]] && ( addwrite "${ROOT}"; eselect opengl set ${OLD_IMPLEM}; )
+	[[ ${OLD_IMPLEM} != ${OPENGL_DIR} ]] && ( addwrite "${ROOT}"; eselect opengl set ${OPENGL_DIR}; )
 	xorg-2_src_configure
 }
 
