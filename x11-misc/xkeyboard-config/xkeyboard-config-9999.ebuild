@@ -1,4 +1,4 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -8,6 +8,7 @@ if [[ ${PV} = 9999* ]]; then
 	GIT_ECLASS="git"
 	EGIT_REPO_URI="git://anongit.freedesktop.org/git/xkeyboard-config"
 else
+	GIT_ECLASS=
 	SRC_URI="http://xlibs.freedesktop.org/xkbdesc/${P}.tar.bz2"
 fi
 
@@ -16,7 +17,7 @@ inherit ${GIT_ECLASS} autotools
 DESCRIPTION="X keyboard configuration database"
 HOMEPAGE="http://www.freedesktop.org/wiki/Software/XKeyboardConfig"
 
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~x86-solaris"
 IUSE=""
 
 LICENSE="MIT"
@@ -36,11 +37,10 @@ src_prepare() {
 
 src_configure() {
 	econf \
-		--with-xkb-base=/usr/share/X11/xkb \
+		--with-xkb-base="${EPREFIX}"/usr/share/X11/xkb \
 		--enable-compat-rules \
 		--disable-xkbcomp-symlink \
-		--with-xkb-rules-symlink=xorg \
-		|| die "configure failed"
+		--with-xkb-rules-symlink=xorg
 }
 
 src_install() {
