@@ -3,7 +3,9 @@
 # $Header: $
 
 EAPI=3
-inherit xorg-2
+PYTHON_DEPEND="2:2.5"
+
+inherit python xorg-2
 
 DESCRIPTION="X C-language Bindings protocol headers"
 HOMEPAGE="http://xcb.freedesktop.org/"
@@ -16,5 +18,8 @@ IUSE=""
 
 RDEPEND=""
 DEPEND="${RDEPEND}
-	dev-libs/libxml2
-	>=dev-lang/python-2.5"
+	dev-libs/libxml2"
+
+pkg_setup() {
+	python_set_active_version 2
+}
