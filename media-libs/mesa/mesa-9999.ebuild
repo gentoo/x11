@@ -61,6 +61,10 @@ RDEPEND="
 	x11-libs/libXmu
 	x11-libs/libXxf86vm
 	motif? ( x11-libs/openmotif )
+	gallium? (
+		dev-libs/udis86
+		sys-devel/llvm
+	)
 "
 DEPEND="${RDEPEND}
 	dev-util/pkgconfig
@@ -139,12 +143,14 @@ src_configure() {
 		elog "You have enabled gallium infrastructure."
 		elog "This infrastructure currently support these drivers:"
 		elog "    Intel: works only i915."
+		elog "    LLVMpipe: Software renderer."
 		elog "    Nouveau: Support for nVidia NV30 and later cards."
 		elog "    Radeon: Newest implementation of r300-r500 driver."
 		elog "    Svga: VMWare Virtual GPU driver."
 		echo
 		myconf="${myconf}
 			--with-state-trackers=glx,dri,egl
+			--enable-gallium-llvm
 			$(use_enable video_cards_svga gallium-svga)
 			$(use_enable video_cards_nouveau gallium-nouveau)
 			$(use_enable video_cards_intel gallium-intel)"
