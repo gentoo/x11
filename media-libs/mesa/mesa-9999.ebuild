@@ -43,7 +43,7 @@ for card in ${VIDEO_CARDS}; do
 done
 
 IUSE="${IUSE_VIDEO_CARDS}
-	debug +gallium motif +nptl pic selinux +xcb kernel_FreeBSD"
+	debug +gallium llvm motif +nptl pic selinux +xcb kernel_FreeBSD"
 
 # keep correct libdrm and dri2proto dep
 # keep blocks in rdepend for binpkg
@@ -62,8 +62,10 @@ RDEPEND="
 	x11-libs/libXxf86vm
 	motif? ( x11-libs/openmotif )
 	gallium? (
-		dev-libs/udis86
-		sys-devel/llvm
+		llvm? (
+			dev-libs/udis86
+			sys-devel/llvm
+		)
 	)
 "
 DEPEND="${RDEPEND}
@@ -150,7 +152,7 @@ src_configure() {
 		echo
 		myconf="${myconf}
 			--with-state-trackers=glx,dri,egl
-			--enable-gallium-llvm
+			$(use_enable llvm gallium-llvm)
 			$(use_enable video_cards_svga gallium-svga)
 			$(use_enable video_cards_nouveau gallium-nouveau)
 			$(use_enable video_cards_intel gallium-intel)"

@@ -5,5 +5,6 @@
 <use>
 	<flag name='pic'>disable optimized assembly code that is not PIC friendly</flag>
 	<flag name='gallium'>Gallium3D is new architecture for building 3D graphics drivers.</flag>
+	<flag name='llvm'>Enable LLVM backend for Gallium3D.</flag>
 </use>
 </pkgmetadata>
