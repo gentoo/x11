@@ -1,9 +1,10 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=3
-inherit xorg-2
+
+inherit python xorg-2
 
 DESCRIPTION="X C-language Bindings library"
 HOMEPAGE="http://xcb.freedesktop.org/"
@@ -21,9 +22,10 @@ DEPEND="${RDEPEND}
 	doc? ( app-doc/doxygen )
 	dev-libs/libxslt
 	>=x11-proto/xcb-proto-1.6
-	>=dev-lang/python-2.5[xml]"
+	=dev-lang/python-2*[xml]"
 
 pkg_setup() {
+	python_set_active_version 2
 	xorg-2_pkg_setup
 	CONFIGURE_OPTIONS="$(use_enable doc build-docs)
 		$(use_enable selinux)
