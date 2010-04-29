@@ -9,7 +9,7 @@ DESCRIPTION="Driver for Wacom tablets and drawing devices"
 LICENSE="GPL-2"
 EGIT_REPO_URI="git://linuxwacom.git.sourceforge.net/gitroot/linuxwacom/${PN}"
 [[ ${PV} != 9999* ]] && \
-	SRC_URI="mirror://sourceforge/linuxwacom/files/${PN}/${P}.tar.bz2"
+	SRC_URI="mirror://sourceforge/linuxwacom/${PN}/${P}.tar.bz2"
 
 KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
 IUSE="hal debug"
@@ -31,12 +31,9 @@ pkg_setup() {
 
 src_install() {
 	xorg-2_src_install
-	rm -r "${D}/usr/share/hal"
 
-	if use hal; then
-		insinto /usr/share/hal/fdi/policy/10osvendor
-		newins "${S}"/fdi/wacom.fdi 11-x11-wacom.fdi
-	fi
+	use hal || rm -fr "${D}/usr/share/hal"
+
 }
 
 pkg_postinst() {
