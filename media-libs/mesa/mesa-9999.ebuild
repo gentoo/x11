@@ -37,7 +37,7 @@ LICENSE="LGPL-2"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 
-VIDEO_CARDS="intel mach64 mga none nouveau r128 radeon radeonhd savage sis svga tdfx via"
+VIDEO_CARDS="i810 i915 -i965 intel mach64 mga none nouveau r100 r128 r200 r300 r600 radeon radeonhd savage sis svga tdfx via"
 for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
 done
@@ -128,13 +128,27 @@ src_configure() {
 
 	# Configurable DRI drivers
 	driver_enable swrast
-	driver_enable video_cards_intel i810 i915 i965
+	driver_enable_i810 i810
+	driver_enable_i915 i915
+	driver_enable_i965 i965
+	if !use video_cards_i810 && !use video_cards_i915 && !use video_cards_i965
+	then
+		driver_enable video_cards_intel i810 i915 i965
+	fi
 	driver_enable video_cards_mach64 mach64
 	driver_enable video_cards_mga mga
 	driver_enable video_cards_r128 r128
 	# ATI has two implementations as video_cards
-	driver_enable video_cards_radeon radeon r200 r300 r600
-	driver_enable video_cards_radeonhd r300 r600
+	driver_enable video_cards_r100 radeon
+	driver_enable video_cards_r200 r200
+	driver_enable video_cards_r300 r300
+	driver_enable video_cards_r600 r600
+	if !use video_cards_r100 && !use video_cards_r200 && !use video_cards_r300 &&
+	   !use video_cards_r600;
+	then
+		driver_enable video_cards_radeon radeon r200 r300 r600
+		driver_enable video_cards_radeonhd r300 r600
+	fi
 	driver_enable video_cards_savage savage
 	driver_enable video_cards_sis sis
 	driver_enable video_cards_tdfx tdfx
@@ -154,9 +168,13 @@ src_configure() {
 			--with-state-trackers=glx,dri,egl
 			$(use_enable llvm gallium-llvm)
 			$(use_enable video_cards_svga gallium-svga)
-			$(use_enable video_cards_nouveau gallium-nouveau)
-			$(use_enable video_cards_intel gallium-intel)"
-		if use video_cards_radeon || use video_cards_radeonhd; then
+			$(use_enable video_cards_nouveau gallium-nouveau)"
+		if use video_cards_i915 || use video_cards_i965 || use video_cards_intel; then
+			myconf="${myconf} --enable-gallium-intel"
+		else
+			myconf="${myconf} --disable-gallium-intel"
+		fi
+		if use video_cards_r300 || use video_cards_radeon || use video_cards_radeonhd; then
 			myconf="${myconf} --enable-gallium-radeon"
 		else
 			myconf="${myconf} --disable-gallium-radeon"
