@@ -67,6 +67,18 @@ RDEPEND="
 			sys-devel/llvm
 		)
 	)
+	video_cards_i810? ( >=x11-libs/libdrm-2.4.17[video_cards_intel] )
+	video_cards_i915? ( >=x11-libs/libdrm-2.4.17[video_cards_intel] )
+	video_cards_i965? ( >=x11-libs/libdrm-2.4.17[video_cards_intel] )
+	video_cards_intel? ( >=x11-libs/libdrm-2.4.17[video_cards_intel] )
+	video_cards_nouveau? ( >=x11-libs/libdrm-2.4.17[video_cards_nouveau] )
+	video_cards_r100? ( >=x11-libs/libdrm-2.4.17[video_cards_radeon] )
+	video_cards_r200? ( >=x11-libs/libdrm-2.4.17[video_cards_radeon] )
+	video_cards_r300? ( >=x11-libs/libdrm-2.4.17[video_cards_radeon] )
+	video_cards_r600? ( >=x11-libs/libdrm-2.4.17[video_cards_radeon] )
+	video_cards_radeon? ( >=x11-libs/libdrm-2.4.17[video_cards_radeon] )
+	video_cards_radeonhd? ( >=x11-libs/libdrm-2.4.17[video_cards_radeon] )
+	video_cards_svga? ( >=x11-libs/libdrm-2.4.17[video_cards_svga] )
 "
 DEPEND="${RDEPEND}
 	dev-util/pkgconfig
