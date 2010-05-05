@@ -16,7 +16,12 @@ else
 fi
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
-IUSE=""
+VIDEO_CARDS="intel nouveau radeon svga"
+for card in ${VIDEO_CARDS}; do
+	IUSE_VIDEO_CARDS+=" video_cards_${card}"
+done
+
+IUSE="${IUSE_VIDEO_CARDS}"
 RESTRICT="test" # see bug #236845
 
 RDEPEND="dev-libs/libpthread-stubs"
@@ -25,10 +30,16 @@ DEPEND="${RDEPEND}"
 pkg_setup() {
 	# Fails to build on ARM if dev-libs/libatomic_ops is installed, bug 297630
 	CONFIGURE_OPTIONS="--enable-udev
-			--enable-nouveau-experimental-api
-			--enable-vmwgfx-experimental-api
-			$(use_enable kernel_linux libkms)
-			$(! use amd64 && ! use x86 && ! use x86-fbsd && echo "--disable-intel")"
+			$(use_enable video_cards_intel intel)
+			$(use_enable video_cards_nouveau nouveau-experimental-api)
+			$(use_enable video_cards_radeon radeon)
+			$(use_enable video_cards_svga vmwgfx-experimental-api)"
+	if use video_cards_intel || use video_cards_nouveau || use video_cards_svga;
+	then
+		CONFIGURE_OPTIONS="${CONFIGURE_OPTIONS} $(use_enable kernel_linux libkms)"
+	else
+		CONFIGURE_OPTIONS="${CONFIGURE_OPTIONS} --disable-libkms"
+	fi
 
 	xorg-2_pkg_setup
 }
