@@ -8,7 +8,7 @@
 	<flag name='llvm'>Enable LLVM backend for Gallium3D.</flag>
 	<flag name='video_cards_r100'>Build only r100 based chips code for radeon.</flag>
 	<flag name='video_cards_r200'>Build only r200 based chips code for radeon.</flag>
-	<flag name='video_cards_r300'>Build only r300 and r500 based chips code for radeon.</flag>
+	<flag name='video_cards_r300'>Build only r300, r400 and r500 based chips code for radeon.</flag>
 	<flag name='video_cards_r600'>Build only r600 and r700 based chips code for radeon.</flag>
 </use>
 </pkgmetadata>
