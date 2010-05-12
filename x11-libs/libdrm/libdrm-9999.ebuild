@@ -34,8 +34,10 @@ pkg_setup() {
 			$(use_enable video_cards_nouveau nouveau-experimental-api)
 			$(use_enable video_cards_radeon radeon)
 			$(use_enable video_cards_svga vmwgfx-experimental-api)"
-	if use video_cards_intel || use video_cards_nouveau || use video_cards_svga;
-	then
+	if use video_cards_intel || \
+			use video_cards_nouveau || \
+			use video_cards_radeon || \
+			use video_cards_svga; then
 		CONFIGURE_OPTIONS="${CONFIGURE_OPTIONS} $(use_enable kernel_linux libkms)"
 	else
 		CONFIGURE_OPTIONS="${CONFIGURE_OPTIONS} --disable-libkms"
