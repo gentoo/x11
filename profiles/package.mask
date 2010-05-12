@@ -29,6 +29,7 @@
 =x11-drivers/xf86-video-ati-9999
 =x11-drivers/xf86-video-intel-9999
 =x11-drivers/xf86-video-nouveau-9999
+=x11-drivers/xf86-video-vmware-9999
 =x11-libs/cairo-9999
 =x11-libs/libdmx-9999
 =x11-libs/libdrm-9999
