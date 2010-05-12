@@ -3,7 +3,6 @@
 # $Header: /var/cvsroot/gentoo-x86/x11-drivers/xf86-video-vmware/xf86-video-vmware-11.0.1.ebuild,v 1.3 2010/04/16 21:29:38 pacho Exp $
 
 EAPI=3
-
 inherit xorg-2
 
 DESCRIPTION="VMware SVGA video driver"
