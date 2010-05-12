@@ -140,27 +140,34 @@ src_configure() {
 
 	# Configurable DRI drivers
 	driver_enable swrast
+
+	# Intel code
 	driver_enable_i810 i810
 	driver_enable_i915 i915
 	driver_enable_i965 i965
-	if !use video_cards_i810 && !use video_cards_i915 && !use video_cards_i965
-	then
+	if ! use video_cards_i810 && \
+			! use video_cards_i915 && \
+			! use video_cards_i965; then
 		driver_enable video_cards_intel i810 i915 i965
 	fi
+	
 	driver_enable video_cards_mach64 mach64
 	driver_enable video_cards_mga mga
 	driver_enable video_cards_r128 r128
-	# ATI has two implementations as video_cards
+
+	# ATI code
 	driver_enable video_cards_r100 radeon
 	driver_enable video_cards_r200 r200
 	driver_enable video_cards_r300 r300
 	driver_enable video_cards_r600 r600
-	if !use video_cards_r100 && !use video_cards_r200 && !use video_cards_r300 &&
-	   !use video_cards_r600;
-	then
+	if !use video_cards_r100 && \
+			!use video_cards_r200 && \
+			!use video_cards_r300 && \
+			!use video_cards_r600; then
 		driver_enable video_cards_radeon radeon r200 r300 r600
 		driver_enable video_cards_radeonhd r300 r600
 	fi
+	
 	driver_enable video_cards_savage savage
 	driver_enable video_cards_sis sis
 	driver_enable video_cards_tdfx tdfx
@@ -170,10 +177,10 @@ src_configure() {
 	if use gallium; then
 		elog "You have enabled gallium infrastructure."
 		elog "This infrastructure currently support these drivers:"
-		elog "    Intel: works only i915."
+		elog "    Intel: works only i915 and i965 somehow."
 		elog "    LLVMpipe: Software renderer."
 		elog "    Nouveau: Support for nVidia NV30 and later cards."
-		elog "    Radeon: Newest implementation of r300-r500 driver."
+		elog "    Radeon: Newest implementation of r300-r700 driver."
 		elog "    Svga: VMWare Virtual GPU driver."
 		echo
 		myconf="${myconf}
@@ -181,12 +188,17 @@ src_configure() {
 			$(use_enable llvm gallium-llvm)
 			$(use_enable video_cards_svga gallium-svga)
 			$(use_enable video_cards_nouveau gallium-nouveau)"
-		if use video_cards_i915 || use video_cards_i965 || use video_cards_intel; then
+		if use video_cards_i915 || \
+				use video_cards_i965 || \
+				use video_cards_intel; then
 			myconf="${myconf} --enable-gallium-intel"
 		else
 			myconf="${myconf} --disable-gallium-intel"
 		fi
-		if use video_cards_r300 || use video_cards_radeon || use video_cards_radeonhd; then
+		if use video_cards_r300 || \
+				use video_cards_r600 || \
+				use video_cards_radeon || \
+				use video_cards_radeonhd; then
 			myconf="${myconf} --enable-gallium-radeon"
 		else
 			myconf="${myconf} --disable-gallium-radeon"
