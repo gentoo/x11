@@ -1,4 +1,4 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -37,7 +37,9 @@ LICENSE="LGPL-2"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 
-VIDEO_CARDS="i810 i915 -i965 intel mach64 mga none nouveau r100 r128 r200 r300 r600 radeon radeonhd savage sis svga tdfx via"
+INTEL_CARDS="i810 i915 i965 intel"
+RADEON_CARDS="r100 r200 r300 r600 radeon radeonhd"
+VIDEO_CARDS="${INTEL_CARDS} ${RADEON_CARDS} mach64 mga none nouveau r128 savage sis svga tdfx via"
 for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
 done
@@ -45,6 +47,7 @@ done
 IUSE="${IUSE_VIDEO_CARDS}
 	debug +gallium llvm motif +nptl pic selinux +xcb kernel_FreeBSD"
 
+LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.19"
 # keep correct libdrm and dri2proto dep
 # keep blocks in rdepend for binpkg
 RDEPEND="
@@ -52,7 +55,6 @@ RDEPEND="
 	!<=x11-proto/xf86driproto-2.0.3
 	>=app-admin/eselect-opengl-1.1.1-r2
 	dev-libs/expat
-	>=x11-libs/libdrm-2.4.17
 	x11-libs/libICE
 	x11-libs/libX11[xcb?]
 	x11-libs/libXdamage
@@ -67,19 +69,20 @@ RDEPEND="
 			sys-devel/llvm
 		)
 	)
-	video_cards_i810? ( >=x11-libs/libdrm-2.4.17[video_cards_intel] )
-	video_cards_i915? ( >=x11-libs/libdrm-2.4.17[video_cards_intel] )
-	video_cards_i965? ( >=x11-libs/libdrm-2.4.17[video_cards_intel] )
-	video_cards_intel? ( >=x11-libs/libdrm-2.4.17[video_cards_intel] )
-	video_cards_nouveau? ( >=x11-libs/libdrm-2.4.17[video_cards_nouveau] )
-	video_cards_r100? ( >=x11-libs/libdrm-2.4.17[video_cards_radeon] )
-	video_cards_r200? ( >=x11-libs/libdrm-2.4.17[video_cards_radeon] )
-	video_cards_r300? ( >=x11-libs/libdrm-2.4.17[video_cards_radeon] )
-	video_cards_r600? ( >=x11-libs/libdrm-2.4.17[video_cards_radeon] )
-	video_cards_radeon? ( >=x11-libs/libdrm-2.4.17[video_cards_radeon] )
-	video_cards_radeonhd? ( >=x11-libs/libdrm-2.4.17[video_cards_radeon] )
-	video_cards_svga? ( >=x11-libs/libdrm-2.4.17[video_cards_svga] )
+	${LIBDRM_DEPSTRING}[video_cards_nouveau?,video_cards_svga?]
 "
+for card in ${INTEL_CARDS}; do
+	RDEPEND="${RDEPEND}
+		video_cards_${card}? ( ${LIBDRM_DEPSTRING}[video_cards_intel] )
+	"
+done
+
+for card in ${RADEON_CARDS}; do
+	RDEPEND="${RDEPEND}
+		video_cards_${card}? ( ${LIBDRM_DEPSTRING}[video_cards_radeon] )
+	"
+done
+
 DEPEND="${RDEPEND}
 	dev-util/pkgconfig
 	x11-misc/makedepend
@@ -150,7 +153,7 @@ src_configure() {
 			! use video_cards_i965; then
 		driver_enable video_cards_intel i810 i915 i965
 	fi
-	
+
 	driver_enable video_cards_mach64 mach64
 	driver_enable video_cards_mga mga
 	driver_enable video_cards_r128 r128
@@ -167,7 +170,7 @@ src_configure() {
 		driver_enable video_cards_radeon radeon r200 r300 r600
 		driver_enable video_cards_radeonhd r300 r600
 	fi
-	
+
 	driver_enable video_cards_savage savage
 	driver_enable video_cards_sis sis
 	driver_enable video_cards_tdfx tdfx
