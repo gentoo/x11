@@ -39,7 +39,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-
 
 INTEL_CARDS="i810 i915 i965 intel"
 RADEON_CARDS="r100 r200 r300 r600 radeon radeonhd"
-VIDEO_CARDS="${INTEL_CARDS} ${RADEON_CARDS} mach64 mga none nouveau r128 savage sis svga tdfx via"
+VIDEO_CARDS="${INTEL_CARDS} ${RADEON_CARDS} mach64 mga none nouveau r128 savage sis vmware tdfx via"
 for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
 done
@@ -69,7 +69,7 @@ RDEPEND="
 			sys-devel/llvm
 		)
 	)
-	${LIBDRM_DEPSTRING}[video_cards_nouveau?,video_cards_svga?]
+	${LIBDRM_DEPSTRING}[video_cards_nouveau?,video_cards_vmware?]
 "
 for card in ${INTEL_CARDS}; do
 	RDEPEND="${RDEPEND}
@@ -101,7 +101,7 @@ S="${WORKDIR}/${MY_P}"
 QA_EXECSTACK="usr/lib*/opengl/xorg-x11/lib/libGL.so*"
 QA_WX_LOAD="usr/lib*/opengl/xorg-x11/lib/libGL.so*"
 
-# Think about: ggi, svga, fbcon, no-X configs
+# Think about: ggi, fbcon, no-X configs
 
 pkg_setup() {
 	# gcc 4.2 has buggy ivopts
@@ -189,7 +189,7 @@ src_configure() {
 		myconf="${myconf}
 			--with-state-trackers=glx,dri,egl
 			$(use_enable llvm gallium-llvm)
-			$(use_enable video_cards_svga gallium-svga)
+			$(use_enable video_cards_vmware gallium-svga)
 			$(use_enable video_cards_nouveau gallium-nouveau)"
 		if use video_cards_i915 || \
 				use video_cards_i965 || \
@@ -207,7 +207,7 @@ src_configure() {
 			myconf="${myconf} --disable-gallium-radeon"
 		fi
 	else
-		if use video_cards_nouveau || use video_cards_svga; then
+		if use video_cards_nouveau || use video_cards_vmware; then
 			elog "SVGA and nouveau drivers are available only via gallium interface."
 			elog "Enable gallium useflag if you want to use them."
 		fi

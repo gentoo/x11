@@ -16,7 +16,7 @@ else
 fi
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
-VIDEO_CARDS="intel nouveau radeon svga"
+VIDEO_CARDS="intel nouveau radeon vmware"
 for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
 done
@@ -33,15 +33,8 @@ pkg_setup() {
 			$(use_enable video_cards_intel intel)
 			$(use_enable video_cards_nouveau nouveau-experimental-api)
 			$(use_enable video_cards_radeon radeon)
-			$(use_enable video_cards_svga vmwgfx-experimental-api)"
-	if use video_cards_intel || \
-			use video_cards_nouveau || \
-			use video_cards_radeon || \
-			use video_cards_svga; then
-		CONFIGURE_OPTIONS="${CONFIGURE_OPTIONS} $(use_enable kernel_linux libkms)"
-	else
-		CONFIGURE_OPTIONS="${CONFIGURE_OPTIONS} --disable-libkms"
-	fi
+			$(use_enable video_cards_vmware vmwgfx-experimental-api)
+			$(use_enable kernel_linux libkms)"
 
 	xorg-2_pkg_setup
 }
