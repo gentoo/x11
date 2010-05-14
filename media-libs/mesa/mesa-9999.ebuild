@@ -145,9 +145,9 @@ src_configure() {
 	driver_enable swrast
 
 	# Intel code
-	driver_enable_i810 i810
-	driver_enable_i915 i915
-	driver_enable_i965 i965
+	driver_enable video_cards_i810 i810
+	driver_enable video_cards_i915 i915
+	driver_enable video_cards_i965 i965
 	if ! use video_cards_i810 && \
 			! use video_cards_i915 && \
 			! use video_cards_i965; then
