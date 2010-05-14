@@ -11,7 +11,7 @@ if [[ ${PV} = 9999* ]]; then
 	EXPERIMENTAL="true"
 fi
 
-inherit base autotools multilib flag-o-matic versionator ${GIT_ECLASS}
+inherit base autotools multilib flag-o-matic toolchain-funcs versionator ${GIT_ECLASS}
 
 OPENGL_DIR="xorg-x11"
 
@@ -132,6 +132,14 @@ src_prepare() {
 			configure.ac || die
 	fi
 
+	# In order for mesa to complete it's build process we need to use a tool
+	# that it compiles. When we cross compile this clearly does not work
+	# so we require mesa to be built on the host system first. -solar
+	if tc-is-cross-compiler; then
+		sed -i -e "s#^GLSL_CL = .*\$#GLSL_CL = glsl-compile#g" \
+			"${S}"/src/mesa/shader/slang/library/Makefile || die
+	fi
+
 	[[ $PV = 9999* ]] && git_src_prepare
 	base_src_prepare
 
@@ -232,6 +240,12 @@ src_configure() {
 src_install() {
 	base_src_install
 
+	# Save the glsl-compiler for later use
+	if ! tc-is-cross-compiler; then
+		dodir /usr/bin/
+		cp "${S}"/src/glsl/apps/compile "${D}"/usr/bin/glsl-compile \
+			|| die "failed to copy the glsl compiler."
+	fi
 	# Remove redundant headers
 	# GLUT thing
 	rm -f "${D}"/usr/include/GL/glut*.h || die "Removing glut include failed."
