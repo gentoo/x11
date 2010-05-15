@@ -26,7 +26,7 @@ RESTRICT="test"
 RDEPEND="media-libs/fontconfig
 	>=media-libs/freetype-2.1.9
 	sys-libs/zlib
-	media-libs/libpng
+	media-libs/libpng:0
 	>=x11-libs/pixman-0.12.0
 	directfb? ( >=dev-libs/DirectFB-0.9.24 )
 	glitz? ( >=media-libs/glitz-0.5.1 )
