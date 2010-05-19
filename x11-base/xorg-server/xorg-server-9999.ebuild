@@ -51,7 +51,7 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 		>=media-libs/mesa-7.8_rc[nptl=]
 	)
 	tslib? ( >=x11-libs/tslib-1.0 x11-proto/xcalibrateproto )
-	udev? ( sys-fs/udev[extras] )"
+	udev? ( sys-fs/udev )"
 
 DEPEND="${RDEPEND}
 	!!net-dialup/dtrace
@@ -189,9 +189,8 @@ src_install() {
 	server_based_install
 
 	if ! use minimal &&	use xorg; then
-		# Install xorg.conf.example (see bugs #151421 and #151670)
-		insinto /etc/X11
-		doins hw/xfree86/xorg.conf.example \
+		# Install xorg.conf.example into docs
+		dodoc hw/xfree86/xorg.conf.example \
 			|| die "couldn't install xorg.conf.example"
 	fi
 
