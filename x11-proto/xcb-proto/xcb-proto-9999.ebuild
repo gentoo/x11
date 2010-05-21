@@ -23,3 +23,16 @@ DEPEND="${RDEPEND}
 pkg_setup() {
 	python_set_active_version 2
 }
+
+src_install() {
+	x-modular_src_install
+	python_clean_installation_image
+}
+
+pkg_postinst() {
+	python_mod_optimize $(python_get_sitedir)/xcbgen
+}
+
+pkg_postrm() {
+	python_mod_cleanup $(python_get_sitedir)/xcbgen
+}
