@@ -25,14 +25,14 @@ pkg_setup() {
 }
 
 src_install() {
-	x-modular_src_install
+	xorg-2_src_install
 	python_clean_installation_image
 }
 
 pkg_postinst() {
-	python_mod_optimize $(python_get_sitedir)/xcbgen
+	python_mod_optimize xcbgen
 }
 
 pkg_postrm() {
-	python_mod_cleanup $(python_get_sitedir)/xcbgen
+	python_mod_cleanup xcbgen
 }
