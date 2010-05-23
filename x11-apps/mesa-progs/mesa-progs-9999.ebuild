@@ -4,8 +4,7 @@
 
 EAPI=3
 
-EGIT_REPO_URI="git://anongit.freedesktop.org/mesa/mesa"
-EGIT_PROJECT="mesa"
+EGIT_REPO_URI="git://anongit.freedesktop.org/mesa/demos"
 
 if [[ ${PV} = 9999* ]]; then
 	    GIT_ECLASS="git"
@@ -41,54 +40,19 @@ SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE=""
 
-RDEPEND="virtual/glut
-	virtual/opengl
-	virtual/glu"
-
+RDEPEND="virtual/opengl"
 DEPEND="${RDEPEND}"
 
 S="${WORKDIR}/${MY_P}"
 
-pkg_setup() {
-	if [[ ${KERNEL} == "FreeBSD" ]]; then
-		CONFIG="freebsd"
-	elif use x86; then
-		CONFIG="linux-dri-x86"
-	elif use amd64; then
-		CONFIG="linux-dri-x86-64"
-	elif use ppc; then
-		CONFIG="linux-dri-ppc"
-	else
-		CONFIG="linux-dri"
-	fi
-}
-
-src_prepare() {
-	HOSTCONF="${S}/configs/${CONFIG}"
-
-	# Kill this; we don't want /usr/X11R6/lib ever to be searched in this
-	# build.
-	echo "EXTRA_LIB_PATH =" >> ${HOSTCONF}
-
-	echo "OPT_FLAGS = ${CFLAGS}" >> ${HOSTCONF}
-	echo "CC = $(tc-getCC)" >> ${HOSTCONF}
-	echo "CXX = $(tc-getCXX)" >> ${HOSTCONF}
-	echo "LDFLAGS = ${LDFLAGS}" >> ${HOSTCONF}
-
-	# Just executables here, no need to compile with -fPIC
-	echo "PIC_FLAGS =" >> ${HOSTCONF}
-}
-
 src_compile() {
-	cd "${S}"/configs
-	ln -s ${CONFIG} current
+	tc-export CC
+	cd "${S}"/src/xdemos
 
-	cd "${S}"/progs/xdemos
-
-	emake glxinfo || die "glxinfo failed"
-	emake glxgears || die "glxgears failed"
+	${CC} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS} glxgears.c -o glxgears -lGL || die
+	${CC} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS} glxinfo.c -o glxinfo -lGL || die
 }
 
 src_install() {
-	dobin "${S}"/progs/xdemos/{glxgears,glxinfo} || die
+	dobin "${S}"/src/xdemos/{glxgears,glxinfo} || die
 }
