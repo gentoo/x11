@@ -53,6 +53,7 @@ LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.19"
 RDEPEND="
 	!<x11-base/xorg-server-1.7
 	!<=x11-proto/xf86driproto-2.0.3
+	app-admin/eselect-mesa
 	>=app-admin/eselect-opengl-1.1.1-r2
 	dev-libs/expat
 	x11-libs/libICE
@@ -149,10 +150,10 @@ src_prepare() {
 src_configure() {
 	local myconf
 
-	# Configurable DRI drivers
-	driver_enable swrast
-
 	if use classic; then
+	# Configurable DRI drivers
+		driver_enable swrast
+
 	# Intel code
 		driver_enable video_cards_i810 i810
 		driver_enable video_cards_i915 i915
@@ -285,11 +286,11 @@ src_install() {
 		pushd "${D}"/usr/$(get_libdir)/dri || die "pushd failed"
 		ln -s ../mesa/*.so . || die "Creating symlink failed"
 	# remove symlinks to drivers known to eselect
-#		for x in r300_dri.so swrast_dri.so; do
-#			if [ -f ${x} -o -L ${x} ]; then
-#				rm "${x}" || die "Failed to remove ${x}"
-#			fi
-#		done
+		for x in r300_dri.so swrast_dri.so; do
+			if [ -f ${x} -o -L ${x} ]; then
+				rm "${x}" || die "Failed to remove ${x}"
+			fi
+		done
 		popd
 	eend $?
 }
@@ -298,6 +299,8 @@ pkg_postinst() {
 	# Switch to the xorg implementation.
 	echo
 	eselect opengl set --use-old ${OPENGL_DIR}
+	# Select classic/gallium drivers
+	eselect mesa set --auto
 }
 
 # $1 - VIDEO_CARDS flag
