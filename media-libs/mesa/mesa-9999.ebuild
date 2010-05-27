@@ -216,13 +216,14 @@ src_configure() {
 		else
 			myconf="${myconf} --disable-gallium-radeon"
 		fi
-		if use video_cards_r600 || \
-				use video_cards_radeon || \
-				use video_cards_radeonhd; then
-			myconf="${myconf} --enable-gallium-r600"
-		else
-			myconf="${myconf} --disable-gallium-r600"
-		fi
+	# disable r600g for now, it does not work at all and displaces classic
+#		if use video_cards_r600 || \
+#				use video_cards_radeon || \
+#				use video_cards_radeonhd; then
+#			myconf="${myconf} --enable-gallium-r600"
+#		else
+#			myconf="${myconf} --disable-gallium-r600"
+#		fi
 	else
 		if use video_cards_nouveau || use video_cards_vmware; then
 			elog "SVGA and nouveau drivers are available only via gallium interface."
