@@ -53,7 +53,7 @@ LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.19"
 RDEPEND="
 	!<x11-base/xorg-server-1.7
 	!<=x11-proto/xf86driproto-2.0.3
-	app-admin/eselect-mesa
+	>=app-admin/eselect-mesa-0.0.2
 	>=app-admin/eselect-opengl-1.1.1-r2
 	dev-libs/expat
 	x11-libs/libICE
@@ -210,12 +210,18 @@ src_configure() {
 			myconf="${myconf} --disable-gallium-intel"
 		fi
 		if use video_cards_r300 || \
-				use video_cards_r600 || \
 				use video_cards_radeon || \
 				use video_cards_radeonhd; then
 			myconf="${myconf} --enable-gallium-radeon"
 		else
 			myconf="${myconf} --disable-gallium-radeon"
+		fi
+		if use video_cards_r600 || \
+				use video_cards_radeon || \
+				use video_cards_radeonhd; then
+			myconf="${myconf} --enable-gallium-r600"
+		else
+			myconf="${myconf} --disable-gallium-r600"
 		fi
 	else
 		if use video_cards_nouveau || use video_cards_vmware; then
@@ -286,7 +292,7 @@ src_install() {
 		pushd "${D}"/usr/$(get_libdir)/dri || die "pushd failed"
 		ln -s ../mesa/*.so . || die "Creating symlink failed"
 	# remove symlinks to drivers known to eselect
-		for x in r300_dri.so swrast_dri.so; do
+		for x in r300_dri.so r600_dri.so swrast_dri.so; do
 			if [ -f ${x} -o -L ${x} ]; then
 				rm "${x}" || die "Failed to remove ${x}"
 			fi
