@@ -53,7 +53,7 @@ LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.19"
 RDEPEND="
 	!<x11-base/xorg-server-1.7
 	!<=x11-proto/xf86driproto-2.0.3
-	>=app-admin/eselect-mesa-0.0.2
+	>=app-admin/eselect-mesa-0.0.3
 	>=app-admin/eselect-opengl-1.1.1-r2
 	dev-libs/expat
 	x11-libs/libICE
@@ -216,14 +216,13 @@ src_configure() {
 		else
 			myconf="${myconf} --disable-gallium-radeon"
 		fi
-	# disable r600g for now, it does not work at all and displaces classic
-#		if use video_cards_r600 || \
-#				use video_cards_radeon || \
-#				use video_cards_radeonhd; then
-#			myconf="${myconf} --enable-gallium-r600"
-#		else
-#			myconf="${myconf} --disable-gallium-r600"
-#		fi
+		if use video_cards_r600 || \
+				use video_cards_radeon || \
+				use video_cards_radeonhd; then
+			myconf="${myconf} --enable-gallium-r600"
+		else
+			myconf="${myconf} --disable-gallium-r600"
+		fi
 	else
 		if use video_cards_nouveau || use video_cards_vmware; then
 			elog "SVGA and nouveau drivers are available only via gallium interface."
@@ -283,7 +282,19 @@ src_install() {
 	eend $?
 
 	ebegin "Moving DRI/Gallium drivers for dynamic switching"
+		local gallium_drivers=( i915_dri.so i965_dri.so r300_dri.so r600_dri.so swrast_dri.so )
 		dodir /usr/$(get_libdir)/mesa
+		for x in ${gallium_drivers[@]}; do
+			if [ -f ${S}/$(get_libdir)/gallium/${x} ]; then
+				mv -f "${D}/usr/$(get_libdir)/dri/${x}" "${D}/usr/$(get_libdir)/dri/${x/_dri.so/g_dri.so}" \
+					|| die "Failed to move ${x}"
+				insinto "/usr/$(get_libdir)/dri/"
+				if [ -f ${S}/$(get_libdir)/${x} ]; then
+					fperms 755
+					doins "${S}/$(get_libdir)/${x}" || die "failed to install ${x}"
+				fi
+			fi
+		done
 		for x in "${D}"/usr/$(get_libdir)/dri/*.so; do
 			if [ -f ${x} -o -L ${x} ]; then
 				mv -f "${x}" "${x/dri/mesa}" \
@@ -293,7 +304,7 @@ src_install() {
 		pushd "${D}"/usr/$(get_libdir)/dri || die "pushd failed"
 		ln -s ../mesa/*.so . || die "Creating symlink failed"
 	# remove symlinks to drivers known to eselect
-		for x in r300_dri.so r600_dri.so swrast_dri.so; do
+		for x in ${gallium_drivers[@]}; do
 			if [ -f ${x} -o -L ${x} ]; then
 				rm "${x}" || die "Failed to remove ${x}"
 			fi
