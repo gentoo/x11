@@ -290,7 +290,7 @@ src_install() {
 					|| die "Failed to move ${x}"
 				insinto "/usr/$(get_libdir)/dri/"
 				if [ -f ${S}/$(get_libdir)/${x} ]; then
-					fperms 755
+					insopts -m0755
 					doins "${S}/$(get_libdir)/${x}" || die "failed to install ${x}"
 				fi
 			fi
