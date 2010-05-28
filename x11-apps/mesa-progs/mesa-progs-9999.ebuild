@@ -49,8 +49,8 @@ src_compile() {
 	tc-export CC
 	cd "${S}"/src/xdemos
 
-	${CC} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS} glxgears.c -o glxgears -lGL || die
-	${CC} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS} glxinfo.c -o glxinfo -lGL || die
+	${CC} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS} glxgears.c -o glxgears -lGL -lm || die
+	${CC} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS} glxinfo.c -o glxinfo -lGL -lm || die
 }
 
 src_install() {
