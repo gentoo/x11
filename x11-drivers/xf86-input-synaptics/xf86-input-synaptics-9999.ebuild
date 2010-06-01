@@ -21,7 +21,7 @@ DEPEND="${RDEPEND}
 	>=sys-apps/sed-4"
 
 src_install() {
-	DOCS="TODO README"
+	DOCS="README"
 	xorg-2_src_install
 
 	if use hal ; then
