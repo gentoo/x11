@@ -47,12 +47,9 @@ S="${WORKDIR}/${MY_P}"
 
 src_compile() {
 	tc-export CC
-	cd "${S}"/src/xdemos
-
-	${CC} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS} glxgears.c -o glxgears -lGL -lm || die
-	${CC} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS} glxinfo.c -o glxinfo -lGL -lm || die
+	emake LDLIBS='-lGL -lm' src/xdemos/{glxgears,glxinfo} || die
 }
 
 src_install() {
-	dobin "${S}"/src/xdemos/{glxgears,glxinfo} || die
+	dobin src/xdemos/{glxgears,glxinfo} || die
 }
