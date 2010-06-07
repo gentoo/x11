@@ -17,7 +17,6 @@ RDEPEND="
 	x11-libs/libXtst
 	hal? ( sys-apps/hal )"
 DEPEND="${RDEPEND}
-	>=x11-misc/util-macros-1.8
 	x11-proto/inputproto
 	>=sys-apps/sed-4"
 
