@@ -21,7 +21,7 @@ for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
 done
 
-IUSE="${IUSE_VIDEO_CARDS}"
+IUSE="${IUSE_VIDEO_CARDS} libkms"
 RESTRICT="test" # see bug #236845
 
 RDEPEND="dev-libs/libpthread-stubs"
@@ -33,7 +33,7 @@ pkg_setup() {
 			$(use_enable video_cards_nouveau nouveau-experimental-api)
 			$(use_enable video_cards_radeon radeon)
 			$(use_enable video_cards_vmware vmwgfx-experimental-api)
-			$(use_enable kernel_linux libkms)"
+			$(use_enable libkms)"
 
 	xorg-2_pkg_setup
 }
