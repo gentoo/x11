@@ -164,11 +164,14 @@ src_configure() {
 			driver_enable video_cards_intel i810 i915 i965
 		fi
 
+		# Nouveau code
+		driver_enable video_cards_nouveau nouveau
+
+		# ATI code
 		driver_enable video_cards_mach64 mach64
 		driver_enable video_cards_mga mga
 		driver_enable video_cards_r128 r128
 
-		# ATI code
 		driver_enable video_cards_r100 radeon
 		driver_enable video_cards_r200 r200
 		driver_enable video_cards_r300 r300
