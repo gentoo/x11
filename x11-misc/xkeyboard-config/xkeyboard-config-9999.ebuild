@@ -39,7 +39,6 @@ src_configure() {
 	econf \
 		--with-xkb-base="${EPREFIX}"/usr/share/X11/xkb \
 		--enable-compat-rules \
-		--disable-xkbcomp-symlink \
 		--with-xkb-rules-symlink=xorg
 }
 
