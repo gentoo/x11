@@ -12,5 +12,5 @@ IUSE=""
 
 RDEPEND="x11-libs/libX11
 	x11-libs/libXcursor
-	=media-libs/libpng-1.2*"
+	media-libs/libpng:0"
 DEPEND="${RDEPEND}"
