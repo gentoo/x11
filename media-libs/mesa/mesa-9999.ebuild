@@ -201,7 +201,7 @@ src_configure() {
 		elog "    Svga: VMWare Virtual GPU driver."
 		echo
 		myconf="${myconf}
-			--with-state-trackers=glx,dri,egl
+			--with-state-trackers=glx,dri,egl,vega
 			$(use_enable llvm gallium-llvm)
 			$(use_enable video_cards_vmware gallium-svga)
 			$(use_enable video_cards_nouveau gallium-nouveau)"
