@@ -2,12 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
+EAPI=3
 
-if [[ ${PV} == *9999 ]]; then
-	EGIT_REPO_URI="git://anongit.freedesktop.org/git/cairo"
-	GIT_ECLASS="git"
-fi
+EGIT_REPO_URI="git://anongit.freedesktop.org/git/cairo"
+[[ ${PV} == *9999 ]] && GIT_ECLASS="git"
 
 inherit eutils flag-o-matic autotools ${GIT_ECLASS}
 
@@ -25,11 +23,12 @@ RESTRICT="test"
 
 RDEPEND="media-libs/fontconfig
 	>=media-libs/freetype-2.1.9
-	sys-libs/zlib
 	media-libs/libpng:0
+	sys-libs/zlib
 	>=x11-libs/pixman-0.12.0
 	directfb? ( >=dev-libs/DirectFB-0.9.24 )
 	glitz? ( >=media-libs/glitz-0.5.1 )
+	opengl? ( virtual/opengl )
 	svg? ( dev-libs/libxml2 )
 	X? (
 		>=x11-libs/libXrender-0.6
@@ -89,6 +88,8 @@ src_configure() {
 	fi
 
 	econf \
+		--disable-dependency-tracking \
+		$(use_with X x) \
 		$(use_enable X xlib) \
 		$(use_enable X xlib-xrender) \
 		$(use_enable aqua quartz) \
@@ -97,17 +98,18 @@ src_configure() {
 		$(use_enable directfb) \
 		$(use_enable doc gtk-doc) \
 		$(use_enable glitz) \
-		$(use_enable xcb) \
+		$(use_enable opengl gl) \
 		$(use_enable svg) \
+		$(use_enable xcb) \
+		--enable-ft \
 		--enable-pdf \
 		--enable-png \
-		--enable-ft \
 		--enable-ps
 }
 
 src_install() {
 	# parallel make install fails
-	make DESTDIR="${D}" install || die "Installation failed"
+	emake -j1 DESTDIR="${D}" install || die "Installation failed"
 	dodoc AUTHORS ChangeLog NEWS README || die
 }
 
