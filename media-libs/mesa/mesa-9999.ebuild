@@ -47,7 +47,7 @@ done
 IUSE="${IUSE_VIDEO_CARDS}
 	+classic debug +gallium llvm motif +nptl pic selinux +xcb kernel_FreeBSD"
 
-LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.19"
+LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.21"
 # keep correct libdrm and dri2proto dep
 # keep blocks in rdepend for binpkg
 RDEPEND="
