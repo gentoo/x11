@@ -206,11 +206,16 @@ src_configure() {
 			$(use_enable video_cards_vmware gallium-svga)
 			$(use_enable video_cards_nouveau gallium-nouveau)"
 		if use video_cards_i915 || \
-				use video_cards_i965 || \
 				use video_cards_intel; then
-			myconf="${myconf} --enable-gallium-intel"
+			myconf="${myconf} --enable-gallium-i915"
 		else
-			myconf="${myconf} --disable-gallium-intel"
+			myconf="${myconf} --disable-gallium-i915"
+		fi
+		if use video_cards_i965 || \
+				use video_cards_intel; then
+			myconf="${myconf} --enable-gallium-i965"
+		else
+			myconf="${myconf} --disable-gallium-i965"
 		fi
 		if use video_cards_r300 || \
 				use video_cards_radeon || \
