@@ -226,6 +226,10 @@ src_install() {
 	newinitd "${T}"/xdm.initd xdm || die "initd file install failed"
 	newinitd "${FILESDIR}"/xdm-setup.initd-1 xdm-setup || die
 	newconfd "${FILESDIR}"/xdm.confd-3 xdm || die
+
+	# install the @x11-module-rebuild set for Portage
+	insinto /usr/share/portage/config/sets
+	newins "${FILESDIR}"/xorg-sets.conf xorg.conf || die
 }
 
 pkg_postinst() {
