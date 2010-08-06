@@ -29,6 +29,11 @@ CONFIGURE_OPTIONS="
 	--enable-compat-rules
 	--with-xkb-rules-symlink=xorg"
 
+src_prepare() {
+	xorg-2_src_prepare
+	intltoolize || die
+}
+
 src_install() {
 	xorg-2_src_install
 
