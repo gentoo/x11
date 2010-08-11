@@ -23,6 +23,5 @@ pkg_setup() {
 	CONFIGURE_OPTIONS="
 		$(use_with doc xmlto)
 		--without-fop
-		--docdir=/usr/share/${PF}
 	"
 }
