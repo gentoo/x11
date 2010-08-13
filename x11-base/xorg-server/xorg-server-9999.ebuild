@@ -78,7 +78,10 @@ DEPEND="${RDEPEND}
 	>=x11-proto/xineramaproto-1.1.3
 	>=x11-proto/xproto-7.0.17
 	dmx? ( >=x11-proto/dmxproto-2.2.99.1 )
-	doc? ( app-doc/doxygen )
+	doc? (
+		app-doc/doxygen
+		app-text/xmlto
+	)
 	!minimal? (
 		>=x11-proto/xf86driproto-2.1.0
 		>=x11-proto/dri2proto-2.1
@@ -108,9 +111,11 @@ pkg_setup() {
 	use minimal || ensure_a_server_is_building
 
 	# localstatedir is used for the log location; we need to override the default
-	# from ebuild.sh
+	# 	from ebuild.sh
 	# sysconfdir is used for the xorg.conf location; same applies
-	# --enable-install-setuid needed because sparcs default off
+	# 	--enable-install-setuid needed because sparcs default off
+	# NOTE: fop is used for doc generating ; and i have no idea if gentoo
+	#	 package it somewhere
 	CONFIGURE_OPTIONS="
 		$(use_enable ipv6)
 		$(use_enable dmx)
@@ -129,6 +134,7 @@ pkg_setup() {
 		$(use_enable nptl glx-tls)
 		$(use_enable udev config-udev)
 		$(use_with doc doxygen)
+		$(use_with doc xmlto)
 		--sysconfdir=/etc/X11
 		--localstatedir=/var
 		--enable-install-setuid
@@ -136,6 +142,7 @@ pkg_setup() {
 		--with-xkb-output=/var/lib/xkb
 		--disable-config-hal
 		--without-dtrace
+		--without-fop
 		--with-os-vendor=Gentoo
 		${conf_opts}"
 
