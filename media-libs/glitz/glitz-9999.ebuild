@@ -11,7 +11,7 @@ HOMEPAGE="http://www.freedesktop.org/Software/glitz"
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~x86 ~x86-fbsd"
 IUSE=""
 
 DEPEND="virtual/opengl"

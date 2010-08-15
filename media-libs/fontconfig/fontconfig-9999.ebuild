@@ -23,7 +23,7 @@ HOMEPAGE="http://fontconfig.org/"
 
 LICENSE="MIT"
 SLOT="1.0"
-KEYWORDS=""
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~sparc-fbsd ~x86-fbsd"
 IUSE="doc"
 
 # Purposefully dropped the xml USE flag and libxml2 support. Having this is
