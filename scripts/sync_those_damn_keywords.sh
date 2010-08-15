@@ -38,7 +38,7 @@ function get_keywords() {
 	echo ${keywords}
 }
 ###############################################################################
-# set keywords for 
+# set keywords for all ebuilds in overlay for specified package
 ###############################################################################
 function set_keywords() {
 	local overlay=$1
@@ -59,7 +59,7 @@ function set_keywords() {
 	echo "true"
 }
 ###############################################################################
-# cleanup all temporary files
+# regenerate manifest on specified package
 ###############################################################################
 function regen_manifest() {
 	local overlay=$1
