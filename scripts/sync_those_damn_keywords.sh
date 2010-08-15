@@ -29,7 +29,8 @@ function get_keywords() {
 
 	pushd "${PORTDIR}/${package}" > /dev/null
 	# grep added to ignore live versions
-	keywords=$(pquery --max ${package} --repo=${PORTDIR} | awk -F/ '{print $2".ebuild"}' | \
+	keywords=$(pquery --max ${package} --repo=${PORTDIR} | \
+		awk -F/ '{print $2".ebuild"}' | \
 		xargs sed -ne 's/^KEYWORDS="\(.*\)"/\1/p' | \
 		tr '\n' ' ')
 	popd > /dev/null
@@ -84,11 +85,11 @@ function help() {
 	echo "!!! THIS SCRIPT REQUIRES sys-apps/pkgcore !!!"
 	echo "!!!"
 	echo
-	echo "For usage you just need to specify overlay you want to work with."
+	echo "For usage you just need to specify overlay you want to work."
 	echo "Example:"
 	echo "$0 -o /var/tmp/myoverlay/"
 	echo
-	echo "Optionaly you can also specify location of portdir"
+	echo "Optionally you can also specify location of portdir"
 	echo "Example:"
 	echo "$0 -p /var/tmp/portage/ -o /var/tmp/myoverlay/"
 	exit 0
