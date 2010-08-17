@@ -137,7 +137,7 @@ src_prepare() {
 	# that it compiles. When we cross compile this clearly does not work
 	# so we require mesa to be built on the host system first. -solar
 	if tc-is-cross-compiler; then
-		sed -i -e "s#^GLSL_CL = .*\$#GLSL_CL = glsl-compile#g" \
+		sed -i -e "s#^GLSL_CL = .*\$#GLSL_CL = glsl_compiler#g" \
 			"${S}"/src/mesa/shader/slang/library/Makefile || die
 	fi
 
@@ -259,9 +259,7 @@ src_install() {
 
 	# Save the glsl-compiler for later use
 	if ! tc-is-cross-compiler; then
-		dodir /usr/bin/
-		cp "${S}"/src/glsl/apps/compile "${D}"/usr/bin/glsl-compile \
-			|| die "failed to copy the glsl compiler."
+		dobin "${S}"/src/glsl/glsl_compiler || die
 	fi
 	# Remove redundant headers
 	# GLUT thing
