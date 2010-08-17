@@ -16,7 +16,7 @@ HOMEPAGE="http://cairographics.org/"
 LICENSE="|| ( LGPL-2.1 MPL-1.1 )"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
-IUSE="aqua debug directfb doc glitz opengl +svg X xcb"
+IUSE="aqua debug directfb doc opengl openvg +svg X xcb"
 
 # Test causes a circular depend on gtk+... since gtk+ needs cairo but test needs gtk+ so we need to block it
 RESTRICT="test"
@@ -27,7 +27,6 @@ RDEPEND="media-libs/fontconfig
 	sys-libs/zlib
 	>=x11-libs/pixman-0.12.0
 	directfb? ( >=dev-libs/DirectFB-0.9.24 )
-	glitz? ( >=media-libs/glitz-0.5.1 )
 	opengl? ( virtual/opengl )
 	svg? ( dev-libs/libxml2 )
 	X? (
@@ -83,9 +82,6 @@ src_configure() {
 	#gets rid of fbmmx.c inlining warnings
 	append-flags -finline-limit=1200
 
-	if use glitz && use opengl; then
-		export glitz_LIBS=$(pkg-config --libs glitz-glx)
-	fi
 
 	econf \
 		--disable-dependency-tracking \
@@ -97,7 +93,7 @@ src_configure() {
 		$(use_enable debug test-surfaces) \
 		$(use_enable directfb) \
 		$(use_enable doc gtk-doc) \
-		$(use_enable glitz) \
+		$(use_enable openvg vg) \
 		$(use_enable opengl gl) \
 		$(use_enable svg) \
 		$(use_enable xcb) \
