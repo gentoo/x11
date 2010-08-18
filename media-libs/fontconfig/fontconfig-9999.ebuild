@@ -49,7 +49,7 @@ src_prepare() {
 	# Neeeded to get a sane .so versionning on fbsd, please dont drop
 	# If you have to run eautoreconf, you can also leave the elibtoolize call as
 	# it will be a no-op.
-	eautomake
+	[[ ${PV} = 9999* ]] && eautoreconf || eautomake
 	elibtoolize
 }
 
