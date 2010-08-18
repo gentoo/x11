@@ -4,7 +4,7 @@
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/${PN}"
 EGIT_BOOTSTRAP="eautoreconf"
-inherit git
+inherit autotools git
 
 DESCRIPTION="An OpenGL image compositing library"
 HOMEPAGE="http://www.freedesktop.org/Software/glitz"
