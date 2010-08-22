@@ -68,6 +68,11 @@ src_configure() {
 		${myconf} || die
 }
 
+src_compile() {
+	# in a release ebuild, the ChangeLog target won't do anything
+	emake all ChangeLog || die
+}
+
 src_install() {
 	emake DESTDIR="${D}" install || die
 
