@@ -56,6 +56,7 @@ RDEPEND="
 	>=app-admin/eselect-mesa-0.0.3
 	>=app-admin/eselect-opengl-1.1.1-r2
 	dev-libs/expat
+	dev-libs/libxml2[python]
 	sys-libs/talloc
 	x11-libs/libICE
 	x11-libs/libX11[xcb?]
