@@ -103,6 +103,7 @@ EPATCH_SUFFIX="patch"
 PATCHES=(
 	"${UPSTREAMED_PATCHES[@]}"
 	"${FILESDIR}"/${PN}-disable-acpi.patch
+	"${FILESDIR}"/${PN}-1.9-nouveau-default.patch
 	)
 
 pkg_setup() {

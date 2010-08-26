@@ -1,8 +1,8 @@
-diff --git a/hw/xfree86/common/xf86AutoConfig.c b/hw/xfree86/common/xf86AutoConfig.c
-index 7f4ada8..d964c6c 100644
---- a/hw/xfree86/common/xf86AutoConfig.c
-+++ b/hw/xfree86/common/xf86AutoConfig.c
-@@ -192,7 +192,24 @@ videoPtrToDriverList(struct pci_device *dev,
+diff --git a/hw/xfree86/common/xf86pciBus.c b/hw/xfree86/common/xf86pciBus.c
+index 74016af..9c296f5 100644
+--- a/hw/xfree86/common/xf86pciBus.c
++++ b/hw/xfree86/common/xf86pciBus.c
+@@ -1118,7 +1118,23 @@ videoPtrToDriverList(struct pci_device *dev,
  	    break;
  	case 0x102b:		    driverList[0] = "mga";	break;
  	case 0x10c8:		    driverList[0] = "neomagic"; break;
@@ -21,7 +21,6 @@ index 7f4ada8..d964c6c 100644
 +		break;
 +	    default:
 +		driverList[0] = "nouveau";
-+		driverList[1] = "nv";
 +		break;
 +	    }
 +	    break;
@@ -29,4 +28,3 @@ index 7f4ada8..d964c6c 100644
          case 0x1b36:		    driverList[0] = "qxl"; break;
  	case 0x1163:		    driverList[0] = "rendition"; break;
 -- 
-1.6.5.2
