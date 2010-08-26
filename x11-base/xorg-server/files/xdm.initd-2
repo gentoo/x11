@@ -1,7 +1,7 @@
 #!/sbin/runscript
 # Copyright 1999-2004 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License, v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/x11-base/xorg-server/files/xdm.initd,v 1.1 2010/04/13 10:07:39 scarabeus Exp $
 
 # This is here to serve as a note to myself, and future developers.
 #
@@ -37,7 +37,7 @@
 # 04 March 2002
 
 depend() {
-	need localmount xdm-setup
+	need localmount xdm
 
 	# this should start as early as possible
 	# we can't do 'before *' as that breaks it
@@ -52,7 +52,6 @@ depend() {
 
 	# Start before X
 	use consolekit xfs
-	@HALD_DEPEND@
 }
 
 setup_dm() {
@@ -127,8 +126,8 @@ start() {
 	local EXE= NAME= PIDFILE=
 	setup_dm
 
-	if [ -f /etc/.noxdm ] ; then
-		einfo "Skipping ${EXE}, /etc/.noxdm found"
+	if [ -f /etc/.noxdm ] || get_bootparam "nox" ; then
+		einfo "Skipping ${EXE##*/}, /etc/.noxdm found or \"nox\" bootparam passed."
 		rm /etc/.noxdm
 		return 0
 	fi
