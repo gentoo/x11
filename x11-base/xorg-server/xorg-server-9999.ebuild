@@ -51,7 +51,7 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 		>=media-libs/mesa-7.8_rc[nptl=]
 	)
 	tslib? ( >=x11-libs/tslib-1.0 x11-proto/xcalibrateproto )
-	udev? ( sys-fs/udev )"
+	udev? ( >=sys-fs/udev-150 )"
 
 DEPEND="${RDEPEND}
 	sys-devel/flex
