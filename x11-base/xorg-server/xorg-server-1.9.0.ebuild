@@ -44,6 +44,7 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	)
 	kdrive? (
 		>=x11-libs/libXext-1.0.5
+		x11-libs/libXv
 	)
 	!minimal? (
 		>=x11-libs/libX11-1.1.5
