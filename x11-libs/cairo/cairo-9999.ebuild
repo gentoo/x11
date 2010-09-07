@@ -109,4 +109,6 @@ src_install() {
 	# parallel make install fails
 	emake -j1 DESTDIR="${D}" install || die "Installation failed"
 	dodoc AUTHORS ChangeLog NEWS README || die
+
+	use static-libs || find "${D}" -type f -name '*.la' -exec rm -f '{}' \;
 }
