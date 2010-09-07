@@ -16,7 +16,7 @@ HOMEPAGE="http://cairographics.org/"
 LICENSE="|| ( LGPL-2.1 MPL-1.1 )"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
-IUSE="X aqua debug directfb doc opengl openvg static-libs +svg xcb"
+IUSE="X aqua debug directfb doc opengl openvg qt static-libs +svg xcb"
 
 # Test causes a circular depend on gtk+... since gtk+ needs cairo but test needs gtk+ so we need to block it
 RESTRICT="test"
@@ -28,6 +28,7 @@ RDEPEND="media-libs/fontconfig
 	>=x11-libs/pixman-0.12.0
 	directfb? ( >=dev-libs/DirectFB-0.9.24 )
 	opengl? ( virtual/opengl )
+	qt? ( x11-libs/qt-gui )
 	svg? ( dev-libs/libxml2 )
 	X? (
 		>=x11-libs/libXrender-0.6
@@ -94,6 +95,7 @@ src_configure() {
 		$(use_enable doc gtk-doc) \
 		$(use_enable openvg vg) \
 		$(use_enable opengl gl) \
+		$(use_enable qt) \
 		$(use_enable static-libs static) \
 		$(use_enable svg) \
 		$(use_enable xcb) \
@@ -107,15 +109,4 @@ src_install() {
 	# parallel make install fails
 	emake -j1 DESTDIR="${D}" install || die "Installation failed"
 	dodoc AUTHORS ChangeLog NEWS README || die
-}
-
-pkg_postinst() {
-	if use xcb; then
-		ewarn "You have enabled the Cairo XCB backend which is used only by"
-		ewarn "a select few apps. The Cairo XCB backend is presently"
-		ewarn "un-maintained and needs a lot of work to get it caught up"
-		ewarn "to the Xrender and Xlib backends, which are the backends used"
-		ewarn "by most applications. See:"
-		ewarn "http://lists.freedesktop.org/archives/xcb/2008-December/004139.html"
-	fi
 }
