@@ -25,7 +25,7 @@ RDEPEND="media-libs/fontconfig
 	>=media-libs/freetype-2.1.9
 	media-libs/libpng:0
 	sys-libs/zlib
-	>=x11-libs/pixman-0.12.0
+	>=x11-libs/pixman-0.18.4
 	directfb? ( >=dev-libs/DirectFB-0.9.24 )
 	opengl? ( virtual/opengl )
 	qt? ( x11-libs/qt-gui )
