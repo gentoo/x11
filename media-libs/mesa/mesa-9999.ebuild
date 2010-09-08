@@ -45,7 +45,7 @@ for card in ${VIDEO_CARDS}; do
 done
 
 IUSE="${IUSE_VIDEO_CARDS}
-	+classic debug +gallium gles llvm motif +nptl pic selinux +xcb kernel_FreeBSD"
+	+classic debug +gallium gles llvm motif +nptl pic selinux kernel_FreeBSD"
 
 LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.21"
 # keep correct libdrm and dri2proto dep
@@ -59,7 +59,7 @@ RDEPEND="
 	dev-libs/libxml2[python]
 	sys-libs/talloc
 	x11-libs/libICE
-	x11-libs/libX11[xcb?]
+	>x11-libs/libX11-1.3.5
 	x11-libs/libXdamage
 	x11-libs/libXext
 	x11-libs/libXi
@@ -249,11 +249,11 @@ src_configure() {
 		--with-driver=dri \
 		--disable-glut \
 		--without-demos \
+		--enable-xcb \
 		$(use_enable debug) \
 		$(use_enable motif glw) \
 		$(use_enable motif) \
 		$(use_enable nptl glx-tls) \
-		$(use_enable xcb) \
 		$(use_enable !pic asm) \
 		--with-dri-drivers=${DRI_DRIVERS} \
 		${myconf}
