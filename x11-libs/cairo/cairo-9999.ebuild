@@ -37,20 +37,13 @@ RDEPEND="media-libs/fontconfig
 		x11-libs/libXft
 	)
 	xcb? (
+		|| (
+			<=x11-libs/libX11-1.3.5[xcb]
+			>x11-libs/libX11-1.3.5
+		)
 		>=x11-libs/libxcb-0.92
 		x11-libs/xcb-util
 	)"
-#	test? (
-#	pdf test
-#	x11-libs/pango
-#	>=x11-libs/gtk+-2.0
-#	>=app-text/poppler-bindings-0.9.2[gtk]
-#	ps test
-#	app-text/ghostscript-gpl
-#	svg test
-#	>=x11-libs/gtk+-2.0
-#	>=gnome-base/librsvg-2.15.0
-
 DEPEND="${RDEPEND}
 	>=dev-util/pkgconfig-0.19
 	>=sys-devel/libtool-2
@@ -99,6 +92,8 @@ src_configure() {
 		$(use_enable static-libs static) \
 		$(use_enable svg) \
 		$(use_enable xcb) \
+		$(use_enable xcb xlib-xcb) \
+		$(use_enable xcb xcb-shm) \
 		--enable-ft \
 		--enable-pdf \
 		--enable-png \

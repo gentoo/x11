@@ -16,7 +16,7 @@ HOMEPAGE="http://cairographics.org/"
 LICENSE="|| ( LGPL-2.1 MPL-1.1 )"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
-IUSE="X aqua debug directfb doc opengl static-libs +svg" # openvg xcb
+IUSE="X aqua debug directfb doc opengl openvg qt static-libs +svg xcb"
 
 # Test causes a circular depend on gtk+... since gtk+ needs cairo but test needs gtk+ so we need to block it
 RESTRICT="test"
@@ -28,28 +28,22 @@ RDEPEND="media-libs/fontconfig
 	>=x11-libs/pixman-0.18.4
 	directfb? ( >=dev-libs/DirectFB-0.9.24 )
 	opengl? ( virtual/opengl )
+	qt? ( x11-libs/qt-gui )
 	svg? ( dev-libs/libxml2 )
 	X? (
 		>=x11-libs/libXrender-0.6
 		x11-libs/libXext
 		x11-libs/libX11
 		x11-libs/libXft
+	)
+	xcb? (
+		|| (
+			<=x11-libs/libX11-1.3.5[xcb]
+			>x11-libs/libX11-1.3.5
+		)
+		>=x11-libs/libxcb-0.92
+		x11-libs/xcb-util
 	)"
-#	xcb? (
-#		>=x11-libs/libxcb-0.92
-#		x11-libs/xcb-util
-#	)"
-#	test? (
-#	pdf test
-#	x11-libs/pango
-#	>=x11-libs/gtk+-2.0
-#	>=app-text/poppler-bindings-0.9.2[gtk]
-#	ps test
-#	app-text/ghostscript-gpl
-#	svg test
-#	>=x11-libs/gtk+-2.0
-#	>=gnome-base/librsvg-2.15.0
-
 DEPEND="${RDEPEND}
 	>=dev-util/pkgconfig-0.19
 	>=sys-devel/libtool-2
@@ -92,18 +86,18 @@ src_configure() {
 		$(use_enable debug test-surfaces) \
 		$(use_enable directfb) \
 		$(use_enable doc gtk-doc) \
+		$(use_enable openvg vg) \
 		$(use_enable opengl gl) \
+		$(use_enable qt) \
 		$(use_enable static-libs static) \
 		$(use_enable svg) \
+		$(use_enable xcb) \
+		$(use_enable xcb xlib-xcb) \
+		$(use_enable xcb xcb-shm) \
 		--enable-ft \
 		--enable-pdf \
 		--enable-png \
-		--enable-ps \
-		--disable-xcb \
-		--disable-vg
-	# Disabled currently non-well working implementations
-	# $(use_enable openvg vg) \
-	# $(use_enable xcb) \
+		--enable-ps
 }
 
 src_install() {
