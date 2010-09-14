@@ -114,11 +114,11 @@ pkg_setup() {
 	use minimal || ensure_a_server_is_building
 
 	# localstatedir is used for the log location; we need to override the default
-	# 	from ebuild.sh
+	#	from ebuild.sh
 	# sysconfdir is used for the xorg.conf location; same applies
-	# 	--enable-install-setuid needed because sparcs default off
+	#	--enable-install-setuid needed because sparcs default off
 	# NOTE: fop is used for doc generating ; and i have no idea if gentoo
-	#	 package it somewhere
+	#	package it somewhere
 	CONFIGURE_OPTIONS="
 		$(use_enable ipv6)
 		$(use_enable dmx)
