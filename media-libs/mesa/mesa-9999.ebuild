@@ -39,7 +39,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-
 
 INTEL_CARDS="i810 i915 i965 intel"
 RADEON_CARDS="r100 r200 r300 r600 radeon radeonhd"
-VIDEO_CARDS="${INTEL_CARDS} ${RADEON_CARDS} mach64 mga none nouveau r128 savage sis vmware tdfx via"
+VIDEO_CARDS="${INTEL_CARDS} ${RADEON_CARDS} mach64 mga nouveau r128 savage sis vmware tdfx via"
 for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
 done
