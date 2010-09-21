@@ -80,7 +80,7 @@ DEPEND="${RDEPEND}
 	>=x11-proto/xproto-7.0.17
 	dmx? ( >=x11-proto/dmxproto-2.2.99.1 )
 	doc? (
-		app-doc/doxygen
+		>=app-doc/doxygen-1.6.1
 		app-text/xmlto
 	)
 	!minimal? (
