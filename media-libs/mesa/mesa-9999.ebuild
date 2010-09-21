@@ -59,7 +59,7 @@ RDEPEND="
 	dev-libs/libxml2[python]
 	sys-libs/talloc
 	x11-libs/libICE
-	>x11-libs/libX11-1.3.5
+	>=x11-libs/libX11-1.3.99.901
 	x11-libs/libXdamage
 	x11-libs/libXext
 	x11-libs/libXi
