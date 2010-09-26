@@ -37,7 +37,7 @@
 # 04 March 2002
 
 depend() {
-	need localmount xdm
+	need localmount
 
 	# this should start as early as possible
 	# we can't do 'before *' as that breaks it
