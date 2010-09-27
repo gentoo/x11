@@ -18,14 +18,3 @@ DEPEND="${RDEPEND}
 	dev-util/pkgconfig
 	x11-proto/xproto
 	test? ( >=dev-libs/check-0.9.4 )"
-
-pkg_postinst() {
-	xorg-2_pkg_postinst
-
-	echo
-	ewarn "Library names have changed since earlier versions of xcb-util;"
-	ewarn "you must rebuild packages that have linked against <xcb-util-0.3.0."
-	einfo "Using 'revdep-rebuild' from app-portage/gentoolkit is highly"
-	einfo "recommended."
-	epause 5
-}
