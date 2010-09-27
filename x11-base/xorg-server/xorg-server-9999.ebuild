@@ -152,6 +152,18 @@ pkg_setup() {
 		--with-os-vendor=Gentoo
 		${conf_opts}"
 
+	# Xorg-server requires includes from OS mesa which are not visible for
+	# users of binary drivers.
+	# Due to the limitations of CONFIGURE_OPTIONS, we have to export this
+	mkdir -p "${T}/mesa-symlinks/GL"
+	for i in gl glx glxmd glxproto glxtokens; do
+		ln -s "${EROOT}usr/$(get_libdir)/opengl/xorg-x11/include/$i.h" "${T}/mesa-symlinks/GL/$i.h" || die
+	done
+	for i in glext glxext; do
+		ln -s "${EROOT}usr/$(get_libdir)/opengl/global/include/$i.h" "${T}/mesa-symlinks/GL/$i.h" || die
+	done
+	append-cppflags "-I${T}/mesa-symlinks"
+
 	# (#121394) Causes window corruption
 	filter-flags -fweb
 
@@ -173,24 +185,6 @@ pkg_setup() {
 			has_version "<x11-base/xorg-server-$(get_version_component_range 1-2)"; then
 		INFO="yes"
 	fi
-}
-
-src_configure() {
-	# this is required only for configure and build time
-	# we need to ensure having enough glxtokens
-	# the subshell is needed so the addwrite is not shared in rest of that phase
-	OLD_IMPLEM="$(eselect opengl show)"
-	[[ ${OLD_IMPLEM} != ${OPENGL_DIR} ]] && ( addwrite "${ROOT}"; eselect opengl set ${OPENGL_DIR}; )
-	xorg-2_src_configure
-}
-
-src_compile() {
-	emake # no die here intentional
-	if [[ $? != 0 ]]; then
-		[[ ${OLD_IMPLEM} != ${OPENGL_DIR} ]] && ( addwrite "${ROOT}"; eselect opengl set ${OLD_IMPLEM}; )
-		die "Compilation failed"
-	fi
-	[[ ${OLD_IMPLEM} != ${OPENGL_DIR} ]] && ( addwrite "${ROOT}"; eselect opengl set ${OLD_IMPLEM}; )
 }
 
 src_install() {
@@ -216,6 +210,9 @@ src_install() {
 }
 
 pkg_postinst() {
+	# sets up libGL and DRI2 symlinks if needed (ie, on a fresh install)
+	eselect opengl set --use-old xorg-x11
+
 	if [[ ${INFO} = yes ]]; then
 		einfo "You should consider reading upgrade guide for this release:"
 		einfo "	http://www.gentoo.org/proj/en/desktop/x/x11/xorg-server-$(get_version_component_range 1-2)-upgrade-guide.xml"
