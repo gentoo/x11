@@ -33,10 +33,3 @@ src_prepare() {
 	xorg-2_src_prepare
 	intltoolize || die
 }
-
-src_install() {
-	xorg-2_src_install
-
-	echo "CONFIG_PROTECT=\"${EPREFIX}/usr/share/X11/xkb\"" > "${T}"/10xkeyboard-config
-	doenvd "${T}"/10xkeyboard-config
-}
