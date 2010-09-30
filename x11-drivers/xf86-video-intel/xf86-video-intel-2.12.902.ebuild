@@ -12,7 +12,7 @@ KEYWORDS="~amd64 ~ia64 ~x86 -x86-fbsd"
 IUSE="dri"
 
 RDEPEND=">=x11-base/xorg-server-1.6
-	>=x11-libs/libdrm-2.4.22
+	>=x11-libs/libdrm-2.4.22[video_cards_intel]
 	x11-libs/libpciaccess
 	x11-libs/libXext
 	x11-libs/libXfixes
