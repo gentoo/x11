@@ -10,7 +10,7 @@ KEYWORDS="~amd64 ~x86 ~x86-fbsd"
 IUSE=""
 
 RDEPEND=">=x11-base/xorg-server-1.0.99.901
-	x11-libs/libdrm[video_cards_vmware]"
+	x11-libs/libdrm[libkms,video_cards_vmware]"
 DEPEND="${RDEPEND}
 	x11-proto/fontsproto
 	x11-proto/randrproto
