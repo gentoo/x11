@@ -86,7 +86,7 @@ DEPEND="${RDEPEND}
 	!minimal? (
 		>=x11-proto/xf86driproto-2.1.0
 		>=x11-proto/dri2proto-2.3
-		>=x11-libs/libdrm-2.4.21
+		>=x11-libs/libdrm-2.4.20
 	)"
 
 PDEPEND="
