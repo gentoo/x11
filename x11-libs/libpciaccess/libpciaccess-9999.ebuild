@@ -1,4 +1,4 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -18,6 +18,6 @@ CONFIGURE_OPTIONS="--with-pciids-path=/usr/share/misc"
 src_install() {
 	xorg-2_src_install
 	if ! use minimal; then
-		dobin src/.libs/scanpci || die
+		dobin scanpci/scanpci || die
 	fi
 }
