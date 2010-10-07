@@ -45,7 +45,7 @@ for card in ${VIDEO_CARDS}; do
 done
 
 IUSE="${IUSE_VIDEO_CARDS}
-	+classic debug +gallium gles llvm motif +nptl pic selinux kernel_FreeBSD"
+	+classic d3d debug +gallium gles llvm motif +nptl pic selinux kernel_FreeBSD"
 
 LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.21"
 # keep correct libdrm and dri2proto dep
@@ -65,6 +65,7 @@ RDEPEND="
 	x11-libs/libXi
 	x11-libs/libXmu
 	x11-libs/libXxf86vm
+	d3d? ( app-emulation/wine )
 	motif? ( x11-libs/openmotif )
 	gallium? (
 		llvm? (
@@ -203,7 +204,7 @@ src_configure() {
 		elog "    Svga: VMWare Virtual GPU driver."
 		echo
 		myconf="${myconf}
-			--with-state-trackers=glx,dri,egl,vega
+			--with-state-trackers=glx,dri,egl,vega$(use d3d && echo ",d3d1x")
 			$(use_enable llvm gallium-llvm)
 			$(use_enable gles gles1)
 			$(use_enable gles gles2)
