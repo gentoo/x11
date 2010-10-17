@@ -37,11 +37,3 @@ pkg_setup() {
 
 	xorg-2_pkg_setup
 }
-
-pkg_postinst() {
-	xorg-2_pkg_postinst
-
-	ewarn "libdrm's ABI may have changed without change in library name"
-	ewarn "Please rebuild media-libs/mesa, x11-base/xorg-server and"
-	ewarn "your video drivers in x11-drivers/*."
-}
