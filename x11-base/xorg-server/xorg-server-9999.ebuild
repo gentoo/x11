@@ -105,8 +105,6 @@ PATCHES=(
 	"${UPSTREAMED_PATCHES[@]}"
 	"${FILESDIR}"/${PN}-disable-acpi.patch
 	"${FILESDIR}"/${PN}-1.9-nouveau-default.patch
-	"${FILESDIR}"/0001-Fix-tslib-check-fallback-to-set-TSLIB_LIBS.patch
-	"${FILESDIR}"/0002-Fix-linking-with-tslib-with-Wl-as-needed.patch
 	)
 
 pkg_setup() {
