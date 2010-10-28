@@ -17,11 +17,3 @@ RDEPEND="x11-libs/libXrender
 	media-libs/freetype
 	media-libs/fontconfig"
 DEPEND="${RDEPEND}"
-
-pkg_setup() {
-	xorg-2_pkg_setup
-	# (#125465) Broken with Bdirect support
-	filter-flags -Wl,-Bdirect
-	filter-ldflags -Bdirect
-	filter-ldflags -Wl,-Bdirect
-}
