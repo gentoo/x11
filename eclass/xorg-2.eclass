@@ -1,6 +1,6 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/eclass/xorg-2.eclass,v 1.13 2010/09/27 09:40:25 scarabeus Exp $
+# $Header: /var/cvsroot/gentoo-x86/eclass/xorg-2.eclass,v 1.16 2010/10/28 11:46:32 scarabeus Exp $
 #
 # @ECLASS: xorg-2.eclass
 # @MAINTAINER:
@@ -113,6 +113,7 @@ if [[ ${FONT} == yes ]]; then
 		x11-apps/mkfontscale
 		x11-apps/mkfontdir"
 	PDEPEND+=" media-fonts/font-alias"
+	DEPEND+=" >=media-fonts/font-util-1.1.1-r1"
 
 	# @ECLASS-VARIABLE: FONT_DIR
 	# @DESCRIPTION:
@@ -256,6 +257,13 @@ xorg-2_flags_setup() {
 	[[ ${CHOST} == *-winnt* ]] && append-cppflags -DWIN32 -D__STDC__
 	# hardened ldflags
 	[[ ${PN} = xorg-server || -n ${DRIVER} ]] && append-ldflags -Wl,-z,lazy
+
+	# Quite few libraries fail on runtime without these:
+	if has static-libs ${IUSE//+}; then
+		filter-flags -Wl,-Bdirect
+		filter-ldflags -Bdirect
+		filter-ldflags -Wl,-Bdirect
+	fi
 }
 
 # @FUNCTION: xorg-2_src_configure
