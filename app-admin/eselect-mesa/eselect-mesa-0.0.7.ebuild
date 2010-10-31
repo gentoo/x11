@@ -21,3 +21,10 @@ src_install() {
 	insinto /usr/share/eselect/modules
 	doins mesa.eselect || die
 }
+
+pkg_postinst() {
+	if has_version ">=media-libs/mesa-7.9" && \
+		! [ -f ${EROOT}/usr/share/mesa/eselect-mesa.conf ]; then
+		ewarn "Rebuild media-libs/mesa for ${PN} to work."
+	fi
+}
