@@ -1,6 +1,6 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/x11-libs/libXpm/libXpm-3.5.9.ebuild,v 1.1 2010/10/31 10:47:40 scarabeus Exp $
 
 EAPI=3
 inherit xorg-2 flag-o-matic
@@ -15,6 +15,7 @@ RDEPEND="x11-libs/libX11
 	x11-libs/libXext"
 DEPEND="${RDEPEND}
 	sys-devel/gettext
+	x11-proto/xextproto
 	x11-proto/xproto"
 
 src_compile() {
