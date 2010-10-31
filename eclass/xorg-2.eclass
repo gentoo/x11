@@ -100,7 +100,7 @@ if [[ ${XORG_EAUTORECONF} != no ]]; then
 		sys-devel/m4"
 	# This MUST BE STABLE
 	if [[ ${PN} != util-macros ]] ; then
-		DEPEND+=" >=x11-misc/util-macros-1.8.0"
+		DEPEND+=" >=x11-misc/util-macros-1.11.0"
 		# Required even by xorg-server
 		[[ ${PN} == "font-util" ]] || DEPEND+=" >=media-fonts/font-util-1.1.1-r1"
 	fi
