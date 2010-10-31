@@ -3,6 +3,7 @@
 # $Header: $
 
 EAPI=3
+XORG_STATIC=no
 inherit xorg-2
 
 DESCRIPTION="create an index of scalable font files for X"
@@ -11,8 +12,10 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86
 IUSE=""
 
 RDEPEND="x11-libs/libfontenc
-	=media-libs/freetype-2*"
+	media-libs/freetype:2"
 DEPEND="${RDEPEND}
-	x11-proto/xproto"
+	x11-proto/xproto
+	app-arch/gzip
+	app-arch/bzip2"
 
 CONFIGURE_OPTIONS="--with-bzip2"
