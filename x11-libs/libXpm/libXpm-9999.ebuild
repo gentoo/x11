@@ -12,11 +12,11 @@ IUSE=""
 
 RDEPEND="x11-libs/libX11
 	x11-libs/libXt
-	x11-libs/libXext"
-DEPEND="${RDEPEND}
-	sys-devel/gettext
+	x11-libs/libXext
 	x11-proto/xextproto
 	x11-proto/xproto"
+DEPEND="${RDEPEND}
+	sys-devel/gettext"
 
 src_compile() {
 	# the gettext configure check and code in sxpm are incorrect; they assume

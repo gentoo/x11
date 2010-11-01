@@ -29,11 +29,11 @@ DEPEND="${RDEPEND}"
 
 pkg_setup() {
 	CONFIGURE_OPTIONS="--enable-udev
-			$(use_enable video_cards_intel intel)
-			$(use_enable video_cards_nouveau nouveau-experimental-api)
-			$(use_enable video_cards_radeon radeon)
-			$(use_enable video_cards_vmware vmwgfx-experimental-api)
-			$(use_enable libkms)"
+		$(use_enable video_cards_intel intel)
+		$(use_enable video_cards_nouveau nouveau-experimental-api)
+		$(use_enable video_cards_radeon radeon)
+		$(use_enable video_cards_vmware vmwgfx-experimental-api)
+		$(use_enable libkms)"
 
 	xorg-2_pkg_setup
 }

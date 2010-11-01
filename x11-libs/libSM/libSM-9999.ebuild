@@ -12,14 +12,16 @@ IUSE="doc ipv6 +uuid"
 
 RDEPEND="x11-libs/libICE
 	x11-libs/xtrans
+	x11-proto/xproto
 	!elibc_FreeBSD? (
 		uuid? ( >=sys-apps/util-linux-2.16 )
 	)"
 DEPEND="${RDEPEND}
-	x11-proto/xproto
 	doc? ( app-text/xmlto )"
 
 pkg_setup() {
+	xorg-2_pkg_setup
+
 	CONFIGURE_OPTIONS="$(use_enable ipv6)
 		$(use_enable doc docs)
 		$(use_with doc xmlto)

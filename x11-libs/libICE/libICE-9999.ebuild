@@ -16,6 +16,8 @@ DEPEND="${RDEPEND}
 	doc? ( app-text/xmlto )"
 
 pkg_setup() {
+	xorg-2_pkg_setup
+
 	CONFIGURE_OPTIONS="$(use_enable ipv6)
 		$(use_enable doc docs)
 		$(use_enable doc specs)

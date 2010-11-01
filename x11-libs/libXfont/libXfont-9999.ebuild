@@ -13,10 +13,10 @@ IUSE="doc ipv6"
 RDEPEND="x11-libs/xtrans
 	x11-libs/libfontenc
 	>=media-libs/freetype-2
-	app-arch/bzip2"
-DEPEND="${RDEPEND}
+	app-arch/bzip2
 	x11-proto/xproto
-	x11-proto/fontsproto
+	x11-proto/fontsproto"
+DEPEND="${RDEPEND}
 	doc? ( app-text/xmlto )"
 
 pkg_setup() {

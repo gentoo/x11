@@ -14,13 +14,15 @@ RDEPEND="x11-libs/libX11
 	x11-libs/libXext
 	x11-libs/libXt
 	x11-libs/libXmu
-	x11-libs/libXpm"
-DEPEND="${RDEPEND}
+	x11-libs/libXpm
 	x11-proto/xproto
-	x11-proto/xextproto
+	x11-proto/xextproto"
+DEPEND="${RDEPEND}
 	doc? ( app-text/xmlto )"
 
 pkg_setup() {
+	xorg-2_pkg_setup
+
 	CONFIGURE_OPTIONS="$(use_enable doc specs)
 		$(use_with doc xmlto)
 		--without-fop"

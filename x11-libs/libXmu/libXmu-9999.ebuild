@@ -12,9 +12,9 @@ IUSE="doc ipv6"
 
 RDEPEND="x11-libs/libXt
 	x11-libs/libXext
-	x11-libs/libX11"
+	x11-libs/libX11
+	x11-proto/xextproto"
 DEPEND="${RDEPEND}
-	x11-proto/xextproto
 	doc? ( app-text/xmlto )"
 
 pkg_setup() {

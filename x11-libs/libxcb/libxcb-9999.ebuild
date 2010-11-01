@@ -15,14 +15,14 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/git/xcb/libxcb"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE="doc selinux"
 
-RDEPEND="x11-libs/libXau
+RDEPEND="dev-libs/libpthread-stubs
+	x11-libs/libXau
 	x11-libs/libXdmcp
-	dev-libs/libpthread-stubs"
+	>=x11-proto/xcb-proto-1.6"
 DEPEND="${RDEPEND}
-	doc? ( app-doc/doxygen )
+	=dev-lang/python-2*[xml]
 	dev-libs/libxslt
-	>=x11-proto/xcb-proto-1.6
-	=dev-lang/python-2*[xml]"
+	doc? ( app-doc/doxygen )"
 
 pkg_setup() {
 	python_set_active_version 2

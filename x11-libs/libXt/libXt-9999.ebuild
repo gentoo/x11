@@ -12,10 +12,10 @@ IUSE=""
 
 RDEPEND="x11-libs/libX11
 	x11-libs/libSM
-	x11-libs/libICE"
-DEPEND="${RDEPEND}
+	x11-libs/libICE
 	x11-proto/xproto
 	x11-proto/kbproto"
+DEPEND="${RDEPEND}"
 
 pkg_setup() {
 	xorg-2_pkg_setup

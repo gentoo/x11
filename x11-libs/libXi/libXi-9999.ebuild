@@ -14,9 +14,9 @@ RDEPEND="
 	>=x11-libs/libX11-1.3
 	>=x11-libs/libXext-1.1
 	>=x11-proto/inputproto-2.0
+	>=x11-proto/xproto-7.0.16
 "
 DEPEND="${RDEPEND}
-	>=x11-proto/xproto-7.0.16
 	doc? (
 		app-text/asciidoc
 		app-text/xmlto

@@ -12,6 +12,6 @@ IUSE=""
 
 RDEPEND="x11-libs/libX11
 	x11-libs/libXt
-	x11-libs/libXext"
-DEPEND="${RDEPEND}
+	x11-libs/libXext
 	x11-proto/trapproto"
+DEPEND="${RDEPEND}"

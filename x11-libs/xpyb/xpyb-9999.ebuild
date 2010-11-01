@@ -14,9 +14,9 @@ KEYWORDS="~amd64 ~x86"
 IUSE="selinux"
 
 RDEPEND=">=x11-libs/libxcb-1.1
-	>=dev-lang/python-2.5"
-DEPEND="${RDEPEND}
+	>=dev-lang/python-2.5
 	>=x11-proto/xcb-proto-1.2"
+DEPEND="${RDEPEND}"
 
 DOCS="NEWS README"
 

@@ -11,15 +11,15 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86
 IUSE="doc ipv6 test"
 
 RDEPEND=">=x11-libs/libxcb-1.1.92
-	x11-libs/xtrans"
-DEPEND="${RDEPEND}
-	doc? ( app-text/xmlto )
-	test? ( dev-lang/perl )
+	x11-libs/xtrans
+	>=x11-proto/xproto-7.0.13
 	x11-proto/xf86bigfontproto
 	x11-proto/inputproto
 	x11-proto/kbproto
-	x11-proto/xextproto
-	>=x11-proto/xproto-7.0.13"
+	x11-proto/xextproto"
+DEPEND="${RDEPEND}
+	doc? ( app-text/xmlto )
+	test? ( dev-lang/perl )"
 
 pkg_setup() {
 	xorg-2_pkg_setup
