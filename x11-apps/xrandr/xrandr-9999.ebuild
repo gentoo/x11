@@ -3,7 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/x11-apps/xrandr/xrandr-1.3.3.ebuild,v 1.1 2010/07/24 11:47:41 scarabeus Exp $
 
 EAPI=3
-XORG_STATIC=no
+
 inherit xorg-2
 
 DESCRIPTION="primitive command line interface to RandR extension"

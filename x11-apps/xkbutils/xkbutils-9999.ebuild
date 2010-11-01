@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=3
-XORG_STATIC=no
+
 inherit xorg-2
 
 DESCRIPTION="X.Org xkbutils application"
