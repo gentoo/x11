@@ -1,14 +1,14 @@
-From a2d86ec291aabd2bafd3a2f52e22bac085de555d Mon Sep 17 00:00:00 2001
+From 4f039767273b60f9a1a24867db0988d46abe5972 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?R=C3=A9mi=20Cardona?= <remi@gentoo.org>
 Date: Tue, 8 Dec 2009 15:22:13 +0100
 Subject: [PATCH] Gentoo-specific customizations
 
 ---
- xinitrc.cpp |   26 ++++++++++++++++++--------
- 1 files changed, 18 insertions(+), 8 deletions(-)
+ xinitrc.cpp |   29 +++++++++++++++++------------
+ 1 files changed, 17 insertions(+), 12 deletions(-)
 
 diff --git a/xinitrc.cpp b/xinitrc.cpp
-index 049a8e4..80c3ad9 100644
+index 379b1f3..159f294 100644
 --- a/xinitrc.cpp
 +++ b/xinitrc.cpp
 @@ -2,8 +2,8 @@ XCOMM!SHELL_CMD
@@ -22,16 +22,17 @@ index 049a8e4..80c3ad9 100644
  
  XCOMM merge in defaults and keymaps
  
-@@ -84,15 +84,25 @@ fi
+@@ -84,19 +84,24 @@ fi
  XCOMM This is the fallback case if nothing else is executed above
  #endif /* !defined(__SCO__)  && !defined(__UNIXWARE__) */
  
+-#ifdef __APPLE__
 +if [ -n "`/etc/X11/chooser.sh`" ]; then
 +	command="`/etc/X11/chooser.sh`"
 +else
 +	failsafe="yes"
 +fi
-+
+ 
  if [ -d XINITDIR/xinitrc.d ] ; then
 -	for f in XINITDIR/xinitrc.dXSLASHGLOB.sh ; do
 +	for f in XINITDIR/xinitrc.dXSLASHGLOB ; do
@@ -39,7 +40,9 @@ index 049a8e4..80c3ad9 100644
  	done
  	unset f
  fi
- 
+-
+-#endif
+-
 -TWM &
 -XCLOCK -geometry 50x50-1+1 &
 -XTERM -geometry 80x50+494+51 &
@@ -55,5 +58,5 @@ index 049a8e4..80c3ad9 100644
 +	exec $command
 +fi
 -- 
-1.7.0.4
+1.6.5.5
 

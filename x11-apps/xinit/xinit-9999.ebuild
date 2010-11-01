@@ -1,25 +1,26 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/x11-apps/xinit/xinit-1.2.1-r2.ebuild,v 1.1 2010/05/27 08:42:59 scarabeus Exp $
 
 EAPI=3
-inherit xorg-2 pam
+
+inherit xorg-2
 
 DESCRIPTION="X Window System initializer"
 
 LICENSE="${LICENSE} GPL-2"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
-IUSE="+minimal pam"
+IUSE="+minimal"
 
 RDEPEND="
+	!<x11-base/xorg-server-1.8.0
 	x11-apps/xauth
-	>=x11-base/xorg-server-1.8.0-r1
 	x11-libs/libX11
 "
 DEPEND="${RDEPEND}"
-PDEPEND="!minimal? (
+PDEPEND="x11-apps/xrdb
+	!minimal? (
 		x11-apps/xclock
-		x11-apps/xrdb
 		x11-apps/xsm
 		x11-terms/xterm
 		x11-wm/twm
@@ -27,11 +28,12 @@ PDEPEND="!minimal? (
 "
 
 PATCHES=(
-	"${FILESDIR}/0001-Gentoo-specific-customizations-r1.patch"
+	"${FILESDIR}/0001-Gentoo-customizations.patch"
 )
 
 pkg_setup() {
 	xorg-2_pkg_setup
+
 	CONFIGURE_OPTIONS="--with-xinitdir=/etc/X11/xinit"
 }
 
@@ -44,7 +46,6 @@ src_install() {
 	doexe "${FILESDIR}"/Xsession || die
 	exeinto /etc/X11/xinit
 	doexe "${FILESDIR}"/xserverrc || die
-	newpamd "${FILESDIR}"/xserver.pamd xserver
 	exeinto /etc/X11/xinit/xinitrc.d/
 	doexe "${FILESDIR}/00-xhost"
 }
