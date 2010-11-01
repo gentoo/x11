@@ -1,8 +1,9 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/x11-apps/xrandr/xrandr-1.3.3.ebuild,v 1.1 2010/07/24 11:47:41 scarabeus Exp $
 
 EAPI=3
+XORG_STATIC=no
 inherit xorg-2
 
 DESCRIPTION="primitive command line interface to RandR extension"
@@ -17,5 +18,5 @@ DEPEND="${RDEPEND}"
 
 src_install() {
 	xorg-2_src_install
-	rm -f "${D}"/usr/bin/xkeystone
+	rm -f "${ED}"/usr/bin/xkeystone
 }
