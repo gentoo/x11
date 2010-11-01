@@ -1,6 +1,6 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-misc/xkeyboard-config/xkeyboard-config-1.9.ebuild,v 1.1 2010/06/20 19:23:24 scarabeus Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-misc/xkeyboard-config/xkeyboard-config-2.0.ebuild,v 1.1 2010/09/28 20:55:37 scarabeus Exp $
 
 EAPI=3
 
@@ -11,7 +11,8 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/git/xkeyboard-config"
 
 DESCRIPTION="X keyboard configuration database"
 HOMEPAGE="http://www.freedesktop.org/wiki/Software/XKeyboardConfig"
-[[ ${PV} = 9999 ]] || SRC_URI="${BASE_INDIVIDUAL_URI}/data/xkeyboard-config/${P}.tar.bz2"
+[[ ${PV} = 9999 ]] || \
+	SRC_URI="${BASE_INDIVIDUAL_URI}/data/xkeyboard-config/${P}.tar.bz2"
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~x86-solaris"
 IUSE=""
@@ -31,5 +32,13 @@ CONFIGURE_OPTIONS="
 
 src_prepare() {
 	xorg-2_src_prepare
+
 	intltoolize || die
+}
+
+src_compile() {
+	# cleanup to make sure .dir files are regenerated
+	# bug #328455 c#26
+	emake clean || die
+	xorg-2_src_compile
 }
