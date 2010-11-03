@@ -10,12 +10,11 @@ DESCRIPTION="X.Org Xi library"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd ~x64-freebsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris ~x86-winnt"
 IUSE="doc"
 
-RDEPEND="
-	>=x11-libs/libX11-1.3
+RDEPEND=">=x11-libs/libX11-1.3
 	>=x11-libs/libXext-1.1
 	>=x11-proto/inputproto-2.0
-	>=x11-proto/xproto-7.0.16
-"
+	>=x11-proto/xproto-7.0.13
+	>=x11-proto/xextproto-7.0.3"
 DEPEND="${RDEPEND}
 	doc? (
 		app-text/asciidoc
@@ -25,10 +24,10 @@ DEPEND="${RDEPEND}
 
 pkg_setup() {
 	xorg-2_pkg_setup
-	CONFIGURE_OPTIONS="
+	CONFIGURE_OPTIONS="$(use_enable doc specs)
 		$(use_with doc xmlto)
 		$(use_with doc asciidoc)
-	"
+		--without-fop"
 }
 
 pkg_postinst() {
