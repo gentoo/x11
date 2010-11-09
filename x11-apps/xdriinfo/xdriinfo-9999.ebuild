@@ -13,21 +13,11 @@ IUSE=""
 RDEPEND="x11-libs/libX11
 	virtual/opengl"
 DEPEND="${RDEPEND}
-	app-admin/eselect-opengl
 	x11-proto/glproto"
 
 pkg_setup() {
 	xorg-2_pkg_setup
 
-	# Bug #138920
-	ewarn "Forcing on xorg-x11 for header sanity..."
-	OLD_IMPLEM="$(eselect opengl show)"
-	eselect opengl set xorg-x11
-}
+	append-cppflags "-I${EPREFIX}/usr/lib64/opengl/xorg-x11/include/"
 
-pkg_postinst() {
-	xorg-2_pkg_postinst
-
-	echo
-	eselect opengl set ${OLD_IMPLEM}
 }
