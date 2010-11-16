@@ -213,8 +213,8 @@ pkg_postinst() {
 	eselect opengl set --use-old xorg-x11
 
 	if [[ ${INFO} = yes ]]; then
-		einfo "You should consider reading upgrade guide for this release:"
-		einfo "	http://www.gentoo.org/proj/en/desktop/x/x11/xorg-server-$(get_version_component_range 1-2)-upgrade-guide.xml"
+		elog "You should consider reading upgrade guide for this release:"
+		elog "	http://www.gentoo.org/proj/en/desktop/x/x11/xorg-server-$(get_version_component_range 1-2)-upgrade-guide.xml"
 		echo
 		ewarn "You must rebuild all drivers if upgrading from <xorg-server-$(get_version_component_range 1-2)"
 		ewarn "because the ABI changed. If you cannot start X because"
