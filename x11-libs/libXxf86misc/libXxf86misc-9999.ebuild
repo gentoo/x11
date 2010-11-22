@@ -13,5 +13,6 @@ IUSE=""
 RDEPEND="x11-libs/libX11
 	x11-libs/libXext
 	x11-proto/xproto
+	x11-proto/xextproto
 	x11-proto/xf86miscproto"
 DEPEND="${RDEPEND}"
