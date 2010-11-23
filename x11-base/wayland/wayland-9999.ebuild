@@ -10,6 +10,7 @@ DESCRIPTION="Wayland is compositor standalone display server"
 HOMEPAGE="http://wayland.freedesktop.org/"
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/${PN}"
 
+LICENSE="LGPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="expat"
