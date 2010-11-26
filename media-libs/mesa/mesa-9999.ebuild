@@ -69,7 +69,9 @@ RDEPEND="
 	motif? ( x11-libs/openmotif )
 	gallium? (
 		llvm? (
-			dev-libs/udis86
+			amd64? ( dev-libs/udis86 )
+			x86? ( dev-libs/udis86 )
+			x86-fbsd? ( dev-libs/udis86 )
 			sys-devel/llvm
 		)
 	)
