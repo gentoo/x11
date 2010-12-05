@@ -16,7 +16,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE="expat"
 
 # cairo opengl is automagic
-RDEPEND="app-text/poppler
+RDEPEND="app-text/poppler[cairo]
 	dev-libs/glib:2
 	media-libs/mesa[gles,gallium]
 	>=sys-fs/udev-136
