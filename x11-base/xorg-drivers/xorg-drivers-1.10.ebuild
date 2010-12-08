@@ -48,6 +48,7 @@ IUSE_VIDEO_CARDS="
 	video_cards_newport
 	video_cards_nouveau
 	video_cards_nv
+	video_cards_omapfb
 	video_cards_r128
 	video_cards_radeon
 	video_cards_rendition
