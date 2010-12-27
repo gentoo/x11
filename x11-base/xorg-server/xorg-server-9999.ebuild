@@ -52,7 +52,8 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 		>=media-libs/mesa-7.8_rc[nptl=]
 	)
 	tslib? ( >=x11-libs/tslib-1.0 x11-proto/xcalibrateproto )
-	udev? ( >=sys-fs/udev-150 )"
+	udev? ( >=sys-fs/udev-150 )
+	>=x11-apps/xinit-1.3"
 
 DEPEND="${RDEPEND}
 	sys-devel/flex
@@ -90,7 +91,6 @@ DEPEND="${RDEPEND}
 	)"
 
 PDEPEND="
-	>=x11-apps/xinit-1.2.1-r1
 	xorg? ( >=x11-base/xorg-drivers-$(get_version_component_range 1-2) )"
 
 EPATCH_FORCE="yes"
