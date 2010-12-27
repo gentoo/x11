@@ -1,3 +1,6 @@
+# depends on unreleased software (aka 9999 versions for now)
+=x11-base/xorg-server-1.9.99.901
+
 # Don't let people install these accidentally
 =media-fonts/font-util-9999
 =media-libs/fontconfig-9999
