@@ -31,7 +31,7 @@ MESA_DRIVERS[r300,default]="gallium"
 MESA_DRIVERS[r600,description]="r600 (Radeon R600-R700, Evergreen, Northern Islands)"
 MESA_DRIVERS[r600,classicdriver]="r600_dri.so"
 MESA_DRIVERS[r600,galliumdriver]="r600g_dri.so"
-MESA_DRIVERS[r600,default]="gallium"
+MESA_DRIVERS[r600,default]="classic"
 
 MESA_DRIVERS[sw,description]="sw (Software renderer)"
 MESA_DRIVERS[sw,classicdriver]="swrast_dri.so"
