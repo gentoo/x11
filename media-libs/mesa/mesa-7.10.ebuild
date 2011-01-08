@@ -37,8 +37,8 @@ LICENSE="LGPL-2 kilgard"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 
-INTEL_CARDS="i810 i915 i965 intel"
-RADEON_CARDS="r100 r200 r300 r600 radeon"
+INTEL_CARDS="intel"
+RADEON_CARDS="radeon"
 VIDEO_CARDS="${INTEL_CARDS} ${RADEON_CARDS} mach64 mga nouveau r128 savage sis vmware tdfx via"
 for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
@@ -47,7 +47,7 @@ done
 IUSE="${IUSE_VIDEO_CARDS}
 	+classic d3d debug +gallium gles llvm motif +nptl pic selinux kernel_FreeBSD"
 
-LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.24"
+LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.23"
 # keep correct libdrm and dri2proto dep
 # keep blocks in rdepend for binpkg
 RDEPEND="
@@ -163,34 +163,17 @@ src_configure() {
 	# Configurable DRI drivers
 		driver_enable swrast
 
-	# Intel code
-		driver_enable video_cards_i810 i810
-		driver_enable video_cards_i915 i915
-		driver_enable video_cards_i965 i965
-			if ! use video_cards_i810 && \
-				! use video_cards_i915 && \
-				! use video_cards_i965; then
-			driver_enable video_cards_intel i810 i915 i965
-		fi
+		# Intel code
+		driver_enable video_cards_intel i810 i915 i965
 
 		# Nouveau code
 		driver_enable video_cards_nouveau nouveau
 
 		# ATI code
+		driver_enable video_cards_radeon radeon r200 r300 r600
 		driver_enable video_cards_mach64 mach64
 		driver_enable video_cards_mga mga
 		driver_enable video_cards_r128 r128
-
-		driver_enable video_cards_r100 radeon
-		driver_enable video_cards_r200 r200
-		driver_enable video_cards_r300 r300
-		driver_enable video_cards_r600 r600
-		if ! use video_cards_r100 && \
-				! use video_cards_r200 && \
-				! use video_cards_r300 && \
-				! use video_cards_r600; then
-			driver_enable video_cards_radeon radeon r200 r300 r600
-		fi
 
 		driver_enable video_cards_savage savage
 		driver_enable video_cards_sis sis
@@ -224,30 +207,6 @@ src_configure() {
 			$(use_enable video_cards_intel gallium-i965)
 			$(use_enable video_cards_radeon gallium-radeon)
 			$(use_enable video_cards_radeon gallium-r600)"
-		if use video_cards_i915 || \
-				use video_cards_intel; then
-			myconf="${myconf} --enable-gallium-i915"
-		else
-			myconf="${myconf} --disable-gallium-i915"
-		fi
-		if use video_cards_i965 || \
-				use video_cards_intel; then
-			myconf="${myconf} --enable-gallium-i965"
-		else
-			myconf="${myconf} --disable-gallium-i965"
-		fi
-		if use video_cards_r300 || \
-				use video_cards_radeon; then
-			myconf="${myconf} --enable-gallium-radeon"
-		else
-			myconf="${myconf} --disable-gallium-radeon"
-		fi
-		if use video_cards_r600 || \
-				use video_cards_radeon; then
-			myconf="${myconf} --enable-gallium-r600"
-		else
-			myconf="${myconf} --disable-gallium-r600"
-		fi
 	else
 		if use video_cards_nouveau || use video_cards_vmware; then
 			elog "SVGA and nouveau drivers are available only via gallium interface."
@@ -287,7 +246,7 @@ src_install() {
 
 	# Install config file for eselect mesa
 	insinto /usr/share/mesa
-	newins "${FILESDIR}/eselect-mesa.conf.7.11" eselect-mesa.conf || die
+	newins "${FILESDIR}/eselect-mesa.conf.7.10" eselect-mesa.conf || die
 
 	# Move libGL and others from /usr/lib to /usr/lib/opengl/blah/lib
 	# because user can eselect desired GL provider.
