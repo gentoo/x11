@@ -11,7 +11,7 @@ if [[ ${PV} = 9999* ]]; then
 	EXPERIMENTAL="true"
 fi
 
-inherit base autotools multilib flag-o-matic toolchain-funcs ${GIT_ECLASS}
+inherit base autotools multilib flag-o-matic python toolchain-funcs ${GIT_ECLASS}
 
 OPENGL_DIR="xorg-x11"
 
@@ -47,7 +47,7 @@ done
 IUSE="${IUSE_VIDEO_CARDS}
 	+classic d3d debug +gallium gles llvm motif +nptl pic selinux kernel_FreeBSD"
 
-LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.23"
+LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.24"
 # keep correct libdrm and dri2proto dep
 # keep blocks in rdepend for binpkg
 RDEPEND="
@@ -90,6 +90,7 @@ for card in ${RADEON_CARDS}; do
 done
 
 DEPEND="${RDEPEND}
+	=dev-lang/python-2*
 	dev-util/pkgconfig
 	x11-misc/makedepend
 	>=x11-proto/dri2proto-2.2
@@ -117,6 +118,9 @@ pkg_setup() {
 
 	# recommended by upstream
 	append-flags -ffast-math
+
+	python_set_active_version 2
+	python_pkg_setup
 }
 
 src_unpack() {
@@ -215,7 +219,11 @@ src_configure() {
 			$(use_enable gles gles2)
 			$(use_enable gles gles-overlay)
 			$(use_enable video_cards_vmware gallium-svga)
-			$(use_enable video_cards_nouveau gallium-nouveau)"
+			$(use_enable video_cards_nouveau gallium-nouveau)
+			$(use_enable video_cards_intel gallium-i915)
+			$(use_enable video_cards_intel gallium-i965)
+			$(use_enable video_cards_radeon gallium-radeon)
+			$(use_enable video_cards_radeon gallium-r600)"
 		if use video_cards_i915 || \
 				use video_cards_intel; then
 			myconf="${myconf} --enable-gallium-i915"
@@ -279,7 +287,7 @@ src_install() {
 
 	# Install config file for eselect mesa
 	insinto /usr/share/mesa
-	newins "${FILESDIR}/eselect-mesa.conf.7.10" eselect-mesa.conf || die
+	newins "${FILESDIR}/eselect-mesa.conf.7.11" eselect-mesa.conf || die
 
 	# Move libGL and others from /usr/lib to /usr/lib/opengl/blah/lib
 	# because user can eselect desired GL provider.

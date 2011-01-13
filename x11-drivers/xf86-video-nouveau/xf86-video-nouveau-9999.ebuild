@@ -15,7 +15,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 RDEPEND=">=x11-base/xorg-server-1.7[-minimal]
-	>=x11-libs/libdrm-2.4.23[video_cards_nouveau]"
+	>=x11-libs/libdrm-2.4.24[video_cards_nouveau]"
 
 DEPEND="${RDEPEND}
 	x11-proto/fontsproto
