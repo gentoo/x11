@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/x11-libs/libXfont/libXfont-1.4.3.ebuild,v 1.1 2010/10/29 08:56:28 scarabeus Exp $
 
-EAPI=3
+EAPI=4
 inherit xorg-2
 
 DESCRIPTION="X.Org Xfont library"

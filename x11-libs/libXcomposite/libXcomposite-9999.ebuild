@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/x11-libs/libXcomposite/libXcomposite-0.4.2.ebuild,v 1.9 2010/10/21 01:15:22 ranger Exp $
 
-EAPI=3
+EAPI=4
 inherit xorg-2
 
 DESCRIPTION="X.Org Xcomposite library"

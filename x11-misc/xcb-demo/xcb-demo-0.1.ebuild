@@ -5,7 +5,7 @@
 # Must be before x-modular eclass is inherited
 #SNAPSHOT="yes"
 
-EAPI=3
+EAPI=4
 inherit xorg-2
 
 DESCRIPTION="X C-language Bindings demos"

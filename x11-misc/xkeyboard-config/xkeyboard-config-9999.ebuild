@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/x11-misc/xkeyboard-config/xkeyboard-config-2.0.ebuild,v 1.1 2010/09/28 20:55:37 scarabeus Exp $
 
-EAPI=3
+EAPI=4
 
 XORG_STATIC=no
 inherit xorg-2
