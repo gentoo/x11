@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI=4
 
 XORG_STATIC=no
 
@@ -33,6 +33,6 @@ CONFIGURE_OPTIONS="
 src_compile() {
 	# cleanup to make sure .dir files are regenerated
 	# bug #328455 c#26
-	emake clean || die
+	emake clean
 	xorg-2_src_compile
 }
