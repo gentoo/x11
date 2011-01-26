@@ -178,6 +178,19 @@ DEPEND+=" >=dev-util/pkgconfig-0.23"
 has dri ${IUSE//+} && DEPEND+=" dri? ( >=x11-base/xorg-server-1.6.3.901-r2[-minimal] )"
 [[ -n "${DRIVER}" ]] && DEPEND+=" x11-base/xorg-server[xorg]"
 
+# Add deps on documentation
+# Most docbooks use dtd version 4.2 and 4.3 add more when found
+if has doc ${IUSE//+}; then
+	DEPEND+="
+		doc? (
+			app-text/xmlto
+			app-doc/doxygen
+			app-text/docbook-xml-dtd:4.2
+			app-text/docbook-xml-dtd:4.3
+		)
+	"
+fi
+
 # @FUNCTION: xorg-2_pkg_setup
 # @DESCRIPTION:
 # Setup prefix compat
