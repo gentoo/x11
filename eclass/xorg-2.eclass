@@ -379,11 +379,8 @@ xorg-2_src_install() {
 		dodoc ${DOCS} || die "dodoc failed"
 	fi
 
-	# Don't install libtool archives for server modules
-	if [[ -e "${D%/}${EPREFIX}/usr/$(get_libdir)/xorg/modules" ]]; then
-		find "${D%/}${EPREFIX}/usr/$(get_libdir)/xorg/modules" -name '*.la' \
-			-exec rm -f {} ';'
-	fi
+	# Don't install libtool archives
+	find "${D}" -type f -name '*.la' -exec rm -f '{}' +
 
 	[[ -n ${FONT} ]] && remove_font_metadata
 }
