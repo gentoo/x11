@@ -45,11 +45,10 @@ src_compile() {
 	set_arch_to_kernel
 	emake \
 		LINUXDIR="${KERNEL_DIR}" \
-		GIT_REVISION="$(zcat ${WORKDIR}/master.tar.gz | git get-tar-commit-id)" \
-		|| die "Compiling kernel modules failed"
+		GIT_REVISION="$(zcat ${WORKDIR}/master.tar.gz | git get-tar-commit-id)"
 }
 
 src_install() {
 	insinto /lib/modules/${KV_FULL}/${PN}
-	doins drivers/gpu/drm/{*/,}*.ko || die "doins failed"
+	doins drivers/gpu/drm/{*/,}*.ko
 }

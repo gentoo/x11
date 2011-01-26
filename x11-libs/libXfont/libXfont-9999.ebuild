@@ -1,6 +1,6 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-libs/libXfont/libXfont-1.4.3.ebuild,v 1.1 2010/10/29 08:56:28 scarabeus Exp $
+# $Header: $
 
 EAPI=4
 inherit xorg-2
@@ -16,8 +16,7 @@ RDEPEND="x11-libs/xtrans
 	app-arch/bzip2
 	x11-proto/xproto
 	x11-proto/fontsproto"
-DEPEND="${RDEPEND}
-	doc? ( app-text/xmlto )"
+DEPEND="${RDEPEND}"
 
 pkg_setup() {
 	xorg-2_pkg_setup

@@ -11,8 +11,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86
 IUSE="doc"
 
 RDEPEND="!<x11-libs/libXtst-1.0.99.2"
-DEPEND="${RDEPEND}
-	doc? ( app-text/xmlto )"
+DEPEND="${RDEPEND}"
 
 pkg_setup() {
 	xorg-2_pkg_setup

@@ -1,6 +1,6 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-apps/xinit/xinit-1.2.1-r2.ebuild,v 1.1 2010/05/27 08:42:59 scarabeus Exp $
+# $Header: $
 
 EAPI=4
 
@@ -41,11 +41,11 @@ src_install() {
 	xorg-2_src_install
 
 	exeinto /etc/X11
-	doexe "${FILESDIR}"/chooser.sh "${FILESDIR}"/startDM.sh || die
+	doexe "${FILESDIR}"/chooser.sh "${FILESDIR}"/startDM.sh
 	exeinto /etc/X11/Sessions
-	doexe "${FILESDIR}"/Xsession || die
+	doexe "${FILESDIR}"/Xsession
 	exeinto /etc/X11/xinit
-	doexe "${FILESDIR}"/xserverrc || die
+	doexe "${FILESDIR}"/xserverrc
 	exeinto /etc/X11/xinit/xinitrc.d/
 	doexe "${FILESDIR}/00-xhost"
 }

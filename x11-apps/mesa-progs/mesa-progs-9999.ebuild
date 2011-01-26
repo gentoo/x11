@@ -7,20 +7,12 @@ EAPI=4
 MY_PN=${PN/progs/demos}
 MY_P=${MY_PN}-${PV}
 EGIT_REPO_URI="git://anongit.freedesktop.org/${MY_PN/-//}"
-
-if [[ ${PV} = 9999* ]]; then
-	    GIT_ECLASS="git"
-fi
-
+[[ ${PV} = 9999* ]] && GIT_ECLASS="git"
 inherit toolchain-funcs ${GIT_ECLASS}
 
 DESCRIPTION="Mesa's OpenGL utility and demo programs (glxgears and glxinfo)"
 HOMEPAGE="http://mesa3d.sourceforge.net/"
-if [[ ${PV} == 9999* ]]; then
-	SRC_URI=""
-else
-	SRC_URI="ftp://ftp.freedesktop.org/pub/${MY_PN/-//}/${PV}/${MY_P}.tar.bz2"
-fi
+[[ ${PV} == 9999* ]] || SRC_URI="ftp://ftp.freedesktop.org/pub/${MY_PN/-//}/${PV}/${MY_P}.tar.bz2"
 
 LICENSE="LGPL-2"
 SLOT="0"
@@ -40,9 +32,9 @@ src_configure() {
 
 src_compile() {
 	tc-export CC
-	emake LDLIBS='-lGL -lm' src/xdemos/{glxgears,glxinfo} || die
+	emake LDLIBS='-lGL -lm' src/xdemos/{glxgears,glxinfo}
 }
 
 src_install() {
-	dobin src/xdemos/{glxgears,glxinfo} || die
+	dobin src/xdemos/{glxgears,glxinfo}
 }

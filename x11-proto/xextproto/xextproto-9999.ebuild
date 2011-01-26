@@ -3,7 +3,6 @@
 # $Header: $
 
 EAPI=4
-
 inherit xorg-2
 
 DESCRIPTION="X.Org XExt protocol headers"
@@ -12,14 +11,11 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86
 IUSE="doc"
 
 RDEPEND="!<x11-libs/libXext-1.0.99"
-DEPEND="${RDEPEND}
-	doc? (
-		app-text/xmlto
-		app-text/docbook-xml-dtd:4.1.2
-		app-text/docbook-xml-dtd:4.3
-	)"
+DEPEND="${RDEPEND}"
 
 pkg_setup() {
+	xorg-2_pkg_setup
+
 	CONFIGURE_OPTIONS="
 		$(use_with doc xmlto)
 		--without-fop

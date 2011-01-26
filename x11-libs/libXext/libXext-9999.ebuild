@@ -1,6 +1,6 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-libs/libXext/libXext-1.1.2.ebuild,v 1.10 2010/10/21 01:16:32 ranger Exp $
+# $Header: $
 
 EAPI=4
 inherit xorg-2
@@ -12,8 +12,7 @@ IUSE="doc"
 
 RDEPEND=">=x11-libs/libX11-1.2
 	>=x11-proto/xextproto-7.1"
-DEPEND="${RDEPEND}
-	doc? ( app-text/xmlto )"
+DEPEND="${RDEPEND}"
 
 pkg_setup() {
 	CONFIGURE_OPTIONS="$(use_enable doc specs)

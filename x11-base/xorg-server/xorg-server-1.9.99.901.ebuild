@@ -1,19 +1,17 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-base/xorg-server/xorg-server-1.9.0.ebuild,v 1.1 2010/09/12 18:41:36 chithanh Exp $
+# $Header: $
 
 EAPI=4
+PACKAGE_NAME="xserver"
 inherit xorg-2 multilib versionator
-
-EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/xserver"
-
-OPENGL_DIR="xorg-x11"
 
 DESCRIPTION="X.Org X servers"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 
 IUSE_SERVERS="dmx kdrive xorg"
 IUSE="${IUSE_SERVERS} doc ipv6 minimal nptl tslib +udev"
+
 RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	dev-libs/openssl
 	media-libs/freetype
@@ -80,10 +78,6 @@ DEPEND="${RDEPEND}
 	>=x11-proto/xineramaproto-1.1.3
 	>=x11-proto/xproto-7.0.17
 	dmx? ( >=x11-proto/dmxproto-2.2.99.1 )
-	doc? (
-		>=app-doc/doxygen-1.6.1
-		app-text/xmlto
-	)
 	!minimal? (
 		>=x11-proto/xf86driproto-2.1.0
 		>=x11-proto/dri2proto-2.3
@@ -93,13 +87,13 @@ DEPEND="${RDEPEND}
 PDEPEND="
 	xorg? ( >=x11-base/xorg-drivers-$(get_version_component_range 1-2) )"
 
-EPATCH_FORCE="yes"
-EPATCH_SUFFIX="patch"
+REQUIRED_USE="!minimal? (
+		|| ( ${IUSE_SERVERS} )
+	)"
 
-# These have been sent upstream
 #UPSTREAMED_PATCHES=(
 #	"${WORKDIR}/patches/"
-#	)
+#)
 
 PATCHES=(
 	"${UPSTREAMED_PATCHES[@]}"
@@ -109,8 +103,6 @@ PATCHES=(
 
 pkg_setup() {
 	xorg-2_pkg_setup
-
-	use minimal || ensure_a_server_is_building
 
 	# localstatedir is used for the log location; we need to override the default
 	#	from ebuild.sh
@@ -149,7 +141,7 @@ pkg_setup() {
 		--without-dtrace
 		--without-fop
 		--with-os-vendor=Gentoo
-		${conf_opts}"
+	"
 
 	# Xorg-server requires includes from OS mesa which are not visible for
 	# users of binary drivers.
@@ -195,22 +187,21 @@ src_install() {
 
 	if ! use minimal &&	use xorg; then
 		# Install xorg.conf.example into docs
-		dodoc hw/xfree86/xorg.conf.example \
-			|| die "couldn't install xorg.conf.example"
+		dodoc hw/xfree86/xorg.conf.example
 	fi
 
-	newinitd "${FILESDIR}"/xdm-setup.initd-1 xdm-setup || die
-	newinitd "${FILESDIR}"/xdm.initd-3 xdm || die
-	newconfd "${FILESDIR}"/xdm.confd-3 xdm || die
+	newinitd "${FILESDIR}"/xdm-setup.initd-1 xdm-setup
+	newinitd "${FILESDIR}"/xdm.initd-3 xdm
+	newconfd "${FILESDIR}"/xdm.confd-3 xdm
 
 	# install the @x11-module-rebuild set for Portage
 	insinto /usr/share/portage/config/sets
-	newins "${FILESDIR}"/xorg-sets.conf xorg.conf || die
+	newins "${FILESDIR}"/xorg-sets.conf xorg.conf
 }
 
 pkg_postinst() {
 	# sets up libGL and DRI2 symlinks if needed (ie, on a fresh install)
-	eselect opengl set --use-old xorg-x11
+	eselect opengl set xorg-x11 --use-old
 
 	if [[ ${INFO} = yes ]]; then
 		elog "You should consider reading upgrade guide for this release:"
@@ -239,11 +230,11 @@ pkg_postrm() {
 dynamic_libgl_install() {
 	# next section is to setup the dynamic libGL stuff
 	ebegin "Moving GL files for dynamic switching"
-		dodir /usr/$(get_libdir)/opengl/${OPENGL_DIR}/extensions
+		dodir /usr/$(get_libdir)/opengl/xorg-x11/extensions
 		local x=""
 		for x in "${D}"/usr/$(get_libdir)/xorg/modules/extensions/lib{glx,dri,dri2}*; do
 			if [ -f ${x} -o -L ${x} ]; then
-				mv -f ${x} "${D}"/usr/$(get_libdir)/opengl/${OPENGL_DIR}/extensions
+				mv -f ${x} "${D}"/usr/$(get_libdir)/opengl/xorg-x11/extensions
 			fi
 		done
 	eend 0
@@ -256,13 +247,4 @@ server_based_install() {
 			"${D}"/usr/$(get_libdir)/pkgconfig/xorg-server.pc \
 			"${D}"/usr/share/man/man1/Xserver.1x
 	fi
-}
-
-ensure_a_server_is_building() {
-	for server in ${IUSE_SERVERS}; do
-		use ${server} && return;
-	done
-	eerror "You need to specify at least one server to build."
-	eerror "Valid servers are: ${IUSE_SERVERS}."
-	die "No servers were specified to build."
 }

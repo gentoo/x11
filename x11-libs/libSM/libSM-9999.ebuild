@@ -16,8 +16,7 @@ RDEPEND="x11-libs/libICE
 	!elibc_FreeBSD? (
 		uuid? ( >=sys-apps/util-linux-2.16 )
 	)"
-DEPEND="${RDEPEND}
-	doc? ( app-text/xmlto )"
+DEPEND="${RDEPEND}"
 
 pkg_setup() {
 	xorg-2_pkg_setup

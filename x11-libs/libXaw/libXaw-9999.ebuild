@@ -17,8 +17,7 @@ RDEPEND="x11-libs/libX11
 	x11-libs/libXpm
 	x11-proto/xproto
 	x11-proto/xextproto"
-DEPEND="${RDEPEND}
-	doc? ( app-text/xmlto )"
+DEPEND="${RDEPEND}"
 
 pkg_setup() {
 	xorg-2_pkg_setup

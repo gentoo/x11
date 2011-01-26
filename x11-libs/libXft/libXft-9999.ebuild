@@ -1,6 +1,6 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-libs/libXft/libXft-2.2.0.ebuild,v 1.2 2010/11/01 14:28:03 scarabeus Exp $
+# $Header: $
 
 EAPI=4
 inherit xorg-2 flag-o-matic

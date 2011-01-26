@@ -18,6 +18,6 @@ CONFIGURE_OPTIONS="--with-pciids-path=/usr/share/misc"
 src_install() {
 	xorg-2_src_install
 	if ! use minimal; then
-		dobin scanpci/scanpci || die
+		dobin scanpci/scanpci
 	fi
 }

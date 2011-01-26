@@ -3,6 +3,7 @@
 # $Header: $
 
 EAPI=4
+
 inherit xorg-2 toolchain-funcs versionator
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/pixman"

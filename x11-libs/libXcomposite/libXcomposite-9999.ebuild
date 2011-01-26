@@ -1,6 +1,6 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-libs/libXcomposite/libXcomposite-0.4.2.ebuild,v 1.9 2010/10/21 01:15:22 ranger Exp $
+# $Header: $
 
 EAPI=4
 inherit xorg-2
@@ -15,10 +15,9 @@ RDEPEND="x11-libs/libX11
 	x11-libs/libXext
 	>=x11-proto/compositeproto-0.4
 	x11-proto/xproto"
-DEPEND="${RDEPEND}
-	doc? ( app-text/xmlto )"
+DEPEND="${RDEPEND}"
 
-src_configure() {
+pkg_setup() {
+	xorg-2_pkg_setup
 	CONFIGURE_OPTIONS="$(use_with doc xmlto)"
-	xorg-2_src_configure
 }
