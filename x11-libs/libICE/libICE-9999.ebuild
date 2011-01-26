@@ -13,6 +13,7 @@ IUSE="doc ipv6"
 RDEPEND="x11-libs/xtrans
 	x11-proto/xproto"
 DEPEND="${RDEPEND}"
+
 pkg_setup() {
 	xorg-2_pkg_setup
 
