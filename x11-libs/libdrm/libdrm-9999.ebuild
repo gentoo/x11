@@ -15,7 +15,7 @@ else
 	SRC_URI="http://dri.freedesktop.org/${PN}/${P}.tar.bz2"
 fi
 
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd ~x64-freebsd ~x86-freebsd ~amd64-linux ~x86-linux ~sparc-solaris ~x64-solaris ~x86-solaris"
 VIDEO_CARDS="intel nouveau radeon vmware"
 for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
@@ -26,6 +26,11 @@ RESTRICT="test" # see bug #236845
 
 RDEPEND="dev-libs/libpthread-stubs"
 DEPEND="${RDEPEND}"
+
+PATCHES=(
+	"${FILESDIR}"/${PN}-2.4.16-solaris.patch
+	"${FILESDIR}"/${PN}-2.4.15-solaris.patch
+)
 
 pkg_setup() {
 	CONFIGURE_OPTIONS="--enable-udev

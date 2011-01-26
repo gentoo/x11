@@ -35,7 +35,7 @@ fi
 
 LICENSE="LGPL-2 kilgard"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~sparc-solaris ~x64-solaris ~x86-solaris"
 
 INTEL_CARDS="i810 i915 i965 intel"
 RADEON_CARDS="r100 r200 r300 r600 radeon"
@@ -140,6 +140,11 @@ src_prepare() {
 		sed -i \
 			-e "s/-DHAVE_POSIX_MEMALIGN//" \
 			configure.ac || die
+	fi
+	# Solaris needs some recent POSIX stuff in our case
+	if [[ ${CHOST} == *-solaris* ]] ; then
+		sed -i -e "s/-DSVR4/-D_POSIX_C_SOURCE=200112L/" configure.ac || die
+		sed -i -e 's/uint/unsigned int/g' src/egl/drivers/glx/egl_glx.c || die
 	fi
 
 	# In order for mesa to complete it's build process we need to use a tool
@@ -280,9 +285,9 @@ src_install() {
 	fi
 	# Remove redundant headers
 	# GLUT thing
-	rm -f "${D}"/usr/include/GL/glut*.h || die "Removing glut include failed."
+	rm -f "${ED}"/usr/include/GL/glut*.h || die "Removing glut include failed."
 	# Glew includes
-	rm -f "${D}"/usr/include/GL/{glew,glxew,wglew}.h \
+	rm -f "${ED}"/usr/include/GL/{glew,glxew,wglew}.h \
 		|| die "Removing glew includes failed."
 
 	# Install config file for eselect mesa
@@ -294,15 +299,15 @@ src_install() {
 	ebegin "Moving libGL and friends for dynamic switching"
 		dodir /usr/$(get_libdir)/opengl/${OPENGL_DIR}/{lib,extensions,include}
 		local x
-		for x in "${D}"/usr/$(get_libdir)/libGL.{la,a,so*}; do
+		for x in "${ED}"/usr/$(get_libdir)/libGL.{la,a,so*}; do
 			if [ -f ${x} -o -L ${x} ]; then
-				mv -f "${x}" "${D}"/usr/$(get_libdir)/opengl/${OPENGL_DIR}/lib \
+				mv -f "${x}" "${ED}"/usr/$(get_libdir)/opengl/${OPENGL_DIR}/lib \
 					|| die "Failed to move ${x}"
 			fi
 		done
-		for x in "${D}"/usr/include/GL/{gl.h,glx.h,glext.h,glxext.h}; do
+		for x in "${ED}"/usr/include/GL/{gl.h,glx.h,glext.h,glxext.h}; do
 			if [ -f ${x} -o -L ${x} ]; then
-				mv -f "${x}" "${D}"/usr/$(get_libdir)/opengl/${OPENGL_DIR}/include \
+				mv -f "${x}" "${ED}"/usr/$(get_libdir)/opengl/${OPENGL_DIR}/include \
 					|| die "Failed to move ${x}"
 			fi
 		done
@@ -314,7 +319,7 @@ src_install() {
 			dodir /usr/$(get_libdir)/mesa
 			for x in ${gallium_drivers[@]}; do
 				if [ -f "${S}/$(get_libdir)/gallium/${x}" ]; then
-					mv -f "${D}/usr/$(get_libdir)/dri/${x}" "${D}/usr/$(get_libdir)/dri/${x/_dri.so/g_dri.so}" \
+					mv -f "${ED}/usr/$(get_libdir)/dri/${x}" "${ED}/usr/$(get_libdir)/dri/${x/_dri.so/g_dri.so}" \
 						|| die "Failed to move ${x}"
 					insinto "/usr/$(get_libdir)/dri/"
 					if [ -f "${S}/$(get_libdir)/${x}" ]; then
@@ -323,13 +328,13 @@ src_install() {
 					fi
 				fi
 			done
-			for x in "${D}"/usr/$(get_libdir)/dri/*.so; do
+			for x in "${ED}"/usr/$(get_libdir)/dri/*.so; do
 				if [ -f ${x} -o -L ${x} ]; then
 					mv -f "${x}" "${x/dri/mesa}" \
 						|| die "Failed to move ${x}"
 				fi
 			done
-			pushd "${D}"/usr/$(get_libdir)/dri || die "pushd failed"
+			pushd "${ED}"/usr/$(get_libdir)/dri || die "pushd failed"
 			ln -s ../mesa/*.so . || die "Creating symlink failed"
 			# remove symlinks to drivers known to eselect
 			for x in ${gallium_drivers[@]}; do
