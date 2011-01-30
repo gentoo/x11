@@ -319,7 +319,6 @@ xorg-2_src_configure() {
 	local myopts=""
 
 	xorg-2_flags_setup
-	[[ -n "${FONT}" ]] && xorg-2_font_configure
 
 	# @VARIABLE: CONFIGURE_OPTIONS
 	# @DESCRIPTION:
@@ -327,6 +326,7 @@ xorg-2_src_configure() {
 	# @DEFAULT_UNSET
 	CONFIGURE_OPTIONS=${CONFIGURE_OPTIONS:=""}
 	if [[ -x ${ECONF_SOURCE:-.}/configure ]]; then
+		[[ -n "${FONT}" ]] && xorg-2_font_configure
 		if has static-libs ${IUSE//+}; then
 			myopts+=" $(use_enable static-libs static)"
 		fi
