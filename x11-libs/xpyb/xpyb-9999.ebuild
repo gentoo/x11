@@ -1,4 +1,4 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -18,7 +18,7 @@ RDEPEND=">=x11-libs/libxcb-1.1
 	>=x11-proto/xcb-proto-1.2"
 DEPEND="${RDEPEND}"
 
-DOCS="NEWS README"
+DOCS=( NEWS README )
 
 pkg_setup() {
 	xorg-2_pkg_setup
