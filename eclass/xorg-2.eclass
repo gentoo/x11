@@ -330,7 +330,7 @@ xorg-2_src_configure() {
 		if has static-libs ${IUSE//+}; then
 			myopts+=" $(use_enable static-libs static)"
 		fi
-		econf \
+		base_src_configure \
 			--disable-dependency-tracking \
 			${FONT_OPTIONS} \
 			${CONFIGURE_OPTIONS} \
