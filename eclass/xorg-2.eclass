@@ -355,16 +355,12 @@ xorg-2_src_install() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	if [[ ${CATEGORY} == x11-proto ]]; then
-		emake \
+		base_src_install \
 			${PN/proto/}docdir=${EPREFIX}/usr/share/doc/${PF} \
-			docdir=${EPREFIX}/usr/share/doc/${PF} \
-			DESTDIR="${D}" \
-			install || die "emake install failed"
+			docdir=${EPREFIX}/usr/share/doc/${PF}
 	else
-		emake \
-			docdir=${EPREFIX}/usr/share/doc/${PF} \
-			DESTDIR="${D}" \
-			install || die "emake install failed"
+		base_src_install \
+			docdir=${EPREFIX}/usr/share/doc/${PF}
 	fi
 
 	if [[ -n ${GIT_ECLASS} ]]; then
@@ -375,13 +371,6 @@ xorg-2_src_install() {
 
 	if [[ -e "${S}"/ChangeLog ]]; then
 		dodoc "${S}"/ChangeLog || die "dodoc failed"
-	fi
-	# @VARIABLE: DOCS
-	# @DESCRIPTION:
-	# Any documentation to install
-	# @DEFAULT_UNSET
-	if [[ -n ${DOCS} ]]; then
-		dodoc ${DOCS} || die "dodoc failed"
 	fi
 
 	# Don't install libtool archives
