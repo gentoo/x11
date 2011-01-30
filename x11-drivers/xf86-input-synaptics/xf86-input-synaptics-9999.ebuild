@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -20,7 +20,7 @@ DEPEND="${RDEPEND}
 	x11-proto/inputproto
 	>=x11-proto/recordproto-1.14"
 
-DOCS="README"
+DOCS=( "README" )
 
 pkg_postinst() {
 	xorg-2_pkg_postinst
