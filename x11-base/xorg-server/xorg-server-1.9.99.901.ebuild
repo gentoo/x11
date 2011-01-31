@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=4
-PACKAGE_NAME="xserver"
+PACKAGE_NAME=""
 inherit xorg-2 multilib versionator
 
 DESCRIPTION="X.Org X servers"
