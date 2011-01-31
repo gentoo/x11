@@ -84,10 +84,12 @@ fi
 # @DESCRIPTION:
 # For git checkout the git repository migth differ from package name.
 # This variable can be used for proper directory specification
-: ${PACKAGE_NAME:=${PN}}
+: ${PACKAGE_NAME:-${PN}}
+# PACKAGE_NAME can be empty value
+[[ -n ${PACKAGE_NAME} ]] && PACKAGE_NAME="/${PACKAGE_NAME}"
 
 if [[ -n ${GIT_ECLASS} ]]; then
-	EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/${MODULE}/${PACKAGE_NAME}"
+	EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/${MODULE}${PACKAGE_NAME}"
 else
 	SRC_URI+=" ${BASE_INDIVIDUAL_URI}/${MODULE}/${P}.tar.bz2"
 fi
