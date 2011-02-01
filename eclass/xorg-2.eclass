@@ -38,7 +38,7 @@ if [[ ${PN} == font* \
 	FONT_ECLASS="font"
 fi
 
-inherit eutils base libtool multilib toolchain-funcs flag-o-matic autotools \
+inherit autotools-utils eutils libtool multilib toolchain-funcs flag-o-matic autotools \
 	${FONT_ECLASS} ${GIT_ECLASS}
 
 EXPORTED_FUNCTIONS="src_unpack src_compile src_install pkg_postinst pkg_postrm"
@@ -229,7 +229,7 @@ xorg-2_patch_source() {
 	EPATCH_SUFFIX=${EPATCH_SUFFIX:=patch}
 
 	[[ -d "${EPATCH_SOURCE}" ]] && epatch
-	base_src_prepare "$@"
+	autotools-utils_src_prepare "$@"
 }
 
 # @FUNCTION: xorg-2_reconf_source
@@ -318,7 +318,6 @@ xorg-2_flags_setup() {
 # Perform any necessary pre-configuration steps, then run configure
 xorg-2_src_configure() {
 	debug-print-function ${FUNCNAME} "$@"
-	local myopts=""
 
 	xorg-2_flags_setup
 
@@ -327,17 +326,15 @@ xorg-2_src_configure() {
 	# Any options to pass to configure
 	# @DEFAULT_UNSET
 	CONFIGURE_OPTIONS=${CONFIGURE_OPTIONS:=""}
-	if [[ -x ${ECONF_SOURCE:-.}/configure ]]; then
-		[[ -n "${FONT}" ]] && xorg-2_font_configure
-		if has static-libs ${IUSE//+}; then
-			myopts+=" $(use_enable static-libs static)"
-		fi
-		base_src_configure \
-			--disable-dependency-tracking \
-			${FONT_OPTIONS} \
-			${CONFIGURE_OPTIONS} \
-			${myopts}
-	fi
+
+	[[ -n "${FONT}" ]] && xorg-2_font_configure
+	local myeconfargs=(
+		--disable-dependency-tracking
+		${CONFIGURE_OPTIONS}
+		${FONT_OPTIONS}
+	)
+
+	autotools-utils_src_configure "$@"
 }
 
 # @FUNCTION: xorg-2_src_compile
@@ -346,7 +343,7 @@ xorg-2_src_configure() {
 xorg-2_src_compile() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	base_src_compile "$@"
+	autotools-utils_src_compile "$@"
 }
 
 # @FUNCTION: xorg-2_src_install
@@ -357,11 +354,11 @@ xorg-2_src_install() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	if [[ ${CATEGORY} == x11-proto ]]; then
-		base_src_install \
+		autotools-utils_src_install \
 			${PN/proto/}docdir=${EPREFIX}/usr/share/doc/${PF} \
 			docdir=${EPREFIX}/usr/share/doc/${PF}
 	else
-		base_src_install \
+		autotools-utils_src_install \
 			docdir=${EPREFIX}/usr/share/doc/${PF}
 	fi
 
@@ -375,8 +372,8 @@ xorg-2_src_install() {
 		dodoc "${S}"/ChangeLog || die "dodoc failed"
 	fi
 
-	# Don't install libtool archives
-	find "${D}" -type f -name '*.la' -exec rm -f '{}' +
+	# Don't install libtool archives (even with static-libs)
+	remove_libtool_files all
 
 	[[ -n ${FONT} ]] && remove_font_metadata
 }
