@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -30,9 +30,15 @@ CONFIGURE_OPTIONS="
 	--enable-compat-rules
 	--with-xkb-rules-symlink=xorg"
 
+src_prepare() {
+	xorg-2_src_prepare
+	if [[ ${XORG_EAUTORECONF} != no ]]; then
+		intltoolize --copy --automake || die
+	fi
+}
+
 src_compile() {
 	# cleanup to make sure .dir files are regenerated
 	# bug #328455 c#26
-	emake clean
-	xorg-2_src_compile
+	xorg-2_src_compile clean all
 }
