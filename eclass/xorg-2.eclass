@@ -84,7 +84,7 @@ fi
 # @DESCRIPTION:
 # For git checkout the git repository migth differ from package name.
 # This variable can be used for proper directory specification
-: ${PACKAGE_NAME:-${PN}}
+: ${PACKAGE_NAME:=${PN}}
 # PACKAGE_NAME can be empty value
 [[ -n ${PACKAGE_NAME} ]] && PACKAGE_NAME="/${PACKAGE_NAME}"
 
