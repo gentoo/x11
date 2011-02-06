@@ -6,27 +6,27 @@ EAPI=4
 
 inherit xorg-2
 
-DESCRIPTION="Wayland is compositor standalone display server"
+DESCRIPTION="A nano display server, relying on kernel modesetting"
 HOMEPAGE="http://wayland.freedesktop.org/"
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/${PN}"
 
-LICENSE="LGPL-2"
+LICENSE="CCPL-Attribution-ShareAlike-3.0 MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="expat"
+IUSE=""
 
 # cairo opengl is automagic
 RDEPEND="app-text/poppler[cairo]
+	dev-libs/expat
 	dev-libs/glib:2
 	media-libs/mesa[gles,gallium]
 	>=sys-fs/udev-136
-	x11-libs/cairo[opengl]
+	>=x11-libs/cairo-1.10[opengl]
 	x11-libs/gtk+:2
-	>=x11-libs/libdrm-2.4.17
+	>=x11-libs/libdrm-2.4.23
 	x11-libs/libxcb
 	x11-libs/libxkbcommon
-	virtual/libffi
-	expat? ( dev-libs/expat )"
+	virtual/libffi"
 DEPEND="${RDEPEND}"
 
 src_prepare() {
@@ -44,6 +44,6 @@ src_install() {
 
 	cd "${ED}/usr/bin"
 	for binary in $(echo *); do
-		mv "${binary}" "wayland_${binary}" || die
+		mv "${binary}" "wayland-${binary}" || die
 	done
 }
