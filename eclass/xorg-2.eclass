@@ -68,30 +68,28 @@ BASE_INDIVIDUAL_URI="http://xorg.freedesktop.org/releases/individual"
 # inherit to override the default autoconfigured module.
 if [[ -z ${MODULE} ]]; then
 	case ${CATEGORY} in
-		app-doc)             MODULE="doc"     ;;
-		media-fonts)         MODULE="font"    ;;
-		x11-apps|x11-wm)     MODULE="app"     ;;
-		x11-misc|x11-themes) MODULE="util"    ;;
-		x11-drivers)         MODULE="driver"  ;;
-		x11-base)            MODULE="xserver" ;;
-		x11-proto)           MODULE="proto"   ;;
-		x11-libs)            MODULE="lib"     ;;
-		*)                   MODULE=""        ;;
+		app-doc)             MODULE=doc/     ;;
+		media-fonts)         MODULE=font/    ;;
+		x11-apps|x11-wm)     MODULE=app/     ;;
+		x11-misc|x11-themes) MODULE=util/    ;;
+		x11-drivers)         MODULE=driver/  ;;
+		x11-base)            MODULE=xserver/ ;;
+		x11-proto)           MODULE=proto/   ;;
+		x11-libs)            MODULE=lib/     ;;
+		*)                   MODULE=         ;;
 	esac
 fi
 
 # @ECLASS-VARIABLE: PACKAGE_NAME
 # @DESCRIPTION:
-# For git checkout the git repository migth differ from package name.
+# For git checkout the git repository might differ from package name.
 # This variable can be used for proper directory specification
 : ${PACKAGE_NAME:=${PN}}
-# PACKAGE_NAME can be empty value
-[[ -n ${PACKAGE_NAME} ]] && PACKAGE_NAME="/${PACKAGE_NAME}"
 
 if [[ -n ${GIT_ECLASS} ]]; then
 	EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/${MODULE}${PACKAGE_NAME}"
 else
-	SRC_URI+=" ${BASE_INDIVIDUAL_URI}/${MODULE}/${P}.tar.bz2"
+	SRC_URI+=" ${BASE_INDIVIDUAL_URI}/${MODULE}${P}.tar.bz2"
 fi
 
 : ${SLOT:=0}
