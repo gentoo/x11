@@ -73,7 +73,6 @@ if [[ -z ${MODULE} ]]; then
 		x11-apps|x11-wm)     MODULE=app/     ;;
 		x11-misc|x11-themes) MODULE=util/    ;;
 		x11-drivers)         MODULE=driver/  ;;
-		x11-base)            MODULE=xserver/ ;;
 		x11-proto)           MODULE=proto/   ;;
 		x11-libs)            MODULE=lib/     ;;
 		*)                   MODULE=         ;;
