@@ -19,7 +19,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 S=${WORKDIR}/${PN}
-RESTRICT=fetch
+RESTRICT="bindist fetch"
 
 pkg_nofetch() {
 	eerror "Due to unclear patent situation, you have to download the package"
