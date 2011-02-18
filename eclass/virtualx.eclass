@@ -144,7 +144,7 @@ Xmake() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ewarn "QA: you should not execute make directly"
-	ewarn "QA: rather execute emake -j1 if you have issues with parallel make"
+	ewarn "QA: rather execute Xemake -j1 if you have issues with parallel make"
 	export maketype="make"
 	virtualmake "$@"
 }
