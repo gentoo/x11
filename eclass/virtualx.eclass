@@ -55,7 +55,7 @@ case ${VIRTUALX_REQUIRED} in
 		;;
 esac
 
-# @FUNCTION: Xmake
+# @FUNCTION: virtualmake
 # @DESCRIPTION: 
 # Function which attach to running X session or start new Xvfb session
 # where the $maketype variable content gets executed.
