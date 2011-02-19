@@ -57,7 +57,6 @@ RDEPEND="
 	>=app-admin/eselect-opengl-1.1.1-r2
 	dev-libs/expat
 	dev-libs/libxml2[python]
-	sys-libs/talloc
 	x11-libs/libICE
 	>=x11-libs/libX11-1.3.99.901
 	x11-libs/libXdamage
