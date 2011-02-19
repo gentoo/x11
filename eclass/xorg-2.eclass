@@ -72,6 +72,7 @@ if [[ -z ${MODULE} ]]; then
 		media-fonts)         MODULE=font/    ;;
 		x11-apps|x11-wm)     MODULE=app/     ;;
 		x11-misc|x11-themes) MODULE=util/    ;;
+		x11-base)            MODULE=xserver/ ;;
 		x11-drivers)         MODULE=driver/  ;;
 		x11-proto)           MODULE=proto/   ;;
 		x11-libs)            MODULE=lib/     ;;
