@@ -63,7 +63,7 @@ esac
 # @FUNCTION: virtualmake
 # @DESCRIPTION: 
 # Function which attach to running X session or start new Xvfb session
-# where the $maketype variable content gets executed.
+# where the VIRTUALX_COMMAND variable content gets executed.
 virtualmake() {
 	debug-print-function ${FUNCNAME} "$@"
 
@@ -78,7 +78,7 @@ virtualmake() {
 	if [[ -n ${maketype} ]]; then
 		ewarn "QA: ebuild is exporting \$maketype=${maketype}"
 		ewarn "QA: Ebuild should be migrated to use VIRTUALX_COMMAND=${maketype} instead."
-		ewarn "QA: Setting VIRTUALX_COMMAND to \$maketype conviniently for now."
+		ewarn "QA: Setting VIRTUALX_COMMAND to \$maketype conveniently for now."
 		VIRTUALX_COMMAND=${maketype}
 	fi
 
