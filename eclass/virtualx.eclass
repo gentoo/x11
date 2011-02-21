@@ -143,6 +143,7 @@ virtualmake() {
 		export DISPLAY=:${XDISPLAY}
 		# Do not break on error, but setup $retval, as we need
 		# to kill Xvfb
+		debug-print "${FUNCNAME}: ${VIRTUALX_COMMAND} \"$@\""
 		${VIRTUALX_COMMAND} "$@"
 		retval=$?
 
@@ -151,6 +152,7 @@ virtualmake() {
 	else
 		debug-print "${FUNCNAME}: attaching to running X display"
 		# Normal make if we can connect to an X display
+		debug-print "${FUNCNAME}: ${VIRTUALX_COMMAND} \"$@\""
 		${VIRTUALX_COMMAND} "$@"
 		retval=$?
 	fi
