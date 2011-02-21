@@ -31,6 +31,11 @@ VIRTUALX_DEPEND="
 	x11-apps/xhost
 "
 
+# @ECLASS-VARIABLE: VIRTUALX_COMMAND
+# @DESCRIPTION:
+# Command (or eclass function call) to be run in the X11 environment
+: ${VIRTUALX_COMMAND:="emake"}
+
 has "${EAPI:-0}" 0 1 && die "virtualx eclass require EAPI=2 or newer."
 
 case ${VIRTUALX_REQUIRED} in
@@ -68,6 +73,14 @@ virtualmake() {
 	local XVFB=$(type -p Xvfb)
 	local XHOST=$(type -p xhost)
 	local xvfbargs="-screen 0 800x600x24"
+
+	# backcompat for maketype
+	if [[ -n ${maketype} ]]; then
+		ewarn "QA: ebuild is exporting \$maketype=${maketype}"
+		ewarn "QA: Ebuild should be migrated to use VIRTUALX_COMMAND=${maketype} instead."
+		ewarn "QA: Setting VIRTUALX_COMMAND to \$maketype conviniently for now."
+		VIRTUALX_COMMAND=${maketype}
+	fi
 
 	# If $DISPLAY is not set, or xhost cannot connect to an X
 	# display, then do the Xvfb hack.
@@ -121,7 +134,7 @@ virtualmake() {
 		export DISPLAY=:${XDISPLAY}
 		# Do not break on error, but setup $retval, as we need
 		# to kill Xvfb
-		${maketype} "$@"
+		${VIRTUALX_COMMAND} "$@"
 		retval=$?
 
 		# Now kill Xvfb
@@ -129,7 +142,7 @@ virtualmake() {
 	else
 		debug-print "${FUNCNAME}: attaching to running X display"
 		# Normal make if we can connect to an X display
-		${maketype} "$@"
+		${VIRTUALX_COMMAND} "$@"
 		retval=$?
 	fi
 
@@ -145,8 +158,7 @@ Xmake() {
 
 	ewarn "QA: you should not execute make directly"
 	ewarn "QA: rather execute Xemake -j1 if you have issues with parallel make"
-	export maketype="make"
-	virtualmake "$@"
+	VIRTUALX_COMMAND="emake" virtualmake "$@"
 }
 
 # @FUNCTION: Xemake
@@ -155,8 +167,7 @@ Xmake() {
 Xemake() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	export maketype="emake"
-	virtualmake "$@"
+	VIRTUALX_COMMAND="emake" virtualmake "$@"
 }
 
 # @FUNCTION: Xeconf
@@ -165,6 +176,5 @@ Xemake() {
 Xeconf() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	export maketype="econf"
-	virtualmake "$@"
+	VIRTUALX_COMMAND="econf" virtualmake "$@"
 }
