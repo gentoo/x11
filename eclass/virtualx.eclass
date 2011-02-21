@@ -157,7 +157,8 @@ virtualmake() {
 		retval=$?
 	fi
 
-	return ${retval}
+	# die if our command failed
+	[[ $? -ne 0 ]] && die "${FUNCNAME}: the ${VIRTALX_COMMAND} failed."
 }
 
 # @FUNCTION: Xmake
