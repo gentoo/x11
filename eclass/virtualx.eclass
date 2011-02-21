@@ -167,7 +167,7 @@ Xmake() {
 Xemake() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	VIRTUALX_COMMAND="emake" virtualmake "$@"
+	VIRTUALX_COMMAND="make" virtualmake "$@"
 }
 
 # @FUNCTION: Xeconf
