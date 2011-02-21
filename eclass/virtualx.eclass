@@ -11,22 +11,20 @@
 
 # @ECLASS-VARIABLE: VIRTUALX_REQUIRED
 # @DESCRIPTION:
-# Is a dependency on xorg-server and xhost needed?
-# Valid values are "always", "optional", and "manual".
-# "tests" is a synonym for "optional".
-: ${VIRTUALX_REQUIRED:=optional}
-
-# @ECLASS-VARIABLE: VIRTUALX_USE
-# @DESCRIPTION:
-# If VIRTUALX_REQUIRED=optional, what USE flag should control
-# the dependency?
-: ${VIRTUALX_USE:=test}
+# Variable specifying the dependency on xorg-server and xhost.
+# Possible special values are "always" and "manual", which specify
+# the dependency to be set unconditionaly or not at all.
+# Any other value is taken as useflag desired to be in control of
+# the dependency (eg. VIRTUALX_REQUIRED="kde" will add the dependency
+# into "kde? ( )" and add kde into IUSE.
+: ${VIRTUALX_REQUIRED:=test}
 
 # @ECLASS-VARIABLE: VIRTUALX_DEPEND
 # @DESCRIPTION:
 # Dep string available for use outside of eclass, in case a more
 # complicated dep is needed.
-VIRTUALX_DEPEND="
+# You can specify the variable BEFORE inherit to add more dependencies.
+VIRTUALX_DEPEND="${VIRTUALX_DEPEND}
 	!prefix? ( x11-base/xorg-server[-minimal] )
 	x11-apps/xhost
 "
@@ -34,29 +32,40 @@ VIRTUALX_DEPEND="
 # @ECLASS-VARIABLE: VIRTUALX_COMMAND
 # @DESCRIPTION:
 # Command (or eclass function call) to be run in the X11 environment
+# (within virtualmake function).
 : ${VIRTUALX_COMMAND:="emake"}
 
 has "${EAPI:-0}" 0 1 && die "virtualx eclass require EAPI=2 or newer."
 
 case ${VIRTUALX_REQUIRED} in
+	manual)
+		;;
 	always)
 		DEPEND="${VIRTUALX_DEPEND}"
 		RDEPEND=""
 		;;
 	optional|tests)
+		# deprecated section YAY.
+		ewarn "QA: VIRTUALX_REQUIRED=optional and VIRTUALX_REQUIRED=tests are deprecated."
+		ewarn "QA: You can drop the variable definition completely from ebuild,"
+		ewarn "QA: because it is default behaviour."
+
+		if [[ -n ${VIRTUALX_USE} ]]; then
+			# so they like to specify the useflag
+			ewarn "QA: VIRTUALX_USE variable is deprecated."
+			ewarn "QA: Please read eclass manpage to find out how to use VIRTUALX_REQUIRED"
+			ewarn "QA: to achieve the same behaviour."
+		fi
+
+		[[ -z ${VIRTUALX_USE} ]] && VIRTUALX_USE="test"
 		DEPEND="${VIRTUALX_USE}? ( ${VIRTUALX_DEPEND} )"
 		RDEPEND=""
 		IUSE="${VIRTUALX_USE}"
 		;;
-	manual)
-		;;
 	*)
-		eerror "Invalid value (${VIRTUALX_REQUIRED}) for VIRTUALX_REQUIRED"
-		eerror "Valid values are:"
-		eerror "  always"
-		eerror "  optional (default if unset)"
-		eerror "  manual"
-		die "Invalid value (${VIRTUALX_REQUIRED}) for VIRTUALX_REQUIRED"
+		DEPEND="${VIRTUALX_REQUIRED}? ( ${VIRTUALX_DEPEND} )"
+		RDEPEND=""
+		IUSE="${VIRTUALX_REQUIRED}"
 		;;
 esac
 
