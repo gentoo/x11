@@ -353,11 +353,11 @@ xorg-2_src_install() {
 
 	if [[ ${CATEGORY} == x11-proto ]]; then
 		autotools-utils_src_install \
-			${PN/proto/}docdir=${EPREFIX}/usr/share/doc/${PF} \
-			docdir=${EPREFIX}/usr/share/doc/${PF}
+			${PN/proto/}docdir="${EPREFIX}/usr/share/doc/${PF}" \
+			docdir="${EPREFIX}/usr/share/doc/${PF}"
 	else
 		autotools-utils_src_install \
-			docdir=${EPREFIX}/usr/share/doc/${PF}
+			docdir="${EPREFIX}/usr/share/doc/${PF}"
 	fi
 
 	if [[ -n ${GIT_ECLASS} ]]; then
