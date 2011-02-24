@@ -11,22 +11,11 @@ DESCRIPTION="X.Org driver for Intel cards"
 KEYWORDS="~amd64 ~ia64 ~x86 -x86-fbsd"
 IUSE="dri"
 
-RDEPEND=">=x11-base/xorg-server-1.6
-	>=x11-libs/libdrm-2.4.22[video_cards_intel]
-	x11-libs/libpciaccess
-	x11-libs/libXext
+RDEPEND="x11-libs/libXext
 	x11-libs/libXfixes
 	x11-libs/libXvMC
 	>=x11-libs/libxcb-1.5"
-DEPEND="${RDEPEND}
-	>=x11-proto/dri2proto-1.99.3
-	x11-proto/fontsproto
-	x11-proto/randrproto
-	x11-proto/renderproto
-	x11-proto/xextproto
-	x11-proto/xproto
-	dri? ( x11-proto/xf86driproto
-	       x11-proto/glproto )"
+DEPEND="${RDEPEND}"
 
 pkg_setup() {
 	xorg-2_pkg_setup

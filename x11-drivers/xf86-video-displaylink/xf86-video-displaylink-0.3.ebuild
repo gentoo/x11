@@ -15,12 +15,5 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 S="${WORKDIR}/${PN}"
-RDEPEND="x11-base/xorg-server"
-DEPEND="${RDEPEND}
-	x11-proto/fontsproto
-	x11-proto/randrproto
-	x11-proto/renderproto
-	x11-proto/videoproto
-	x11-proto/xproto"
 
 PATCHES=( "${FILESDIR}/${P}-xorg-abi-fix.patch" )

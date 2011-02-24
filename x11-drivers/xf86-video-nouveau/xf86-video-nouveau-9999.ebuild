@@ -14,17 +14,11 @@ SRC_URI=""
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-RDEPEND=">=x11-base/xorg-server-1.7[-minimal]
-	>=x11-libs/libdrm-2.4.24[video_cards_nouveau]"
-
+RDEPEND=">=x11-libs/libdrm-2.4.24[video_cards_nouveau]"
 DEPEND="${RDEPEND}
-	x11-proto/fontsproto
-	x11-proto/randrproto
-	x11-proto/renderproto
-	x11-proto/videoproto
-	x11-proto/xextproto
+	x11-proto/glproto
 	x11-proto/xf86driproto
-	x11-proto/xproto"
+	x11-proto/dri2proto"
 
 pkg_postinst() {
 	xorg-2_pkg_postinst
