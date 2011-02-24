@@ -20,7 +20,6 @@
 =x11-apps/xkbutils-9999
 =x11-apps/xman-9999
 =x11-apps/xrandr-9999
-=x11-apps/xvinfo-9999
 =x11-apps/xwininfo-9999
 =x11-base/nouveau-drm-99999999
 =x11-base/xorg-drivers-9999
