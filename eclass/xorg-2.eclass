@@ -174,9 +174,34 @@ fi
 
 DEPEND+=" >=dev-util/pkgconfig-0.23"
 
-# Check deps on xorg-server
-has dri ${IUSE//+} && DEPEND+=" dri? ( >=x11-base/xorg-server-1.6.3.901-r2[-minimal] )"
-[[ -n "${DRIVER}" ]] && DEPEND+=" x11-base/xorg-server[xorg]"
+# Check deps on drivers
+if has dri ${IUSE//+}; then
+	COMMON_DEPEND+=" dri? (
+		x11-base/xorg-server[-minimal]
+		x11-libs/libdrm
+	)"
+	DEPEND+=" dri? (
+		x11-proto/xf86driproto
+		x11-proto/glproto
+		x11-proto/dri2proto
+	)"
+fi
+if [[ -n "${DRIVER}" ]]; then
+	COMMON_DEPEND+="
+		x11-base/xorg-server[xorg]
+		x11-libs/libpciaccess
+	"
+	# we also needs some protos and libs in all cases
+	DEPEND+="
+		x11-proto/fontsproto
+		x11-proto/randrproto
+		x11-proto/renderproto
+		x11-proto/videoproto
+		x11-proto/xextproto
+		x11-proto/xineramaproto
+		x11-proto/xproto
+	"
+fi
 
 # Add deps on documentation
 # Most docbooks use dtd version 4.2 and 4.3 add more when found
@@ -190,6 +215,13 @@ if has doc ${IUSE//+}; then
 		)
 	"
 fi
+
+DEPEND+=" ${COMMON_DEPEND}"
+RDEPEND+=" ${COMMON_DEPEND}"
+unset COMMON_DEPEND
+
+debug-print "${LINENO} ${ECLASS} ${FUNCNAME}: DEPEND=${DEPEND}"
+debug-print "${LINENO} ${ECLASS} ${FUNCNAME}: RDEPEND=${RDEPEND}"
 
 # @FUNCTION: xorg-2_pkg_setup
 # @DESCRIPTION:
