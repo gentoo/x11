@@ -4,21 +4,20 @@
 
 EAPI=3
 
-inherit base multilib toolchain-funcs versionator
+inherit autotools autotools-utils multilib
 
-MY_PV=$(get_version_component_range $(get_version_component_count))
-MY_P=${PN}${MY_PV#pre}
+MY_P=${PN}-2ad8205e96236e2525ed50c382847627863afc29
 
 DESCRIPTION="Helper library for	S3TC texture (de)compression"
-HOMEPAGE="http://people.freedesktop.org/~cbrill/libtxc_dxtn/"
-SRC_URI="${HOMEPAGE}${MY_P}.tar.gz"
+HOMEPAGE="http://cgit.freedesktop.org/~mareko/libtxc_dxtn/"
+SRC_URI="${HOMEPAGE}/snapshot/${MY_P}.tar.bz2"
 
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-S=${WORKDIR}/${PN}
+S=${WORKDIR}/${MY_P}
 RESTRICT="bindist fetch"
 
 pkg_nofetch() {
@@ -33,25 +32,31 @@ pkg_nofetch() {
 	eerror "the external library."
 }
 
-src_compile() {
+foreachabi() {
 	local ABI
 
-	tc-export CC
 	for ABI in $(get_all_abis); do
-		einfo "Building for ${ABI} ..."
 		multilib_toolchain_setup ${ABI}
-		mkdir ${ABI} || die
-		emake || die
-		mv ${PN}.so *.o ${ABI}/ || die
+		AUTOTOOLS_BUILD_DIR=${WORKDIR}/${ABI} "${@}"
 	done
 }
 
-src_install() {
-	local ABI
+src_prepare() {
+	autotools-utils_src_prepare
+	eautoreconf
+}
 
-	for ABI in $(get_all_abis); do
-		dolib ${ABI}/${PN}.so || die
-	done
+src_configure() {
+	foreachabi autotools-utils_src_configure
+}
+
+src_compile() {
+	foreachabi autotools-utils_src_compile
+}
+
+src_install() {
+	foreachabi autotools-utils_src_install
+	remove_libtool_files all
 }
 
 pkg_postinst() {
