@@ -6,11 +6,11 @@ EAPI=3
 
 inherit autotools autotools-utils multilib
 
-MY_P=${PN}-2ad8205e96236e2525ed50c382847627863afc29
+MY_P=${PN}-a1d6ad4f8784028b87dc06c919474ff2d0468e5b
 
 DESCRIPTION="Helper library for	S3TC texture (de)compression"
 HOMEPAGE="http://cgit.freedesktop.org/~mareko/libtxc_dxtn/"
-SRC_URI="${HOMEPAGE}/snapshot/${MY_P}.tar.bz2"
+SRC_URI="${HOMEPAGE}snapshot/${MY_P}.tar.bz2"
 
 LICENSE="MIT"
 SLOT="0"
