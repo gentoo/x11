@@ -202,7 +202,7 @@ src_configure() {
 		driver_enable video_cards_via unichrome
 	fi
 
-	myconf="${myconf} $(use_enable gallium)"
+	myconf+=" $(use_enable gallium)"
 	if use !gallium && use !classic; then
 		ewarn "You enabled neither classic nor gallium USE flags. No hardware"
 		ewarn "drivers will be built."
@@ -216,7 +216,7 @@ src_configure() {
 		elog "    Radeon: Newest implementation of r300-r700 driver."
 		elog "    Svga: VMWare Virtual GPU driver."
 		echo
-		myconf="${myconf}
+		myconf+="
 			--with-state-trackers=glx,dri,egl,vega$(use d3d && echo ",d3d1x")
 			$(use_enable llvm gallium-llvm)
 			$(use_enable gles gles1)
@@ -227,30 +227,31 @@ src_configure() {
 			$(use_enable video_cards_intel gallium-i915)
 			$(use_enable video_cards_intel gallium-i965)
 			$(use_enable video_cards_radeon gallium-radeon)
-			$(use_enable video_cards_radeon gallium-r600)"
+			$(use_enable video_cards_radeon gallium-r600)
+		"
 		if use video_cards_i915 || \
 				use video_cards_intel; then
-			myconf="${myconf} --enable-gallium-i915"
+			myconf+=" --enable-gallium-i915"
 		else
-			myconf="${myconf} --disable-gallium-i915"
+			myconf+=" --disable-gallium-i915"
 		fi
 		if use video_cards_i965 || \
 				use video_cards_intel; then
-			myconf="${myconf} --enable-gallium-i965"
+			myconf+=" --enable-gallium-i965"
 		else
-			myconf="${myconf} --disable-gallium-i965"
+			myconf+=" --disable-gallium-i965"
 		fi
 		if use video_cards_r300 || \
 				use video_cards_radeon; then
-			myconf="${myconf} --enable-gallium-radeon"
+			myconf+=" --enable-gallium-radeon"
 		else
-			myconf="${myconf} --disable-gallium-radeon"
+			myconf+=" --disable-gallium-radeon"
 		fi
 		if use video_cards_r600 || \
 				use video_cards_radeon; then
-			myconf="${myconf} --enable-gallium-r600"
+			myconf+=" --enable-gallium-r600"
 		else
-			myconf="${myconf} --disable-gallium-r600"
+			myconf+=" --disable-gallium-r600"
 		fi
 	else
 		if use video_cards_nouveau || use video_cards_vmware; then
@@ -261,6 +262,7 @@ src_configure() {
 
 	# --with-driver=dri|xlib|osmesa || do we need osmesa?
 	econf \
+		--enable-shared-dricore
 		--disable-option-checking \
 		--with-driver=dri \
 		--disable-glut \
