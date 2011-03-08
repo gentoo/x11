@@ -155,9 +155,6 @@ pkg_setup() {
 	done
 	append-cppflags "-I${T}/mesa-symlinks"
 
-	# (#121394) Causes window corruption
-	filter-flags -fweb
-
 	# Incompatible with GCC 3.x SSP on x86, bug #244352
 	if use x86 ; then
 		if [[ $(gcc-major-version) -lt 4 ]]; then
