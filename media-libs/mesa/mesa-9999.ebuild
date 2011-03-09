@@ -262,7 +262,7 @@ src_configure() {
 
 	# --with-driver=dri|xlib|osmesa || do we need osmesa?
 	econf \
-		--enable-shared-dricore
+		--enable-shared-dricore \
 		--disable-option-checking \
 		--with-driver=dri \
 		--disable-glut \
