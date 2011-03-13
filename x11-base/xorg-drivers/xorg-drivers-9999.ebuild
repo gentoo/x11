@@ -133,8 +133,12 @@ PDEPEND="
 	video_cards_siliconmotion? ( x11-drivers/xf86-video-siliconmotion )
 	video_cards_sis?           ( x11-drivers/xf86-video-sis )
 	video_cards_sisusb?        ( x11-drivers/xf86-video-sisusb )
+	video_cards_suncg14?       ( x11-drivers/xf86-video-suncg14 )
+	video_cards_suncg3?        ( x11-drivers/xf86-video-suncg3 )
+	video_cards_suncg6?        ( !x11-drivers/xf86-video-suncg6 )
 	video_cards_sunffb?        ( x11-drivers/xf86-video-sunffb )
 	video_cards_sunleo?        ( x11-drivers/xf86-video-sunleo )
+	video_cards_suntcx?        ( x11-drivers/xf86-video-suntcx )
 	video_cards_tdfx?          ( x11-drivers/xf86-video-tdfx )
 	video_cards_tga?           ( x11-drivers/xf86-video-tga )
 	video_cards_trident?       ( x11-drivers/xf86-video-trident )
@@ -154,8 +158,4 @@ PDEPEND="
 	!x11-drivers/xf86-video-impact
 	!x11-drivers/xf86-video-nsc
 	!x11-drivers/xf86-video-sunbw2
-	!x11-drivers/xf86-video-suncg14
-	!x11-drivers/xf86-video-suncg3
-	!x11-drivers/xf86-video-suncg6
-	!x11-drivers/xf86-video-suntcx
 "
