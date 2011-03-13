@@ -67,12 +67,7 @@ RDEPEND="
 	d3d? ( app-emulation/wine )
 	motif? ( x11-libs/openmotif )
 	gallium? (
-		llvm? (
-			amd64? ( dev-libs/udis86 )
-			x86? ( dev-libs/udis86 )
-			x86-fbsd? ( dev-libs/udis86 )
-			sys-devel/llvm
-		)
+		llvm? ( >=sys-devel/llvm-2.7 )
 	)
 	${LIBDRM_DEPSTRING}[video_cards_nouveau?,video_cards_vmware?]
 "
