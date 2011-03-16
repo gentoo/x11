@@ -4,6 +4,7 @@
 
 EAPI=4
 
+XORG_DOC=doc
 inherit xorg-2
 
 DESCRIPTION="X.Org Xi library"
@@ -15,12 +16,7 @@ RDEPEND=">=x11-libs/libX11-1.3
 	>=x11-proto/inputproto-2.0
 	>=x11-proto/xproto-7.0.13
 	>=x11-proto/xextproto-7.0.3"
-DEPEND="${RDEPEND}
-	doc? (
-		app-text/asciidoc
-		app-text/xmlto
-	)
-"
+DEPEND="${RDEPEND}"
 
 pkg_setup() {
 	xorg-2_pkg_setup

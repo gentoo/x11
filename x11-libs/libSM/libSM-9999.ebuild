@@ -2,13 +2,15 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI=4
+
+XORG_DOC=doc
 inherit xorg-2
 
 DESCRIPTION="X.Org SM library"
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~ppc-aix ~x86-fbsd ~x64-freebsd ~x86-freebsd ~hppa-hpux ~ia64-hpux ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris ~x86-winnt"
-IUSE="doc ipv6 +uuid"
+IUSE="ipv6 +uuid"
 
 RDEPEND=">=x11-libs/libICE-1.0.5
 	x11-libs/xtrans
@@ -16,8 +18,7 @@ RDEPEND=">=x11-libs/libICE-1.0.5
 	!elibc_FreeBSD? ( !elibc_IRIX? ( !elibc_SunOS? (
 		uuid? ( >=sys-apps/util-linux-2.16 )
 	) ) )"
-DEPEND="${RDEPEND}
-	doc? ( app-text/xmlto )"
+DEPEND="${RDEPEND}"
 
 pkg_setup() {
 	xorg-2_pkg_setup
