@@ -4,12 +4,13 @@
 
 EAPI=4
 
+XORG_DRI=dri
 inherit linux-info xorg-2
 
 DESCRIPTION="X.Org driver for Intel cards"
 
 KEYWORDS="~amd64 ~ia64 ~x86 -x86-fbsd"
-IUSE="dri"
+IUSE=""
 
 RDEPEND="x11-libs/libXext
 	x11-libs/libXfixes

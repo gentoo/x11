@@ -3,6 +3,8 @@
 # $Header: $
 
 EAPI=4
+
+XORG_DRI=always
 inherit xorg-2
 
 DESCRIPTION="VMware SVGA video driver"
