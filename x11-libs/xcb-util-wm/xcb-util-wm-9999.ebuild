@@ -7,13 +7,13 @@ inherit xorg-2
 
 DESCRIPTION="X C-language Bindings sample implementations"
 HOMEPAGE="http://xcb.freedesktop.org/"
-EGIT_REPO_URI="git://anongit.freedesktop.org/git/xcb/util"
+EGIT_REPO_URI="git://anongit.freedesktop.org/git/xcb/util-wm"
 EGIT_HAS_SUBMODULES=yes
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~ia64-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~x64-solaris"
 IUSE="test"
 
-RDEPEND=">=x11-libs/libxcb-1
+RDEPEND="=x11-libs/xcb-util-9999
 	x11-proto/xproto"
 DEPEND="${RDEPEND}
 	>=dev-util/gperf-3.0.1
