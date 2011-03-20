@@ -1,7 +1,4 @@
 # Don't let people install these accidentally
-=media-fonts/font-util-9999
-=media-libs/fontconfig-9999
-=media-libs/glitz-9999
 =media-libs/mesa-9999
 =x11-apps/mesa-progs-9999
 =x11-apps/mkfontdir-9999
@@ -15,13 +12,15 @@
 =x11-apps/xinput-9999
 =x11-apps/xkbevd-9999
 =x11-apps/xkbutils-9999
+=x11-apps/xlsclients-9999
 =x11-apps/xman-9999
 =x11-apps/xrandr-9999
 =x11-apps/xwininfo-9999
-=x11-base/nouveau-drm-99999999
+=x11-base/wayland-9999
 =x11-base/xorg-drivers-9999
 =x11-base/xorg-server-9999
 =x11-drivers/xf86-input-evdev-9999
+=x11-drivers/xf86-input-joystick-9999
 =x11-drivers/xf86-input-keyboard-9999
 =x11-drivers/xf86-input-mouse-9999
 =x11-drivers/xf86-input-synaptics-9999
@@ -36,7 +35,6 @@
 =x11-libs/libfontenc-9999
 =x11-libs/libFS-9999
 =x11-libs/libICE-9999
-=x11-libs/liblbxutil-9999
 =x11-libs/libpciaccess-9999
 =x11-libs/libSM-9999
 =x11-libs/libX11-9999
@@ -56,6 +54,7 @@
 =x11-libs/libXft-9999
 =x11-libs/libXi-9999
 =x11-libs/libXinerama-9999
+=x11-libs/libxkbcommon-9999
 =x11-libs/libxkbfile-9999
 =x11-libs/libxkbui-9999
 =x11-libs/libXmu-9999
@@ -75,6 +74,10 @@
 =x11-libs/libXxf86vm-9999
 =x11-libs/pixman-9999
 =x11-libs/xcb-util-9999
+=x11-libs/xcb-util-image-9999
+=x11-libs/xcb-util-keysyms-9999
+=x11-libs/xcb-util-renderutil-9999
+=x11-libs/xcb-util-wm-9999
 =x11-libs/xpyb-9999
 =x11-libs/xtrans-9999
 =x11-misc/util-macros-9999
