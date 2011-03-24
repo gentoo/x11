@@ -19,7 +19,7 @@ IUSE=""
 RDEPEND="app-text/poppler[cairo]
 	dev-libs/expat
 	dev-libs/glib:2
-	media-libs/mesa[gles,gallium]
+	media-libs/mesa[gles]
 	>=sys-fs/udev-136
 	>=x11-libs/cairo-1.10[opengl]
 	x11-libs/gtk+:2
