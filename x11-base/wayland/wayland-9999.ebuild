@@ -8,7 +8,7 @@ inherit xorg-2
 
 DESCRIPTION="A nano display server, relying on kernel modesetting"
 HOMEPAGE="http://wayland.freedesktop.org/"
-EGIT_REPO_URI="git://anongit.freedesktop.org/git/${PN}"
+EGIT_REPO_URI="git://anongit.freedesktop.org/git/${PN}/${PN}"
 
 LICENSE="CCPL-Attribution-ShareAlike-3.0 MIT"
 SLOT="0"
