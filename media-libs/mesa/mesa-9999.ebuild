@@ -45,7 +45,7 @@ for card in ${VIDEO_CARDS}; do
 done
 
 IUSE="${IUSE_VIDEO_CARDS}
-	+classic d3d debug egl +gallium gles llvm motif +nptl openvg pic selinux wayland kernel_FreeBSD"
+	+classic d3d debug +egl +gallium gles llvm motif +nptl openvg pic selinux wayland kernel_FreeBSD"
 
 LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.24"
 # keep correct libdrm and dri2proto dep
