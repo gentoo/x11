@@ -200,11 +200,14 @@ src_configure() {
 
 	if use egl; then
 		myconf+="--with-egl-platforms=$(use wayland && echo "wayland,")drm,x11"
+	else
+		myconf+="--disable-egl"
 	fi
 
 	myconf+="
 		$(use_enable gles gles1)
 		$(use_enable gles gles2)
+		$(use_enable openvg)
 		$(use_enable gallium)
 	"
 	if use !gallium && use !classic; then
