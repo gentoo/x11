@@ -202,10 +202,10 @@ src_configure() {
 		$(use_enable gles gles1)
 		$(use_enable gles gles2)
 		$(use_enable egl)
-		$(use_with egl egl-platforms "$(use wayland && echo "wayland,")drm,x11")
 		$(use_enable openvg)
 		$(use_enable gallium)
 	"
+	use egl && myconf+="--with-egl-platforms=$(use wayland && echo "wayland,")drm,x11"
 
 	if use !gallium && use !classic; then
 		ewarn "You enabled neither classic nor gallium USE flags. No hardware"
