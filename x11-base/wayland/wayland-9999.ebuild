@@ -28,22 +28,3 @@ RDEPEND="app-text/poppler[cairo]
 	x11-libs/libxkbcommon
 	virtual/libffi"
 DEPEND="${RDEPEND}"
-
-src_prepare() {
-	# install the programs too
-	# this should be fixed in makefile.am
-	sed -i \
-		-e "/PROGRAMS/s/noinst_/bin_/" \
-		{compositor,clients}"/Makefile.am" || die
-
-	xorg-2_src_prepare
-}
-
-src_install() {
-	xorg-2_src_install
-
-	cd "${ED}/usr/bin"
-	for binary in $(echo *); do
-		mv "${binary}" "wayland-${binary}" || die
-	done
-}
