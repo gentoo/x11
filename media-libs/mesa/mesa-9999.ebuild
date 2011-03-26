@@ -45,7 +45,7 @@ for card in ${VIDEO_CARDS}; do
 done
 
 IUSE="${IUSE_VIDEO_CARDS}
-	+classic d3d debug +gallium gles llvm motif +nptl pic selinux kernel_FreeBSD"
+	+classic d3d debug egl +gallium gles llvm motif +nptl openvg pic selinux wayland kernel_FreeBSD"
 
 LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.24"
 # keep correct libdrm and dri2proto dep
@@ -69,6 +69,7 @@ RDEPEND="
 	gallium? (
 		llvm? ( >=sys-devel/llvm-2.7 )
 	)
+	wayland? ( x11-base/wayland )
 	${LIBDRM_DEPSTRING}[video_cards_nouveau?,video_cards_vmware?]
 "
 for card in ${INTEL_CARDS}; do
@@ -197,7 +198,15 @@ src_configure() {
 		driver_enable video_cards_via unichrome
 	fi
 
-	myconf+=" $(use_enable gallium)"
+	if use egl; then
+		myconf+="--with-egl-platforms=$(use wayland && echo "wayland,")drm,x11"
+	fi
+
+	myconf+="
+		$(use_enable gles gles1)
+		$(use_enable gles gles2)
+		$(use_enable gallium)
+	"
 	if use !gallium && use !classic; then
 		ewarn "You enabled neither classic nor gallium USE flags. No hardware"
 		ewarn "drivers will be built."
@@ -212,11 +221,8 @@ src_configure() {
 		elog "    Svga: VMWare Virtual GPU driver."
 		echo
 		myconf+="
-			--with-state-trackers=glx,dri,egl,vega$(use d3d && echo ",d3d1x")
+			--with-state-trackers=glx,dri$(use egl && echo ",egl")$(use openvg && echo ",vega")$(use d3d && echo ",d3d1x")
 			$(use_enable llvm gallium-llvm)
-			$(use_enable gles gles1)
-			$(use_enable gles gles2)
-			$(use_enable gles gles-overlay)
 			$(use_enable video_cards_vmware gallium-svga)
 			$(use_enable video_cards_nouveau gallium-nouveau)
 			$(use_enable video_cards_intel gallium-i915)
