@@ -28,8 +28,7 @@ RDEPEND="dev-libs/libpthread-stubs"
 DEPEND="${RDEPEND}"
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-2.4.16-solaris.patch
-	"${FILESDIR}"/${PN}-2.4.15-solaris.patch
+	"${FILESDIR}"/${PN}-2.4.23-solaris.patch
 )
 
 pkg_setup() {
