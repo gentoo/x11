@@ -20,7 +20,7 @@ fi
 IUSE="debug +modules multilib qt4"
 
 LICENSE="AMD GPL-2 QPL-1.0 as-is"
-KEYWORDS="amd64 x86"
+KEYWORDS="~amd64 ~x86"
 SLOT="1"
 
 RDEPEND="
