@@ -550,7 +550,7 @@ pkg_postinst() {
 	elog "with this driver and multi-threaded applications such as wine,"
 	elog "set UseFastTLS in xorg.conf to either 0 or 1, but not 2."
 	elog
-	elog "Fully rebooting the system after an ${PN} update is raccomended"
+	elog "Fully rebooting the system after an ${PN} update is recommended"
 	elog "Stopping Xorg, reloading fglrx kernel module and restart Xorg"
 	elog "might not work"
 
