@@ -45,7 +45,7 @@ for card in ${VIDEO_CARDS}; do
 done
 
 IUSE="${IUSE_VIDEO_CARDS}
-	+classic d3d debug +egl +gallium gles llvm motif +nptl openvg pic selinux wayland kernel_FreeBSD"
+	+classic d3d debug +egl +gallium gles llvm motif +nptl openvg pic selinux shared-dricore wayland kernel_FreeBSD"
 
 LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.24"
 # keep correct libdrm and dri2proto dep
@@ -263,7 +263,6 @@ src_configure() {
 
 	# --with-driver=dri|xlib|osmesa || do we need osmesa?
 	econf \
-		--enable-shared-dricore \
 		--disable-option-checking \
 		--with-driver=dri \
 		--disable-glut \
@@ -274,6 +273,7 @@ src_configure() {
 		$(use_enable motif) \
 		$(use_enable nptl glx-tls) \
 		$(use_enable !pic asm) \
+		$(use_enable shared-dricore) \
 		--with-dri-drivers=${DRI_DRIVERS} \
 		${myconf}
 }
