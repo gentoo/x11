@@ -53,7 +53,8 @@ LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.24"
 RDEPEND="
 	!<x11-base/xorg-server-1.7
 	!<=x11-proto/xf86driproto-2.0.3
-	>=app-admin/eselect-mesa-0.0.3
+	classic? ( app-admin/eselect-mesa )
+	gallium? ( app-admin/eselect-mesa )
 	>=app-admin/eselect-opengl-1.1.1-r2
 	dev-libs/expat
 	dev-libs/libxml2[python]
@@ -316,8 +317,9 @@ src_install() {
 	eend $?
 
 	if use classic || use gallium; then
-		ebegin "Moving DRI/Gallium drivers for dynamic switching"
+			ebegin "Moving DRI/Gallium drivers for dynamic switching"
 			local gallium_drivers=( i915_dri.so i965_dri.so r300_dri.so r600_dri.so swrast_dri.so )
+			keepdir /usr/$(get_libdir)/dri
 			dodir /usr/$(get_libdir)/mesa
 			for x in ${gallium_drivers[@]}; do
 				if [ -f "${S}/$(get_libdir)/gallium/${x}" ]; then
@@ -354,7 +356,9 @@ pkg_postinst() {
 	echo
 	eselect opengl set --use-old ${OPENGL_DIR}
 	# Select classic/gallium drivers
-	eselect mesa set --auto
+	if use classic || use gallium; then
+		eselect mesa set --auto
+	fi
 }
 
 # $1 - VIDEO_CARDS flag
