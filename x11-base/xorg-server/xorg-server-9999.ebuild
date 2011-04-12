@@ -219,10 +219,9 @@ pkg_postinst() {
 
 pkg_postrm() {
 	# Get rid of module dir to ensure opengl-update works properly
-	if ! has_version x11-base/xorg-server; then
-		if [[ -e ${ROOT}/usr/$(get_libdir)/xorg/modules ]]; then
-			rm -rf "${ROOT}"/usr/$(get_libdir)/xorg/modules
-		fi
+	if ! has_version x11-base/xorg-server &&
+			[[ -e ${ROOT}/usr/$(get_libdir)/xorg/modules ]]; then
+		rm -rf "${ROOT}"/usr/$(get_libdir)/xorg/modules
 	fi
 }
 
