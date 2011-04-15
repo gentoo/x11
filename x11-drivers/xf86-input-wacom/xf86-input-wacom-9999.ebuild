@@ -31,7 +31,9 @@ DEPEND="${RDEPEND}
 pkg_setup() {
 	linux-info_pkg_setup
 
-	CONFIGURE_OPTIONS="$(use_enable debug)"
+	XORG_CONFIGURE_OPTIONS=(
+		$(use_enable debug)
+	)
 }
 
 src_install() {
