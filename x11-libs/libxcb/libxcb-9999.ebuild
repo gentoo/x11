@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -27,7 +27,9 @@ DEPEND="${RDEPEND}
 pkg_setup() {
 	python_set_active_version 2
 	xorg-2_pkg_setup
-	CONFIGURE_OPTIONS="$(use_enable doc build-docs)
+	XORG_CONFIGURE_OPTIONS=(
+		$(use_enable doc build-docs)
 		$(use_enable selinux)
-		--enable-xinput"
+		--enable-xinput
+	)
 }
