@@ -97,6 +97,10 @@ DEPEND="${RDEPEND}
 	x11-proto/xf86vidmodeproto
 "
 
+RESTRICT="
+	texture-float? ( bindist )
+"
+
 S="${WORKDIR}/${MY_P}"
 
 # It is slow without texrels, if someone wants slow

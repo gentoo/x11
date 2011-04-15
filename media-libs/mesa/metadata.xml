@@ -10,5 +10,6 @@
 	<flag name='llvm'>Enable LLVM backend for Gallium3D.</flag>
 	<flag name='pic'>disable optimized assembly code that is not PIC friendly</flag>
 	<flag name='shared-dricore'>Enable sharing of common code for classic DRI drivers.</flag>
+	<flag name='texture-float'>Enable support for floating point textures.</flag>
 </use>
 </pkgmetadata>
