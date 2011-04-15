@@ -112,7 +112,7 @@ pkg_setup() {
 	#	--enable-install-setuid needed because sparcs default off
 	# NOTE: fop is used for doc generating ; and i have no idea if gentoo
 	#	package it somewhere
-	CONFIGURE_OPTIONS="
+	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable ipv6)
 		$(use_enable dmx)
 		$(use_enable kdrive)
@@ -143,11 +143,10 @@ pkg_setup() {
 		--without-dtrace
 		--without-fop
 		--with-os-vendor=Gentoo
-	"
+	)
 
 	# Xorg-server requires includes from OS mesa which are not visible for
 	# users of binary drivers.
-	# Due to the limitations of CONFIGURE_OPTIONS, we have to export this
 	mkdir -p "${T}/mesa-symlinks/GL"
 	for i in gl glx glxmd glxproto glxtokens; do
 		ln -s "${EROOT}usr/$(get_libdir)/opengl/xorg-x11/include/$i.h" "${T}/mesa-symlinks/GL/$i.h" || die
