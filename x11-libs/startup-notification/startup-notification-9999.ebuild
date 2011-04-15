@@ -23,7 +23,9 @@ DEPEND="${RDEPEND}
 	x11-proto/xproto
 	x11-libs/libXt"
 
-CONFIGURE_OPTIONS="--disable-static"
+XORG_CONFIGURE_OPTIONS=(
+	--disable-static
+)
 
 src_install() {
 	xorg-2_src_install
