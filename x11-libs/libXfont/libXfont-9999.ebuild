@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -22,10 +22,12 @@ DEPEND="${RDEPEND}"
 
 pkg_setup() {
 	xorg-2_pkg_setup
-	CONFIGURE_OPTIONS="$(use_enable ipv6)
+	XORG_CONFIGURE_OPTIONS=(
+		$(use_enable ipv6)
 		$(use_enable doc devel-docs)
 		$(use_with doc xmlto)
 		--with-bzip2
 		--without-fop
-		--with-encodingsdir=${EPREFIX}/usr/share/fonts/encodings"
+		--with-encodingsdir="${EPREFIX}/usr/share/fonts/encodings"
+	)
 }
