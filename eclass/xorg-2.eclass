@@ -401,17 +401,22 @@ xorg-2_src_configure() {
 
 	xorg-2_flags_setup
 
-	# @VARIABLE: CONFIGURE_OPTIONS
+	# @VARIABLE: XORG_CONFIGURE_OPTIONS
 	# @DESCRIPTION:
-	# Any options to pass to configure
+	# Array of an additional options to pass to configure.
 	# @DEFAULT_UNSET
-	CONFIGURE_OPTIONS=${CONFIGURE_OPTIONS:=""}
+	if [[ $(declare -p XORG_CONFIGURE_OPTIONS 2>&-) != "declare -a"* ]]; then
+		# fallback to CONFIGURE_OPTIONS, deprecated.
+		local xorgconfadd=(${CONFIGURE_OPTIONS})
+	else
+		local xorgconfadd=("${XORG_CONFIGURE_OPTIONS[@]}")
+	fi
 
 	[[ -n "${FONT}" ]] && xorg-2_font_configure
 	local myeconfargs=(
 		--disable-dependency-tracking
-		${CONFIGURE_OPTIONS}
 		${FONT_OPTIONS}
+		"${xorgconfadd[@]}"
 	)
 
 	autotools-utils_src_configure "$@"
