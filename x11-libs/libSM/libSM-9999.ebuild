@@ -23,11 +23,13 @@ DEPEND="${RDEPEND}"
 pkg_setup() {
 	xorg-2_pkg_setup
 
-	CONFIGURE_OPTIONS="$(use_enable ipv6)
+	XORG_CONFIGURE_OPTIONS=(
+		$(use_enable ipv6)
 		$(use_enable doc docs)
 		$(use_with doc xmlto)
 		$(use_with uuid libuuid)
-		--without-fop"
+		--without-fop
+	)
 	# do not use uuid even if available in libc (like on FreeBSD)
 	use uuid || export ac_cv_func_uuid_create=no
 	# solaris hack
