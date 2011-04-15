@@ -13,7 +13,9 @@ IUSE="minimal"
 DEPEND="!<x11-base/xorg-server-1.5"
 RDEPEND="${DEPEND}"
 
-CONFIGURE_OPTIONS="--with-pciids-path=/usr/share/misc"
+XORG_CONFIGURE_OPTIONS=(
+	--with-pciids-path=/usr/share/misc
+)
 
 src_install() {
 	xorg-2_src_install
