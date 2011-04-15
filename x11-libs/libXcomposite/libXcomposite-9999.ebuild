@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -21,5 +21,7 @@ DEPEND="${RDEPEND}"
 
 pkg_setup() {
 	xorg-2_pkg_setup
-	CONFIGURE_OPTIONS="$(use_with doc xmlto)"
+	XORG_CONFIGURE_OPTIONS=(
+		$(use_with doc xmlto)
+	)
 }
