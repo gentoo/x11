@@ -26,12 +26,13 @@ DEPEND="${RDEPEND}
 	>=dev-util/intltool-0.30
 	dev-perl/XML-Parser"
 
-# do not check for runtime deps
-CONFIGURE_OPTIONS="
-	--with-xkb-base=\"${EPREFIX}/usr/share/X11/xkb\"
+XORG_CONFIGURE_OPTIONS=(
+	--with-xkb-base="${EPREFIX}/usr/share/X11/xkb"
 	--enable-compat-rules
+	# do not check for runtime deps
 	--disable-runtime-deps
-	--with-xkb-rules-symlink=xorg"
+	--with-xkb-rules-symlink=xorg
+)
 
 src_prepare() {
 	xorg-2_src_prepare
