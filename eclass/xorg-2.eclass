@@ -408,7 +408,7 @@ xorg-2_src_configure() {
 	if [[ $(declare -p XORG_CONFIGURE_OPTIONS 2>&-) != "declare -a"* ]]; then
 		# fallback to CONFIGURE_OPTIONS, deprecated.
 		[[ -n "${CONFIGURE_OPTIONS}" ]] && \
-			eqawarn "CONFIGURE_OPTIONS are deprecated. Please migrate to XORG_CONFIGURE_OPTIONS."
+			ewarn "QA: CONFIGURE_OPTIONS are deprecated. Please migrate to XORG_CONFIGURE_OPTIONS."
 		local xorgconfadd=(${CONFIGURE_OPTIONS})
 	else
 		local xorgconfadd=("${XORG_CONFIGURE_OPTIONS[@]}")
