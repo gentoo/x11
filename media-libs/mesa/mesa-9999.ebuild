@@ -45,7 +45,7 @@ for card in ${VIDEO_CARDS}; do
 done
 
 IUSE="${IUSE_VIDEO_CARDS}
-	+classic d3d debug +egl +gallium gles llvm motif +nptl openvg pic selinux shared-dricore wayland kernel_FreeBSD"
+	+classic d3d debug +egl texture-float +gallium gles llvm motif +nptl openvg pic selinux shared-dricore wayland kernel_FreeBSD"
 
 LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.24"
 # keep correct libdrm and dri2proto dep
@@ -200,6 +200,7 @@ src_configure() {
 	fi
 
 	myconf+="
+		$(use_enable texture-float)
 		$(use_enable gles gles1)
 		$(use_enable gles gles2)
 		$(use_enable egl)
