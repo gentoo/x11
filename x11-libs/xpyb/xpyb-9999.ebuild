@@ -22,5 +22,7 @@ DOCS=( NEWS README )
 
 pkg_setup() {
 	xorg-2_pkg_setup
-	CONFIGURE_OPTIONS="$(use_enable selinux xselinux)"
+	XORG_CONFIGURE_OPTIONS=(
+		$(use_enable selinux xselinux)
+	)
 }
