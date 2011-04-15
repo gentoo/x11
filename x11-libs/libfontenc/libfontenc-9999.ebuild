@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -14,4 +14,6 @@ RDEPEND="sys-libs/zlib
 	x11-proto/xproto"
 DEPEND="${RDEPEND}"
 
-CONFIGURE_OPTIONS="--with-encodingsdir=${EPREFIX}/usr/share/fonts/encodings"
+XORG_CONFIGURE_OPTIONS=(
+	--with-encodingsdir="${EPREFIX}/usr/share/fonts/encodings"
+)
