@@ -1,4 +1,4 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -18,4 +18,6 @@ DEPEND="${RDEPEND}
 	app-arch/gzip
 	app-arch/bzip2"
 
-CONFIGURE_OPTIONS="--with-bzip2"
+XORG_CONFIGURE_OPTIONS=(
+	--with-bzip2
+)
