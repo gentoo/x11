@@ -30,12 +30,12 @@ PATCHES=(
 
 pkg_setup() {
 	xorg-2_pkg_setup
-	CONFIGURE_OPTIONS="
+	XORG_CONFIGURE_OPTIONS=(
 		$(use_with doc xmlto)
 		$(use_enable doc specs)
 		$(use_enable ipv6)
 		--without-fop
-	"
+	)
 }
 
 src_configure() {
