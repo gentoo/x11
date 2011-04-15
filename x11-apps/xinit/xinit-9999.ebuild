@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -34,7 +34,9 @@ PATCHES=(
 pkg_setup() {
 	xorg-2_pkg_setup
 
-	CONFIGURE_OPTIONS="--with-xinitdir=/etc/X11/xinit"
+	XORG_CONFIGURE_OPTIONS=(
+		--with-xinitdir=/etc/X11/xinit
+	)
 }
 
 src_install() {
