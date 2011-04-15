@@ -1,4 +1,4 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -32,12 +32,14 @@ PATCHES=(
 )
 
 pkg_setup() {
-	CONFIGURE_OPTIONS="--enable-udev
+	XORG_CONFIGURE_OPTIONS=(
+		--enable-udev
 		$(use_enable video_cards_intel intel)
 		$(use_enable video_cards_nouveau nouveau-experimental-api)
 		$(use_enable video_cards_radeon radeon)
 		$(use_enable video_cards_vmware vmwgfx-experimental-api)
-		$(use_enable libkms)"
+		$(use_enable libkms)
+	)
 
 	xorg-2_pkg_setup
 }
