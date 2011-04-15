@@ -101,7 +101,13 @@ PATCHES=(
 	"${UPSTREAMED_PATCHES[@]}"
 	"${FILESDIR}"/${PN}-disable-acpi.patch
 	"${FILESDIR}"/${PN}-1.9-nouveau-default.patch
-	)
+)
+
+pkg_pretend() {
+	# older gcc is not supported
+	[[ $(gcc-major-version) -lt 4 ]] && \
+		die "Sorry, but gcc earlier than 4.0 wont work for xorg-server."
+}
 
 pkg_setup() {
 	xorg-2_pkg_setup
@@ -155,25 +161,6 @@ pkg_setup() {
 		ln -s "${EROOT}usr/$(get_libdir)/opengl/global/include/$i.h" "${T}/mesa-symlinks/GL/$i.h" || die
 	done
 	append-cppflags "-I${T}/mesa-symlinks"
-
-	# Incompatible with GCC 3.x SSP on x86, bug #244352
-	if use x86 ; then
-		if [[ $(gcc-major-version) -lt 4 ]]; then
-			filter-flags -fstack-protector
-		fi
-	fi
-
-	# Incompatible with GCC 3.x CPP, bug #314615
-	if [[ $(gcc-major-version) -lt 4 ]]; then
-		ewarn "GCC 3.x C preprocessor may cause build failures. Use GCC 4.x"
-		ewarn "or set CPP=cpp-4.3.4 (replace with the actual installed version)"
-	fi
-
-	# detect if we should inform user about ebuild breakage
-	if ! has_version "x11-base/xorg-server" ||
-			has_version "<x11-base/xorg-server-$(get_version_component_range 1-2)"; then
-		INFO="yes"
-	fi
 }
 
 src_install() {
@@ -201,7 +188,7 @@ pkg_postinst() {
 	# sets up libGL and DRI2 symlinks if needed (ie, on a fresh install)
 	eselect opengl set xorg-x11 --use-old
 
-	if [[ ${INFO} = yes ]]; then
+	if [[ ${PV} != 9999 && $(get_minor_version ${REPLACING_VERSIONS}) != $(get_minor_version ${PV}) ]]; then
 		elog "You should consider reading upgrade guide for this release:"
 		elog "	http://www.gentoo.org/proj/en/desktop/x/x11/xorg-server-$(get_version_component_range 1-2)-upgrade-guide.xml"
 		echo
@@ -213,13 +200,14 @@ pkg_postinst() {
 		ewarn "You can generate a list of all installed packages in the x11-drivers"
 		ewarn "category using this command:"
 		ewarn "	emerge portage-utils; qlist -I -C x11-drivers/"
+		ewarn "or using sets from portage-2.2:"
+		ewarn "	emerge @x11-module-rebuild"
 	fi
 }
 
 pkg_postrm() {
 	# Get rid of module dir to ensure opengl-update works properly
-	if ! has_version x11-base/xorg-server &&
-			[[ -e ${ROOT}/usr/$(get_libdir)/xorg/modules ]]; then
+	if [[ -z ${REPLACED_BY} && -e ${ROOT}/usr/$(get_libdir)/xorg/modules ]]; then
 		rm -rf "${ROOT}"/usr/$(get_libdir)/xorg/modules
 	fi
 }
