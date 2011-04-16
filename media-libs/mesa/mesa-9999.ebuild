@@ -45,7 +45,7 @@ for card in ${VIDEO_CARDS}; do
 done
 
 IUSE="${IUSE_VIDEO_CARDS}
-	+classic d3d debug +egl texture-float +gallium gles llvm motif +nptl openvg pic selinux shared-dricore wayland kernel_FreeBSD"
+	bindist +classic d3d debug +egl +gallium gles llvm motif +nptl openvg pic selinux shared-dricore wayland kernel_FreeBSD"
 
 LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.24"
 # keep correct libdrm and dri2proto dep
@@ -95,10 +95,6 @@ DEPEND="${RDEPEND}
 	>=x11-proto/xextproto-7.0.99.1
 	x11-proto/xf86driproto
 	x11-proto/xf86vidmodeproto
-"
-
-RESTRICT="
-	texture-float? ( bindist )
 "
 
 S="${WORKDIR}/${MY_P}"
@@ -204,7 +200,7 @@ src_configure() {
 	fi
 
 	myconf+="
-		$(use_enable texture-float)
+		$(use_enable !bindist texture-float)
 		$(use_enable gles gles1)
 		$(use_enable gles gles2)
 		$(use_enable egl)
@@ -287,6 +283,10 @@ src_configure() {
 src_install() {
 	base_src_install
 
+	if use !bindist; then
+		dodoc docs/patents.txt || die
+	fi
+
 	# Save the glsl-compiler for later use
 	if ! tc-is-cross-compiler; then
 		dobin "${S}"/src/glsl/glsl_compiler || die
@@ -363,6 +363,12 @@ pkg_postinst() {
 	# Select classic/gallium drivers
 	if use classic || use gallium; then
 		eselect mesa set --auto
+	fi
+	
+	# warn about patent encumbered texture-float
+	if use !bindist; then
+		elog "USE=\"bindist\" was not set. Potentially patent encumbered code was"
+		elog "enabled. Please see patents.txt for an explanation."
 	fi
 }
 
