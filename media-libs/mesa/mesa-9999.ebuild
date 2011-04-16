@@ -214,14 +214,6 @@ src_configure() {
 		ewarn "drivers will be built."
 	fi
 	if use gallium; then
-		elog "You have enabled gallium infrastructure."
-		elog "This infrastructure currently support these drivers:"
-		elog "    Intel: works only i915 and i965 somehow."
-		elog "    LLVMpipe: Software renderer."
-		elog "    Nouveau: Support for nVidia NV30 and later cards."
-		elog "    Radeon: Newest implementation of r300-r700 driver."
-		elog "    Svga: VMWare Virtual GPU driver."
-		echo
 		myconf+="
 			--with-state-trackers=glx,dri$(use egl && echo ",egl")$(use openvg && echo ",vega")$(use d3d && echo ",d3d1x")
 			$(use_enable llvm gallium-llvm)
