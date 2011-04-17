@@ -112,7 +112,7 @@ EAUTORECONF_DEPEND+="
 	>=sys-devel/libtool-2.2.6a
 	sys-devel/m4"
 if [[ ${PN} != util-macros ]] ; then
-	EAUTORECONF_DEPEND+=" >=x11-misc/util-macros-1.12.0"
+	EAUTORECONF_DEPEND+=" >=x11-misc/util-macros-1.13.0"
 	# Required even by xorg-server
 	[[ ${PN} == "font-util" ]] || EAUTORECONF_DEPEND+=" >=media-fonts/font-util-1.2.0"
 fi
