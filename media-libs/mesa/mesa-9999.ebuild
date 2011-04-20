@@ -7,7 +7,7 @@ EAPI=3
 EGIT_REPO_URI="git://anongit.freedesktop.org/mesa/mesa"
 
 if [[ ${PV} = 9999* ]]; then
-	GIT_ECLASS="git"
+	GIT_ECLASS="git-2"
 	EXPERIMENTAL="true"
 fi
 
@@ -124,7 +124,7 @@ pkg_setup() {
 }
 
 src_unpack() {
-	[[ $PV = 9999* ]] && git_src_unpack || base_src_unpack
+	[[ $PV = 9999* ]] && git-2_src_unpack || base_src_unpack
 }
 
 src_prepare() {
@@ -155,7 +155,6 @@ src_prepare() {
 			"${S}"/src/mesa/shader/slang/library/Makefile || die
 	fi
 
-	[[ $PV = 9999* ]] && git_src_prepare
 	base_src_prepare
 
 	eautoreconf
@@ -225,7 +224,7 @@ src_configure() {
 			$(use_enable video_cards_nouveau gallium-nouveau)
 			$(use_enable video_cards_intel gallium-i915)
 			$(use_enable video_cards_intel gallium-i965)
-			$(use_enable video_cards_radeon gallium-radeon)
+			$(use_enable video_cards_radeon gallium-r300)
 			$(use_enable video_cards_radeon gallium-r600)
 		"
 		if use video_cards_i915 || \
@@ -242,9 +241,9 @@ src_configure() {
 		fi
 		if use video_cards_r300 || \
 				use video_cards_radeon; then
-			myconf+=" --enable-gallium-radeon"
+			myconf+=" --enable-gallium-r300"
 		else
-			myconf+=" --disable-gallium-radeon"
+			myconf+=" --disable-gallium-r300"
 		fi
 		if use video_cards_r600 || \
 				use video_cards_radeon; then
@@ -360,7 +359,7 @@ pkg_postinst() {
 	if use classic || use gallium; then
 		eselect mesa set --auto
 	fi
-	
+
 	# warn about patent encumbered texture-float
 	if use !bindist; then
 		elog "USE=\"bindist\" was not set. Potentially patent encumbered code was"
