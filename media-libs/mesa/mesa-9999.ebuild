@@ -45,7 +45,7 @@ for card in ${VIDEO_CARDS}; do
 done
 
 IUSE="${IUSE_VIDEO_CARDS}
-	bindist +classic d3d debug +egl +gallium gles llvm motif +nptl openvg pic selinux shared-dricore wayland kernel_FreeBSD"
+	bindist +classic d3d debug +egl +gallium gles +llvm motif +nptl openvg pic selinux shared-dricore wayland kernel_FreeBSD"
 
 LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.24"
 # not a runtime dependency of this package, but dependency of packages which
@@ -74,7 +74,7 @@ RDEPEND="${EXTERNAL_DEPEND}
 	d3d? ( app-emulation/wine )
 	motif? ( x11-libs/openmotif )
 	gallium? (
-		llvm? ( >=sys-devel/llvm-2.7 )
+		llvm? ( >=sys-devel/llvm-2.9 )
 	)
 	wayland? ( x11-base/wayland )
 	${LIBDRM_DEPSTRING}[video_cards_nouveau?,video_cards_vmware?]
