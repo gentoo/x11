@@ -207,7 +207,7 @@ pkg_postinst() {
 
 pkg_postrm() {
 	# Get rid of module dir to ensure opengl-update works properly
-	if [[ -z ${REPLACED_BY} && -e ${ROOT}/usr/$(get_libdir)/xorg/modules ]]; then
+	if [[ -z ${REPLACED_BY_VERSION} && -e ${ROOT}/usr/$(get_libdir)/xorg/modules ]]; then
 		rm -rf "${ROOT}"/usr/$(get_libdir)/xorg/modules
 	fi
 }
