@@ -188,7 +188,7 @@ pkg_postinst() {
 	# sets up libGL and DRI2 symlinks if needed (ie, on a fresh install)
 	eselect opengl set xorg-x11 --use-old
 
-	if [[ ${PV} != 9999 && $(get_minor_version ${REPLACING_VERSIONS}) != $(get_minor_version ${PV}) ]]; then
+	if [[ ${PV} != 9999 && $(get_version_component_range 2 ${REPLACING_VERSIONS}) != $(get_version_component_range 2 ${PV}) ]]; then
 		elog "You should consider reading upgrade guide for this release:"
 		elog "	http://www.gentoo.org/proj/en/desktop/x/x11/xorg-server-$(get_version_component_range 1-2)-upgrade-guide.xml"
 		echo
