@@ -9,7 +9,7 @@ XORG_BASE_INDIVIDUAL_URI=http://xcb.freedesktop.org/dist
 XORG_DOC=doc
 inherit xorg-2
 
-EGIT_REPO_URI="git://anongit.freedesktop.org/git/xcb/util-image"
+EGIT_REPO_URI="git://anongit.freedesktop.org/git/xcb/util-keysyms"
 EGIT_HAS_SUBMODULES=yes
 
 DESCRIPTION="X C-language Bindings sample implementations"
