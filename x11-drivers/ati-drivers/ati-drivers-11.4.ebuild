@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit eutils multilib linux-mod toolchain-funcs versionator
+inherit eutils multilib linux-info linux-mod toolchain-funcs versionator
 
 DESCRIPTION="Ati precompiled drivers for r600 (HD Series) and newer chipsets"
 HOMEPAGE="http://www.ati.com"
@@ -217,6 +217,15 @@ _check_kernel_config() {
 }
 
 pkg_pretend() {
+	# workaround until bug 365543 is solved
+	if use modules; then
+		linux-info_pkg_setup
+		require_configured_kernel
+		_check_kernel_config
+	fi
+}
+
+pkg_setup() {
 	if use modules; then
 		MODULE_NAMES="fglrx(video:${S}/${FOLDER_PREFIX}/lib/modules/fglrx/build_mod/2.6.x)"
 		BUILD_TARGETS="kmod_build"
@@ -228,11 +237,7 @@ pkg_pretend() {
 		else
 			BUILD_PARAMS="${BUILD_PARAMS} CFLAGS_MODULE+=-DCOMPAT_ALLOC_USER_SPACE=compat_alloc_user_space"
 		fi
-		_check_kernel_config
 	fi
-}
-
-pkg_setup() {
 	# Define module dir.
 	MODULE_DIR="${S}/${FOLDER_PREFIX}/lib/modules/fglrx/build_mod"
 	# get the xorg-server version and set BASE_DIR for that
