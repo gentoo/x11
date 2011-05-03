@@ -12,7 +12,6 @@
 =x11-apps/xinput-9999
 =x11-apps/xkbevd-9999
 =x11-apps/xkbutils-9999
-=x11-apps/xlsclients-9999
 =x11-apps/xman-9999
 =x11-apps/xrandr-9999
 =x11-apps/xwininfo-9999
