@@ -11,6 +11,4 @@ IUSE=""
 
 RDEPEND=">=x11-base/xorg-server-1.6.3"
 DEPEND="${RDEPEND}
-	>=sys-kernel/linux-headers-2.6
-	x11-proto/inputproto
-	x11-proto/xproto"
+	>=sys-kernel/linux-headers-2.6"

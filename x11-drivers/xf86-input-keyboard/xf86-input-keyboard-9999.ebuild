@@ -11,8 +11,4 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-
 IUSE=""
 
 RDEPEND=">=x11-base/xorg-server-1.6.3"
-DEPEND="${RDEPEND}
-	x11-proto/inputproto
-	x11-proto/kbproto
-	x11-proto/randrproto
-	x11-proto/xproto"
+DEPEND="${RDEPEND}"

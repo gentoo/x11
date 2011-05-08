@@ -17,13 +17,12 @@ RDEPEND="
 	>=x11-libs/libXi-1.2
 	>=x11-libs/libXtst-1.1.0"
 DEPEND="${RDEPEND}
-	x11-proto/inputproto
 	>=x11-proto/recordproto-1.14"
 
-DOCS=( "README" )
+DOCS=( README )
 
-pkg_postinst() {
-	xorg-2_pkg_postinst
+pkg_pretend() {
+	linux-info_pkg_setup
 	# Just a friendly warning
 	if ! linux_config_exists \
 			|| ! linux_chkconfig_present INPUT_EVDEV; then

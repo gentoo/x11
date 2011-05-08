@@ -23,10 +23,7 @@ RDEPEND="!x11-drivers/linuxwacom
 	x11-libs/libXi
 	x11-libs/libXrandr"
 DEPEND="${RDEPEND}
-	x11-proto/inputproto
-	x11-proto/kbproto
-	x11-proto/randrproto
-	x11-proto/xproto"
+	x11-proto/randrproto"
 
 pkg_setup() {
 	linux-info_pkg_setup
@@ -42,8 +39,8 @@ src_install() {
 	rm -rf "${D}"/usr/share/hal
 }
 
-pkg_postinst() {
-	xorg-2_pkg_postinst
+pkg_pretend() {
+	linux-info_pkg_setup
 
 	if ! linux_config_exists \
 			|| ! linux_chkconfig_present TABLET_USB_WACOM \
