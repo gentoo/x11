@@ -32,7 +32,7 @@ src_configure() {
 
 src_compile() {
 	tc-export CC
-	emake LDLIBS='-lGL -lm' src/xdemos/{glxgears,glxinfo}
+	emake CPPFLAGS='-Isrc/util' LDLIBS='-lX11 -lGL -lm' src/xdemos/{glxgears,glxinfo}
 }
 
 src_install() {
