@@ -124,12 +124,13 @@ pkg_setup() {
 }
 
 src_unpack() {
-	[[ $PV = 9999* ]] && git-2_src_unpack || base_src_unpack
+	default
+	[[ $PV = 9999* ]] && git-2_src_unpack
 }
 
 src_prepare() {
 	# apply patches
-	if [[ ${PV} != 9999* && -n ${SRC_PATCHES} ]]; then
+	if [[ -n ${SRC_PATCHES} ]]; then
 		EPATCH_FORCE="yes" \
 		EPATCH_SOURCE="${WORKDIR}/patches" \
 		EPATCH_SUFFIX="patch" \
