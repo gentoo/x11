@@ -200,6 +200,19 @@ _check_kernel_config() {
 		failed=1
 	fi
 
+	kernel_is ge 2 6 37 && kernel_is le 2 6 38 && if ! linux_chkconfig_present BKL ; then
+		eerror "${P} requires BKL."
+		eerror "Please enable the Big Kernel Lock:"
+		eerror "Kernel hacking  --->"
+		eerror "    [*] Big Kernel Lock"
+		eerror "in the kernel config."
+		eerror "or add"
+		eerror "    CONFIG_BKL=y"
+		eerror "in /usr/src/linux/.config"
+		error+=" BKL disabled;"
+		failed=1
+	fi
+
 	[[ ${failed} -ne 0 ]] && die "${error}"
 }
 
