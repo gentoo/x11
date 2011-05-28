@@ -4,11 +4,11 @@
 
 EAPI=3
 
-inherit autotools autotools-utils multilib
+inherit autotools-utils multilib
 
 DESCRIPTION="Helper library for	S3TC texture (de)compression"
 HOMEPAGE="http://cgit.freedesktop.org/~mareko/libtxc_dxtn/"
-SRC_URI="${HOMEPAGE}snapshot/${P}.tar.bz2"
+SRC_URI="http://people.freedesktop.org/~cbrill/${PN}/${P}.tar.bz2"
 
 LICENSE="MIT"
 SLOT="0"
@@ -36,11 +36,6 @@ foreachabi() {
 		multilib_toolchain_setup ${ABI}
 		AUTOTOOLS_BUILD_DIR=${WORKDIR}/${ABI} "${@}"
 	done
-}
-
-src_prepare() {
-	autotools-utils_src_prepare
-	eautoreconf
 }
 
 src_configure() {
