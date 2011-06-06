@@ -26,8 +26,8 @@ CONFIG_CHECK="~BACKLIGHT_CLASS_DEVICE ~DEBUG_FS !DRM ~FB_CFB_FILLRECT ~FB_CFB_CO
 
 pkg_setup() {
 	linux-mod_pkg_setup
-	if kernel_is le 2 6 34; then
-		eerror "You need kernel 2.6.35-rc3 for nouveau-drm"
+	if kernel_is le 2 6 39; then
+		eerror "You need kernel 3.0 for nouveau-drm"
 		die "Incompatible kernel version"
 	fi
 	elog "Use in-kernel nouveau drm if you experience build issues."
