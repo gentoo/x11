@@ -75,7 +75,6 @@ IUSE_VIDEO_CARDS="
 	video_cards_virtualbox
 	video_cards_vmware
 	video_cards_voodoo
-	video_cards_xgi
 	video_cards_fglrx
 	video_cards_nvidia
 "
@@ -129,7 +128,7 @@ PDEPEND="
 	video_cards_sisusb?        ( x11-drivers/xf86-video-sisusb )
 	video_cards_suncg14?       ( x11-drivers/xf86-video-suncg14 )
 	video_cards_suncg3?        ( x11-drivers/xf86-video-suncg3 )
-	video_cards_suncg6?        ( !x11-drivers/xf86-video-suncg6 )
+	video_cards_suncg6?        ( x11-drivers/xf86-video-suncg6 )
 	video_cards_sunffb?        ( x11-drivers/xf86-video-sunffb )
 	video_cards_sunleo?        ( x11-drivers/xf86-video-sunleo )
 	video_cards_suntcx?        ( x11-drivers/xf86-video-suntcx )
@@ -143,7 +142,6 @@ PDEPEND="
 	video_cards_virtualbox?    ( x11-drivers/xf86-video-virtualbox )
 	video_cards_vmware?        ( x11-drivers/xf86-video-vmware )
 	video_cards_voodoo?        ( x11-drivers/xf86-video-voodoo )
-	video_cards_xgi?           ( x11-drivers/xf86-video-xgi )
 
 	!x11-drivers/xf86-input-citron
 	!x11-drivers/xf86-input-elographics
