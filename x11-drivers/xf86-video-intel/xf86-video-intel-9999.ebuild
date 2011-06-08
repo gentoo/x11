@@ -10,7 +10,7 @@ inherit linux-info xorg-2
 DESCRIPTION="X.Org driver for Intel cards"
 
 KEYWORDS="~amd64 ~ia64 ~x86 -x86-fbsd"
-IUSE=""
+IUSE="sna"
 
 RDEPEND="x11-libs/libXext
 	x11-libs/libXfixes
@@ -22,6 +22,7 @@ pkg_setup() {
 	xorg-2_pkg_setup
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable dri)
+		$(use_enable sna)
 		--enable-xvmc
 	)
 }
