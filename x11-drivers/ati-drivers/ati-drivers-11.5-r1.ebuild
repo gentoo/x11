@@ -127,7 +127,7 @@ QA_DT_HASH="
 _check_kernel_config() {
 	local failed=0
 	local error=""
-	if ! kernel_is 2 6; then
+	if kernel_is -lt 2 6; then
 		eerror "You need a 2.6 linux kernel to compile against!"
 		die "No 2.6 Kernel found"
 	fi
