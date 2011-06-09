@@ -16,7 +16,9 @@ RDEPEND="x11-libs/libXext
 	x11-libs/libXfixes
 	x11-libs/libXvMC
 	>=x11-libs/libxcb-1.5"
-DEPEND="${RDEPEND}"
+# Requires dri2proto-2.6 (unreleased)
+DEPEND="${RDEPEND}
+	>=x11-proto/dri2proto-2.6"
 
 pkg_setup() {
 	xorg-2_pkg_setup
