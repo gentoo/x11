@@ -25,7 +25,8 @@ IUSE="${IUSE_VIDEO_CARDS} +libkms"
 RESTRICT="test" # see bug #236845
 
 RDEPEND="dev-libs/libpthread-stubs"
-DEPEND="${RDEPEND}"
+DEPEND="${RDEPEND}
+	>=x11-libs/libpciaccess-0.10"
 
 PATCHES=(
 	"${FILESDIR}"/${PN}-2.4.23-solaris.patch
