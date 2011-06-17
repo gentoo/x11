@@ -84,7 +84,7 @@ QA_WX_LOAD="
 QA_PRESTRIPPED="
 	usr/lib\(32\|64\)\?/libXvBAW.so.1.0
 	usr/lib\(32\|64\)\?/opengl/ati/lib/libGL.so.1.2
-	usr/lib\(32\|64\)\?/opengl/ati/extensions/libglx.so
+	usr/lib\(32\|64\)\?/opengl/ati/extensions/fglrx-libglx.so
 	usr/lib\(32\|64\)\?/xorg/modules/glesx.so
 	usr/lib\(32\|64\)\?/libAMDXvBA.so.1.0
 	usr/lib\(32\|64\)\?/libaticaldd.so
@@ -127,7 +127,7 @@ QA_DT_HASH="
 _check_kernel_config() {
 	local failed=0
 	local error=""
-	if ! kernel_is 2 6; then
+	if ! kernel_is ge 2 6; then
 		eerror "You need a 2.6 linux kernel to compile against!"
 		die "No 2.6 Kernel found"
 	fi
@@ -200,7 +200,7 @@ _check_kernel_config() {
 		failed=1
 	fi
 
-	kernel_is ge 2 6 37 && if ! linux_chkconfig_present BKL ; then
+	kernel_is ge 2 6 37 && kernel_is le 2 6 38 && if ! linux_chkconfig_present BKL ; then
 		eerror "${P} requires BKL."
 		eerror "Please enable the Big Kernel Lock:"
 		eerror "Kernel hacking  --->"
@@ -290,8 +290,10 @@ src_prepare() {
 		fi
 	fi
 
-	# Fix a known compilation error
-	epatch "${FILESDIR}"/ati-drivers-fix_compilation-bug-297322.patch
+	# Experimental 2.6.39 support
+	if kernel_is -ge 2 6 39 ; then
+		epatch "${FILESDIR}"/ati-drivers-2.6.39.patch || die "epatch failed"
+	fi
 
 	# These are the userspace utilities that we also have source for.
 	# We rebuild these later.
@@ -423,15 +425,6 @@ src_install() {
 	# We cleaned out the compilable stuff in src_unpack
 	dobin "${ARCH_DIR}"/usr/X11R6/bin/*
 
-	# lib.
-	exeinto /usr/$(get_libdir)
-	# Everything except for the libGL.so installed in src_install-libs.
-	doexe $(find "${ARCH_DIR}"/usr/X11R6/${PKG_LIBDIR} \
-		-maxdepth 1 -type f -name '*.so*' -not -name '*libGL.so*')
-	insinto /usr/$(get_libdir)
-	doins $(find "${ARCH_DIR}"/usr/X11R6/${PKG_LIBDIR} \
-		-maxdepth 1 -type f -not -name '*.so*')
-
 	# Common files.
 	# etc.
 	insinto /etc/ati
@@ -528,6 +521,15 @@ src_install-libs() {
 	dosym /usr/$(get_libdir)/opengl/xorg-x11/extensions/libglx.so \
 		${ATI_ROOT}/extensions/FGL.renamed.libglx.so
 	dosym fglrx-libglx.so ${ATI_ROOT}/extensions/libglx.so
+
+	# other libs
+	exeinto /usr/$(get_libdir)
+	# Everything except for the libGL.so installed some row above
+	doexe $(find "${MY_ARCH_DIR}"/usr/X11R6/${pkglibdir} \
+		-maxdepth 1 -type f -name '*.so*' -not -name '*libGL.so*')
+	insinto /usr/$(get_libdir)
+	doins $(find "${MY_ARCH_DIR}"/usr/X11R6/${pkglibdir} \
+		-maxdepth 1 -type f -not -name '*.so*')
 
 	# DRI modules, installed into the path used by recent versions of mesa.
 	exeinto /usr/$(get_libdir)/dri
