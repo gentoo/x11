@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit xorg-2
+inherit xorg-2 flag-o-matic
 
 DESCRIPTION="window information utility for X"
 
@@ -15,3 +15,11 @@ RDEPEND=">=x11-libs/libxcb-1.6
 	x11-libs/libX11"
 DEPEND="${RDEPEND}
 	>=x11-proto/xproto-7.0.17"
+
+pkg_setup() {
+	# interix has a _very_ old iconv in libc, however, including
+	# iconv.h redefines those symbols to libiconv_*, which then
+	# are unresolved, as the configure check is old and dumb.
+	[[ ${CHOST} == *-interix* ]] &&
+		append-libs -liconv
+}
