@@ -212,7 +212,10 @@ src_configure() {
 	"
 	if use egl; then
 		use shared-glapi || die "egl needs shared-glapi. Please either enable shared-glapi or disable the egl use flag ."
-		myconf+="--with-egl-platforms=$(use wayland && echo "wayland,")drm,x11"
+		myconf+="
+			--with-egl-platforms=$(use wayland && echo "wayland,")drm,x11
+			$(use_enable gallium gallium-egl)
+		"
 	fi
 
 	if use !gallium && use !classic; then
