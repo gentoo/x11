@@ -28,9 +28,9 @@ dynamic_libgl_install() {
 		dodir /usr/$(get_libdir)/opengl/xorg-x11/include
 		local x=""
 		# glext.h added for #54984
-		for x in "${D}"/usr/include/GL/{glxtokens.h,glxmd.h,glxproto.h}; do
+		for x in "${ED}"/usr/include/GL/{glxtokens.h,glxmd.h,glxproto.h}; do
 			if [[ -f ${x} || -L ${x} ]]; then
-				mv -f "${x}" "${D}"/usr/$(get_libdir)/opengl/xorg-x11/include
+				mv -f "${x}" "${ED}"/usr/$(get_libdir)/opengl/xorg-x11/include
 			fi
 		done
 	eend 0
