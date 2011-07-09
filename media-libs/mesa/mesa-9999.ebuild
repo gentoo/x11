@@ -61,7 +61,7 @@ RDEPEND="${EXTERNAL_DEPEND}
 	!<=x11-proto/xf86driproto-2.0.3
 	classic? ( app-admin/eselect-mesa )
 	gallium? ( app-admin/eselect-mesa )
-	>=app-admin/eselect-opengl-1.1.1-r2
+	>=app-admin/eselect-opengl-1.2.2
 	dev-libs/expat
 	dev-libs/libxml2[python]
 	x11-libs/libICE
@@ -130,12 +130,16 @@ src_unpack() {
 
 src_prepare() {
 	# apply patches
-	if [[ -n ${SRC_PATCHES} ]]; then
+	if [[ ${PV} != 9999* && -n ${SRC_PATCHES} ]]; then
 		EPATCH_FORCE="yes" \
 		EPATCH_SOURCE="${WORKDIR}/patches" \
 		EPATCH_SUFFIX="patch" \
 		epatch
 	fi
+
+	# fix for hardened, bug 240956
+	[[ ${PV} != 9999* ]] && epatch "${FILESDIR}"/glx_ro_text_segm.patch
+
 	# FreeBSD 6.* doesn't have posix_memalign().
 	if [[ ${CHOST} == *-freebsd6.* ]]; then
 		sed -i \
@@ -250,6 +254,13 @@ src_configure() {
 		fi
 	fi
 
+	# x86 hardened needs glx-rts, bug 240956
+	if use hardened; then
+		myconf+="
+			$(use_enable x86 glx-rts)
+		"
+	fi
+
 	# --with-driver=dri|xlib|osmesa || do we need osmesa?
 	econf \
 		--disable-option-checking \
@@ -296,7 +307,7 @@ src_install() {
 	ebegin "Moving libGL and friends for dynamic switching"
 		dodir /usr/$(get_libdir)/opengl/${OPENGL_DIR}/{lib,extensions,include}
 		local x
-		for x in "${ED}"/usr/$(get_libdir)/libGL.{la,a,so*}; do
+		for x in "${ED}"/usr/$(get_libdir)/lib{EGL,GL,OpenVG}.{la,a,so*}; do
 			if [ -f ${x} -o -L ${x} ]; then
 				mv -f "${x}" "${ED}"/usr/$(get_libdir)/opengl/${OPENGL_DIR}/lib \
 					|| die "Failed to move ${x}"
