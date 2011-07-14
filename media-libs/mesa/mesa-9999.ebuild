@@ -45,7 +45,7 @@ for card in ${VIDEO_CARDS}; do
 done
 
 IUSE="${IUSE_VIDEO_CARDS}
-	bindist +classic d3d debug +egl +gallium gles +llvm motif +nptl openvg pic selinux shared-dricore +shared-glapi wayland kernel_FreeBSD"
+	bindist +classic d3d debug +egl g3dvl +gallium gles +llvm motif +nptl openvg pic selinux shared-dricore +shared-glapi vaapi vdpau wayland xvmc kernel_FreeBSD"
 
 LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.24"
 # not a runtime dependency of this package, but dependency of packages which
@@ -76,7 +76,10 @@ RDEPEND="${EXTERNAL_DEPEND}
 	gallium? (
 		llvm? ( >=sys-devel/llvm-2.9 )
 	)
+	vaapi? ( x11-libs/libva )
+	vdpau? ( >=x11-libs/libvdpau-0.4.1 )
 	wayland? ( x11-base/wayland )
+	xvmc? ( x11-libs/libXvMC )
 	${LIBDRM_DEPSTRING}[video_cards_nouveau?,video_cards_vmware?]
 "
 for card in ${INTEL_CARDS}; do
@@ -269,12 +272,16 @@ src_configure() {
 		--without-demos \
 		--enable-xcb \
 		$(use_enable debug) \
+		$(use_enable g3dvl) \
 		$(use_enable motif glw) \
 		$(use_enable motif) \
 		$(use_enable nptl glx-tls) \
 		$(use_enable !pic asm) \
 		$(use_enable shared-dricore) \
 		$(use_enable shared-glapi) \
+		$(use_enable vaapi va) \
+		$(use_enable vdpau) \
+		$(use_enable xvmc) \
 		--with-dri-drivers=${DRI_DRIVERS} \
 		--with-gallium-drivers=${GALLIUM_DRIVERS} \
 		${myconf}
