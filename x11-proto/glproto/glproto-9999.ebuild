@@ -1,4 +1,4 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -9,7 +9,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86
 LICENSE="SGI-B-2.0"
 IUSE=""
 
-RDEPEND="app-admin/eselect-opengl"
+RDEPEND=">=app-admin/eselect-opengl-1.2.3"
 DEPEND=""
 
 src_install() {
@@ -19,7 +19,7 @@ src_install() {
 
 pkg_postinst() {
 	xorg-2_pkg_postinst
-	eselect opengl set --use-old xorg-x11
+	eselect opengl set --ignore-missing --use-old xorg-x11
 }
 
 dynamic_libgl_install() {
