@@ -3,6 +3,7 @@
 # $Header: $
 
 EAPI=4
+XORG_DRI="always"
 inherit linux-info xorg-2
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/nouveau/${PN}"
