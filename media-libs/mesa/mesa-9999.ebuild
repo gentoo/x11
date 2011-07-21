@@ -96,6 +96,8 @@ done
 DEPEND="${RDEPEND}
 	=dev-lang/python-2*
 	dev-util/pkgconfig
+	sys-devel/bison
+	sys-devel/flex
 	x11-misc/makedepend
 	x11-proto/inputproto
 	>=x11-proto/xextproto-7.0.99.1
