@@ -62,7 +62,7 @@ DEPEND="${RDEPEND}
 	>=x11-proto/damageproto-1.1
 	>=x11-proto/fixesproto-4.1
 	>=x11-proto/fontsproto-2.0.2
-	>=x11-proto/glproto-1.4.11
+	>=x11-proto/glproto-1.4.14
 	>=x11-proto/inputproto-1.9.99.902
 	>=x11-proto/kbproto-1.0.3
 	>=x11-proto/randrproto-1.2.99.3
@@ -78,7 +78,7 @@ DEPEND="${RDEPEND}
 	>=x11-proto/xf86rushproto-1.1.2
 	>=x11-proto/xf86vidmodeproto-2.2.99.1
 	>=x11-proto/xineramaproto-1.1.3
-	>=x11-proto/xproto-7.0.17
+	>=x11-proto/xproto-7.0.22
 	dmx? (
 		>=x11-proto/dmxproto-2.2.99.1
 		doc? (
