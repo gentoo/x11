@@ -221,7 +221,7 @@ src_configure() {
 	if use egl; then
 		use shared-glapi || die "egl needs shared-glapi. Please either enable shared-glapi or disable the egl use flag ."
 		myconf+="
-			--with-egl-platforms=$(use wayland && echo "wayland,")drm,x11
+			--with-egl-platforms=x11,$(use wayland && echo "wayland,")drm
 			$(use_enable gallium gallium-egl)
 		"
 	fi
