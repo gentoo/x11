@@ -19,7 +19,7 @@ IUSE=""
 LICENSE="MIT"
 SLOT="0"
 
-RDEPEND="x11-apps/xkbcomp
+RDEPEND=">=x11-apps/xkbcomp-1.2.1
 	>=x11-libs/libX11-1.4.2"
 DEPEND="${RDEPEND}
 	x11-proto/xproto
