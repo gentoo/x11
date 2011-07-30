@@ -54,6 +54,8 @@ DEPEND="${RDEPEND}
 	x11-proto/xf86vidmodeproto
 	x11-proto/xineramaproto
 	x11-libs/libXtst
+	sys-apps/findutils
+	app-misc/pax-utils
 "
 
 EMULTILIB_PKG="true"
@@ -290,14 +292,6 @@ src_prepare() {
 		fi
 	fi
 
-	# Fix a known compilation error
-	epatch "${FILESDIR}"/ati-drivers-fix_compilation-bug-297322.patch
-
-	# Experimental 2.6.39 support
-	if kernel_is -ge 2 6 39 ; then
-		epatch "${FILESDIR}"/ati-drivers-2.6.39.patch || die "epatch failed"
-	fi
-
 	# These are the userspace utilities that we also have source for.
 	# We rebuild these later.
 	rm \
@@ -428,15 +422,6 @@ src_install() {
 	# We cleaned out the compilable stuff in src_unpack
 	dobin "${ARCH_DIR}"/usr/X11R6/bin/*
 
-	# lib.
-	exeinto /usr/$(get_libdir)
-	# Everything except for the libGL.so installed in src_install-libs.
-	doexe $(find "${ARCH_DIR}"/usr/X11R6/${PKG_LIBDIR} \
-		-maxdepth 1 -type f -name '*.so*' -not -name '*libGL.so*')
-	insinto /usr/$(get_libdir)
-	doins $(find "${ARCH_DIR}"/usr/X11R6/${PKG_LIBDIR} \
-		-maxdepth 1 -type f -not -name '*.so*')
-
 	# Common files.
 	# etc.
 	insinto /etc/ati
@@ -534,6 +519,15 @@ src_install-libs() {
 		${ATI_ROOT}/extensions/FGL.renamed.libglx.so
 	dosym fglrx-libglx.so ${ATI_ROOT}/extensions/libglx.so
 
+	# other libs
+	exeinto /usr/$(get_libdir)
+	# Everything except for the libGL.so installed some row above
+	doexe $(find "${MY_ARCH_DIR}"/usr/X11R6/${pkglibdir} \
+		-maxdepth 1 -type f -name '*.so*' -not -name '*libGL.so*')
+	insinto /usr/$(get_libdir)
+	doins $(find "${MY_ARCH_DIR}"/usr/X11R6/${pkglibdir} \
+		-maxdepth 1 -type f -not -name '*.so*')
+
 	# DRI modules, installed into the path used by recent versions of mesa.
 	exeinto /usr/$(get_libdir)/dri
 	doexe "${MY_ARCH_DIR}"/usr/X11R6/${pkglibdir}/modules/dri/fglrx_dri.so
@@ -548,6 +542,15 @@ src_install-libs() {
 	fi
 	echo "LIBGL_DRIVERS_PATH=/usr/$(get_libdir)/dri" > "${envname}"
 	doenvd "${envname}"
+
+	# Silence the QA notice by creating missing soname symlinks
+	for so in $(find "${D}"/usr/$(get_libdir) -maxdepth 1 -name *.so.[0-9].[0-9])
+	do
+		local soname=${so##*/}
+		## let's keep also this alternative way ;)
+		#dosym ${soname} /usr/$(get_libdir)/${soname%.[0-9]}
+		dosym ${soname} /usr/$(get_libdir)/$(scanelf -qF "#f%S" ${so})
+	done
 }
 
 pkg_postinst() {

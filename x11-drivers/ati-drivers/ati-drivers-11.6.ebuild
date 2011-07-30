@@ -545,6 +545,14 @@ src_install-libs() {
 	fi
 	echo "LIBGL_DRIVERS_PATH=/usr/$(get_libdir)/dri" > "${envname}"
 	doenvd "${envname}"
+
+	# Silence the QA notice by creating missing soname symlinks
+	for so in $(find "${D}"/usr/$(get_libdir) -maxdepth 1 -name *.so.[0-9].[0-9])
+	do
+		local soname=${so##*/}
+		einfo dosym ${soname} /usr/$(get_libdir)/${soname%.[0-9]}
+		dosym ${soname} /usr/$(get_libdir)/${soname%.[0-9]}
+	done
 }
 
 pkg_postinst() {
