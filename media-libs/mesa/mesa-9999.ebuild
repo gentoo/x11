@@ -142,7 +142,7 @@ src_prepare() {
 		epatch
 	fi
 
-	# fix for hardened, bug 240956
+	# fix for hardened pax_kernel, bug 240956
 	[[ ${PV} != 9999* ]] && epatch "${FILESDIR}"/glx_ro_text_segm.patch
 
 	# FreeBSD 6.* doesn't have posix_memalign().
@@ -259,8 +259,8 @@ src_configure() {
 		fi
 	fi
 
-	# x86 hardened needs glx-rts, bug 240956
-	if use hardened; then
+	# x86 hardened pax_kernel needs glx-rts, bug 240956
+	if use pax_kernel; then
 		myconf+="
 			$(use_enable x86 glx-rts)
 		"
