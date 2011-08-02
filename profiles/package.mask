@@ -40,6 +40,7 @@
 =x11-libs/libXamine-9999
 =x11-libs/libXau-9999
 =x11-libs/libXaw-9999
+=x11-libs/libXaw3d-9999
 =x11-libs/libxcb-9999
 =x11-libs/libXcomposite-9999
 =x11-libs/libXcursor-9999
