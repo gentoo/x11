@@ -217,7 +217,6 @@ src_configure() {
 		$(use_enable gles gles1)
 		$(use_enable gles gles2)
 		$(use_enable egl)
-		$(use_enable openvg)
 	"
 	if use egl; then
 		use shared-glapi || die "egl needs shared-glapi. Please either enable shared-glapi or disable the egl use flag ."
@@ -235,6 +234,7 @@ src_configure() {
 		myconf+="
 			--with-state-trackers=glx,dri$(use egl && echo ",egl")$(use openvg && echo ",vega")$(use d3d && echo ",d3d1x")
 			$(use_enable llvm gallium-llvm)
+			$(use_enable openvg)
 		"
 		gallium_enable swrast
 		gallium_enable video_cards_vmware svga
