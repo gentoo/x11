@@ -45,7 +45,7 @@ for card in ${VIDEO_CARDS}; do
 done
 
 IUSE="${IUSE_VIDEO_CARDS}
-	bindist +classic d3d debug +egl g3dvl +gallium gbm gles +llvm motif +nptl openvg pax_kernel pic selinux shared-dricore +shared-glapi vdpau wayland xvmc kernel_FreeBSD"
+	bindist +classic d3d debug +egl g3dvl +gallium gbm gles +llvm +nptl openvg pax_kernel pic selinux shared-dricore +shared-glapi vdpau wayland xvmc kernel_FreeBSD"
 
 LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.24"
 # not a runtime dependency of this package, but dependency of packages which
@@ -72,7 +72,6 @@ RDEPEND="${EXTERNAL_DEPEND}
 	x11-libs/libXmu
 	x11-libs/libXxf86vm
 	d3d? ( app-emulation/wine )
-	motif? ( x11-libs/openmotif )
 	gallium? (
 		llvm? ( >=sys-devel/llvm-2.9 )
 	)
@@ -276,8 +275,6 @@ src_configure() {
 		$(use_enable debug) \
 		$(use_enable g3dvl) \
 		$(use_enable gbm) \
-		$(use_enable motif glw) \
-		$(use_enable motif) \
 		$(use_enable nptl glx-tls) \
 		$(use_enable !pic asm) \
 		$(use_enable shared-dricore) \
