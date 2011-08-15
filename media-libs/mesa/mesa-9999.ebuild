@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI=4
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/mesa/mesa"
 
@@ -11,7 +11,7 @@ if [[ ${PV} = 9999* ]]; then
 	EXPERIMENTAL="true"
 fi
 
-inherit base autotools multilib flag-o-matic python toolchain-funcs ${GIT_ECLASS}
+inherit base autotools multilib flag-o-matic toolchain-funcs ${GIT_ECLASS}
 
 OPENGL_DIR="xorg-x11"
 
@@ -122,9 +122,6 @@ pkg_setup() {
 
 	# recommended by upstream
 	append-flags -ffast-math
-
-	python_set_active_version 2
-	python_pkg_setup
 }
 
 src_unpack() {
@@ -290,12 +287,12 @@ src_install() {
 	base_src_install
 
 	if use !bindist; then
-		dodoc docs/patents.txt || die
+		dodoc docs/patents.txt
 	fi
 
 	# Save the glsl-compiler for later use
 	if ! tc-is-cross-compiler; then
-		dobin "${S}"/src/glsl/glsl_compiler || die
+		dobin "${S}"/src/glsl/glsl_compiler
 	fi
 	# Remove redundant headers
 	# GLUT thing
@@ -306,7 +303,7 @@ src_install() {
 
 	# Install config file for eselect mesa
 	insinto /usr/share/mesa
-	newins "${FILESDIR}/eselect-mesa.conf.7.12" eselect-mesa.conf || die
+	newins "${FILESDIR}/eselect-mesa.conf.7.12" eselect-mesa.conf
 
 	# Move libGL and others from /usr/lib to /usr/lib/opengl/blah/lib
 	# because user can eselect desired GL provider.
@@ -339,7 +336,7 @@ src_install() {
 					insinto "/usr/$(get_libdir)/dri/"
 					if [ -f "${S}/$(get_libdir)/${x}" ]; then
 						insopts -m0755
-						doins "${S}/$(get_libdir)/${x}" || die "failed to install ${x}"
+						doins "${S}/$(get_libdir)/${x}"
 					fi
 				fi
 			done
