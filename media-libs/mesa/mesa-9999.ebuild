@@ -54,8 +54,8 @@ REQUIRED_USE="
 	openvg? ( gallium )
 	egl? ( shared-glapi )
 	gallium? (
-		video_cards_r300?   ( llvm )
-		video_cards_radeon? ( llvm )
+		video_cards_r300?   ( x86? ( llvm ) amd64? ( llvm ) )
+		video_cards_radeon? ( x86? ( llvm ) amd64? ( llvm ) )
 	)
 	g3dvl? ( || ( vdpau xvmc ) )
 	vdpau? ( g3dvl )
