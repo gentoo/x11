@@ -57,6 +57,9 @@ REQUIRED_USE="
 		video_cards_r300?   ( llvm )
 		video_cards_radeon? ( llvm )
 	)
+	g3dvl? ( || ( vdpau xvmc ) )
+	vdpau? ( g3dvl )
+	xvmc?  ( g3dvl )
 	video_cards_i810?   ( classic )
 	video_cards_i915?   ( classic )
 	video_cards_mach64? ( classic )
@@ -252,6 +255,8 @@ src_configure() {
 			--with-state-trackers=glx,dri$(use egl && echo ",egl")$(use openvg && echo ",vega")$(use d3d && echo ",d3d1x")
 			$(use_enable llvm gallium-llvm)
 			$(use_enable openvg)
+			$(use_enable vdpau)
+			$(use_enable xvmc)
 		"
 		gallium_enable swrast
 		gallium_enable video_cards_vmware svga
@@ -292,8 +297,6 @@ src_configure() {
 		$(use_enable !pic asm) \
 		$(use_enable shared-dricore) \
 		$(use_enable shared-glapi) \
-		$(use_enable vdpau) \
-		$(use_enable xvmc) \
 		--with-dri-drivers=${DRI_DRIVERS} \
 		--with-gallium-drivers=${GALLIUM_DRIVERS} \
 		${myconf}

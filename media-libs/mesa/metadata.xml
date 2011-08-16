@@ -16,7 +16,7 @@
 	<flag name='pic'>disable optimized assembly code that is not PIC friendly</flag>
 	<flag name='shared-dricore'>Enable sharing of common code for classic DRI drivers.</flag>
 	<flag name='shared-glapi'>Enable sharing of common code for the OpenGL API.</flag>
-	<flag name='vdpau'>Enable the VDPAU acceleration interface.</flag>
-	<flag name='xvmc'>Enable the XvMC acceleration interface.</flag>
+	<flag name='vdpau'>Enable the VDPAU acceleration interface for the Gallium3D Video Layer.</flag>
+	<flag name='xvmc'>Enable the XvMC acceleration interface for the Gallium3D Video Layer.</flag>
 </use>
 </pkgmetadata>
