@@ -47,6 +47,30 @@ done
 IUSE="${IUSE_VIDEO_CARDS}
 	bindist +classic d3d debug +egl g3dvl +gallium gbm gles +llvm +nptl openvg pax_kernel pic selinux shared-dricore +shared-glapi vdpau wayland xvmc kernel_FreeBSD"
 
+REQUIRED_USE="
+	d3d?    ( gallium )
+	g3dvl?  ( gallium )
+	llvm?   ( gallium )
+	openvg? ( gallium )
+	egl? ( shared-glapi )
+	gallium? (
+		video_cards_r300?   ( llvm )
+		video_cards_radeon? ( llvm )
+	)
+	video_cards_i810?   ( classic )
+	video_cards_i915?   ( classic )
+	video_cards_mach64? ( classic )
+	video_cards_mga?    ( classic )
+	video_cards_r100?   ( classic )
+	video_cards_r128?   ( classic )
+	video_cards_r200?   ( classic )
+	video_cards_savage? ( classic )
+	video_cards_sis?    ( classic )
+	video_cards_vmware? ( gallium )
+	video_cards_tdfx?   ( classic )
+	video_cards_via?    ( classic )
+"
+
 LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.24"
 # not a runtime dependency of this package, but dependency of packages which
 # depend on this package, bug #342393
@@ -72,9 +96,7 @@ RDEPEND="${EXTERNAL_DEPEND}
 	x11-libs/libXmu
 	x11-libs/libXxf86vm
 	d3d? ( app-emulation/wine )
-	gallium? (
-		llvm? ( >=sys-devel/llvm-2.9 )
-	)
+	llvm? ( >=sys-devel/llvm-2.9 )
 	vdpau? ( >=x11-libs/libvdpau-0.4.1 )
 	wayland? ( x11-base/wayland )
 	xvmc? ( x11-libs/libXvMC )
@@ -215,7 +237,6 @@ src_configure() {
 		$(use_enable egl)
 	"
 	if use egl; then
-		use shared-glapi || die "egl needs shared-glapi. Please either enable shared-glapi or disable the egl use flag ."
 		myconf+="
 			--with-egl-platforms=x11$(use wayland && echo ",wayland")$(use gbm && echo ",drm")
 			$(use_enable gallium gallium-egl)
@@ -247,11 +268,6 @@ src_configure() {
 		if ! use video_cards_r300 && \
 				! use video_cards_r600; then
 			gallium_enable video_cards_radeon r300 r600
-		fi
-	else
-		if use video_cards_nouveau || use video_cards_vmware; then
-			elog "SVGA and nouveau drivers are available only via gallium interface."
-			elog "Enable gallium useflag if you want to use them."
 		fi
 	fi
 
