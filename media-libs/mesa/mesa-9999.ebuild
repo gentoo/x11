@@ -253,6 +253,7 @@ src_configure() {
 	if use gallium; then
 		myconf+="
 			--with-state-trackers=glx,dri$(use egl && echo ",egl")$(use openvg && echo ",vega")$(use d3d && echo ",d3d1x")
+			$(use_enable g3dvl)
 			$(use_enable llvm gallium-llvm)
 			$(use_enable openvg)
 			$(use_enable vdpau)
@@ -291,7 +292,6 @@ src_configure() {
 		--without-demos \
 		--enable-xcb \
 		$(use_enable debug) \
-		$(use_enable g3dvl) \
 		$(use_enable gbm) \
 		$(use_enable nptl glx-tls) \
 		$(use_enable !pic asm) \
