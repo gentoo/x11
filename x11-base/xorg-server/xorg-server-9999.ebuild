@@ -51,7 +51,7 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 		>=x11-libs/libXext-1.0.5
 		>=media-libs/mesa-7.8_rc[nptl=]
 	)
-	tslib? ( >=x11-libs/tslib-1.0 x11-proto/xcalibrateproto )
+	tslib? ( >=x11-libs/tslib-1.0 )
 	udev? ( >=sys-fs/udev-150 )
 	>=x11-apps/xinit-1.3"
 
@@ -135,7 +135,6 @@ pkg_setup() {
 		$(use_enable kdrive kdrive-mouse)
 		$(use_enable kdrive kdrive-evdev)
 		$(use_enable tslib)
-		$(use_enable tslib xcalibrate)
 		$(use_enable !minimal record)
 		$(use_enable !minimal xfree86-utils)
 		$(use_enable !minimal install-libxf86config)
