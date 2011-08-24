@@ -392,6 +392,20 @@ pkg_postinst() {
 		elog "USE=\"bindist\" was not set. Potentially patent encumbered code was"
 		elog "enabled. Please see patents.txt for an explanation."
 	fi
+
+	local using_radeon r_flag
+	for r_flag in ${RADEON_CARDS}; do
+		if use video_cards_${r_flag}; then
+			using_radeon=1
+			break
+		fi
+	done
+
+	if [[ ${using_radeon} = 1 ]] && ! has_version media-libs/libtxc_dxtn; then
+		elog "Note that in order to have full S3TC support, it is necessary to install"
+		elog "media-libs/libtxc_dxtn as well. This may be necessary to get nice"
+		elog "textures in some apps, and some others even require this to run."
+	fi
 }
 
 # $1 - VIDEO_CARDS flag
