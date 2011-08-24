@@ -37,9 +37,9 @@ LICENSE="LGPL-2 kilgard"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~sparc-solaris ~x64-solaris ~x86-solaris"
 
-INTEL_CARDS="i810 i915 i965 intel"
+INTEL_CARDS="i915 i965 intel"
 RADEON_CARDS="r100 r200 r300 r600 radeon"
-VIDEO_CARDS="${INTEL_CARDS} ${RADEON_CARDS} mach64 mga nouveau r128 savage sis vmware tdfx via"
+VIDEO_CARDS="${INTEL_CARDS} ${RADEON_CARDS} nouveau vmware"
 for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
 done
@@ -60,18 +60,10 @@ REQUIRED_USE="
 	g3dvl? ( || ( vdpau xvmc ) )
 	vdpau? ( g3dvl )
 	xvmc?  ( g3dvl )
-	video_cards_i810?   ( classic )
 	video_cards_i915?   ( classic )
-	video_cards_mach64? ( classic )
-	video_cards_mga?    ( classic )
 	video_cards_r100?   ( classic )
-	video_cards_r128?   ( classic )
 	video_cards_r200?   ( classic )
-	video_cards_savage? ( classic )
-	video_cards_sis?    ( classic )
 	video_cards_vmware? ( gallium )
-	video_cards_tdfx?   ( classic )
-	video_cards_via?    ( classic )
 "
 
 LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.24"
@@ -199,23 +191,17 @@ src_configure() {
 		driver_enable swrast
 
 	# Intel code
-		driver_enable video_cards_i810 i810
 		driver_enable video_cards_i915 i915
 		driver_enable video_cards_i965 i965
-			if ! use video_cards_i810 && \
-				! use video_cards_i915 && \
+			if ! use video_cards_i915 && \
 				! use video_cards_i965; then
-			driver_enable video_cards_intel i810 i915 i965
+			driver_enable video_cards_intel i915 i965
 		fi
 
 		# Nouveau code
 		driver_enable video_cards_nouveau nouveau
 
 		# ATI code
-		driver_enable video_cards_mach64 mach64
-		driver_enable video_cards_mga mga
-		driver_enable video_cards_r128 r128
-
 		driver_enable video_cards_r100 radeon
 		driver_enable video_cards_r200 r200
 		driver_enable video_cards_r300 r300
@@ -226,11 +212,6 @@ src_configure() {
 				! use video_cards_r600; then
 			driver_enable video_cards_radeon radeon r200 r300 r600
 		fi
-
-		driver_enable video_cards_savage savage
-		driver_enable video_cards_sis sis
-		driver_enable video_cards_tdfx tdfx
-		driver_enable video_cards_via unichrome
 	fi
 
 	myconf+="
