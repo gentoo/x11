@@ -4,7 +4,6 @@
 
 EAPI=4
 
-EGIT_REPO_URI="git://people.freedesktop.org/~mattst88/libXaw3d"
 inherit xorg-2
 
 DESCRIPTION="X.Org Xaw3d library"
@@ -13,10 +12,14 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86
 IUSE=""
 
 RDEPEND="x11-libs/libX11
-	x11-libs/libXt
+	x11-libs/libXext
 	x11-libs/libXmu
+	x11-libs/libXt"
+DEPEND="${RDEPEND}
+	sys-devel/flex
+	virtual/yacc
+	x11-proto/xextproto
 	x11-proto/xproto"
-DEPEND="${RDEPEND}"
 
 pkg_setup() {
 	xorg-2_pkg_setup
