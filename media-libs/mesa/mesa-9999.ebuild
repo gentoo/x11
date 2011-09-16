@@ -269,7 +269,6 @@ src_configure() {
 	econf \
 		--disable-option-checking \
 		--with-driver=dri \
-		--without-demos \
 		--enable-xcb \
 		$(use_enable debug) \
 		$(use_enable gbm) \
