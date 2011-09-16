@@ -269,7 +269,6 @@ src_configure() {
 	econf \
 		--disable-option-checking \
 		--with-driver=dri \
-		--disable-glut \
 		--without-demos \
 		--enable-xcb \
 		$(use_enable debug) \
@@ -294,12 +293,6 @@ src_install() {
 	if ! tc-is-cross-compiler; then
 		dobin "${S}"/src/glsl/glsl_compiler
 	fi
-	# Remove redundant headers
-	# GLUT thing
-	rm -f "${ED}"/usr/include/GL/glut*.h || die "Removing glut include failed."
-	# Glew includes
-	rm -f "${ED}"/usr/include/GL/{glew,glxew,wglew}.h \
-		|| die "Removing glew includes failed."
 
 	# Install config file for eselect mesa
 	insinto /usr/share/mesa
