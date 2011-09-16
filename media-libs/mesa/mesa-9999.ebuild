@@ -91,7 +91,6 @@ RDEPEND="${EXTERNAL_DEPEND}
 	x11-libs/libXmu
 	x11-libs/libXxf86vm
 	d3d? ( app-emulation/wine )
-	llvm? ( >=sys-devel/llvm-2.9 )
 	vdpau? ( >=x11-libs/libvdpau-0.4.1 )
 	wayland? ( x11-base/wayland )
 	xvmc? ( x11-libs/libXvMC )
@@ -110,6 +109,7 @@ for card in ${RADEON_CARDS}; do
 done
 
 DEPEND="${RDEPEND}
+	llvm? ( >=sys-devel/llvm-2.9 )
 	=dev-lang/python-2*
 	dev-libs/libxml2[python]
 	dev-util/pkgconfig
