@@ -86,12 +86,9 @@ RDEPEND="${EXTERNAL_DEPEND}
 	>=app-admin/eselect-opengl-1.2.2
 	dev-libs/expat
 	gbm? ( sys-fs/udev )
-	x11-libs/libICE
 	>=x11-libs/libX11-1.3.99.901
 	x11-libs/libXdamage
 	x11-libs/libXext
-	x11-libs/libXi
-	x11-libs/libXmu
 	x11-libs/libXxf86vm
 	d3d? ( app-emulation/wine )
 	vdpau? ( >=x11-libs/libvdpau-0.4.1 )
@@ -119,7 +116,6 @@ DEPEND="${RDEPEND}
 	sys-devel/bison
 	sys-devel/flex
 	x11-misc/makedepend
-	x11-proto/inputproto
 	>=x11-proto/xextproto-7.0.99.1
 	x11-proto/xf86driproto
 	x11-proto/xf86vidmodeproto
