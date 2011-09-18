@@ -6,8 +6,9 @@ EAPI=4
 
 MY_PN=${PN/progs/demos}
 MY_P=${MY_PN}-${PV}
-EGIT_REPO_URI="git://anongit.freedesktop.org/${MY_PN/-//}"
-[[ ${PV} = 9999* ]] && GIT_ECLASS="git"
+EGIT_REPO_URI="git://anongit.freedesktop.org/${MY_PN/-//}
+	http://anongit.freedesktop.org/${MY_PN/-//}"
+[[ ${PV} = 9999* ]] && GIT_ECLASS="git-2"
 inherit toolchain-funcs ${GIT_ECLASS}
 
 DESCRIPTION="Mesa's OpenGL utility and demo programs (glxgears and glxinfo)"
@@ -20,7 +21,8 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-
 IUSE=""
 
 RDEPEND="virtual/opengl"
-DEPEND="${RDEPEND}"
+DEPEND="${RDEPEND}
+	dev-util/pkgconfig"
 
 S=${WORKDIR}/${MY_P}
 
@@ -31,8 +33,11 @@ src_configure() {
 }
 
 src_compile() {
+	local pkgs='gl x11'
 	tc-export CC
-	emake CPPFLAGS='-Isrc/util' LDLIBS='-lX11 -lGL -lm' src/xdemos/{glxgears,glxinfo}
+	emake \
+		CPPFLAGS="$(pkg-config --cflags ${pkgs}) -Isrc/util" \
+		LDLIBS="$(pkg-config --libs ${pkgs}) -lm" src/xdemos/{glxgears,glxinfo}
 }
 
 src_install() {
