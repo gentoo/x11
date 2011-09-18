@@ -15,7 +15,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="gles2"
 
-RDEPEND="media-libs/libpng:1.2
+RDEPEND="media-libs/libpng
 	media-libs/mesa[gles2?]
 	x11-libs/libX11"
 DEPEND="${RDEPEND}
