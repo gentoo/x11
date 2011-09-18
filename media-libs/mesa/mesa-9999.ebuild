@@ -157,12 +157,6 @@ src_prepare() {
 	# fix for hardened pax_kernel, bug 240956
 	[[ ${PV} != 9999* ]] && epatch "${FILESDIR}"/glx_ro_text_segm.patch
 
-	# FreeBSD 6.* doesn't have posix_memalign().
-	if [[ ${CHOST} == *-freebsd6.* ]]; then
-		sed -i \
-			-e "s/-DHAVE_POSIX_MEMALIGN//" \
-			configure.ac || die
-	fi
 	# Solaris needs some recent POSIX stuff in our case
 	if [[ ${CHOST} == *-solaris* ]] ; then
 		sed -i -e "s/-DSVR4/-D_POSIX_C_SOURCE=200112L/" configure.ac || die
