@@ -169,14 +169,6 @@ src_prepare() {
 		sed -i -e 's/uint/unsigned int/g' src/egl/drivers/glx/egl_glx.c || die
 	fi
 
-	# In order for mesa to complete it's build process we need to use a tool
-	# that it compiles. When we cross compile this clearly does not work
-	# so we require mesa to be built on the host system first. -solar
-	if tc-is-cross-compiler; then
-		sed -i -e "s#^GLSL_CL = .*\$#GLSL_CL = glsl_compiler#g" \
-			"${S}"/src/mesa/shader/slang/library/Makefile || die
-	fi
-
 	base_src_prepare
 
 	eautoreconf
