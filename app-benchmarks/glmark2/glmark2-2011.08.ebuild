@@ -8,23 +8,37 @@ inherit waf-utils
 
 DESCRIPTION="Opengl test suite"
 HOMEPAGE="https://launchpad.net/glmark2"
-SRC_URI="http://launchpad.net/${PN}/trunk/${PV}/+download/${P}.tar.gz"
+SRC_URI="http://launchpad.net/${PN}/2011.11/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE=""
+IUSE="gles2"
 
-DEPEND="media-libs/mesa[gallium]"
-RDEPEND="${DEPEND}"
+RDEPEND="media-libs/libpng:1.2
+	media-libs/mesa[gles2?]
+	x11-libs/libX11"
+DEPEND="${RDEPEND}
+	dev-util/pkgconfig"
+
+src_prepare() {
+	rm -rf ${S}/src/libpng
+	sed -i -e 's#libpng12#libpng#g' ${S}/wscript ${S}/src/wscript_build || die
+}
 
 src_configure() {
 	: ${WAF_BINARY:="${S}/waf"}
+
+	local myconf
+
+	if use gles2; then
+		myconf += "--enable-glesv2"
+	fi
 
 	# it does not know --libdir specification, dandy huh
 	CCFLAGS="${CFLAGS}" LINKFLAGS="${LDFLAGS}" "${WAF_BINARY}" \
 		--prefix=/usr \
 		--enable-gl \
-		--enable-glesv2 \
+		${myconf} \
 		configure || die "configure failed"
 }
