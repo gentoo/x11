@@ -160,7 +160,6 @@ src_prepare() {
 	# Solaris needs some recent POSIX stuff in our case
 	if [[ ${CHOST} == *-solaris* ]] ; then
 		sed -i -e "s/-DSVR4/-D_POSIX_C_SOURCE=200112L/" configure.ac || die
-		sed -i -e 's/uint/unsigned int/g' src/egl/drivers/glx/egl_glx.c || die
 	fi
 
 	base_src_prepare
