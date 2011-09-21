@@ -249,10 +249,11 @@ src_configure() {
 		"
 	fi
 
-	# --with-driver=dri|xlib|osmesa || do we need osmesa?
+	# do we need osmesa?
 	econf \
 		--disable-option-checking \
-		--with-driver=dri \
+		--enable-dri \
+		--enable-glx \
 		--enable-xcb \
 		$(use_enable debug) \
 		$(use_enable gbm) \
