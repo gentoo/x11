@@ -48,7 +48,7 @@ for card in ${VIDEO_CARDS}; do
 done
 
 IUSE="${IUSE_VIDEO_CARDS}
-	bindist +classic d3d debug +egl g3dvl +gallium gbm gles1 gles2 +llvm +nptl openvg pax_kernel pic selinux shared-dricore +shared-glapi vdpau wayland xvmc kernel_FreeBSD"
+	bindist +classic d3d debug +egl g3dvl +gallium gbm gles1 gles2 +llvm +nptl openvg osmesa pax_kernel pic selinux shared-dricore +shared-glapi vdpau wayland xvmc kernel_FreeBSD"
 
 REQUIRED_USE="
 	d3d?    ( gallium )
@@ -243,7 +243,6 @@ src_configure() {
 		"
 	fi
 
-	# do we need osmesa?
 	econf \
 		--disable-option-checking \
 		--enable-dri \
@@ -256,6 +255,7 @@ src_configure() {
 		$(use_enable gles1) \
 		$(use_enable gles2) \
 		$(use_enable nptl glx-tls) \
+		$(use_enable osmesa) \
 		$(use_enable !pic asm) \
 		$(use_enable shared-dricore) \
 		$(use_enable shared-glapi) \
