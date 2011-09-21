@@ -212,7 +212,7 @@ src_configure() {
 	if use gallium; then
 		myconf+="
 			$(use_enable d3d d3d1x)
-			$(use_enable g3dvl)
+			$(use_enable g3dvl gallium-g3dvl)
 			$(use_enable llvm gallium-llvm)
 			$(use_enable openvg)
 			$(use_enable vdpau)
