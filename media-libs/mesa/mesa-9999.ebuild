@@ -198,12 +198,6 @@ src_configure() {
 		fi
 	fi
 
-	myconf+="
-		$(use_enable !bindist texture-float)
-		$(use_enable gles1)
-		$(use_enable gles2)
-		$(use_enable egl)
-	"
 	if use egl; then
 		myconf+="
 			--with-egl-platforms=x11$(use wayland && echo ",wayland")$(use gbm && echo ",drm")
@@ -255,8 +249,12 @@ src_configure() {
 		--enable-dri \
 		--enable-glx \
 		--enable-xcb \
+		$(use_enable !bindist texture-float) \
 		$(use_enable debug) \
+		$(use_enable egl) \
 		$(use_enable gbm) \
+		$(use_enable gles1) \
+		$(use_enable gles2) \
 		$(use_enable nptl glx-tls) \
 		$(use_enable !pic asm) \
 		$(use_enable shared-dricore) \
