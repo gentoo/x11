@@ -217,7 +217,7 @@ src_configure() {
 	fi
 	if use gallium; then
 		myconf+="
-			--with-state-trackers=glx,dri$(use egl && echo ",egl")$(use openvg && echo ",vega")$(use d3d && echo ",d3d1x")
+			$(use_enable d3d d3d1x)
 			$(use_enable g3dvl)
 			$(use_enable llvm gallium-llvm)
 			$(use_enable openvg)
