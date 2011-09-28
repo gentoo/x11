@@ -25,8 +25,6 @@ SLOT="1"
 
 RDEPEND="
 	<=x11-base/xorg-server-1.10.99
-	!x11-drivers/ati-drivers:0
-	!x11-apps/ati-drivers-extra
 	>=app-admin/eselect-opengl-1.0.7
 	sys-power/acpid
 	x11-apps/xauth
@@ -86,7 +84,7 @@ QA_WX_LOAD="
 QA_PRESTRIPPED="
 	usr/lib\(32\|64\)\?/libXvBAW.so.1.0
 	usr/lib\(32\|64\)\?/opengl/ati/lib/libGL.so.1.2
-	usr/lib\(32\|64\)\?/opengl/ati/extensions/fglrx-libglx.so
+	usr/lib\(32\|64\)\?/opengl/ati/extensions/libglx.so
 	usr/lib\(32\|64\)\?/xorg/modules/glesx.so
 	usr/lib\(32\|64\)\?/libAMDXvBA.so.1.0
 	usr/lib\(32\|64\)\?/libaticaldd.so
@@ -346,7 +344,7 @@ src_compile() {
 	# These extra libs/utils either have an Imakefile that does not
 	# work very well without tweaking or a Makefile ignoring CFLAGS
 	# and the like. We bypass those.
-
+src_test() { :; } # no tests present
 	# The -DUSE_GLU is needed to compile using nvidia headers
 	# according to a comment in ati-drivers-extra-8.33.6.ebuild.
 	"$(tc-getCC)" -o fgl_glxgears ${CFLAGS} ${LDFLAGS} -DUSE_GLU \
@@ -354,6 +352,8 @@ src_compile() {
 		-lGL -lGLU -lX11 -lm || die "fgl_glxgears build failed"
 	eend $?
 }
+
+src_test() { :; } # no tests presentsrc_test() { :; } # no tests present
 
 src_install() {
 	use modules && linux-mod_src_install
@@ -473,14 +473,10 @@ src_install() {
 	newconfd "${T}"/atieventsd.conf atieventsd
 
 	# PowerXpress stuff
-	local alllibdir="$(get_libdir)"
-	use multilib && alllibdir="lib64 lib32"
-	for libdir in ${alllibdir}
-	do
-		dosym /usr/${libdir}/opengl/xorg-x11/lib/libGL.so.1.2 \
-			/usr/${libdir}/fglrx/libGL.so.1.2
-		dosym ./libGL.so.1.2 /usr/${libdir}/fglrx/fglrx-libGL.so.1.2
-	done
+	exeinto /usr/$(get_libdir)/fglrx
+	doexe "${FILESDIR}"/switchlibGL || die "newexe switchlibGL failed"
+	dosym ./switchlibGL /usr/$(get_libdir)/fglrx/switchlibglx || die \
+	"dosym switchlibglx failed"
 }
 
 src_install-libs() {
@@ -507,17 +503,10 @@ src_install-libs() {
 		libGL.so.${libver}
 	dosym libGL.so.${libver} ${ATI_ROOT}/lib/libGL.so.${libmajor}
 	dosym libGL.so.${libver} ${ATI_ROOT}/lib/libGL.so
-	# PowerXpress stuff
-	dosym /usr/$(get_libdir)/opengl/xorg-x11/lib/libGL.so.1.2 \
-		${ATI_ROOT}/lib/FGL.renamed.libGL.so.1.2
-	dosym ./libGL.so.1.2 ${ATI_ROOT}/lib/fglrx-libGL.so.1.2
 
 	exeinto ${ATI_ROOT}/extensions
 	doexe "${EX_BASE_DIR}"/usr/X11R6/${pkglibdir}/modules/extensions/fglrx/fglrx-libglx.so
-	# PowerXpress stuff
-	dosym /usr/$(get_libdir)/opengl/xorg-x11/extensions/libglx.so \
-		${ATI_ROOT}/extensions/FGL.renamed.libglx.so
-	dosym fglrx-libglx.so ${ATI_ROOT}/extensions/libglx.so
+	mv "${D}"/${ATI_ROOT}/extensions/{fglrx-,}libglx.so
 
 	# other libs
 	exeinto /usr/$(get_libdir)
