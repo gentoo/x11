@@ -36,7 +36,7 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 		>=x11-libs/libX11-1.1.5
 		>=x11-libs/libXaw-1.0.4
 		>=x11-libs/libXext-1.0.99.4
-		>=x11-libs/libXfixes-4.0.3
+		>=x11-libs/libXfixes-5.0
 		>=x11-libs/libXi-1.2.99.1
 		>=x11-libs/libXmu-1.0.3
 		>=x11-libs/libXres-1.0.3
@@ -60,7 +60,7 @@ DEPEND="${RDEPEND}
 	>=x11-proto/bigreqsproto-1.1.0
 	>=x11-proto/compositeproto-0.4
 	>=x11-proto/damageproto-1.1
-	>=x11-proto/fixesproto-4.1
+	>=x11-proto/fixesproto-5.0
 	>=x11-proto/fontsproto-2.0.2
 	>=x11-proto/glproto-1.4.14
 	>=x11-proto/inputproto-1.9.99.902
@@ -91,7 +91,7 @@ DEPEND="${RDEPEND}
 	)
 	!minimal? (
 		>=x11-proto/xf86driproto-2.1.0
-		>=x11-proto/dri2proto-2.3
+		>=x11-proto/dri2proto-2.6
 		>=x11-libs/libdrm-2.4.20
 	)"
 
