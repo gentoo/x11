@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -15,12 +15,16 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-
 IUSE_INPUT_DEVICES="
 	input_devices_acecad
 	input_devices_aiptek
+	input_devices_elographics
 	input_devices_evdev
+	input_devices_fpit
+	input_devices_hyperpen
 	input_devices_joystick
 	input_devices_keyboard
 	input_devices_mouse
+	input_devices_mutouch
+	input_devices_penmount
 	input_devices_tslib
-	input_devices_virtualbox
 	input_devices_vmmouse
 	input_devices_void
 	input_devices_synaptics
@@ -84,12 +88,16 @@ IUSE="${IUSE_VIDEO_CARDS} ${IUSE_INPUT_DEVICES}"
 PDEPEND="
 	input_devices_acecad?      ( x11-drivers/xf86-input-acecad )
 	input_devices_aiptek?      ( x11-drivers/xf86-input-aiptek )
+	input_devices_elographics? ( x11-drivers/xf86-input-elographics )
 	input_devices_evdev?       ( x11-drivers/xf86-input-evdev )
+	input_devices_fpit?        ( x11-drivers/xf86-input-fpit )
+	input_devices_hyperpen?    ( x11-drivers/xf86-input-hyperpen )
 	input_devices_joystick?    ( x11-drivers/xf86-input-joystick )
 	input_devices_keyboard?    ( x11-drivers/xf86-input-keyboard )
 	input_devices_mouse?       ( x11-drivers/xf86-input-mouse )
+	input_devices_mutouch?     ( x11-drivers/xf86-input-mutouch )
+	input_devices_penmount?    ( x11-drivers/xf86-input-penmount )
 	input_devices_tslib?       ( x11-drivers/xf86-input-tslib )
-	input_devices_virtualbox?  ( x11-drivers/xf86-input-virtualbox )
 	input_devices_vmmouse?     ( x11-drivers/xf86-input-vmmouse )
 	input_devices_void?        ( x11-drivers/xf86-input-void )
 	input_devices_synaptics?   ( x11-drivers/xf86-input-synaptics )
@@ -144,11 +152,6 @@ PDEPEND="
 	video_cards_voodoo?        ( x11-drivers/xf86-video-voodoo )
 
 	!x11-drivers/xf86-input-citron
-	!x11-drivers/xf86-input-elographics
-	!x11-drivers/xf86-input-fpit
-	!x11-drivers/xf86-input-hyperpen
-	!x11-drivers/xf86-input-mutouch
-	!x11-drivers/xf86-input-penmount
 	!x11-drivers/xf86-video-cyrix
 	!x11-drivers/xf86-video-impact
 	!x11-drivers/xf86-video-nsc
