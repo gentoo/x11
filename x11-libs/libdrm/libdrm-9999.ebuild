@@ -34,6 +34,9 @@ PATCHES=(
 )
 
 pkg_setup() {
+	# tests are restricted, no point in building them
+	sed -ie 's/tests //' ${S}/Makefile.am
+
 	XORG_CONFIGURE_OPTIONS=(
 		--enable-udev
 		$(use_enable video_cards_intel intel)
