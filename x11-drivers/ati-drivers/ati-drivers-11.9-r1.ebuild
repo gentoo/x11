@@ -474,9 +474,9 @@ src_install() {
 
 	# PowerXpress stuff
 	exeinto /usr/$(get_libdir)/fglrx
-	doexe "${FILESDIR}"/switchlibGL || die "newexe switchlibGL failed"
-	dosym ./switchlibGL /usr/$(get_libdir)/fglrx/switchlibglx || die \
-	"dosym switchlibglx failed"
+	doexe "${FILESDIR}"/switchlibGL || die "doexe switchlibGL failed"
+	cp "${FILESDIR}"/switchlibGL "${T}"/switchlibglx
+	doexe "${T}"/switchlibglx || die "doexe switchlibglx failed"
 }
 
 src_install-libs() {
