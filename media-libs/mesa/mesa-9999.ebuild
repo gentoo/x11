@@ -66,6 +66,8 @@ REQUIRED_USE="
 	video_cards_i915?   ( classic )
 	video_cards_r100?   ( classic )
 	video_cards_r200?   ( classic )
+	video_cards_r300?   ( gallium )
+	video_cards_r600?   ( gallium )
 	video_cards_vmware? ( gallium )
 "
 
@@ -188,13 +190,9 @@ src_configure() {
 		# ATI code
 		driver_enable video_cards_r100 radeon
 		driver_enable video_cards_r200 r200
-		driver_enable video_cards_r300 r300
-		driver_enable video_cards_r600 r600
 		if ! use video_cards_r100 && \
-				! use video_cards_r200 && \
-				! use video_cards_r300 && \
-				! use video_cards_r600; then
-			driver_enable video_cards_radeon radeon r200 r300 r600
+				! use video_cards_r200; then
+			driver_enable video_cards_radeon radeon r200
 		fi
 	fi
 
