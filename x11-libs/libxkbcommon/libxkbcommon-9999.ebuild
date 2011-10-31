@@ -14,3 +14,7 @@ RDEPEND="x11-proto/xproto
 DEPEND="${RDEPEND}
 	sys-devel/bison
 	sys-devel/flex"
+
+XORG_CONFIGURE_OPTIONS=(
+	--with-xkb-config-root=${EPREFIX}/usr/share/X11/xkb
+)
