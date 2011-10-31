@@ -21,7 +21,7 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	>=x11-apps/rgb-1.0.3
 	>=x11-apps/xauth-1.0.3
 	x11-apps/xkbcomp
-	>=x11-libs/libpciaccess-0.10.3
+	>=x11-libs/libpciaccess-0.12.901
 	>=x11-libs/libXau-1.0.4
 	>=x11-libs/libXdmcp-1.0.2
 	>=x11-libs/libXfont-1.4.2
