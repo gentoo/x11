@@ -19,6 +19,7 @@ RDEPEND="x11-libs/libXext
 	>=x11-libs/libdrm-2.4.23[video_cards_intel]
 	sna? (
 		>=x11-base/xorg-server-1.10
+		>=x11-libs/pixman-0.23
 	)"
 # Requires dri2proto-2.6 (unreleased)
 DEPEND="${RDEPEND}
