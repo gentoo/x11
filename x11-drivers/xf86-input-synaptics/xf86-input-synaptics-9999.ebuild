@@ -19,7 +19,7 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	>=x11-proto/recordproto-1.14"
 
-DOCS=( README )
+DOCS=( "README" )
 
 pkg_pretend() {
 	linux-info_pkg_setup
