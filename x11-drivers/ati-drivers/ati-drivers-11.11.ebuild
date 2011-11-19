@@ -17,14 +17,14 @@ else
 	SRC_URI="https://launchpad.net/ubuntu/natty/+source/fglrx-installer/2:${PV}-0ubuntu1/+files/fglrx-installer_${PV}.orig.tar.gz"
 	FOLDER_PREFIX=""
 fi
-IUSE="debug +modules multilib qt4"
+IUSE="debug +modules multilib opencl qt4"
 
 LICENSE="AMD GPL-2 QPL-1.0 as-is"
 KEYWORDS="~amd64 ~x86"
 SLOT="1"
 
 RDEPEND="
-	<=x11-base/xorg-server-1.10.99
+	<=x11-base/xorg-server-1.11.49
 	>=app-admin/eselect-opengl-1.0.7
 	sys-power/acpid
 	x11-apps/xauth
@@ -96,6 +96,7 @@ QA_SONAME="
 	usr/lib\(32\|64\)\?/libaticalcl.so
 	usr/lib\(32\|64\)\?/libaticaldd.so
 	usr/lib\(32\|64\)\?/libaticalrt.so
+	usr/lib\(32\|64\)\?/libamdocl\(32\|64\)\?.so
 "
 
 QA_DT_HASH="
@@ -103,8 +104,10 @@ QA_DT_HASH="
 	opt/bin/aticonfig
 	opt/bin/atiodcli
 	opt/bin/atiode
+	opt/bin/clinfo
 	opt/bin/fglrxinfo
 	opt/sbin/atieventsd
+	opt/sbin/amdnotifyui
 	usr/lib\(32\|64\)\?/libaticalcl.so
 	usr/lib\(32\|64\)\?/libaticalrt.so
 	usr/lib\(32\|64\)\?/libatiuki.so.1.0
@@ -122,6 +125,8 @@ QA_DT_HASH="
 	usr/lib\(32\|64\)\?/opengl/ati/extensions/fglrx-libglx.so
 	usr/lib\(32\|64\)\?/opengl/ati/lib/fglrx-libGL.so.1.2
 	usr/lib\(32\|64\)\?/opengl/ati/lib/libGL.so.1.2
+	usr/lib\(32\|64\)\?/libamdocl\(32\|64\)\?.so
+	usr/lib\(32\|64\)\?/libOpenCL.so.1
 "
 
 _check_kernel_config() {
@@ -419,6 +424,8 @@ src_install() {
 	# (s)bin.
 	into /opt
 	dosbin "${ARCH_DIR}"/usr/sbin/atieventsd
+	use qt4 && dosbin "${ARCH_DIR}"/usr/sbin/amdnotifyui
+	use opencl && dobin "${ARCH_DIR}"/usr/bin/clinfo
 	# We cleaned out the compilable stuff in src_unpack
 	dobin "${ARCH_DIR}"/usr/X11R6/bin/*
 
@@ -429,6 +436,11 @@ src_install() {
 	# Everything except for the authatieventsd.sh script.
 	doins ${FOLDER_PREFIX}etc/ati/{logo*,control,atiogl.xml,signature,amdpcsdb.default}
 	doexe ${FOLDER_PREFIX}etc/ati/authatieventsd.sh
+	# OpenCL
+	if use opencl ; then
+		insinto /etc/OpenCL/vendors/
+		doins "${ARCH_DIR}"/etc/OpenCL/vendors/amdocl64.icd || die "doins failed"
+	fi
 
 	# include.
 	insinto /usr
@@ -521,9 +533,13 @@ src_install-libs() {
 	exeinto /usr/$(get_libdir)/dri
 	doexe "${MY_ARCH_DIR}"/usr/X11R6/${pkglibdir}/modules/dri/fglrx_dri.so
 
-	# AMD Cal libraries
+	# AMD Cal and OpenCL libraries
 	exeinto /usr/$(get_libdir)
-	doexe "${MY_ARCH_DIR}"/usr/${pkglibdir}/libati*.so*
+	if use opencl ; then
+		doexe "${MY_ARCH_DIR}"/usr/${pkglibdir}/lib*.so*
+	else
+		doexe "${MY_ARCH_DIR}"/usr/${pkglibdir}/libati*.so*
+	fi
 
 	local envname="${T}"/04ati-dri-path
 	if [[ -n ${ABI} ]]; then

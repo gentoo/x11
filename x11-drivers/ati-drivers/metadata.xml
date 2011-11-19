@@ -18,4 +18,9 @@
 	<use>
 		<flag name='modules'>Build the kernel modules</flag>
 	</use>
+	<use>
+		<flag name='opencl'>
+			Install OpenCL libraries
+		</flag>
+	</use>
 </pkgmetadata>
