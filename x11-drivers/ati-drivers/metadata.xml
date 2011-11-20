@@ -20,7 +20,7 @@
 	</use>
 	<use>
 		<flag name='opencl'>
-			Install OpenCL libraries
+			Install OpenCL runtime libraries
 		</flag>
 	</use>
 </pkgmetadata>
