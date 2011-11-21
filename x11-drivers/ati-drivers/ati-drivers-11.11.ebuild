@@ -439,7 +439,11 @@ src_install() {
 	# OpenCL
 	if use opencl ; then
 		insinto /etc/OpenCL/vendors/
-		doins "${ARCH_DIR}"/etc/OpenCL/vendors/amdocl64.icd || die "doins failed"
+		if [[ "${ABI}" == "amd64" ]] ; then
+			doins "${ARCH_DIR}"/etc/OpenCL/vendors/amdocl64.icd || die "doins failed"
+		else
+			doins "${ARCH_DIR}"/etc/OpenCL/vendors/amdocl32.icd || die "doins failed"
+		fi
 	fi
 
 	# include.
