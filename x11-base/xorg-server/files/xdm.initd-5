@@ -49,11 +49,10 @@ depend() {
 	after bootmisc consolefont modules netmount
 	after readahead-list ypbind autofs openvpn gpm lircmd
 	after quota
-	after dbus
 	before alsasound
 
 	# Start before X
-	use consolekit xfs
+	use consolekit dbus xfs
 }
 
 setup_dm() {
