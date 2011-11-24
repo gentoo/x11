@@ -46,6 +46,9 @@ RDEPEND="
 			x11-libs/qt-core
 			x11-libs/qt-gui
 	)
+	opencl? (
+		!>=x11-drivers/nvidia-drivers-195
+	)
 "
 
 DEPEND="${RDEPEND}
