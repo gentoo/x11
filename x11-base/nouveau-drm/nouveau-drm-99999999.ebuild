@@ -22,12 +22,12 @@ DEPEND="${RDEPEND}
 
 S=${WORKDIR}/master
 
-CONFIG_CHECK="~BACKLIGHT_CLASS_DEVICE ~DEBUG_FS !DRM ~FB_CFB_FILLRECT ~FB_CFB_COPYAREA ~FB_CFB_IMAGEBLIT ~FRAMEBUFFER_CONSOLE ~!FB_NVIDIA ~!FB_RIVA ~!FB_UVESA ~!FB_VGA16 ~I2C_ALGOBIT ~MXM_WMI ~VGA_ARB"
+CONFIG_CHECK="~ACPI_VIDEO ~BACKLIGHT_CLASS_DEVICE ~DEBUG_FS !DRM ~FB_CFB_FILLRECT ~FB_CFB_COPYAREA ~FB_CFB_IMAGEBLIT ~FRAMEBUFFER_CONSOLE ~!FB_NVIDIA ~!FB_RIVA ~!FB_UVESA ~!FB_VGA16 ~I2C_ALGOBIT ~MXM_WMI ~VGA_ARB"
 
 pkg_setup() {
 	linux-mod_pkg_setup
-	if kernel_is le 2 6 39; then
-		eerror "You need kernel 3.0 for nouveau-drm"
+	if kernel_is le 3 1; then
+		eerror "You need kernel 3.2 for nouveau-drm"
 		die "Incompatible kernel version"
 	fi
 	elog "Use in-kernel nouveau drm if you experience build issues."
