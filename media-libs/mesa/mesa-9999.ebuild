@@ -64,6 +64,7 @@ REQUIRED_USE="
 	vdpau? ( g3dvl )
 	xvmc?  ( g3dvl )
 	video_cards_i915?   ( classic )
+	video_cards_i965?   ( classic )
 	video_cards_r100?   ( classic )
 	video_cards_r200?   ( classic )
 	video_cards_r300?   ( gallium )
@@ -222,10 +223,8 @@ src_configure() {
 		gallium_enable video_cards_vmware svga
 		gallium_enable video_cards_nouveau nouveau
 		gallium_enable video_cards_i915 i915
-		gallium_enable video_cards_i965 i965
-		if ! use video_cards_i915 && \
-				! use video_cards_i965; then
-			gallium_enable video_cards_intel i915 i965
+		if ! use video_cards_i915; then
+			gallium_enable video_cards_intel i915
 		fi
 
 		gallium_enable video_cards_r300 r300
