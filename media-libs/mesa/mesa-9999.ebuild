@@ -63,7 +63,6 @@ REQUIRED_USE="
 	g3dvl? ( || ( vdpau xvmc ) )
 	vdpau? ( g3dvl )
 	xvmc?  ( g3dvl )
-	video_cards_i915?   ( classic )
 	video_cards_i965?   ( classic )
 	video_cards_r100?   ( classic )
 	video_cards_r200?   ( classic )
