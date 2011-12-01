@@ -50,6 +50,9 @@ src_install() {
 	doexe "${FILESDIR}"/xserverrc
 	exeinto /etc/X11/xinit/xinitrc.d/
 	doexe "${FILESDIR}/00-xhost"
+
+	insinto /usr/share/xsessions
+	doins "${FILESDIR}/Xsession.desktop"
 }
 
 pkg_postinst() {
