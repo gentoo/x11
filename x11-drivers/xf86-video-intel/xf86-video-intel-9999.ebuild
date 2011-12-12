@@ -16,7 +16,7 @@ RDEPEND="x11-libs/libXext
 	x11-libs/libXfixes
 	x11-libs/libXvMC
 	>=x11-libs/libxcb-1.5
-	>=x11-libs/libdrm-2.4.23[video_cards_intel]
+	>=x11-libs/libdrm-2.4.28[video_cards_intel]
 	sna? (
 		>=x11-base/xorg-server-1.10
 		>=x11-libs/pixman-0.23
