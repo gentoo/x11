@@ -54,7 +54,7 @@ REQUIRED_USE="
 	d3d?    ( gallium )
 	g3dvl?  ( gallium )
 	llvm?   ( gallium )
-	openvg? ( gallium )
+	openvg? ( egl gallium )
 	egl? ( shared-glapi )
 	gallium? (
 		video_cards_r300?   ( x86? ( llvm ) amd64? ( llvm ) )
