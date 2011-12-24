@@ -130,8 +130,8 @@ QA_DT_HASH="
 	usr/lib\(32\|64\)\?/opengl/ati/extensions/fglrx-libglx.so
 	usr/lib\(32\|64\)\?/opengl/ati/lib/fglrx-libGL.so.1.2
 	usr/lib\(32\|64\)\?/opengl/ati/lib/libGL.so.1.2
-	usr/lib\(32\|64\)\?/libamdocl\(32\|64\)\?.so
-	usr/lib\(32\|64\)\?/libOpenCL.so.1
+	usr/lib\(32\|64\)\?/OpenCL/vendor/amd/libamdocl\(32\|64\)\?.so
+	usr/lib\(32\|64\)\?/OpenCL/vendor/amd/libOpenCL.so.1
 "
 
 _check_kernel_config() {
@@ -439,15 +439,6 @@ src_install() {
 	# Everything except for the authatieventsd.sh script.
 	doins ${FOLDER_PREFIX}etc/ati/{logo*,control,atiogl.xml,signature,amdpcsdb.default}
 	doexe ${FOLDER_PREFIX}etc/ati/authatieventsd.sh
-	# OpenCL
-	if use opencl ; then
-		insinto /etc/OpenCL/vendors/
-		if [[ "${ABI}" == "amd64" ]] ; then
-			doins "${ARCH_DIR}"/etc/OpenCL/vendors/amdocl64.icd || die "doins failed"
-		else
-			doins "${ARCH_DIR}"/etc/OpenCL/vendors/amdocl32.icd || die "doins failed"
-		fi
-	fi
 
 	# include.
 	insinto /usr
@@ -503,10 +494,12 @@ src_install-libs() {
 		local EX_BASE_DIR="${BASE_DIR}_64a"
 		local pkglibdir=lib64
 		local MY_ARCH_DIR="${S}/arch/x86_64"
+		local oclsuffix=64
 	else
 		local EX_BASE_DIR="${BASE_DIR}"
 		local pkglibdir=lib
 		local MY_ARCH_DIR="${S}/arch/x86"
+		local oclsuffix=32
 	fi
 	einfo "ati tree '${pkglibdir}' -> '$(get_libdir)' on system"
 
@@ -541,11 +534,27 @@ src_install-libs() {
 	doexe "${MY_ARCH_DIR}"/usr/X11R6/${pkglibdir}/modules/dri/fglrx_dri.so
 
 	# AMD Cal and OpenCL libraries
-	exeinto /usr/$(get_libdir)
 	if use opencl ; then
-		doexe "${MY_ARCH_DIR}"/usr/${pkglibdir}/lib*.so*
-	else
-		doexe "${MY_ARCH_DIR}"/usr/${pkglibdir}/libati*.so*
+		exeinto /usr/$(get_libdir)/OpenCL/vendor/amd
+		doexe "${MY_ARCH_DIR}"/usr/${pkglibdir}/libamdocl*.so*
+		doexe "${MY_ARCH_DIR}"/usr/${pkglibdir}/libOpenCL*.so*
+	fi
+	exeinto /usr/$(get_libdir)
+	doexe "${MY_ARCH_DIR}"/usr/${pkglibdir}/libati*.so*
+
+	# OpenCL vendor files
+	if use opencl ; then
+		insinto /etc/OpenCL/vendors/
+		cat > "${T}"/amdocl${oclsuffix}.icd <<-EOF
+			/usr/$(get_libdir)/OpenCL/vendor/amd/libamdocl${oclsuffix}.so
+		EOF
+		doins "${T}"/amdocl${oclsuffix}.icd
+
+		# OpenCL envd file until eselect-opencl is in place
+		cat > "${T}"/35amdocl${oclsuffix} <<-EOF
+			LDPATH="/usr/$(get_libdir)/OpenCL/vendor/amd"
+		EOF
+		doenvd "${T}"/35amdocl${oclsuffix} || die "doenvd failed"
 	fi
 
 	local envname="${T}"/04ati-dri-path
@@ -579,6 +588,10 @@ pkg_postinst() {
 	elog
 	elog "Some cards need acpid running to handle events"
 	elog "Please add it to boot runlevel with rc-update add acpid boot"
+	elog
+	ewarn "This release of ati-drivers has a crashing bug when using Xv video."
+	ewarn "To avoid this problem, configure your video playback software for"
+	ewarn "OpenGL output. See https://bugs.gentoo.org/show_bug.cgi?id=391193"
 
 	use modules && linux-mod_pkg_postinst
 	"${ROOT}"/usr/bin/eselect opengl set --use-old ati
