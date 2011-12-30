@@ -320,7 +320,12 @@ src_prepare() {
 		|| die "Replacing 'finger' with 'who' failed."
 	# Adjust paths in the script from /usr/X11R6/bin/ to /opt/bin/ and
 	# add function to detect default state.
-	epatch "${FILESDIR}"/ati-powermode-opt-path-2.patch || die "Failed to epatch powermode-opt-path-2.patch"
+	epatch "${FILESDIR}"/ati-powermode-opt-path-2.patch || die \
+		"Failed to epatch powermode-opt-path-2.patch"
+
+	# fix needed for at least hardened-sources, see bug #392753
+	epatch "${FILESDIR}"/ati-drivers-redefine-WARN.patch || die \
+		"Failed to epatch ati-drivers-redefine-WARN.patch"
 
 	cd "${MODULE_DIR}"
 
