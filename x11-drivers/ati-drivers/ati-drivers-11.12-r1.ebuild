@@ -17,7 +17,7 @@ else
 	SRC_URI="https://launchpad.net/ubuntu/natty/+source/fglrx-installer/2:${PV}-0ubuntu1/+files/fglrx-installer_${PV}.orig.tar.gz"
 	FOLDER_PREFIX=""
 fi
-IUSE="debug +modules multilib opencl qt4"
+IUSE="debug +modules multilib opencl pax_kernel qt4"
 
 LICENSE="AMD GPL-2 QPL-1.0 as-is"
 KEYWORDS="~amd64 ~x86"
@@ -320,12 +320,10 @@ src_prepare() {
 		|| die "Replacing 'finger' with 'who' failed."
 	# Adjust paths in the script from /usr/X11R6/bin/ to /opt/bin/ and
 	# add function to detect default state.
-	epatch "${FILESDIR}"/ati-powermode-opt-path-2.patch || die \
-		"Failed to epatch powermode-opt-path-2.patch"
+	epatch "${FILESDIR}"/ati-powermode-opt-path-2.patch
 
 	# fix needed for at least hardened-sources, see bug #392753
-	epatch "${FILESDIR}"/ati-drivers-redefine-WARN.patch || die \
-		"Failed to epatch ati-drivers-redefine-WARN.patch"
+	use pax_kernel && epatch "${FILESDIR}"/ati-drivers-redefine-WARN.patch
 
 	cd "${MODULE_DIR}"
 
@@ -357,7 +355,6 @@ src_compile() {
 	# These extra libs/utils either have an Imakefile that does not
 	# work very well without tweaking or a Makefile ignoring CFLAGS
 	# and the like. We bypass those.
-src_test() { :; } # no tests present
 	# The -DUSE_GLU is needed to compile using nvidia headers
 	# according to a comment in ati-drivers-extra-8.33.6.ebuild.
 	"$(tc-getCC)" -o fgl_glxgears ${CFLAGS} ${LDFLAGS} -DUSE_GLU \
