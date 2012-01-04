@@ -245,7 +245,6 @@ src_configure() {
 		--disable-option-checking \
 		--enable-dri \
 		--enable-glx \
-		--enable-xcb \
 		$(use_enable !bindist texture-float) \
 		$(use_enable debug) \
 		$(use_enable egl) \
