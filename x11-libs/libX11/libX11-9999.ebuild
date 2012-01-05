@@ -14,7 +14,7 @@ IUSE="ipv6 test"
 
 RDEPEND=">=x11-libs/libxcb-1.1.92
 	x11-libs/xtrans
-	>=x11-proto/xproto-7.0.13
+	>=x11-proto/xproto-7.0.17
 	x11-proto/xf86bigfontproto
 	x11-proto/inputproto
 	x11-proto/kbproto
