@@ -92,6 +92,7 @@ RDEPEND="${EXTERNAL_DEPEND}
 	x11-libs/libXdamage
 	x11-libs/libXext
 	x11-libs/libXxf86vm
+	>=x11-libs/libxcb-1.8
 	d3d? ( app-emulation/wine )
 	vdpau? ( >=x11-libs/libvdpau-0.4.1 )
 	wayland? ( x11-base/wayland )
