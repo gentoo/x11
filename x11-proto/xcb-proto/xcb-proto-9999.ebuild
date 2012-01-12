@@ -2,8 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
-PYTHON_DEPEND="2:2.5"
+EAPI=4
 
 inherit python xorg-2
 
@@ -19,10 +18,6 @@ IUSE=""
 RDEPEND=""
 DEPEND="${RDEPEND}
 	dev-libs/libxml2"
-
-pkg_setup() {
-	python_set_active_version 2
-}
 
 src_install() {
 	xorg-2_src_install
