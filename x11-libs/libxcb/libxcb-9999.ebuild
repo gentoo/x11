@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI=4
 
 XORG_DOC=doc
 inherit python xorg-2
@@ -19,13 +19,12 @@ IUSE="selinux"
 RDEPEND="dev-libs/libpthread-stubs
 	x11-libs/libXau
 	x11-libs/libXdmcp
-	>=x11-proto/xcb-proto-1.6"
+	>=x11-proto/xcb-proto-1.7"
 DEPEND="${RDEPEND}
 	=dev-lang/python-2*[xml]
 	dev-libs/libxslt"
 
 pkg_setup() {
-	python_set_active_version 2
 	xorg-2_pkg_setup
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable doc build-docs)
