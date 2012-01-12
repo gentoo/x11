@@ -139,8 +139,6 @@ pkg_setup() {
 		append-flags -fno-ivopts
 	fi
 
-	# recommended by upstream
-	append-flags -ffast-math
 	# workaround toc-issue wrt #386545
 	use ppc64 && append-flags -mminimal-toc
 }
