@@ -20,7 +20,6 @@ MY_P="${MY_PN}-${PV/_/-}"
 MY_SRC_P="${MY_PN}Lib-${PV/_/-}"
 
 FOLDER="${PV/_rc*/}"
-[[ ${PV/_rc*/} == ${PV} ]] || FOLDER+="/RC"
 
 DESCRIPTION="OpenGL-like graphic library for Linux"
 HOMEPAGE="http://mesa3d.sourceforge.net/"
