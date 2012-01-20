@@ -62,7 +62,11 @@ REQUIRED_USE="
 	g3dvl? ( || ( vdpau xvmc ) )
 	vdpau? ( g3dvl )
 	xvmc?  ( g3dvl )
+	video_cards_intel?  ( || ( classic gallium ) )
+	video_cards_i915?   ( || ( classic gallium ) )
 	video_cards_i965?   ( classic )
+	video_cards_nouveau? ( || ( classic gallium ) )
+	video_cards_radeon? ( || ( classic gallium ) )
 	video_cards_r100?   ( classic )
 	video_cards_r200?   ( classic )
 	video_cards_r300?   ( gallium )
@@ -203,10 +207,6 @@ src_configure() {
 		"
 	fi
 
-	if use !gallium && use !classic; then
-		ewarn "You enabled neither classic nor gallium USE flags. No hardware"
-		ewarn "drivers will be built."
-	fi
 	if use gallium; then
 		myconf+="
 			$(use_enable d3d d3d1x)
