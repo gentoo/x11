@@ -235,7 +235,6 @@ src_configure() {
 	fi
 
 	econf \
-		--disable-option-checking \
 		--enable-dri \
 		--enable-glx \
 		$(use_enable !bindist texture-float) \
