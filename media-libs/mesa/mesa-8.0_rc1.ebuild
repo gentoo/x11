@@ -156,7 +156,8 @@ src_prepare() {
 	fi
 
 	# fix for hardened pax_kernel, bug 240956
-	[[ ${PV} != 9999* ]] && epatch "${FILESDIR}"/glx_ro_text_segm.patch
+	# FIXME: uncomment this when mesa-8.0 is moved to the main tree
+	#[[ ${PV} != 9999* ]] && epatch "${FILESDIR}"/glx_ro_text_segm.patch
 
 	# Solaris needs some recent POSIX stuff in our case
 	if [[ ${CHOST} == *-solaris* ]] ; then
