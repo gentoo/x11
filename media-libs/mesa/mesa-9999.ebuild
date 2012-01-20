@@ -137,11 +137,6 @@ QA_WX_LOAD="usr/lib*/opengl/xorg-x11/lib/libGL.so*"
 # Think about: ggi, fbcon, no-X configs
 
 pkg_setup() {
-	# gcc 4.2 has buggy ivopts
-	if [[ $(gcc-version) = "4.2" ]]; then
-		append-flags -fno-ivopts
-	fi
-
 	# workaround toc-issue wrt #386545
 	use ppc64 && append-flags -mminimal-toc
 }
