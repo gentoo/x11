@@ -256,6 +256,8 @@ src_configure() {
 src_install() {
 	base_src_install
 
+	find "${ED}" -name '*.la' -exec rm -f {} + || die
+
 	if use !bindist; then
 		dodoc docs/patents.txt
 	fi
