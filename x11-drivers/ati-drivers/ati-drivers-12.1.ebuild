@@ -6,12 +6,12 @@ EAPI=4
 
 inherit eutils multilib linux-info linux-mod toolchain-funcs versionator
 
-DESCRIPTION="Ati precompiled drivers for r600 (HD Series) and newer chipsets"
-HOMEPAGE="http://www.ati.com"
+DESCRIPTION="Ati precompiled drivers for radeon r600 (HD Series) and newer chipsets"
+HOMEPAGE="http://www.amd.com"
 # 8.ble will be used for beta releases.
 if [[ $(get_major_version) -gt 8 ]]; then
 	ATI_URL="http://www2.ati.com/drivers/linux/"
-	SRC_URI="${ATI_URL}/ati-driver-installer-${PV/./-}-x86.x86_64.run"
+	SRC_URI="${ATI_URL}/amd-driver-installer-${PV/./-}-x86.x86_64.run"
 	FOLDER_PREFIX="common/"
 else
 	SRC_URI="https://launchpad.net/ubuntu/natty/+source/fglrx-installer/2:${PV}-0ubuntu1/+files/fglrx-installer_${PV}.orig.tar.gz"
@@ -267,7 +267,7 @@ pkg_setup() {
 	elog
 	elog "Please note that this driver supports only graphic cards based on"
 	elog "r600 chipset and newer."
-	elog "This represent the ATI Radeon HD series at this moment."
+	elog "This represent the AMD Radeon HD series at this moment."
 	elog
 	elog "If your card is older then use ${CATEGORY}/xf86-video-ati"
 	elog "For migration informations please reffer to:"
@@ -363,7 +363,7 @@ src_compile() {
 	eend $?
 }
 
-src_test() { :; } # no tests presentsrc_test() { :; } # no tests present
+src_test() { :; } # no tests present
 
 src_install() {
 	use modules && linux-mod_src_install
@@ -457,7 +457,7 @@ src_install() {
 		doins -r ${FOLDER_PREFIX}usr/share/ati
 		insinto /usr/share/pixmaps
 		doins ${FOLDER_PREFIX}usr/share/icons/ccc_large.xpm
-		make_desktop_entry amdcccle 'ATI Catalyst Control Center' \
+		make_desktop_entry amdcccle 'AMD Catalyst Control Center' \
 			ccc_large System
 	fi
 
@@ -577,7 +577,7 @@ src_install-libs() {
 }
 
 pkg_postinst() {
-	elog "To switch to ATI OpenGL, run \"eselect opengl set ati\""
+	elog "To switch to AMD OpenGL, run \"eselect opengl set ati\""
 	elog "To change your xorg.conf you can use the bundled \"aticonfig\""
 	elog
 	elog "If you experience unexplained segmentation faults and kernel crashes"
