@@ -99,7 +99,7 @@ RDEPEND="${EXTERNAL_DEPEND}
 	>=x11-libs/libxcb-1.8
 	d3d? ( app-emulation/wine )
 	vdpau? ( >=x11-libs/libvdpau-0.4.1 )
-	wayland? ( x11-base/wayland )
+	wayland? ( dev-libs/wayland )
 	xvmc? ( x11-libs/libXvMC )
 	${LIBDRM_DEPSTRING}[video_cards_nouveau?,video_cards_vmware?]
 "
