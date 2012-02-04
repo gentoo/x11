@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -17,7 +17,7 @@ else
 	SRC_URI="https://launchpad.net/ubuntu/natty/+source/fglrx-installer/2:${PV}-0ubuntu1/+files/fglrx-installer_${PV}.orig.tar.gz"
 	FOLDER_PREFIX=""
 fi
-IUSE="debug +modules multilib opencl pax_kernel qt4"
+IUSE="debug +modules multilib pax_kernel qt4"
 
 LICENSE="AMD GPL-2 QPL-1.0 as-is"
 KEYWORDS="~amd64 ~x86"
@@ -26,6 +26,7 @@ SLOT="1"
 RDEPEND="
 	<=x11-base/xorg-server-1.11.49
 	>=app-admin/eselect-opengl-1.0.7
+	app-admin/eselect-opencl
 	sys-power/acpid
 	x11-apps/xauth
 	x11-libs/libX11
@@ -45,9 +46,6 @@ RDEPEND="
 			x11-libs/libXxf86vm
 			x11-libs/qt-core
 			x11-libs/qt-gui
-	)
-	opencl? (
-		!>=x11-drivers/nvidia-drivers-195
 	)
 "
 
@@ -130,8 +128,8 @@ QA_DT_HASH="
 	usr/lib\(32\|64\)\?/opengl/ati/extensions/fglrx-libglx.so
 	usr/lib\(32\|64\)\?/opengl/ati/lib/fglrx-libGL.so.1.2
 	usr/lib\(32\|64\)\?/opengl/ati/lib/libGL.so.1.2
-	usr/lib\(32\|64\)\?/OpenCL/vendor/amd/libamdocl\(32\|64\)\?.so
-	usr/lib\(32\|64\)\?/OpenCL/vendor/amd/libOpenCL.so.1
+	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libamdocl\(32\|64\)\?.so
+	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libOpenCL.so.1
 "
 
 _check_kernel_config() {
@@ -430,7 +428,7 @@ src_install() {
 	into /opt
 	dosbin "${ARCH_DIR}"/usr/sbin/atieventsd
 	use qt4 && dosbin "${ARCH_DIR}"/usr/sbin/amdnotifyui
-	use opencl && dobin "${ARCH_DIR}"/usr/bin/clinfo
+	dobin "${ARCH_DIR}"/usr/bin/clinfo
 	# We cleaned out the compilable stuff in src_unpack
 	dobin "${ARCH_DIR}"/usr/X11R6/bin/*
 
@@ -536,28 +534,19 @@ src_install-libs() {
 	doexe "${MY_ARCH_DIR}"/usr/X11R6/${pkglibdir}/modules/dri/fglrx_dri.so
 
 	# AMD Cal and OpenCL libraries
-	if use opencl ; then
-		exeinto /usr/$(get_libdir)/OpenCL/vendor/amd
-		doexe "${MY_ARCH_DIR}"/usr/${pkglibdir}/libamdocl*.so*
-		doexe "${MY_ARCH_DIR}"/usr/${pkglibdir}/libOpenCL*.so*
-	fi
+	exeinto /usr/$(get_libdir)/OpenCL/vendors/amd
+	doexe "${MY_ARCH_DIR}"/usr/${pkglibdir}/libamdocl*.so*
+	doexe "${MY_ARCH_DIR}"/usr/${pkglibdir}/libOpenCL*.so*
+	dosym libOpenCL.so.${libmajor} /usr/$(get_libdir)/OpenCL/vendors/amd/libOpenCL.so
 	exeinto /usr/$(get_libdir)
 	doexe "${MY_ARCH_DIR}"/usr/${pkglibdir}/libati*.so*
 
 	# OpenCL vendor files
-	if use opencl ; then
-		insinto /etc/OpenCL/vendors/
-		cat > "${T}"/amdocl${oclsuffix}.icd <<-EOF
-			/usr/$(get_libdir)/OpenCL/vendor/amd/libamdocl${oclsuffix}.so
-		EOF
-		doins "${T}"/amdocl${oclsuffix}.icd
-
-		# OpenCL envd file until eselect-opencl is in place
-		cat > "${T}"/35amdocl${oclsuffix} <<-EOF
-			LDPATH="/usr/$(get_libdir)/OpenCL/vendor/amd"
-		EOF
-		doenvd "${T}"/35amdocl${oclsuffix} || die "doenvd failed"
-	fi
+	insinto /etc/OpenCL/vendors/
+	cat > "${T}"/amdocl${oclsuffix}.icd <<-EOF
+		/usr/$(get_libdir)/OpenCL/vendors/amd/libamdocl${oclsuffix}.so
+	EOF
+	doins "${T}"/amdocl${oclsuffix}.icd
 
 	local envname="${T}"/04ati-dri-path
 	if [[ -n ${ABI} ]]; then
