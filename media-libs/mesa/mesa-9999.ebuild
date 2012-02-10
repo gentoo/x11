@@ -56,10 +56,6 @@ REQUIRED_USE="
 	llvm?   ( gallium )
 	openvg? ( egl gallium )
 	gbm?    ( shared-glapi )
-	gallium? (
-		video_cards_r300?   ( x86? ( llvm ) amd64? ( llvm ) )
-		video_cards_radeon? ( x86? ( llvm ) amd64? ( llvm ) )
-	)
 	g3dvl? ( || ( vdpau xvmc ) )
 	vdpau? ( g3dvl )
 	xvmc?  ( g3dvl )
@@ -155,6 +151,9 @@ src_prepare() {
 		EPATCH_SUFFIX="patch" \
 		epatch
 	fi
+
+	# relax the requirement that r300 must have llvm, bug 380303
+	epatch "${FILESDIR}"/${P}-dont-require-llvm-for-r300.patch
 
 	# fix for hardened pax_kernel, bug 240956
 	[[ ${PV} != 9999* ]] && epatch "${FILESDIR}"/glx_ro_text_segm.patch
