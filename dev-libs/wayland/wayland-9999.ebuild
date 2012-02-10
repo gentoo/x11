@@ -4,11 +4,24 @@
 
 EAPI=4
 
-inherit git autotools toolchain-funcs
+EGIT_REPO_URI="git://anongit.freedesktop.org/git/${PN}/${PN}"
+
+if [[ ${PV} = 9999* ]]; then
+	GIT_ECLASS="git-2"
+	EXPERIMENTAL="true"
+fi
+
+inherit autotools toolchain-funcs $GIT_ECLASS
 
 DESCRIPTION="Wayland protocol libraries"
 HOMEPAGE="http://wayland.freedesktop.org/"
-EGIT_REPO_URI="git://anongit.freedesktop.org/git/${PN}/${PN}"
+
+if [[ $PV = 9999* ]]; then
+	SRC_URI="${SRC_PATCHES}"
+else
+	SRC_URI="http://wayland.freedesktop.org/releases/${P}.tar.xz"
+fi
+
 
 LICENSE="CCPL-Attribution-ShareAlike-3.0 MIT"
 SLOT="0"
@@ -20,7 +33,9 @@ RDEPEND="dev-libs/expat
 DEPEND="${RDEPEND}"
 
 src_prepare() {
-	eautoreconf
+	if [[ ${PV} = 9999* ]]; then
+		eautoreconf
+	fi
 }
 
 src_configure() {
