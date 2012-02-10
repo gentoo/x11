@@ -22,7 +22,6 @@ else
 	SRC_URI="http://wayland.freedesktop.org/releases/${P}.tar.xz"
 fi
 
-
 LICENSE="CCPL-Attribution-ShareAlike-3.0 MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
