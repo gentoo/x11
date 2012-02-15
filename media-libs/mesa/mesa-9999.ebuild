@@ -328,6 +328,14 @@ pkg_postinst() {
 	# Switch to the xorg implementation.
 	echo
 	eselect opengl set --use-old ${OPENGL_DIR}
+
+	# switch to xorg-x11 and back if necessary, bug #374647 comment 11
+	OLD_IMPLEM="$(eselect opengl show)"
+	if [[ ${OPENGL_DIR}x != ${OLD_IMPLEM}x ]]; then
+		eselect opengl set ${OPENGL_DIR}
+		eselect opengl set ${OLD_IMPLEM}
+	fi
+
 	# Select classic/gallium drivers
 	if use classic || use gallium; then
 		eselect mesa set --auto
