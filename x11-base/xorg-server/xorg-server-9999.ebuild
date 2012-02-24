@@ -29,7 +29,7 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	>=x11-libs/pixman-0.21.8
 	>=x11-libs/xtrans-1.2.2
 	>=x11-misc/xbitmaps-1.0.1
-	>=x11-misc/xkeyboard-config-1.4
+	>=x11-misc/xkeyboard-config-2.4.1-r3
 	dmx? (
 		x11-libs/libXt
 		>=x11-libs/libdmx-1.0.99.1
