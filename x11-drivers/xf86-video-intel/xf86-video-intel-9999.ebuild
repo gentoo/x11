@@ -10,13 +10,16 @@ inherit linux-info xorg-2
 DESCRIPTION="X.Org driver for Intel cards"
 
 KEYWORDS="~amd64 ~ia64 ~x86 -x86-fbsd"
-IUSE="sna"
+IUSE="glamor sna"
 
 RDEPEND="x11-libs/libXext
 	x11-libs/libXfixes
 	x11-libs/libXvMC
 	>=x11-libs/libxcb-1.5
 	>=x11-libs/libdrm-2.4.29[video_cards_intel]
+	glamor? (
+		x11-libs/glamor
+	)
 	sna? (
 		>=x11-base/xorg-server-1.10
 		>=x11-libs/pixman-0.23
@@ -29,6 +32,7 @@ pkg_setup() {
 	xorg-2_pkg_setup
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable dri)
+		$(use_enable glamor)
 		$(use_enable sna)
 		--enable-xvmc
 	)
