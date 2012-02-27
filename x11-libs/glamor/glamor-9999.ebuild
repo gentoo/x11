@@ -10,7 +10,10 @@ KEYWORDS="~amd64 ~x86"
 IUSE="gles"
 
 RDEPEND=">=x11-base/xorg-server-1.10
-	media-libs/mesa[egl,gles?]
+	media-libs/mesa[egl]
+	gles? (
+		|| ( media-libs/mesa[gles2] media-libs/mesa[gles] )
+	)
 	>=x11-libs/pixman-0.21.8"
 DEPEND="${RDEPEND}"
 
