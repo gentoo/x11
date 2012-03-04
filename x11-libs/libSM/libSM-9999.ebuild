@@ -1,6 +1,6 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-libs/libSM/libSM-1.2.0.ebuild,v 1.14 2011/12/19 09:13:17 grobian Exp $
+# $Header: $
 
 EAPI=4
 
@@ -47,9 +47,11 @@ pkg_setup() {
 				;;
 		esac
 	fi
-	XORG_CONFIGURE_OPTIONS="$(use_enable ipv6)
+	XORG_CONFIGURE_OPTIONS=(
+		$(use_enable ipv6)
 		$(use_enable doc docs)
 		$(use_with doc xmlto)
 		${withuuid}
-		--without-fop"
+		--without-fop
+	)
 }
