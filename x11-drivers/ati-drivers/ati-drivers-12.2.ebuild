@@ -321,7 +321,7 @@ src_prepare() {
 	epatch "${FILESDIR}"/ati-powermode-opt-path-2.patch
 
 	# fix needed for at least hardened-sources, see bug #392753
-	use pax_kernel && epatch "${FILESDIR}"/ati-drivers-redefine-WARN.patch
+	use pax_kernel && epatch "${FILESDIR}"/ati-drivers-12.2-redefine-WARN.patch
 
 	cd "${MODULE_DIR}"
 
@@ -580,9 +580,6 @@ pkg_postinst() {
 	elog "Some cards need acpid running to handle events"
 	elog "Please add it to boot runlevel with rc-update add acpid boot"
 	elog
-	ewarn "This release of ati-drivers has a crashing bug when using Xv video."
-	ewarn "To avoid this problem, configure your video playback software for"
-	ewarn "OpenGL output. See https://bugs.gentoo.org/show_bug.cgi?id=391193"
 
 	use modules && linux-mod_pkg_postinst
 	"${ROOT}"/usr/bin/eselect opengl set --use-old ati
