@@ -13,16 +13,15 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/git/xcb/libxcb"
 [[ ${PV} != 9999* ]] && \
 	SRC_URI="http://xcb.freedesktop.org/dist/${P}.tar.bz2"
 
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 IUSE="selinux"
 
 RDEPEND="dev-libs/libpthread-stubs
 	x11-libs/libXau
-	x11-libs/libXdmcp
-	>=x11-proto/xcb-proto-1.7"
+	x11-libs/libXdmcp"
 DEPEND="${RDEPEND}
-	=dev-lang/python-2*[xml]
-	dev-libs/libxslt"
+	dev-libs/libxslt
+	>=x11-proto/xcb-proto-1.7"
 
 pkg_setup() {
 	xorg-2_pkg_setup
