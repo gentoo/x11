@@ -13,7 +13,7 @@ IUSE=""
 
 RDEPEND=">=x11-libs/libX11-1.4.99.1
 	>=x11-libs/libXext-1.1
-	>=x11-proto/inputproto-2.1.99.3
+	>=x11-proto/inputproto-2.1.99.6
 	>=x11-proto/xproto-7.0.13
 	>=x11-proto/xextproto-7.0.3"
 DEPEND="${RDEPEND}"

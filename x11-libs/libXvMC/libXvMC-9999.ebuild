@@ -16,3 +16,4 @@ RDEPEND="x11-libs/libX11
 	x11-proto/videoproto
 	x11-proto/xproto"
 DEPEND="${RDEPEND}"
+PDEPEND="app-admin/eselect-xvmc"
