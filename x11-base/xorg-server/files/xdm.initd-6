@@ -46,9 +46,10 @@ depend() {
 	# (#70689 comment #92) Start after consolefont to avoid display corruption
 	# (#291269) Start after quota, since some dm need readable home
 	# (#390609) gdm-3 will fail when dbus is not running
+	# (#366753) starting keymaps after X causes problems
 	after bootmisc consolefont modules netmount
 	after readahead-list ypbind autofs openvpn gpm lircmd
-	after quota
+	after quota keymaps
 	before alsasound
 
 	# Start before X
