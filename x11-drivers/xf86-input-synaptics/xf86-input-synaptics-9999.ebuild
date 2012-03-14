@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -12,11 +12,12 @@ HOMEPAGE="http://cgit.freedesktop.org/xorg/driver/xf86-input-synaptics/"
 KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
 IUSE=""
 
-RDEPEND="
+RDEPEND="sys-libs/mtdev
 	>=x11-base/xorg-server-1.8
 	>=x11-libs/libXi-1.2
 	>=x11-libs/libXtst-1.1.0"
 DEPEND="${RDEPEND}
+	>=sys-kernel/linux-headers-2.6.37
 	>=x11-proto/recordproto-1.14"
 
 DOCS=( "README" )
