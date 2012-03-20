@@ -1,7 +1,7 @@
 #!/sbin/runscript
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License, v2
-# $Header: /var/cvsroot/gentoo-x86/x11-base/xorg-server/files/xdm.initd-3,v 1.2 2011/01/22 15:30:07 lxnay Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-base/xorg-server/files/xdm.initd-7,v 1.1 2012/03/20 16:02:51 ssuominen Exp $
 
 # This is here to serve as a note to myself, and future developers.
 #
@@ -95,6 +95,11 @@ setup_dm() {
 		lxdm)
 			EXE=/usr/sbin/lxdm-binary
 			PIDFILE=/var/run/lxdm.pid
+			START_STOP_ARGS="--background"
+			;;
+		lightdm)
+			EXE=/usr/sbin/lightdm
+			PIDFILE=/var/run/lightdm.pid
 			START_STOP_ARGS="--background"
 			;;
 		*)
