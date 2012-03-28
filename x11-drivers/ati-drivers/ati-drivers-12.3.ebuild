@@ -17,7 +17,7 @@ else
 	SRC_URI="https://launchpad.net/ubuntu/natty/+source/fglrx-installer/2:${PV}-0ubuntu1/+files/fglrx-installer_${PV}.orig.tar.gz"
 	FOLDER_PREFIX=""
 fi
-IUSE="debug +modules multilib pax_kernel qt4"
+IUSE="debug +modules multilib pax_kernel qt4 static-libs"
 
 LICENSE="AMD GPL-2 QPL-1.0 as-is"
 KEYWORDS="~amd64 ~x86"
@@ -563,6 +563,9 @@ src_install-libs() {
 		#dosym ${soname} /usr/$(get_libdir)/${soname%.[0-9]}
 		dosym ${soname} /usr/$(get_libdir)/$(scanelf -qF "#f%S" ${so})
 	done
+
+	#remove static libs if not wanted
+	use static-libs || rm -rf "${D}"/usr/$(get_libdir)/libfglrx_dm.a
 }
 
 pkg_postinst() {
