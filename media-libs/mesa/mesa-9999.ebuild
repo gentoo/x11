@@ -98,7 +98,7 @@ RDEPEND="${EXTERNAL_DEPEND}
 	d3d? ( app-emulation/wine )
 	vdpau? ( >=x11-libs/libvdpau-0.4.1 )
 	wayland? ( dev-libs/wayland )
-	xvmc? ( x11-libs/libXvMC )
+	xvmc? ( >=x11-libs/libXvMC-1.0.6 )
 	${LIBDRM_DEPSTRING}[video_cards_nouveau?,video_cards_vmware?]
 "
 for card in ${INTEL_CARDS}; do
