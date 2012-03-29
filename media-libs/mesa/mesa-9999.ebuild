@@ -165,6 +165,9 @@ src_prepare() {
 		sed -i -e "s/-DSVR4/-D_POSIX_C_SOURCE=200112L/" configure.ac || die
 	fi
 
+	# Tests fail against python-3, bug #407887
+	sed -i 's|/usr/bin/env python|/usr/bin/env python2|' src/glsl/tests/compare_ir || die
+
 	base_src_prepare
 
 	eautoreconf
