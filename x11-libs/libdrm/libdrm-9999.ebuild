@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -49,7 +49,7 @@ pkg_setup() {
 src_prepare() {
 	if [[ ${PV} = 9999* ]]; then
 		# tests are restricted, no point in building them
-		sed -ie 's/tests //' ${S}/Makefile.am
+		sed -ie 's/tests //' "${S}"/Makefile.am
 	fi
 	xorg-2_src_prepare
 }
