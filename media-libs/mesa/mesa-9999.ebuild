@@ -265,6 +265,7 @@ src_configure() {
 		$(use_enable !pic asm) \
 		$(use_enable shared-glapi) \
 		$(use_enable xa) \
+		$(use_enable xorg) \
 		--with-dri-drivers=${DRI_DRIVERS} \
 		--with-gallium-drivers=${GALLIUM_DRIVERS} \
 		${myconf}
