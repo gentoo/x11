@@ -40,7 +40,7 @@ SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~sparc-solaris ~x64-solaris ~x86-solaris"
 
 INTEL_CARDS="i915 i965 intel"
-RADEON_CARDS="r100 r200 r300 r600 radeon"
+RADEON_CARDS="r100 r200 r300 r600 radeon radeonsi"
 VIDEO_CARDS="${INTEL_CARDS} ${RADEON_CARDS} nouveau vmware"
 for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
@@ -49,7 +49,7 @@ done
 IUSE="${IUSE_VIDEO_CARDS}
 	bindist +classic d3d debug +egl g3dvl +gallium gbm gles1 gles2 +llvm +nptl
 	openvg osmesa pax_kernel pic selinux +shared-glapi vdpau wayland xvmc xa
-	kernel_FreeBSD"
+	xorg kernel_FreeBSD"
 
 REQUIRED_USE="
 	d3d?    ( gallium )
@@ -60,6 +60,7 @@ REQUIRED_USE="
 	g3dvl? ( || ( vdpau xvmc ) )
 	vdpau? ( g3dvl )
 	xa?  ( gallium )
+	xorg?  ( gallium )
 	xvmc?  ( g3dvl )
 	video_cards_intel?  ( || ( classic gallium ) )
 	video_cards_i915?   ( || ( classic gallium ) )
@@ -70,10 +71,11 @@ REQUIRED_USE="
 	video_cards_r200?   ( classic )
 	video_cards_r300?   ( gallium )
 	video_cards_r600?   ( gallium )
+	video_cards_radeonsi?   ( gallium llvm xorg )
 	video_cards_vmware? ( gallium )
 "
 
-LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.31"
+LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.34"
 # not a runtime dependency of this package, but dependency of packages which
 # depend on this package, bug #342393
 EXTERNAL_DEPEND="
@@ -82,7 +84,9 @@ EXTERNAL_DEPEND="
 "
 # keep correct libdrm and dri2proto dep
 # keep blocks in rdepend for binpkg
+# gtest file collision bug #411825
 RDEPEND="${EXTERNAL_DEPEND}
+	!dev-cpp/gtest
 	!<x11-base/xorg-server-1.7
 	!<=x11-proto/xf86driproto-2.0.3
 	classic? ( app-admin/eselect-mesa )
@@ -98,6 +102,10 @@ RDEPEND="${EXTERNAL_DEPEND}
 	d3d? ( app-emulation/wine )
 	vdpau? ( >=x11-libs/libvdpau-0.4.1 )
 	wayland? ( dev-libs/wayland )
+	xorg? (
+		x11-base/xorg-server
+		x11-libs/libdrm[libkms]
+	)
 	xvmc? ( >=x11-libs/libXvMC-1.0.6 )
 	${LIBDRM_DEPSTRING}[video_cards_nouveau?,video_cards_vmware?]
 "
@@ -114,7 +122,10 @@ for card in ${RADEON_CARDS}; do
 done
 
 DEPEND="${RDEPEND}
-	llvm? ( >=sys-devel/llvm-2.9 )
+	llvm? (
+		>=sys-devel/llvm-2.9
+		video_cards_radeonsi? ( >=sys-devel/llvm-3.1 )
+	)
 	=dev-lang/python-2*
 	dev-libs/libxml2[python]
 	dev-util/pkgconfig
@@ -226,6 +237,7 @@ src_configure() {
 
 		gallium_enable video_cards_r300 r300
 		gallium_enable video_cards_r600 r600
+		gallium_enable video_cards_radeonsi radeonsi
 		if ! use video_cards_r300 && \
 				! use video_cards_r600; then
 			gallium_enable video_cards_radeon r300 r600
