@@ -15,7 +15,7 @@ SRC_URI=""
 KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
 IUSE=""
 
-RDEPEND=">=x11-libs/libdrm-2.4.24[video_cards_nouveau]"
+RDEPEND=">=x11-libs/libdrm-2.4.34[video_cards_nouveau]"
 DEPEND="${RDEPEND}
 	x11-proto/glproto
 	x11-proto/xf86driproto
