@@ -323,6 +323,13 @@ src_prepare() {
 	# fix needed for at least hardened-sources, see bug #392753
 	use pax_kernel && epatch "${FILESDIR}"/ati-drivers-12.2-redefine-WARN.patch
 
+	# fixed fgrlx compilation error on 32-bit x86 arch with kernel 3.3-rc4 due to commit:
+	# https://github.com/torvalds/linux/commit/f94edacf998516ac9d849f7bc6949a703977a7f3
+	# later modified (in 3.3-rc5) by commit:
+	# https://github.com/torvalds/linux/commit/7e16838d94b566a17b65231073d179bc04d590c8#diff-1
+	# and finally backported to kernel 3.2.8.
+	epatch "${FILESDIR}"/amd-drivers-3.2.7.1.patch
+
 	cd "${MODULE_DIR}"
 
 	# bugged fglrx build system, this file should be copied by hand
