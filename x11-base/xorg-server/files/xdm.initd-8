@@ -68,11 +68,7 @@ setup_dm() {
 	NAME=
 	case "${MY_XDM}" in
 		kdm|kde)
-			EXE="$(which kdm)"
-			PIDFILE=/var/run/kdm.pid
-			;;
-		kdm-*)
-			EXE="/usr/kde/${MY_XDM#kdm-}/bin/kdm"
+			EXE=/usr/bin/kdm
 			PIDFILE=/var/run/kdm.pid
 			;;
 		entrance*)
@@ -104,7 +100,7 @@ setup_dm() {
 			;;
 		*)
 			# first find out if there is such executable
-			EXE="$(which ${MY_XDM} 2>/dev/null)"
+			EXE="$(command -v ${MY_XDM} 2>/dev/null)"
 			PIDFILE="/var/run/${MY_XDM}.pid"
 
 			# warn user that he is doing sick things if the exe was not found
