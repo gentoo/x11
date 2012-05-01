@@ -1,0 +1,13 @@
+--- common/lib/modules/fglrx/build_mod/firegl_public.c.orig	2012-05-01 14:35:33.453055055 +0200
++++ common/lib/modules/fglrx/build_mod/firegl_public.c	2012-05-01 14:36:42.184270842 +0200
+@@ -219,6 +219,10 @@
+ #define preempt_enable()
+ #endif
+ 
++#ifndef cpu_possible_map
++#define cpu_possible_map	(*(cpumask_t *)cpu_possible_mask)
++#endif
++
+ // ============================================================
+ /* globals */
+ 
