@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -48,8 +48,8 @@ done
 
 IUSE="${IUSE_VIDEO_CARDS}
 	bindist +classic d3d debug +egl g3dvl +gallium gbm gles1 gles2 +llvm +nptl
-	openvg osmesa pax_kernel pic selinux +shared-glapi vdpau wayland xvmc xa
-	xorg kernel_FreeBSD"
+	openvg osmesa pax_kernel pic r600-llvm-compiler selinux +shared-glapi vdpau
+	wayland xvmc xa xorg kernel_FreeBSD"
 
 REQUIRED_USE="
 	d3d?    ( gallium )
@@ -59,6 +59,7 @@ REQUIRED_USE="
 	gbm?    ( shared-glapi )
 	g3dvl? ( || ( vdpau xvmc ) )
 	vdpau? ( g3dvl )
+	r600-llvm-compiler ( gallium llvm || ( video_cards_r600 video_cards_radeon ) )
 	xa?  ( gallium )
 	xorg?  ( gallium )
 	xvmc?  ( g3dvl )
@@ -71,7 +72,7 @@ REQUIRED_USE="
 	video_cards_r200?   ( classic )
 	video_cards_r300?   ( gallium )
 	video_cards_r600?   ( gallium )
-	video_cards_radeonsi?   ( gallium llvm xorg )
+	video_cards_radeonsi?   ( gallium llvm )
 	video_cards_vmware? ( gallium )
 "
 
@@ -123,6 +124,7 @@ done
 DEPEND="${RDEPEND}
 	llvm? (
 		>=sys-devel/llvm-2.9
+		r600-llvm-compiler? ( >=sys-devel/llvm-3.1 )
 		video_cards_radeonsi? ( >=sys-devel/llvm-3.1 )
 	)
 	=dev-lang/python-2*
@@ -223,6 +225,7 @@ src_configure() {
 			$(use_enable g3dvl gallium-g3dvl)
 			$(use_enable llvm gallium-llvm)
 			$(use_enable openvg)
+			$(use_enable r600-llvm-compiler)
 			$(use_enable vdpau)
 			$(use_enable xvmc)
 		"
