@@ -59,7 +59,7 @@ REQUIRED_USE="
 	gbm?    ( shared-glapi )
 	g3dvl? ( || ( vdpau xvmc ) )
 	vdpau? ( g3dvl )
-	r600-llvm-compiler ( gallium llvm || ( video_cards_r600 video_cards_radeon ) )
+	r600-llvm-compiler? ( gallium llvm || ( video_cards_r600 video_cards_radeon ) )
 	xa?  ( gallium )
 	xorg?  ( gallium )
 	xvmc?  ( g3dvl )
