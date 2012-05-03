@@ -12,7 +12,7 @@ DESCRIPTION="ATI video driver"
 KEYWORDS="~alpha ~amd64 ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd"
 IUSE=""
 
-RDEPEND=">=x11-libs/libdrm-2.4.31[video_cards_radeon]"
+RDEPEND=">=x11-libs/libdrm-2.4.33[video_cards_radeon]"
 DEPEND="${RDEPEND}"
 
 pkg_setup() {
