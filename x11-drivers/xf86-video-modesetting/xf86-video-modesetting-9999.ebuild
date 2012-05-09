@@ -4,14 +4,9 @@
 
 EAPI=4
 
-XORG_DRI="dri"
 inherit xorg-2
 
 DESCRIPTION="Unaccelerated generic driver for kernel modesetting"
 
 KEYWORDS="~amd64 ~x86"
-IUSE="dri"
-
-pkg_setup() {
-	XORG_CONFIGURE_OPTIONS="$(use_enable dri)"
-}
+IUSE=""
