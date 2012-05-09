@@ -8,5 +8,5 @@ inherit xorg-2
 
 DESCRIPTION="Unaccelerated generic driver for kernel modesetting"
 
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE=""
