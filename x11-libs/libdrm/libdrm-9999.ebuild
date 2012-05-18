@@ -16,7 +16,7 @@ else
 fi
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd ~x64-freebsd ~x86-freebsd ~amd64-linux ~x86-linux ~sparc-solaris ~x64-solaris ~x86-solaris"
-VIDEO_CARDS="intel nouveau omap radeon vmware"
+VIDEO_CARDS="exynos intel nouveau omap radeon vmware"
 for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
 done
@@ -35,6 +35,7 @@ PATCHES=(
 pkg_setup() {
 	XORG_CONFIGURE_OPTIONS=(
 		--enable-udev
+		$(use_enable video_cards_exynos exynos-experimental-api)
 		$(use_enable video_cards_intel intel)
 		$(use_enable video_cards_nouveau nouveau)
 		$(use_enable video_cards_omap omap-experimental-api)
