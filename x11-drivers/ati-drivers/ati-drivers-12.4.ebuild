@@ -330,9 +330,8 @@ src_prepare() {
 	# and finally backported to kernel 3.2.8.
 	epatch "${FILESDIR}"/amd-drivers-3.2.7.1.patch
 
-	# see https://lkml.org/lkml/2012/4/10/485 3.4.0-rc remove the define of
-	# cpu_possible_map, we add it back temporary util AMD fixes
-	epatch "${FILESDIR}"/amd-cpu_possible_map_define.patch
+	# see http://ati.cchtml.com/show_bug.cgi?id=495
+	epatch "${FILESDIR}"/ati-drivers-old_rsp.patch
 
 	cd "${MODULE_DIR}"
 
