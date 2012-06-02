@@ -11,7 +11,7 @@ if [[ ${PV} = 9999* ]]; then
 	EXPERIMENTAL="true"
 fi
 
-inherit $GIT_ECLASS
+inherit base $GIT_ECLASS
 
 DESCRIPTION="OpenCL C library"
 HOMEPAGE="http://libclc.llvm.org/"
@@ -31,6 +31,10 @@ RDEPEND="
 	>=sys-devel/clang-3.1
 	>=sys-devel/llvm-3.1"
 DEPEND="${RDEPEND}"
+
+PATCHES=(
+		"${FILESDIR}/0001-configure.py-Add-an-install-rule.patch"
+)
 
 src_configure() {
 	./configure.py --with-llvm-config="${EPREFIX}/usr/bin/llvm-config"
