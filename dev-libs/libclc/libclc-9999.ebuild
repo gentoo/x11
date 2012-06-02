@@ -37,5 +37,15 @@ PATCHES=(
 )
 
 src_configure() {
-	./configure.py --with-llvm-config="${EPREFIX}/usr/bin/llvm-config"
+	./configure.py \
+		--with-llvm-config="${EPREFIX}/usr/bin/llvm-config" \
+		--prefix="${EPREFIX}/usr"
+}
+
+src_install() {
+	# it has UGY install target so we use own one
+	insinto /usr/include
+	doins -r generic/include/*
+	insinto /usr/$(get_libdir)/clc/r600
+	doins r600--/lib/builtins.bc
 }
