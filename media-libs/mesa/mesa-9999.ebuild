@@ -48,14 +48,15 @@ done
 
 IUSE="${IUSE_VIDEO_CARDS}
 	bindist +classic d3d debug +egl g3dvl +gallium gbm gles1 gles2 +llvm +nptl
-	openvg osmesa pax_kernel pic r600-llvm-compiler selinux +shared-glapi vdpau
-	wayland xvmc xa xorg kernel_FreeBSD"
+	opencl openvg osmesa pax_kernel pic r600-llvm-compiler selinux +shared-glapi
+	vdpau wayland xvmc xa xorg kernel_FreeBSD"
 
 REQUIRED_USE="
 	d3d?    ( gallium )
 	g3dvl?  ( gallium )
 	llvm?   ( gallium )
 	openvg? ( egl gallium )
+	opencl? ( gallium r600-llvm-compiler )
 	gbm?    ( shared-glapi )
 	g3dvl? ( || ( vdpau xvmc ) )
 	vdpau? ( g3dvl )
@@ -101,6 +102,7 @@ RDEPEND="${EXTERNAL_DEPEND}
 	x11-libs/libXxf86vm
 	>=x11-libs/libxcb-1.8
 	d3d? ( app-emulation/wine )
+	opencl? ( app-admin/eselect-opencl )
 	vdpau? ( >=x11-libs/libvdpau-0.4.1 )
 	wayland? ( dev-libs/wayland )
 	xorg? (
@@ -127,6 +129,10 @@ DEPEND="${RDEPEND}
 		>=sys-devel/llvm-2.9
 		r600-llvm-compiler? ( >=sys-devel/llvm-3.1 )
 		video_cards_radeonsi? ( >=sys-devel/llvm-3.1 )
+	)
+	opencl? (
+				>=sys-devel/clang-3.1
+				>=sys-devel/gcc-4.6
 	)
 	=dev-lang/python-2*
 	dev-libs/libxml2[python]
@@ -245,6 +251,13 @@ src_configure() {
 				! use video_cards_r600; then
 			gallium_enable video_cards_radeon r300 r600
 		fi
+		# opencl stuff
+		if use opencl; then
+			myconf+="
+				$(use_enable opencl)
+				--with-opencl-libdir="${EPREFIX}/usr/$(get_libdir)/OpenCL/vendors/mesa"
+				"
+		fi
 	fi
 
 	# x86 hardened pax_kernel needs glx-rts, bug 240956
@@ -343,6 +356,13 @@ src_install() {
 			done
 			popd
 		eend $?
+	fi
+	if use opencl; then
+		ebegin "Moving Gallium/Clover OpenCL implentation for dynamic switching"
+		if [ -f "${ED}/usr/$(get_libdir)/libOpenCL.so" ]; then
+			mv -f "${ED}"/usr/$(get_libdir)/libOpenCL.so* \
+			"${ED}"/usr/$(get_libdir)/OpenCL/vendors/mesa
+		fi
 	fi
 }
 
