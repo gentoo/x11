@@ -34,6 +34,7 @@ DEPEND="${RDEPEND}"
 
 PATCHES=(
 		"${FILESDIR}/0001-configure.py-Add-an-install-rule.patch"
+		"${FILESDIR}/0001-Rename-target-to-r600-amd-none.patch"
 )
 
 src_configure() {

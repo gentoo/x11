@@ -1,0 +1,25 @@
+From 14e7b789aa859c53b09bb885fc1d2266c3097038 Mon Sep 17 00:00:00 2001
+From: Alexey Shvetsov <alexxy@gentoo.org>
+Date: Sun, 3 Jun 2012 14:49:53 +0400
+Subject: [PATCH] Rename target to r600-amd-none
+
+---
+ configure.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.py b/configure.py
+index 0d05e0c..5aded9c 100755
+--- a/configure.py
++++ b/configure.py
+@@ -40,7 +40,7 @@ llvm_clang = os.path.join(llvm_bindir, 'clang')
+ llvm_link = os.path.join(llvm_bindir, 'llvm-link')
+ llvm_opt = os.path.join(llvm_bindir, 'opt')
+ 
+-default_targets = ['r600--']
++default_targets = ['r600-amd-none']
+ 
+ targets = args
+ if not targets:
+-- 
+1.7.10.2
+
