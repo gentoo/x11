@@ -48,5 +48,5 @@ src_install() {
 	insinto /usr/include
 	doins -r generic/include/*
 	insinto /usr/$(get_libdir)/clc/r600-amd-none
-	doins r600--/lib/builtins.bc
+	doins r600-amd-none/lib/builtins.bc
 }
