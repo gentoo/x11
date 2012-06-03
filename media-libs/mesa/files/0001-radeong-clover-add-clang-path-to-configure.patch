@@ -1,0 +1,48 @@
+From 932b4a03d17aad57090835d9559b99475f504d31 Mon Sep 17 00:00:00 2001
+From: Alexey Shvetsov <alexxy@gentoo.org>
+Date: Sun, 3 Jun 2012 14:05:35 +0400
+Subject: [PATCH 1/3] radeong/clover add clang path to configure
+
+---
+ configure.ac                                  |   11 +++++++++++
+ src/gallium/state_trackers/clover/Makefile.am |    2 +-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index fc1c28e..3414a66 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1629,6 +1629,17 @@ AC_ARG_WITH([libclc-path],
+ 
+ AC_SUBST([LIBCLC_PATH])
+ 
++dnl
++dnl Also we need path to clang includes
++dnl
++
++AC_ARG_WITH([clang-path],
++	    [AS_HELP_STRING([--with-clang-path],
++			    [Path to clang base dir.  Example: --with-clang-path=/usr/lib])],
++			    [CLANG_PATH="$withval"],
++			    [CLANG_PATH=""])
++AC_SUBST([CLANG_PATH])
++
+ if test "x$enable_opencl" = xyes; then
+     if test "x$with_gallium_drivers" = x; then
+         AC_MSG_ERROR([cannot enable OpenCL without Gallium])
+diff --git a/src/gallium/state_trackers/clover/Makefile.am b/src/gallium/state_trackers/clover/Makefile.am
+index 818ced6..bc37c4e 100644
+--- a/src/gallium/state_trackers/clover/Makefile.am
++++ b/src/gallium/state_trackers/clover/Makefile.am
+@@ -24,7 +24,7 @@ libclllvm_la_CXXFLAGS = \
+ 	$(LLVM_CPPFLAGS) \
+ 	$(DEFINES) \
+ 	-DLIBCLC_PATH=\"$(LIBCLC_PATH)/\" \
+-	-DCLANG_RESOURCE_DIR=\"$(LLVM_LIBDIR)/clang/$(LLVM_VERSION)/\"
++	-DCLANG_RESOURCE_DIR=\"$(CLANG_PATH)/clang/$(LLVM_VERSION)/\"
+ 
+ libclllvm_la_SOURCES = \
+ 	llvm/invocation.cpp
+-- 
+1.7.10.2
+

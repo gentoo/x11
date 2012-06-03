@@ -147,6 +147,12 @@ DEPEND="${RDEPEND}
 
 S="${WORKDIR}/${MY_P}"
 
+PATCHES=(
+		"${FILESDIR}/0001-radeong-clover-add-clang-path-to-configure.patch"
+		"${FILESDIR}/0002-radeong-opencl-rename-target-from-r600-to-r600-amd-n.patch"
+		"${FILESDIR}/0003-clover-fix-building-and-add-standart-locations-for-l.patch"
+		)
+
 # It is slow without texrels, if someone wants slow
 # mesa without texrels +pic use is worth the shot
 QA_EXECSTACK="usr/lib*/opengl/xorg-x11/lib/libGL.so*"
@@ -256,6 +262,8 @@ src_configure() {
 			myconf+="
 				$(use_enable opencl)
 				--with-opencl-libdir="${EPREFIX}/usr/$(get_libdir)/OpenCL/vendors/mesa"
+				--with-libclc-path="${EPREFIX}/usr"
+				--with-clang-path="${EPREFIX}/usr/$(get_libdir)"
 				"
 		fi
 	fi
