@@ -35,18 +35,11 @@ DEPEND="${RDEPEND}"
 PATCHES=(
 		"${FILESDIR}/0001-configure.py-Add-an-install-rule.patch"
 		"${FILESDIR}/0001-Rename-target-to-r600-amd-none.patch"
+		"${FILESDIR}/fix-install-target.patch"
 )
 
 src_configure() {
 	./configure.py \
 		--with-llvm-config="${EPREFIX}/usr/bin/llvm-config" \
 		--prefix="${EPREFIX}/usr"
-}
-
-src_install() {
-	# it has UGY install target so we use own one
-	insinto /usr/include
-	doins -r generic/include/*
-	insinto /usr/$(get_libdir)/clc/r600-amd-none
-	doins r600-amd-none/lib/builtins.bc
 }

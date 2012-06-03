@@ -1,0 +1,45 @@
+diff --git a/configure.py b/configure.py
+index 546bbd3..dcb9f48 100755
+--- a/configure.py
++++ b/configure.py
+@@ -7,7 +7,11 @@ def c_compiler_rule(b, name, description, compiler, flags):
+ from optparse import OptionParser
+ import os
+ from subprocess import *
+-import sys
++import sys, platform
++
++system_libdir = 'lib'
++if platform.machine() in ('x86_64',):
++    system_libdir = 'lib64'
+ 
+ srcdir = os.path.dirname(sys.argv[0])
+ 
+@@ -94,7 +98,7 @@ for target in targets:
+                    [os.path.join(srcdir, subdir, 'lib') for subdir in subdirs])
+ 
+   clang_cl_includes = ' '.join(["-I%s" % incdir for incdir in incdirs])
+-  install_files += [(incdir, incdir[len(srcdir)+1:]) for incdir in incdirs]
++  install_files += [(incdir, '') for incdir in incdirs]
+ 
+   # The rule for building a .bc file for the specified architecture using clang.
+   clang_bc_flags = "-ccc-host-triple %s -I`dirname $in` %s " \
+@@ -129,15 +133,14 @@ for target in targets:
+   b.build(builtins_link_bc, "LLVM_LINK", objects)
+   b.build(builtins_opt_bc, "OPT", builtins_link_bc)
+   b.build(builtins_bc, "PREPARE_BUILTINS", builtins_opt_bc, prepare_builtins)
+-  install_files.append((builtins_bc, builtins_bc))
++  install_files.append((builtins_bc, '%s/clc/%s' % (system_libdir, target)))
+   install_deps.append(builtins_bc)
+   b.default(builtins_bc)
+ 
+ if options.prefix:
+-  install_cmd = ' && '.join(['mkdir -p %(dst)s && cp -r %(src)s %(dst)s' % 
++  install_cmd = ' && '.join(['mkdir -p $(DESTDIR)/%(dst)s && cp -r %(src)s $(DESTDIR)/%(dst)s' %
+                              {'src': file,
+-                              'dst': os.path.join(options.prefix,
+-                                                  os.path.dirname(dest))}
++                              'dst': os.path.join(options.prefix, dest)}
+                              for (file, dest) in install_files])
+   b.rule('install', command = install_cmd, description = 'INSTALL')
+   b.build('install', 'install', install_deps)
