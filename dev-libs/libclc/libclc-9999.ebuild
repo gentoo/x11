@@ -46,6 +46,6 @@ src_install() {
 	# it has UGY install target so we use own one
 	insinto /usr/include
 	doins -r generic/include/*
-	insinto /usr/$(get_libdir)/clc/r600
+	insinto /usr/$(get_libdir)/clc/r600-amd-none
 	doins r600--/lib/builtins.bc
 }
