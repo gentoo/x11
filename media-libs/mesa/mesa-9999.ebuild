@@ -102,7 +102,10 @@ RDEPEND="${EXTERNAL_DEPEND}
 	x11-libs/libXxf86vm
 	>=x11-libs/libxcb-1.8
 	d3d? ( app-emulation/wine )
-	opencl? ( app-admin/eselect-opencl )
+	opencl? ( 
+				app-admin/eselect-opencl
+				dev-libs/libclc
+			)
 	vdpau? ( >=x11-libs/libvdpau-0.4.1 )
 	wayland? ( dev-libs/wayland )
 	xorg? (
