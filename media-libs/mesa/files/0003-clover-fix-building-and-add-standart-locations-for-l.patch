@@ -27,7 +27,7 @@ index 27276bc..78c8670 100644
  
        // Link the kernel with libclc
 -      linker.LinkInFile(llvm::sys::Path(LIBCLC_PATH + triple + "/lib/builtins.bc"), isNative);
-+      linker.LinkInFile(llvm::sys::Path(LIBCLC_PATH + "/lib/clc/" +triple + "/builtins.bc"), isNative);
++      linker.LinkInFile(llvm::sys::Path(LIBCLC_PATH + ("/lib/clc/" + triple + "/builtins.bc")), isNative);
        mod = linker.releaseModule();
  
        // Run link time optimizations
