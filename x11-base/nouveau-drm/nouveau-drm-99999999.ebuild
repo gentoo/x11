@@ -26,8 +26,8 @@ CONFIG_CHECK="~ACPI_VIDEO ~BACKLIGHT_CLASS_DEVICE ~DEBUG_FS !DRM ~FB_CFB_FILLREC
 
 pkg_setup() {
 	linux-mod_pkg_setup
-	if kernel_is le 3 2; then
-		eerror "You need kernel 3.3 for nouveau-drm"
+	if kernel_is le 3 4; then
+		eerror "You need kernel 3.5 for nouveau-drm"
 		die "Incompatible kernel version"
 	fi
 	elog "Use in-kernel nouveau drm if you experience build issues."
