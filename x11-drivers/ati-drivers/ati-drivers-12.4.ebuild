@@ -333,7 +333,7 @@ src_prepare() {
 	# see http://ati.cchtml.com/show_bug.cgi?id=495
 	epatch "${FILESDIR}"/ati-drivers-old_rsp.patch
 	#fixes bug #420751
-	epatch "${FILESDIR}"/ati-drivers-do_mmap.patch
+	#epatch "${FILESDIR}"/ati-drivers-do_mmap.patch
 
 	cd "${MODULE_DIR}"
 
