@@ -24,12 +24,12 @@ fi
 
 LICENSE="CCPL-Attribution-ShareAlike-3.0 MIT"
 SLOT="0"
-KEYWORDS="~x86 ~amd64"
+KEYWORDS="~amd64 ~x86"
 IUSE="+clients +drm +simple-clients static-libs +tablet +wayland-compositor +x11"
 
 RDEPEND="dev-libs/wayland
 	gnome-base/librsvg
-	>=media-libs/mesa-7.10[egl,gles]
+	media-libs/mesa[egl,gles2]
 	x11-libs/pixman
 	x11? ( x11-libs/libxcb x11-libs/libX11 )
 	drm? ( >=sys-fs/udev-136 >=x11-libs/libdrm-2.4.23 media-libs/mesa[gbm] )
