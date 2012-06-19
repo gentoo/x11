@@ -1,0 +1,13 @@
+--- common/lib/modules/fglrx/build_mod/firegl_public.c.orig	2012-06-15 18:30:13.483762070 +0200
++++ common/lib/modules/fglrx/build_mod/firegl_public.c	2012-06-15 18:57:10.375817772 +0200
+@@ -219,6 +219,10 @@
+ #define preempt_enable()
+ #endif
+ 
++#ifndef do_mmap
++# define do_mmap(a,b,c,d,e,f) vm_mmap(a, b, c, d, e, (f) >> PAGE_SHIFT)
++#endif
++
+ // ============================================================
+ /* globals */
+ 
