@@ -154,6 +154,7 @@ PATCHES=(
 		"${FILESDIR}/0001-radeong-clover-add-clang-path-to-configure.patch"
 		"${FILESDIR}/0002-radeong-opencl-rename-target-from-r600-to-r600-amd-n.patch"
 		"${FILESDIR}/0003-clover-fix-building-and-add-standart-locations-for-l.patch"
+		"${FILESDIR}/0004-r600g-fix-reading-vtx.patch"
 		)
 
 # It is slow without texrels, if someone wants slow
