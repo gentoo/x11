@@ -33,16 +33,6 @@ index 27276bc..78c8670 100644
        // Run link time optimizations
 diff --git a/src/gallium/targets/opencl/Makefile.am b/src/gallium/targets/opencl/Makefile.am
 index d55b21e..4c89e36 100644
---- a/src/gallium/targets/opencl/Makefile.am
-+++ b/src/gallium/targets/opencl/Makefile.am
-@@ -3,6 +3,7 @@ AUTOMAKE_OPTIONS = subdir-objects
- lib_LTLIBRARIES = libOpenCL.la
- 
- libOpenCL_la_LDFLAGS = \
-+	$(LLVM_LDFLAGS) \
- 	-version-number 1:0
- 
- libOpenCL_la_LIBADD = \
 -- 
 1.7.10.2
 
