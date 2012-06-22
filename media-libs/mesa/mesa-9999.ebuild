@@ -151,10 +151,8 @@ DEPEND="${RDEPEND}
 S="${WORKDIR}/${MY_P}"
 
 PATCHES=(
-		"${FILESDIR}/0001-radeong-clover-add-clang-path-to-configure.patch"
 		"${FILESDIR}/0002-radeong-opencl-rename-target-from-r600-to-r600-amd-n.patch"
 		"${FILESDIR}/0003-clover-fix-building-and-add-standart-locations-for-l.patch"
-		"${FILESDIR}/0004-r600g-fix-reading-vtx.patch"
 		)
 
 # It is slow without texrels, if someone wants slow
@@ -267,7 +265,7 @@ src_configure() {
 				$(use_enable opencl)
 				--with-opencl-libdir="${EPREFIX}/usr/$(get_libdir)/OpenCL/vendors/mesa"
 				--with-libclc-path="${EPREFIX}/usr"
-				--with-clang-path="${EPREFIX}/usr/$(get_libdir)"
+				--with-clang-libdir="${EPREFIX}/usr/$(get_libdir)"
 				"
 		fi
 	fi
