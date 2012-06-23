@@ -31,12 +31,11 @@ PATCHES=(
 	"${FILESDIR}/0001-Gentoo-customizations.patch"
 )
 
-pkg_setup() {
-	xorg-2_pkg_setup
-
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		--with-xinitdir=/etc/X11/xinit
 	)
+	xorg-2_src_configure
 }
 
 src_install() {

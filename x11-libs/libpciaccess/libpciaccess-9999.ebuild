@@ -13,13 +13,12 @@ DEPEND="!<x11-base/xorg-server-1.5
 	zlib? ( sys-libs/zlib )"
 RDEPEND="${DEPEND}"
 
-pkg_setup() {
-	xorg-2_pkg_setup
-
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		"$(use_with zlib)"
 		"--with-pciids-path=${EPREFIX}/usr/share/misc"
 	)
+	xorg-2_src_configure
 }
 
 src_install() {

@@ -15,12 +15,11 @@ IUSE=""
 RDEPEND="x11-proto/xproto"
 DEPEND="${RDEPEND}"
 
-pkg_setup() {
-	xorg-2_pkg_setup
-
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable doc docs)
 		$(use_with doc xmlto)
 		--without-fop
 	)
+	xorg-2_src_configure
 }

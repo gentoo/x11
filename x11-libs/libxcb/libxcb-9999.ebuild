@@ -24,11 +24,11 @@ DEPEND="${RDEPEND}
 	dev-libs/libxslt
 	>=x11-proto/xcb-proto-1.7"
 
-pkg_setup() {
-	xorg-2_pkg_setup
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable doc build-docs)
 		$(use_enable selinux)
 		--enable-xinput
 	)
+	xorg-2_src_configure
 }

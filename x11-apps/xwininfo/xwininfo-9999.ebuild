@@ -16,10 +16,11 @@ DEPEND="${RDEPEND}
 	x11-libs/libX11
 	>=x11-proto/xproto-7.0.17"
 
-pkg_setup() {
+src_configure() {
 	# interix has a _very_ old iconv in libc, however, including
 	# iconv.h redefines those symbols to libiconv_*, which then
 	# are unresolved, as the configure check is old and dumb.
 	[[ ${CHOST} == *-interix* ]] &&
 		append-libs -liconv
+	xorg-2_src_configure
 }

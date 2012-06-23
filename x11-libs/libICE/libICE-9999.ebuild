@@ -16,9 +16,7 @@ RDEPEND="x11-libs/xtrans
 	x11-proto/xproto"
 DEPEND="${RDEPEND}"
 
-pkg_setup() {
-	xorg-2_pkg_setup
-
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable ipv6)
 		$(use_enable doc docs)
@@ -26,4 +24,5 @@ pkg_setup() {
 		$(use_with doc xmlto)
 		--without-fop
 	)
+	xorg-2_src_configure
 }

@@ -17,10 +17,11 @@ IUSE=""
 RDEPEND=""
 DEPEND="${RDEPEND}"
 
-pkg_setup() {
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable doc docs)
 		$(use_with doc xmlto)
 		--without-fop
 	)
+	xorg-2_src_configure
 }

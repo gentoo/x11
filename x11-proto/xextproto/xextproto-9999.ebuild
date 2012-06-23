@@ -15,11 +15,10 @@ IUSE=""
 RDEPEND="!<x11-libs/libXext-1.0.99"
 DEPEND="${RDEPEND}"
 
-pkg_setup() {
-	xorg-2_pkg_setup
-
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_with doc xmlto)
 		--without-fop
 	)
+	xorg-2_src_configure
 }

@@ -15,11 +15,11 @@ IUSE=""
 RDEPEND=">=x11-libs/libdrm-2.4.33[video_cards_radeon]"
 DEPEND="${RDEPEND}"
 
-pkg_setup() {
-	xorg-2_pkg_setup
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		--enable-dri
 		--enable-kms
 		--enable-exa
 	)
+	xorg-2_src_configure
 }

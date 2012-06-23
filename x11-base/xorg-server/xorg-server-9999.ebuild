@@ -119,9 +119,7 @@ pkg_pretend() {
 		die "Sorry, but gcc earlier than 4.0 wont work for xorg-server."
 }
 
-pkg_setup() {
-	xorg-2_pkg_setup
-
+src_configure() {
 	# localstatedir is used for the log location; we need to override the default
 	#	from ebuild.sh
 	# sysconfdir is used for the xorg.conf location; same applies
@@ -170,6 +168,8 @@ pkg_setup() {
 		ln -s "${EROOT}usr/$(get_libdir)/opengl/global/include/$i.h" "${T}/mesa-symlinks/GL/$i.h" || die
 	done
 	append-cppflags "-I${T}/mesa-symlinks"
+
+	xorg-2_src_configure
 }
 
 src_install() {

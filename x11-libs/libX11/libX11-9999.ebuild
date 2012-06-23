@@ -28,17 +28,14 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-1.1.5-solaris.patch
 )
 
-pkg_setup() {
-	xorg-2_pkg_setup
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_with doc xmlto)
 		$(use_enable doc specs)
 		$(use_enable ipv6)
 		--without-fop
 	)
-}
 
-src_configure() {
 	[[ ${CHOST} == *-interix* ]] && export ac_cv_func_poll=no
 	xorg-2_src_configure
 }

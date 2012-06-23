@@ -26,11 +26,11 @@ RDEPEND=">=x11-base/xorg-server-1.10
 	>=x11-libs/pixman-0.21.8"
 DEPEND="${RDEPEND}"
 
-pkg_setup() {
-	xorg-2_pkg_setup
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable gles glamor-gles2)
 	)
+	xorg-2_src_configure
 }
 
 src_prepare() {

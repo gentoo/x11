@@ -31,10 +31,9 @@ PDEPEND="
 	>=x11-libs/xcb-util-wm-${PV}
 "
 
-pkg_setup() {
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_with doc doxygen)
 	)
-
-	xorg-2_pkg_setup
+	xorg-2_src_configure
 }

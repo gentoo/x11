@@ -20,7 +20,3 @@ DEPEND="${RDEPEND}
 	virtual/yacc
 	x11-proto/xextproto
 	x11-proto/xproto"
-
-pkg_setup() {
-	xorg-2_pkg_setup
-}

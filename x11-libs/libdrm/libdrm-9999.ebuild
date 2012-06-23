@@ -32,7 +32,15 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.4.28-solaris.patch
 )
 
-pkg_setup() {
+src_prepare() {
+	if [[ ${PV} = 9999* ]]; then
+		# tests are restricted, no point in building them
+		sed -ie 's/tests //' "${S}"/Makefile.am
+	fi
+	xorg-2_src_prepare
+}
+
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		--enable-udev
 		$(use_enable video_cards_exynos exynos-experimental-api)
@@ -43,14 +51,5 @@ pkg_setup() {
 		$(use_enable video_cards_vmware vmwgfx-experimental-api)
 		$(use_enable libkms)
 	)
-
-	xorg-2_pkg_setup
-}
-
-src_prepare() {
-	if [[ ${PV} = 9999* ]]; then
-		# tests are restricted, no point in building them
-		sed -ie 's/tests //' "${S}"/Makefile.am
-	fi
-	xorg-2_src_prepare
+	xorg-2_src_configure
 }

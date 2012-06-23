@@ -28,14 +28,14 @@ RDEPEND="x11-libs/libXext
 DEPEND="${RDEPEND}
 	>=x11-proto/dri2proto-2.6"
 
-pkg_setup() {
-	xorg-2_pkg_setup
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable dri)
 		$(use_enable glamor)
 		$(use_enable sna)
 		--enable-xvmc
 	)
+	xorg-2_src_configure
 }
 
 pkg_postinst() {
@@ -47,7 +47,7 @@ pkg_postinst() {
 		ewarn "    Graphics support --->"
 		ewarn "      Direct Rendering Manager (XFree86 4.1.0 and higher DRI support)  --->"
 		ewarn "      <*>   Intel 830M, 845G, 852GM, 855GM, 865G (i915 driver)  --->"
-		ewarn "              i915 driver"
+		ewarn "	      i915 driver"
 		ewarn "      [*]       Enable modesetting on intel by default"
 		echo
 	fi

@@ -17,8 +17,8 @@ RDEPEND="x11-libs/libX11
 	x11-proto/kbproto"
 DEPEND="${RDEPEND}"
 
-pkg_setup() {
-	xorg-2_pkg_setup
-
+src_configure() {
 	tc-is-cross-compiler && export CFLAGS_FOR_BUILD="${BUILD_CFLAGS}"
+
+	xorg-2_src_configure
 }

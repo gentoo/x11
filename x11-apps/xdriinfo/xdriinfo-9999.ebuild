@@ -15,9 +15,7 @@ RDEPEND="x11-libs/libX11
 DEPEND="${RDEPEND}
 	x11-proto/glproto"
 
-pkg_setup() {
-	xorg-2_pkg_setup
-
+src_configure() {
 	append-cppflags "-I${EPREFIX}/usr/lib64/opengl/xorg-x11/include/"
-
+	xorg-2_src_configure
 }

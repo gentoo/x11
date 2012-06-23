@@ -24,10 +24,9 @@ DEPEND="${RDEPEND}
 	>=dev-util/gperf-3.0.1
 	test? ( >=dev-libs/check-0.9.4 )"
 
-pkg_setup() {
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_with doc doxygen)
 	)
-
-	xorg-2_pkg_setup
+	xorg-2_src_configure
 }

@@ -21,12 +21,11 @@ RDEPEND="x11-libs/libX11
 	x11-proto/xextproto"
 DEPEND="${RDEPEND}"
 
-pkg_setup() {
-	xorg-2_pkg_setup
-
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable doc specs)
 		$(use_with doc xmlto)
 		--without-fop
 	)
+	xorg-2_src_configure
 }

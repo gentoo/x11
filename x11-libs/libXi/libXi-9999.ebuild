@@ -18,14 +18,14 @@ RDEPEND=">=x11-libs/libX11-1.4.99.1
 	>=x11-proto/xextproto-7.0.3"
 DEPEND="${RDEPEND}"
 
-pkg_setup() {
-	xorg-2_pkg_setup
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable doc specs)
 		$(use_with doc xmlto)
 		$(use_with doc asciidoc)
 		--without-fop
 	)
+	xorg-2_src_configure
 }
 
 pkg_postinst() {
