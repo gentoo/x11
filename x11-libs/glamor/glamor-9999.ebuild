@@ -15,7 +15,7 @@ else
 	SRC_URI="mirror://gentoo/${P}.tar.gz"
 fi
 
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64 ~ia64 ~x86"
 IUSE="gles"
 
 RDEPEND=">=x11-base/xorg-server-1.10
