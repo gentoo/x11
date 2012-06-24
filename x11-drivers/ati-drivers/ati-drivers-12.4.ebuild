@@ -162,7 +162,7 @@ _check_kernel_config() {
 		eerror "    CONFIG_ACPI=y"
 		eerror "in /usr/src/linux/.config or"
 		eerror "    Power management and ACPI options --->"
-		eerror "        [*] Power Management support"
+		eerror "	[*] Power Management support"
 		eerror "in the 'menuconfig'"
 		error+=" CONFIG_ACPI disabled;"
 		failed=1
@@ -174,7 +174,7 @@ _check_kernel_config() {
 		eerror "    CONFIG_PCI_MSI=y"
 		eerror "in /usr/src/linux/.config or"
 		eerror "    Bus options (PCI etc.)  --->"
-		eerror "        [*] Message Signaled Interrupts (MSI and MSI-X)"
+		eerror "	[*] Message Signaled Interrupts (MSI and MSI-X)"
 		eerror "in the kernel config."
 		error+=" CONFIG_PCI_MSI disabled;"
 		failed=1
@@ -187,9 +187,9 @@ _check_kernel_config() {
 		eerror "FATAL: modpost: GPL-incompatible module fglrx.ko uses GPL-only symbol 'lock_acquire'"
 		eerror "Please make sure the following options have been unset:"
 		eerror "    Kernel hacking  --->"
-		eerror "        [ ] Lock debugging: detect incorrect freeing of live locks"
-		eerror "        [ ] Lock debugging: prove locking correctness"
-		eerror "        [ ] Lock usage statistics"
+		eerror "	[ ] Lock debugging: detect incorrect freeing of live locks"
+		eerror "	[ ] Lock debugging: prove locking correctness"
+		eerror "	[ ] Lock usage statistics"
 		eerror "in 'menuconfig'"
 		error+=" LOCKDEP enabled;"
 		failed=1
@@ -333,7 +333,7 @@ src_prepare() {
 	# see http://ati.cchtml.com/show_bug.cgi?id=495
 	epatch "${FILESDIR}"/ati-drivers-old_rsp.patch
 	#fixes bug #420751
-	#epatch "${FILESDIR}"/ati-drivers-do_mmap.patch
+	epatch "${FILESDIR}"/ati-drivers-do_mmap.patch
 
 	cd "${MODULE_DIR}"
 

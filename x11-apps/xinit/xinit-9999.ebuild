@@ -9,7 +9,7 @@ inherit xorg-2
 DESCRIPTION="X Window System initializer"
 
 LICENSE="${LICENSE} GPL-2"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd"
 IUSE="+minimal"
 
 RDEPEND="
@@ -31,12 +31,11 @@ PATCHES=(
 	"${FILESDIR}/0001-Gentoo-customizations.patch"
 )
 
-pkg_setup() {
-	xorg-2_pkg_setup
-
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		--with-xinitdir=/etc/X11/xinit
 	)
+	xorg-2_src_configure
 }
 
 src_install() {

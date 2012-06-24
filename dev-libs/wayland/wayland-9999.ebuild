@@ -24,7 +24,7 @@ fi
 
 LICENSE="CCPL-Attribution-ShareAlike-3.0 MIT"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64 ~arm ~hppa ~ppc64 ~x86"
 IUSE="static-libs"
 
 RDEPEND="dev-libs/expat

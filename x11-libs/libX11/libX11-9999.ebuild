@@ -9,7 +9,7 @@ inherit xorg-2 toolchain-funcs flag-o-matic
 
 DESCRIPTION="X.Org X11 library"
 
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~ppc-aix ~x86-fbsd ~x64-freebsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris ~x86-winnt"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~ppc-aix ~amd64-fbsd ~x86-fbsd ~x64-freebsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris ~x86-winnt"
 IUSE="ipv6 test"
 
 RDEPEND=">=x11-libs/libxcb-1.1.92
@@ -28,17 +28,14 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-1.1.5-solaris.patch
 )
 
-pkg_setup() {
-	xorg-2_pkg_setup
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_with doc xmlto)
 		$(use_enable doc specs)
 		$(use_enable ipv6)
 		--without-fop
 	)
-}
 
-src_configure() {
 	[[ ${CHOST} == *-interix* ]] && export ac_cv_func_poll=no
 	xorg-2_src_configure
 }

@@ -27,10 +27,14 @@ DEPEND="${RDEPEND}
 
 pkg_setup() {
 	linux-info_pkg_setup
+	xorg-2_pkg_setup
+}
 
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable debug)
 	)
+	xorg-2_src_configure
 }
 
 src_install() {
@@ -51,7 +55,7 @@ pkg_pretend() {
 		ewarn "    Input device support --->"
 		ewarn "      <*>   Event interface"
 		ewarn "      [*]   Tablets  --->"
-		ewarn "        <*>   Wacom Intuos/Graphire tablet support (USB)"
+		ewarn "	<*>   Wacom Intuos/Graphire tablet support (USB)"
 		echo
 	fi
 }

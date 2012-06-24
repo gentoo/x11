@@ -9,7 +9,7 @@ inherit xorg-2
 
 DESCRIPTION="X.Org Xfont library"
 
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd ~x64-freebsd ~x86-freebsd ~amd64-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~x64-solaris ~x86-solaris"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x64-freebsd ~x86-freebsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~x64-solaris ~x86-solaris"
 IUSE="ipv6"
 
 RDEPEND="x11-libs/xtrans
@@ -20,14 +20,13 @@ RDEPEND="x11-libs/xtrans
 	x11-proto/fontsproto"
 DEPEND="${RDEPEND}"
 
-pkg_setup() {
-	xorg-2_pkg_setup
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable ipv6)
 		$(use_enable doc devel-docs)
 		$(use_with doc xmlto)
 		--with-bzip2
 		--without-fop
-		--with-encodingsdir="${EPREFIX}/usr/share/fonts/encodings"
 	)
+	xorg-2_src_configure
 }

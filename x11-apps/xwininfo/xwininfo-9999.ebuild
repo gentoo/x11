@@ -8,7 +8,7 @@ inherit xorg-2 flag-o-matic
 
 DESCRIPTION="window information utility for X"
 
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~x64-solaris ~x86-solaris ~x86-winnt"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~x64-solaris ~x86-solaris ~x86-winnt"
 IUSE=""
 
 RDEPEND=">=x11-libs/libxcb-1.6"
@@ -16,10 +16,11 @@ DEPEND="${RDEPEND}
 	x11-libs/libX11
 	>=x11-proto/xproto-7.0.17"
 
-pkg_setup() {
+src_configure() {
 	# interix has a _very_ old iconv in libc, however, including
 	# iconv.h redefines those symbols to libiconv_*, which then
 	# are unresolved, as the configure check is old and dumb.
 	[[ ${CHOST} == *-interix* ]] &&
 		append-libs -liconv
+	xorg-2_src_configure
 }

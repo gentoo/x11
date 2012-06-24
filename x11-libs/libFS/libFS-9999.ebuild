@@ -15,10 +15,9 @@ RDEPEND="x11-libs/xtrans
 	x11-proto/fontsproto"
 DEPEND="${RDEPEND}"
 
-pkg_setup() {
-	xorg-2_pkg_setup
-
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable ipv6)
 	)
+	xorg-2_src_configure
 }
