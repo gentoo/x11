@@ -16,6 +16,7 @@ RDEPEND="x11-libs/libXext
 	x11-libs/libXfixes
 	x11-libs/libXvMC
 	>=x11-libs/libxcb-1.5
+	x11-libs/xcb-util
 	>=x11-libs/libdrm-2.4.29[video_cards_intel]
 	glamor? (
 		x11-libs/glamor
