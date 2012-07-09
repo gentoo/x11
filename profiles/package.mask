@@ -4,6 +4,7 @@
 =x11-apps/mesa-progs-9999
 =x11-apps/mkfontdir-9999
 =x11-apps/mkfontscale-9999
+=x11-apps/radeontop-9999
 =x11-apps/smproxy-9999
 =x11-apps/x11perf-9999
 =x11-apps/xcursorgen-9999
