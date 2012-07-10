@@ -8,23 +8,24 @@ inherit eutils multilib linux-info linux-mod toolchain-funcs versionator
 
 DESCRIPTION="Ati precompiled drivers for radeon r600 (HD Series) and newer chipsets"
 HOMEPAGE="http://www.amd.com"
-# 8.ble will be used for beta releases.
-if [[ $(get_major_version) -gt 8 ]]; then
+MY_V=( $(get_version_components) )
+if [[ ${MY_V[2]} != beta ]]; then
 	ATI_URL="http://www2.ati.com/drivers/linux/"
 	SRC_URI="${ATI_URL}/amd-driver-installer-${PV/./-}-x86.x86_64.run"
 	FOLDER_PREFIX="common/"
 else
-	SRC_URI="https://launchpad.net/ubuntu/natty/+source/fglrx-installer/2:${PV}-0ubuntu1/+files/fglrx-installer_${PV}.orig.tar.gz"
-	FOLDER_PREFIX=""
+	#SRC_URI="https://launchpad.net/ubuntu/natty/+source/fglrx-installer/2:${PV}-0ubuntu1/+files/fglrx-installer_${PV}.orig.tar.gz"
+	SRC_URI="http://www2.ati.com/drivers/legacy/amd-driver-installer-12.6-legacy-x86.x86_64.zip"
+	FOLDER_PREFIX="common/"
 fi
-IUSE="debug +modules multilib pax_kernel qt4 static-libs"
+IUSE="debug +modules multilib qt4 static-libs"
 
 LICENSE="AMD GPL-2 QPL-1.0 as-is"
 KEYWORDS="~amd64 ~x86"
 SLOT="1"
 
 RDEPEND="
-	<=x11-base/xorg-server-1.11.49[-minimal]
+	<=x11-base/xorg-server-1.12.49[-minimal]
 	>=app-admin/eselect-opengl-1.0.7
 	app-admin/eselect-opencl
 	sys-power/acpid
@@ -274,14 +275,14 @@ pkg_setup() {
 }
 
 src_unpack() {
-	if [[ $(get_major_version) -gt 8 ]]; then
-		# Switching to a standard way to extract the files since otherwise no signature file
-		# would be created
-		local src="${DISTDIR}/${A}"
-		sh "${src}" --extract "${S}"  2&>1 /dev/null
-	else
+	if [[ ${MY_V[2]} == beta ]]; then
 		unpack ${A}
+		RUN=${A/%.zip/.run}
+	else
+		RUN=${A}
 	fi
+	sh "${S}"/${RUN} --extract "${S}"  2>&1 > /dev/null || die \
+	'unpack failed'
 }
 
 src_prepare() {
@@ -320,20 +321,8 @@ src_prepare() {
 	# add function to detect default state.
 	epatch "${FILESDIR}"/ati-powermode-opt-path-2.patch
 
-	# fix needed for at least hardened-sources, see bug #392753
-	use pax_kernel && epatch "${FILESDIR}"/ati-drivers-12.2-redefine-WARN.patch
-
-	# fixed fgrlx compilation error on 32-bit x86 arch with kernel 3.3-rc4 due to commit:
-	# https://github.com/torvalds/linux/commit/f94edacf998516ac9d849f7bc6949a703977a7f3
-	# later modified (in 3.3-rc5) by commit:
-	# https://github.com/torvalds/linux/commit/7e16838d94b566a17b65231073d179bc04d590c8#diff-1
-	# and finally backported to kernel 3.2.8.
-	epatch "${FILESDIR}"/amd-drivers-3.2.7.1.patch
-
-	# see http://ati.cchtml.com/show_bug.cgi?id=495
-	epatch "${FILESDIR}"/ati-drivers-old_rsp.patch
-	#fixes bug #420751
-	epatch "${FILESDIR}"/ati-drivers-do_mmap.patch
+#	# fix needed for at least hardened-sources, see bug #392753
+#	use pax_kernel && epatch "${FILESDIR}"/ati-drivers-12.2-redefine-WARN.patch
 
 	cd "${MODULE_DIR}"
 
@@ -355,6 +344,15 @@ src_prepare() {
 	mkdir extra || die "mkdir failed"
 	cd extra
 	unpack ./../${FOLDER_PREFIX}usr/src/ati/fglrx_sample_source.tgz
+
+	# Get rid of watermark. Oldest known reference:
+	# http://phoronix.com/forums/showthread.php?19875-Unsupported-Hardware-watermark
+	ebegin "Disabling watermark"
+	driver="${MY_BASE_DIR}"/usr/X11R6/${PKG_LIBDIR}/modules/drivers/fglrx_drv.so
+	for x in $(objdump -d ${driver}|awk '/call/&&/EnableLogo/{print "\\x"$2"\\x"$3"\\x"$4"\\x"$5"\\x"$6}'); do
+		sed -i "s/${x}/\x90\x90\x90\x90\x90/g" ${driver} || break 1
+	done
+	eend $? || die "Disabling watermark failed"
 }
 
 src_compile() {
