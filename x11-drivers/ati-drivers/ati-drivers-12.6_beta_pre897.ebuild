@@ -321,8 +321,8 @@ src_prepare() {
 	# add function to detect default state.
 	epatch "${FILESDIR}"/ati-powermode-opt-path-2.patch
 
-#	# fix needed for at least hardened-sources, see bug #392753
-#	use pax_kernel && epatch "${FILESDIR}"/ati-drivers-12.2-redefine-WARN.patch
+	#fixes bug #420751
+	epatch "${FILESDIR}"/ati-drivers-do_mmap.patch
 
 	cd "${MODULE_DIR}"
 
