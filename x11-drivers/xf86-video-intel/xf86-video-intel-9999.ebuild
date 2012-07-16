@@ -10,7 +10,7 @@ inherit linux-info xorg-2
 DESCRIPTION="X.Org driver for Intel cards"
 
 KEYWORDS="~amd64 ~ia64 ~x86 ~amd64-fbsd -x86-fbsd"
-IUSE="glamor sna"
+IUSE="glamor +sna"
 
 RDEPEND="x11-libs/libXext
 	x11-libs/libXfixes
