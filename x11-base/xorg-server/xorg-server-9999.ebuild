@@ -212,6 +212,11 @@ pkg_postinst() {
 		ewarn "or using sets from portage-2.2:"
 		ewarn "	emerge @x11-module-rebuild"
 	fi
+
+	if use udev && has_version sys-fs/udev[-keymap]; then
+		ewarn "sys-fs/udev was built without keymap support. This may cause input device"
+		ewarn "autoconfiguration to fail."
+	fi
 }
 
 pkg_postrm() {
