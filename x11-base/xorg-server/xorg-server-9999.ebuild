@@ -64,10 +64,10 @@ DEPEND="${RDEPEND}
 	>=x11-proto/damageproto-1.1
 	>=x11-proto/fixesproto-5.0
 	>=x11-proto/fontsproto-2.0.2
-	>=x11-proto/glproto-1.4.14
+	>=x11-proto/glproto-1.4.16
 	>=x11-proto/inputproto-2.1.99.3
 	>=x11-proto/kbproto-1.0.3
-	>=x11-proto/randrproto-1.2.99.3
+	>=x11-proto/randrproto-1.4.0
 	>=x11-proto/recordproto-1.13.99.1
 	>=x11-proto/renderproto-0.11
 	>=x11-proto/resourceproto-1.0.2
@@ -93,7 +93,7 @@ DEPEND="${RDEPEND}
 	)
 	!minimal? (
 		>=x11-proto/xf86driproto-2.1.0
-		>=x11-proto/dri2proto-2.6
+		>=x11-proto/dri2proto-2.8
 		>=x11-libs/libdrm-2.4.20
 	)"
 
@@ -211,6 +211,11 @@ pkg_postinst() {
 		ewarn "	emerge portage-utils; qlist -I -C x11-drivers/"
 		ewarn "or using sets from portage-2.2:"
 		ewarn "	emerge @x11-module-rebuild"
+	fi
+
+	if use udev && has_version sys-fs/udev[-keymap]; then
+		ewarn "sys-fs/udev was built without keymap support. This may cause input device"
+		ewarn "autoconfiguration to fail."
 	fi
 }
 

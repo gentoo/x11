@@ -24,6 +24,8 @@ LICENSE="AMD GPL-2 QPL-1.0 as-is"
 KEYWORDS="~amd64 ~x86"
 SLOT="1"
 
+RESTRICT="bindist"
+
 RDEPEND="
 	<=x11-base/xorg-server-1.12.49[-minimal]
 	>=app-admin/eselect-opengl-1.0.7
