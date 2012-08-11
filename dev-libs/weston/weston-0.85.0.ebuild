@@ -44,7 +44,7 @@ src_prepare() {
 }
 
 src_configure() {
-	econf --disable-setuid-install
+	econf --disable-setuid-install \
 		  $(use_enable static-libs static) \
 		  $(use_enable drm drm-compositor) \
 		  $(use_enable wayland-compositor) \
