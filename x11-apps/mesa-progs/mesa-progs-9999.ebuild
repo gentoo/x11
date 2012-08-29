@@ -10,11 +10,11 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/${MY_PN/-//}"
 EGIT_PROJECT="mesa-progs"
 
 if [[ ${PV} = 9999* ]]; then
-	    GIT_ECLASS="git-2"
-		EXPERIMENTAL="true"
+	GIT_ECLASS="git-2"
+	EXPERIMENTAL="true"
 fi
 
-inherit toolchain-funcs ${GIT_ECLASS}
+inherit base autotools toolchain-funcs ${GIT_ECLASS}
 
 DESCRIPTION="Mesa's OpenGL utility and demo programs (glxgears and glxinfo)"
 HOMEPAGE="http://mesa3d.sourceforge.net/"
@@ -37,6 +37,12 @@ S=${WORKDIR}/${MY_P}
 src_unpack() {
 	default
 	[[ $PV = 9999* ]] && git-2_src_unpack
+}
+
+src_prepare() {
+	base_src_prepare
+
+	eautoreconf
 }
 
 src_configure() {
