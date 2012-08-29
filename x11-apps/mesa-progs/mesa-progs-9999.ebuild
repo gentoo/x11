@@ -7,9 +7,11 @@ EAPI=4
 MY_PN=${PN/progs/demos}
 MY_P=${MY_PN}-${PV}
 EGIT_REPO_URI="git://anongit.freedesktop.org/${MY_PN/-//}"
+EGIT_PROJECT="mesa-progs"
 
 if [[ ${PV} = 9999* ]]; then
-	    GIT_ECLASS="git"
+	    GIT_ECLASS="git-2"
+		EXPERIMENTAL="true"
 fi
 
 inherit toolchain-funcs ${GIT_ECLASS}
@@ -31,6 +33,11 @@ RDEPEND="virtual/opengl"
 DEPEND="${RDEPEND}"
 
 S=${WORKDIR}/${MY_P}
+
+src_unpack() {
+	default
+	[[ $PV = 9999* ]] && git-2_src_unpack
+}
 
 src_configure() {
 	# We're not using the complete buildsystem if we only want to build
