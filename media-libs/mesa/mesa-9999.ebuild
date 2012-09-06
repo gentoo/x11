@@ -76,7 +76,7 @@ REQUIRED_USE="
 	video_cards_vmware? ( gallium )
 "
 
-LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.34"
+LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.39"
 # not a runtime dependency of this package, but dependency of packages which
 # depend on this package, bug #342393
 EXTERNAL_DEPEND="
@@ -98,7 +98,7 @@ RDEPEND="${EXTERNAL_DEPEND}
 	x11-libs/libXdamage
 	x11-libs/libXext
 	x11-libs/libXxf86vm
-	>=x11-libs/libxcb-1.8
+	>=x11-libs/libxcb-1.8.1
 	d3d? ( app-emulation/wine )
 	opencl? ( 
 				app-admin/eselect-opencl

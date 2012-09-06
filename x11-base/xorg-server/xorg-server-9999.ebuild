@@ -140,6 +140,7 @@ src_configure() {
 		$(use_enable !minimal dri)
 		$(use_enable !minimal dri2)
 		$(use_enable !minimal glx)
+		$(use_enable !minimal libdrm)
 		$(use_enable xnest)
 		$(use_enable xorg)
 		$(use_enable xvfb)
