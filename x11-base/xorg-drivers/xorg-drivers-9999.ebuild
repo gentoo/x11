@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -44,9 +44,9 @@ IUSE_VIDEO_CARDS="
 	video_cards_i128
 	video_cards_i740
 	video_cards_intel
-	video_cards_impact
 	video_cards_mach64
 	video_cards_mga
+	video_cards_modesetting
 	video_cards_neomagic
 	video_cards_newport
 	video_cards_nouveau
@@ -117,6 +117,7 @@ PDEPEND="
 	video_cards_intel?         ( x11-drivers/xf86-video-intel )
 	video_cards_mach64?        ( x11-drivers/xf86-video-mach64 )
 	video_cards_mga?           ( x11-drivers/xf86-video-mga )
+	video_cards_modesetting?   ( x11-drivers/xf86-video-modesetting )
 	video_cards_neomagic?      ( x11-drivers/xf86-video-neomagic )
 	video_cards_newport?       ( x11-drivers/xf86-video-newport )
 	video_cards_nouveau?       ( x11-drivers/xf86-video-nouveau )
