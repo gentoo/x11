@@ -46,12 +46,11 @@ for card in ${VIDEO_CARDS}; do
 done
 
 IUSE="${IUSE_VIDEO_CARDS}
-	bindist +classic d3d debug +egl g3dvl +gallium gbm gles1 gles2 +llvm +nptl
-	opencl openvg osmesa pax_kernel pic r600-llvm-compiler selinux +shared-glapi
-	vdpau wayland xvmc xa xorg kernel_FreeBSD"
+	bindist +classic debug +egl g3dvl +gallium gbm gles1 gles2 +llvm +nptl
+	opencl openvg osmesa pax_kernel pic r600-llvm-compiler selinux +shared-glapi vdpau
+	wayland xvmc xa xorg kernel_FreeBSD"
 
 REQUIRED_USE="
-	d3d?    ( gallium )
 	g3dvl?  ( gallium )
 	llvm?   ( gallium )
 	openvg? ( egl gallium )
@@ -99,7 +98,6 @@ RDEPEND="${EXTERNAL_DEPEND}
 	x11-libs/libXext
 	x11-libs/libXxf86vm
 	>=x11-libs/libxcb-1.8.1
-	d3d? ( app-emulation/wine )
 	opencl? ( 
 				app-admin/eselect-opencl
 				dev-libs/libclc
@@ -234,7 +232,6 @@ src_configure() {
 
 	if use gallium; then
 		myconf+="
-			$(use_enable d3d d3d1x)
 			$(use_enable g3dvl gallium-g3dvl)
 			$(use_enable llvm gallium-llvm)
 			$(use_enable openvg)
