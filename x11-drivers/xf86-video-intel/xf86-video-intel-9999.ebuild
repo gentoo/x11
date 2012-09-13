@@ -12,6 +12,8 @@ DESCRIPTION="X.Org driver for Intel cards"
 KEYWORDS="~amd64 ~ia64 ~x86 ~amd64-fbsd -x86-fbsd"
 IUSE="glamor +sna uxa xvmc"
 
+REQUIRED_USE="|| ( glamor sna uxa )"
+
 RDEPEND="x11-libs/libXext
 	x11-libs/libXfixes
 	>=x11-libs/pixman-0.27.1
