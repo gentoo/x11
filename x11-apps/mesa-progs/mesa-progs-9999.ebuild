@@ -39,7 +39,7 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	egl? (
 		media-libs/glew
-		media-libs/glu
+		virtual/glu
 	)
 	x11-proto/xproto"
 
