@@ -10,7 +10,9 @@ inherit linux-info xorg-2
 DESCRIPTION="X.Org driver for Intel cards"
 
 KEYWORDS="~amd64 ~ia64 ~x86 ~amd64-fbsd -x86-fbsd"
-IUSE="glamor +sna uxa xvmc"
+IUSE="glamor +sna udev uxa xvmc"
+
+REQUIRED_USE="|| ( glamor sna uxa )"
 
 RDEPEND="x11-libs/libXext
 	x11-libs/libXfixes
@@ -21,6 +23,9 @@ RDEPEND="x11-libs/libXext
 	)
 	sna? (
 		>=x11-base/xorg-server-1.10
+	)
+	udev? (
+		sys-fs/udev
 	)
 	xvmc? (
 		x11-libs/libXvMC
@@ -38,6 +43,7 @@ src_configure() {
 		$(use_enable glamor)
 		$(use_enable sna)
 		$(use_enable uxa)
+		$(use_enable udev)
 		$(use_enable xvmc)
 	)
 	xorg-2_src_configure

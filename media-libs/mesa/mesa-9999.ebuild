@@ -76,16 +76,9 @@ REQUIRED_USE="
 "
 
 LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.39"
-# not a runtime dependency of this package, but dependency of packages which
-# depend on this package, bug #342393
-EXTERNAL_DEPEND="
-	>=x11-proto/dri2proto-2.6
-	>=x11-proto/glproto-1.4.15-r1
-"
 # keep correct libdrm and dri2proto dep
 # keep blocks in rdepend for binpkg
-# gtest file collision bug #411825
-RDEPEND="${EXTERNAL_DEPEND}
+RDEPEND="
 	!<x11-base/xorg-server-1.7
 	!<=x11-proto/xf86driproto-2.0.3
 	classic? ( app-admin/eselect-mesa )
@@ -139,6 +132,8 @@ DEPEND="${RDEPEND}
 	sys-devel/flex
 	virtual/pkgconfig
 	x11-misc/makedepend
+	>=x11-proto/dri2proto-2.6
+	>=x11-proto/glproto-1.4.15-r1
 	>=x11-proto/xextproto-7.0.99.1
 	x11-proto/xf86driproto
 	x11-proto/xf86vidmodeproto

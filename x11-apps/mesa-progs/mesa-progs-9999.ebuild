@@ -29,8 +29,19 @@ SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux"
 IUSE="egl gles1 gles2"
 
-RDEPEND="virtual/opengl"
-DEPEND="${RDEPEND}"
+RDEPEND="
+	media-libs/mesa[egl?,gles1?,gles2?]
+	virtual/opengl
+	x11-libs/libX11"
+# glew and glu are only needed by the configure script which is only used
+# when building EGL/GLESv1/GLESv2 programs. They are not actually required
+# by the installed programs.
+DEPEND="${RDEPEND}
+	egl? (
+		media-libs/glew
+		virtual/glu
+	)
+	x11-proto/xproto"
 
 S=${WORKDIR}/${MY_P}
 
@@ -56,24 +67,35 @@ src_configure() {
 src_compile() {
 	if ! use egl && ! use gles1 && ! use gles2; then
 		tc-export CC
-		emake LDLIBS='-lX11 -lGL -lm' src/xdemos/{glxgears,glxinfo}
+		emake LDLIBS='-lX11 -lGL' src/xdemos/glxinfo
+		emake LDLIBS='-lX11 -lGL -lm' src/xdemos/glxgears
 	else
 		emake -C src/xdemos glxgears glxinfo
 	fi
 
 	if use egl; then
+		emake LDLIBS="-lEGL" -C src/egl/opengl/ eglinfo
 		emake -C src/egl/eglut/ libeglut_screen.la libeglut_x11.la
-		emake -C src/egl/opengl/ eglgears_screen eglgears_x11
+		emake LDLIBS="-lGL -lEGL -lX11 -lm" -C src/egl/opengl/ eglgears_x11
+		emake LDLIBS="-lGL -lEGL -lm" -C src/egl/opengl/ eglgears_screen
 
-		use gles1 && emake -C src/egl/opengles1/ es1_info gears_screen gears_x11
-		use gles2 && emake -C src/egl/opengles2/ es2_info es2gears_screen es2gears_x11
+		if use gles1; then
+			emake LDLIBS="-lGLESv1_CM -lEGL -lX11" -C src/egl/opengles1/ es1_info
+			emake LDLIBS="-lGLESv1_CM -lEGL -lX11 -lm" -C src/egl/opengles1/ gears_x11
+			emake LDLIBS="-lGLESv1_CM -lEGL -lm" -C src/egl/opengles1/ gears_screen
+		fi
+		if use gles2; then
+			emake LDLIBS="-lGLESv2 -lEGL -lX11" -C src/egl/opengles2/ es2_info
+			emake LDLIBS="-lGLESv2 -lEGL -lX11 -lm" -C src/egl/opengles2/ es2gears_x11
+			emake LDLIBS="-lGLESv2 -lEGL -lm" -C src/egl/opengles2/ es2gears_screen
+		fi
 	fi
 }
 
 src_install() {
 	dobin src/xdemos/{glxgears,glxinfo}
 	if use egl; then
-		dobin src/egl/opengl/eglgears_{screen,x11}
+		dobin src/egl/opengl/egl{info,gears_{screen,x11}}
 
 		if use gles1; then
 			dobin src/egl/opengles1/es1_info
