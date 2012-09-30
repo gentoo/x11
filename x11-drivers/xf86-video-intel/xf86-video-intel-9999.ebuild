@@ -10,7 +10,7 @@ inherit linux-info xorg-2
 DESCRIPTION="X.Org driver for Intel cards"
 
 KEYWORDS="~amd64 ~ia64 ~x86 ~amd64-fbsd -x86-fbsd"
-IUSE="glamor +sna udev uxa xvmc"
+IUSE="glamor +sna +udev uxa xvmc"
 
 REQUIRED_USE="|| ( glamor sna uxa )"
 
@@ -31,8 +31,8 @@ RDEPEND="x11-libs/libXext
 		x11-libs/libXvMC
 		>=x11-libs/libxcb-1.5
 		x11-libs/xcb-util
-	)"
-# Requires dri2proto-2.6 (unreleased)
+	)
+"
 DEPEND="${RDEPEND}
 	>=x11-proto/dri2proto-2.6
 	x11-proto/resourceproto"
