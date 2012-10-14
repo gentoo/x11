@@ -10,8 +10,8 @@ DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and ne
 HOMEPAGE="http://www.amd.com"
 MY_V=( $(get_version_components) )
 #RUN="${WORKDIR}/amd-driver-installer-9.00-x86.x86_64.run"
-SRC_URI="http://www2.ati.com/drivers/beta/amd-driver-installer-12-9-beta-x86.x86_64.zip"
-FOLDER_PREFIX="common/"
+SRC_URI="https://launchpad.net/ubuntu/quantal/+source/fglrx-installer/2:9.000-0ubuntu3/+files/fglrx-installer_9.000.orig.tar.gz"
+FOLDER_PREFIX=""
 IUSE="debug +modules multilib qt4 static-libs disable-watermark"
 
 LICENSE="AMD GPL-2 QPL-1.0 as-is"
@@ -21,7 +21,7 @@ SLOT="1"
 RESTRICT="bindist"
 
 RDEPEND="
-	<=x11-base/xorg-server-1.12.49[-minimal]
+	<=x11-base/xorg-server-1.13.49[-minimal]
 	>=app-admin/eselect-opengl-1.0.7
 	app-admin/eselect-opencl
 	sys-power/acpid
@@ -279,14 +279,18 @@ pkg_setup() {
 }
 
 src_unpack() {
-	#please note, RUN may be insanely assigned at top near SRC_URI
-	if [[ ${A} =~ .*\.zip ]]; then
+	if [[ ${A} =~ .*\.tar\.gz ]]; then
 		unpack ${A}
-		[[ -z "$RUN" ]] && RUN="${S}/${A/%.zip/.run}"
 	else
-		RUN="${DISTDIR}/${A}"
+		#please note, RUN may be insanely assigned at top near SRC_URI
+		if [[ ${A} =~ .*\.zip ]]; then
+			unpack ${A}
+			[[ -z "$RUN" ]] && RUN="${S}/${A/%.zip/.run}"
+		else
+			RUN="${DISTDIR}/${A}"
+		fi
+		sh ${RUN} --extract "${S}" 2>&1 > /dev/null || die
 	fi
-	sh ${RUN} --extract "${S}" 2>&1 > /dev/null || die
 }
 
 src_prepare() {
