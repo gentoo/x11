@@ -334,6 +334,10 @@ src_prepare() {
 	# first hunk applied upstream second (x32 related) was not
 	epatch "${FILESDIR}"/ati-drivers-x32_something_something.patch
 
+	# compile fix for linux-3.7
+	# https://bugs.gentoo.org/show_bug.cgi?id=438516
+	epatch "${FILESDIR}/ati-drivers-vm-reserverd.patch"
+
 	cd "${MODULE_DIR}"
 
 	# bugged fglrx build system, this file should be copied by hand
