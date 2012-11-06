@@ -19,9 +19,6 @@ DEPEND="${RDEPEND}"
 
 src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
-		--enable-dri
-		--enable-kms
-		--enable-exa
 		$(use_enable glamor)
 		$(use_enable udev)
 	)
