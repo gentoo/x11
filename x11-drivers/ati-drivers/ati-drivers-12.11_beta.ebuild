@@ -338,6 +338,9 @@ src_prepare() {
 	# https://bugs.gentoo.org/show_bug.cgi?id=438516
 	epatch "${FILESDIR}/ati-drivers-vm-reserverd.patch"
 
+	# compile fix for AGP-less kernel, bug #435322
+	epatch "${FILESDIR}"/ati-drivers-12.9-KCL_AGP_FindCapsRegisters-stub.patch
+
 	cd "${MODULE_DIR}"
 
 	# bugged fglrx build system, this file should be copied by hand
