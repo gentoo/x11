@@ -10,8 +10,8 @@ DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and ne
 HOMEPAGE="http://www.amd.com"
 MY_V=( $(get_version_components) )
 #RUN="${WORKDIR}/amd-driver-installer-9.00-x86.x86_64.run"
-SRC_URI="https://launchpad.net/ubuntu/quantal/+source/fglrx-installer/2:9.000-0ubuntu3/+files/fglrx-installer_9.000.orig.tar.gz"
-FOLDER_PREFIX=""
+SRC_URI="http://www2.ati.com/drivers/beta/amd-driver-installer-catalyst-12.11-beta8-x86.x86_64.zip"
+FOLDER_PREFIX="common/"
 IUSE="debug +modules multilib qt4 static-libs disable-watermark"
 
 LICENSE="AMD GPL-2 QPL-1.0 as-is"
@@ -337,6 +337,9 @@ src_prepare() {
 	# compile fix for linux-3.7
 	# https://bugs.gentoo.org/show_bug.cgi?id=438516
 	epatch "${FILESDIR}/ati-drivers-vm-reserverd.patch"
+
+	# compile fix for AGP-less kernel, bug #435322
+	epatch "${FILESDIR}"/ati-drivers-12.9-KCL_AGP_FindCapsRegisters-stub.patch
 
 	cd "${MODULE_DIR}"
 
