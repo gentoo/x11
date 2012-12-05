@@ -119,11 +119,11 @@ done
 DEPEND="${RDEPEND}
 	llvm? (
 		>=sys-devel/llvm-2.9
-		r600-llvm-compiler? ( >=sys-devel/llvm-3.1 )
-		video_cards_radeonsi? ( >=sys-devel/llvm-3.1 )
+		r600-llvm-compiler? ( >=sys-devel/llvm-3.2 )
+		video_cards_radeonsi? ( >=sys-devel/llvm-3.2 )
 	)
 	opencl? (
-				>=sys-devel/clang-3.1
+				>=sys-devel/clang-3.2
 				>=sys-devel/gcc-4.6
 	)
 	=dev-lang/python-2*
