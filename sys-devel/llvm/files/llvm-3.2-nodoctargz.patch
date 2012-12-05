@@ -1,6 +1,6 @@
---- docs/Makefile.orig	2011-02-28 21:30:46.000000000 +0100
-+++ docs/Makefile	2011-02-28 21:35:22.000000000 +0100
-@@ -53,13 +53,12 @@
+--- docs/Makefile.orig	2012-04-30 17:00:01.000000000 +0200
++++ docs/Makefile	2012-04-30 17:15:52.000000000 +0200
+@@ -52,11 +52,10 @@
  # 'make generated BUILD_FOR_WEBSITE=1'
  generated:: $(generated_targets)
  
@@ -8,14 +8,12 @@
 +install-html:
  	$(Echo) Installing HTML documentation
  	$(Verb) $(MKDIR) $(DESTDIR)$(PROJ_docsdir)/html
- 	$(Verb) $(MKDIR) $(DESTDIR)$(PROJ_docsdir)/html/img
  	$(Verb) $(DataInstall) $(HTML) $(DESTDIR)$(PROJ_docsdir)/html
- 	$(Verb) $(DataInstall) $(IMAGES) $(DESTDIR)$(PROJ_docsdir)/html/img
 -	$(Verb) $(DataInstall) $(PROJ_OBJ_DIR)/html.tar.gz $(DESTDIR)$(PROJ_docsdir)
  
  $(PROJ_OBJ_DIR)/html.tar.gz: $(HTML)
  	$(Echo) Packaging HTML documentation
-@@ -71,12 +70,11 @@
+@@ -68,12 +67,11 @@
  install-doxygen: doxygen
  	$(Echo) Installing doxygen documentation
  	$(Verb) $(MKDIR) $(DESTDIR)$(PROJ_docsdir)/html/doxygen
@@ -29,7 +27,7 @@
  
  regendoc:
  	$(Echo) Building doxygen documentation
-@@ -102,7 +100,6 @@
+@@ -99,7 +97,6 @@
  install-ocamldoc: ocamldoc
  	$(Echo) Installing ocamldoc documentation
  	$(Verb) $(MKDIR) $(DESTDIR)$(PROJ_docsdir)/ocamldoc/html
@@ -37,3 +35,11 @@
  	$(Verb) cd $(PROJ_OBJ_DIR)/ocamldoc && \
  	  $(FIND) . -type f -exec \
  	    $(DataInstall) {} $(DESTDIR)$(PROJ_docsdir)/ocamldoc/html \;
+@@ -109,7 +106,6 @@
+ 	$(Verb) $(RM) -rf $(PROJ_OBJ_DIR)/ocamldoc.tar*
+ 	$(Verb) $(TAR) cf $(PROJ_OBJ_DIR)/ocamldoc.tar ocamldoc
+ 	$(Verb) $(GZIPBIN) $(PROJ_OBJ_DIR)/ocamldoc.tar
+-	$(Verb) $(CP) $(PROJ_OBJ_DIR)/ocamldoc.tar.gz $(PROJ_OBJ_DIR)/ocamldoc/html/
+ 
+ regen-ocamldoc:
+ 	$(Echo) Building ocamldoc documentation

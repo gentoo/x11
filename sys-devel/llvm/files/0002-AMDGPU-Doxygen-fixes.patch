@@ -1,0 +1,2481 @@
+From 00635a114c1e48f0eb70407ecd714e685a63aaf4 Mon Sep 17 00:00:00 2001
+From: Tom Stellard <thomas.stellard@amd.com>
+Date: Thu, 29 Nov 2012 17:59:40 +0000
+Subject: [PATCH 2/4] AMDGPU: Doxygen fixes
+
+- Add \file to every file
+- Use \brief, \returns, \param, etc. where necessary
+- Remove duplicate function / class names from doxygen comments
+---
+ lib/Target/AMDGPU/AMDGPU.h                         |   1 +
+ lib/Target/AMDGPU/AMDGPUAsmPrinter.cpp             |  10 +-
+ lib/Target/AMDGPU/AMDGPUAsmPrinter.h               |   7 +-
+ lib/Target/AMDGPU/AMDGPUCodeEmitter.h              |   3 +-
+ lib/Target/AMDGPU/AMDGPUConvertToISA.cpp           |   5 +-
+ lib/Target/AMDGPU/AMDGPUISelLowering.cpp           |   4 +-
+ lib/Target/AMDGPU/AMDGPUISelLowering.h             |  22 +++--
+ lib/Target/AMDGPU/AMDGPUInstrInfo.cpp              |   5 +-
+ lib/Target/AMDGPU/AMDGPUInstrInfo.h                |   7 +-
+ lib/Target/AMDGPU/AMDGPUMCInstLower.cpp            |   4 +-
+ lib/Target/AMDGPU/AMDGPUMCInstLower.h              |   3 +-
+ lib/Target/AMDGPU/AMDGPURegisterInfo.cpp           |   3 +-
+ lib/Target/AMDGPU/AMDGPURegisterInfo.h             |  12 ++-
+ lib/Target/AMDGPU/AMDGPUSubtarget.cpp              |   3 +-
+ lib/Target/AMDGPU/AMDGPUSubtarget.h                |   3 +-
+ lib/Target/AMDGPU/AMDGPUTargetMachine.cpp          |   5 +-
+ lib/Target/AMDGPU/AMDGPUTargetMachine.h            |   3 +-
+ lib/Target/AMDGPU/AMDIL.h                          |  28 +++---
+ lib/Target/AMDGPU/AMDIL7XXDevice.cpp               |   1 +
+ lib/Target/AMDGPU/AMDIL7XXDevice.h                 |  44 +++++----
+ lib/Target/AMDGPU/AMDILCFGStructurizer.cpp         |   2 +-
+ lib/Target/AMDGPU/AMDILDevice.cpp                  |   1 +
+ lib/Target/AMDGPU/AMDILDevice.h                    |  47 ++++-----
+ lib/Target/AMDGPU/AMDILDeviceInfo.cpp              |   3 +-
+ lib/Target/AMDGPU/AMDILDeviceInfo.h                | 106 ++++++++++-----------
+ lib/Target/AMDGPU/AMDILDevices.h                   |   2 +-
+ lib/Target/AMDGPU/AMDILEvergreenDevice.cpp         |   1 +
+ lib/Target/AMDGPU/AMDILEvergreenDevice.h           |  58 ++++++-----
+ lib/Target/AMDGPU/AMDILFrameLowering.cpp           |   6 +-
+ lib/Target/AMDGPU/AMDILFrameLowering.h             |  46 ++++-----
+ lib/Target/AMDGPU/AMDILISelDAGToDAG.cpp            |  12 +--
+ lib/Target/AMDGPU/AMDILISelLowering.cpp            |   3 +-
+ lib/Target/AMDGPU/AMDILIntrinsicInfo.cpp           |   3 +-
+ lib/Target/AMDGPU/AMDILIntrinsicInfo.h             |  46 ++++-----
+ lib/Target/AMDGPU/AMDILNIDevice.cpp                |   1 +
+ lib/Target/AMDGPU/AMDILNIDevice.h                  |  70 +++++++-------
+ lib/Target/AMDGPU/AMDILPeepholeOptimizer.cpp       |   1 +
+ lib/Target/AMDGPU/AMDILSIDevice.cpp                |   1 +
+ lib/Target/AMDGPU/AMDILSIDevice.h                  |  40 ++++----
+ .../AMDGPU/InstPrinter/AMDGPUInstPrinter.cpp       |   1 +
+ lib/Target/AMDGPU/InstPrinter/AMDGPUInstPrinter.h  |   5 +-
+ .../AMDGPU/MCTargetDesc/AMDGPUAsmBackend.cpp       |   1 +
+ lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCAsmInfo.cpp |   1 +
+ lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCAsmInfo.h   |  22 ++---
+ .../AMDGPU/MCTargetDesc/AMDGPUMCCodeEmitter.h      |  63 ++++++------
+ .../AMDGPU/MCTargetDesc/AMDGPUMCTargetDesc.cpp     |   3 +-
+ .../AMDGPU/MCTargetDesc/AMDGPUMCTargetDesc.h       |   3 +-
+ .../AMDGPU/MCTargetDesc/R600MCCodeEmitter.cpp      |  18 ++--
+ lib/Target/AMDGPU/MCTargetDesc/SIMCCodeEmitter.cpp |  29 +++---
+ lib/Target/AMDGPU/R600Defines.h                    |   7 +-
+ lib/Target/AMDGPU/R600ExpandSpecialInstrs.cpp      |   9 +-
+ lib/Target/AMDGPU/R600ISelLowering.cpp             |  11 +--
+ lib/Target/AMDGPU/R600ISelLowering.h               |  13 +--
+ lib/Target/AMDGPU/R600InstrInfo.cpp                |   3 +-
+ lib/Target/AMDGPU/R600InstrInfo.h                  |  40 ++++----
+ lib/Target/AMDGPU/R600MachineFunctionInfo.cpp      |   1 +
+ lib/Target/AMDGPU/R600MachineFunctionInfo.h        |   4 +-
+ lib/Target/AMDGPU/R600RegisterInfo.cpp             |   3 +-
+ lib/Target/AMDGPU/R600RegisterInfo.h               |  22 +++--
+ lib/Target/AMDGPU/SIAssignInterpRegs.cpp           |  15 +--
+ lib/Target/AMDGPU/SIFixSGPRLiveness.cpp            |   6 +-
+ lib/Target/AMDGPU/SIISelLowering.cpp               |  10 +-
+ lib/Target/AMDGPU/SIISelLowering.h                 |  10 +-
+ lib/Target/AMDGPU/SIInstrInfo.cpp                  |   3 +-
+ lib/Target/AMDGPU/SIInstrInfo.h                    |   8 +-
+ lib/Target/AMDGPU/SILowerControlFlow.cpp           |  77 +++++++--------
+ lib/Target/AMDGPU/SILowerLiteralConstants.cpp      |  34 +++----
+ lib/Target/AMDGPU/SIMachineFunctionInfo.cpp        |   1 +
+ lib/Target/AMDGPU/SIMachineFunctionInfo.h          |  18 ++--
+ lib/Target/AMDGPU/SIRegisterInfo.cpp               |   3 +-
+ lib/Target/AMDGPU/SIRegisterInfo.h                 |  15 +--
+ lib/Target/AMDGPU/TargetInfo/AMDGPUTargetInfo.cpp  |   8 +-
+ 72 files changed, 572 insertions(+), 517 deletions(-)
+
+diff --git a/lib/Target/AMDGPU/AMDGPU.h b/lib/Target/AMDGPU/AMDGPU.h
+index 2a06ade..40864b0 100644
+--- a/lib/Target/AMDGPU/AMDGPU.h
++++ b/lib/Target/AMDGPU/AMDGPU.h
+@@ -5,6 +5,7 @@
+ // This file is distributed under the University of Illinois Open Source
+ // License. See LICENSE.TXT for details.
+ //
++/// \file
+ //===----------------------------------------------------------------------===//
+ 
+ #ifndef AMDGPU_H
+diff --git a/lib/Target/AMDGPU/AMDGPUAsmPrinter.cpp b/lib/Target/AMDGPU/AMDGPUAsmPrinter.cpp
+index 012f3e9..4d796d4 100644
+--- a/lib/Target/AMDGPU/AMDGPUAsmPrinter.cpp
++++ b/lib/Target/AMDGPU/AMDGPUAsmPrinter.cpp
+@@ -7,9 +7,11 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// The AMDGPUAsmPrinter is used to print both assembly string and also binary
+-// code.  When passed an MCAsmStreamer it prints assembly and when passed
+-// an MCObjectStreamer it outputs binary code.
++/// \file
++///
++/// The AMDGPUAsmPrinter is used to print both assembly string and also binary
++/// code.  When passed an MCAsmStreamer it prints assembly and when passed
++/// an MCObjectStreamer it outputs binary code.
+ //
+ //===----------------------------------------------------------------------===//
+ //
+@@ -35,7 +37,7 @@ extern "C" void LLVMInitializeAMDGPUAsmPrinter() {
+   TargetRegistry::RegisterAsmPrinter(TheAMDGPUTarget, createAMDGPUAsmPrinterPass);
+ }
+ 
+-/// runOnMachineFunction - We need to override this function so we can avoid
++/// We need to override this function so we can avoid
+ /// the call to EmitFunctionHeader(), which the MCPureStreamer can't handle.
+ bool AMDGPUAsmPrinter::runOnMachineFunction(MachineFunction &MF) {
+   const AMDGPUSubtarget &STM = TM.getSubtarget<AMDGPUSubtarget>();
+diff --git a/lib/Target/AMDGPU/AMDGPUAsmPrinter.h b/lib/Target/AMDGPU/AMDGPUAsmPrinter.h
+index b35d2e9..3812282 100644
+--- a/lib/Target/AMDGPU/AMDGPUAsmPrinter.h
++++ b/lib/Target/AMDGPU/AMDGPUAsmPrinter.h
+@@ -7,7 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// AMDGPU Assembly printer class.
++/// \file
++/// \brief AMDGPU Assembly printer class.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+@@ -30,11 +31,11 @@ public:
+     return "AMDGPU Assembly Printer";
+   }
+ 
+-  /// EmitProgramInfo - Emit register usage information so that the GPU driver
++  /// \brief Emit register usage information so that the GPU driver
+   /// can correctly setup the GPU state.
+   void EmitProgramInfo(MachineFunction &MF);
+ 
+-  /// EmitInstuction - Implemented in AMDGPUMCInstLower.cpp
++  /// Implemented in AMDGPUMCInstLower.cpp
+   virtual void EmitInstruction(const MachineInstr *MI);
+ };
+ 
+diff --git a/lib/Target/AMDGPU/AMDGPUCodeEmitter.h b/lib/Target/AMDGPU/AMDGPUCodeEmitter.h
+index 89886dd..84f3588 100644
+--- a/lib/Target/AMDGPU/AMDGPUCodeEmitter.h
++++ b/lib/Target/AMDGPU/AMDGPUCodeEmitter.h
+@@ -7,7 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// CodeEmitter interface for R600 and SI codegen.
++/// \file
++/// \brief CodeEmitter interface for R600 and SI codegen.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+diff --git a/lib/Target/AMDGPU/AMDGPUConvertToISA.cpp b/lib/Target/AMDGPU/AMDGPUConvertToISA.cpp
+index dd5f786..5f3d5e6 100644
+--- a/lib/Target/AMDGPU/AMDGPUConvertToISA.cpp
++++ b/lib/Target/AMDGPU/AMDGPUConvertToISA.cpp
+@@ -7,8 +7,9 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// This pass lowers AMDIL machine instructions to the appropriate hardware
+-// instructions. 
++/// \file
++/// \brief This pass lowers AMDIL machine instructions to the appropriate
++/// hardware instructions. 
+ //
+ //===----------------------------------------------------------------------===//
+ 
+diff --git a/lib/Target/AMDGPU/AMDGPUISelLowering.cpp b/lib/Target/AMDGPU/AMDGPUISelLowering.cpp
+index d815ef8..f6de0c0 100644
+--- a/lib/Target/AMDGPU/AMDGPUISelLowering.cpp
++++ b/lib/Target/AMDGPU/AMDGPUISelLowering.cpp
+@@ -7,7 +7,9 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// This is the parent TargetLowering class for hardware code gen targets.
++/// \file
++/// \brief This is the parent TargetLowering class for hardware code gen
++/// targets.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+diff --git a/lib/Target/AMDGPU/AMDGPUISelLowering.h b/lib/Target/AMDGPU/AMDGPUISelLowering.h
+index 7783326..7ba0ef8 100644
+--- a/lib/Target/AMDGPU/AMDGPUISelLowering.h
++++ b/lib/Target/AMDGPU/AMDGPUISelLowering.h
+@@ -7,8 +7,9 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// This file contains the interface defintiion of the TargetLowering class
+-// that is common to all AMD GPUs.
++/// \file
++/// \brief Interface definition of the TargetLowering class that is common
++/// to all AMD GPUs.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+@@ -28,9 +29,10 @@ private:
+ 
+ protected:
+ 
+-  /// CreateLiveInRegister - Helper function that adds Reg to the LiveIn list
+-  /// of the DAG's MachineFunction.  This returns a Register SDNode representing
+-  /// Reg.
++  /// \brief Helper function that adds Reg to the LiveIn list of the DAG's
++  /// MachineFunction.
++  ///
++  /// \returns a RegisterSDNode representing Reg.
+   SDValue CreateLiveInRegister(SelectionDAG &DAG, const TargetRegisterClass *RC,
+                                                   unsigned Reg, EVT VT) const;
+ 
+@@ -60,9 +62,9 @@ public:
+ // Functions defined in AMDILISelLowering.cpp
+ public:
+ 
+-  /// computeMaskedBitsForTargetNode - Determine which of the bits specified
+-  /// in Mask are known to be either zero or one and return them in the
+-  /// KnownZero/KnownOne bitsets.
++  /// \brief Determine which of the bits specified in \p Mask are known to be
++  /// either zero or one and return them in the \p KnownZero and \p KnownOne
++  /// bitsets.
+   virtual void computeMaskedBitsForTargetNode(const SDValue Op,
+                                               APInt &KnownZero,
+                                               APInt &KnownOne,
+@@ -72,10 +74,10 @@ public:
+   virtual bool getTgtMemIntrinsic(IntrinsicInfo &Info,
+                                   const CallInst &I, unsigned Intrinsic) const;
+ 
+-  /// isFPImmLegal - We want to mark f32/f64 floating point values as legal.
++  /// We want to mark f32/f64 floating point values as legal.
+   bool isFPImmLegal(const APFloat &Imm, EVT VT) const;
+ 
+-  /// ShouldShrinkFPConstant - We don't want to shrink f64/f32 constants.
++  /// We don't want to shrink f64/f32 constants.
+   bool ShouldShrinkFPConstant(EVT VT) const;
+ 
+ private:
+diff --git a/lib/Target/AMDGPU/AMDGPUInstrInfo.cpp b/lib/Target/AMDGPU/AMDGPUInstrInfo.cpp
+index d9defcb..e42a46d 100644
+--- a/lib/Target/AMDGPU/AMDGPUInstrInfo.cpp
++++ b/lib/Target/AMDGPU/AMDGPUInstrInfo.cpp
+@@ -7,8 +7,9 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// This file contains the implementation of the TargetInstrInfo class that is
+-// common to all AMD GPUs.
++/// \file
++/// \brief Implementation of the TargetInstrInfo class that is common to all
++/// AMD GPUs.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+diff --git a/lib/Target/AMDGPU/AMDGPUInstrInfo.h b/lib/Target/AMDGPU/AMDGPUInstrInfo.h
+index bd6a028..32ac691 100644
+--- a/lib/Target/AMDGPU/AMDGPUInstrInfo.h
++++ b/lib/Target/AMDGPU/AMDGPUInstrInfo.h
+@@ -7,8 +7,9 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// This file contains the definition of a TargetInstrInfo class that is common
+-// to all AMD GPUs.
++/// \file
++/// \brief Contains the definition of a TargetInstrInfo class that is common
++/// to all AMD GPUs.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+@@ -136,7 +137,7 @@ public:
+   virtual unsigned getIEQOpcode() const = 0;
+   virtual bool isMov(unsigned opcode) const = 0;
+ 
+-  /// convertToISA - Convert the AMDIL MachineInstr to a supported ISA
++  /// \brief Convert the AMDIL MachineInstr to a supported ISA
+   /// MachineInstr
+   virtual void convertToISA(MachineInstr & MI, MachineFunction &MF,
+     DebugLoc DL) const;
+diff --git a/lib/Target/AMDGPU/AMDGPUMCInstLower.cpp b/lib/Target/AMDGPU/AMDGPUMCInstLower.cpp
+index 5c12c18..de4053e 100644
+--- a/lib/Target/AMDGPU/AMDGPUMCInstLower.cpp
++++ b/lib/Target/AMDGPU/AMDGPUMCInstLower.cpp
+@@ -7,8 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// This file contains code to lower AMDGPU MachineInstrs to their corresponding
+-// MCInst.
++/// \file
++/// \brief Code to lower AMDGPU MachineInstrs to their corresponding MCInst.
+ //
+ //===----------------------------------------------------------------------===//
+ //
+diff --git a/lib/Target/AMDGPU/AMDGPUMCInstLower.h b/lib/Target/AMDGPU/AMDGPUMCInstLower.h
+index 3f68ff0..d7bf827 100644
+--- a/lib/Target/AMDGPU/AMDGPUMCInstLower.h
++++ b/lib/Target/AMDGPU/AMDGPUMCInstLower.h
+@@ -5,6 +5,7 @@
+ // This file is distributed under the University of Illinois Open Source
+ // License. See LICENSE.TXT for details.
+ //
++/// \file
+ //===----------------------------------------------------------------------===//
+ 
+ #ifndef AMDGPU_MCINSTLOWER_H
+@@ -20,7 +21,7 @@ class AMDGPUMCInstLower {
+ public:
+   AMDGPUMCInstLower();
+ 
+-  /// lower - Lower a MachineInstr to an MCInst
++  /// \brief Lower a MachineInstr to an MCInst
+   void lower(const MachineInstr *MI, MCInst &OutMI) const;
+ 
+ };
+diff --git a/lib/Target/AMDGPU/AMDGPURegisterInfo.cpp b/lib/Target/AMDGPU/AMDGPURegisterInfo.cpp
+index 69bda63..eeafec8 100644
+--- a/lib/Target/AMDGPU/AMDGPURegisterInfo.cpp
++++ b/lib/Target/AMDGPU/AMDGPURegisterInfo.cpp
+@@ -7,7 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// Parent TargetRegisterInfo class common to all hw codegen targets.
++/// \file
++/// \brief Parent TargetRegisterInfo class common to all hw codegen targets.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+diff --git a/lib/Target/AMDGPU/AMDGPURegisterInfo.h b/lib/Target/AMDGPU/AMDGPURegisterInfo.h
+index 14d618b..76ee7ae 100644
+--- a/lib/Target/AMDGPU/AMDGPURegisterInfo.h
++++ b/lib/Target/AMDGPU/AMDGPURegisterInfo.h
+@@ -7,8 +7,9 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// This file contains the TargetRegisterInfo interface that is implemented
+-// by all hw codegen targets.
++/// \file
++/// \brief TargetRegisterInfo interface that is implemented by all hw codegen
++/// targets.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+@@ -38,10 +39,11 @@ struct AMDGPURegisterInfo : public AMDGPUGenRegisterInfo {
+     assert(!"Unimplemented");  return BitVector();
+   }
+ 
+-  /// getISARegClass - rc is an AMDIL reg class.  This function returns the
+-  /// ISA reg class that is equivalent to the given AMDIL reg class.
++  /// \param RC is an AMDIL reg class.
++  ///
++  /// \returns The ISA reg class that is equivalent to \p RC.
+   virtual const TargetRegisterClass * getISARegClass(
+-                                         const TargetRegisterClass * rc) const {
++                                         const TargetRegisterClass * RC) const {
+     assert(!"Unimplemented"); return NULL;
+   }
+ 
+diff --git a/lib/Target/AMDGPU/AMDGPUSubtarget.cpp b/lib/Target/AMDGPU/AMDGPUSubtarget.cpp
+index 461a22f..0f356a1 100644
+--- a/lib/Target/AMDGPU/AMDGPUSubtarget.cpp
++++ b/lib/Target/AMDGPU/AMDGPUSubtarget.cpp
+@@ -7,7 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// This file implements the AMDGPU specific subclass of TargetSubtarget.
++/// \file
++/// \brief Implements the AMDGPU specific subclass of TargetSubtarget.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+diff --git a/lib/Target/AMDGPU/AMDGPUSubtarget.h b/lib/Target/AMDGPU/AMDGPUSubtarget.h
+index 79a7486..cab7884 100644
+--- a/lib/Target/AMDGPU/AMDGPUSubtarget.h
++++ b/lib/Target/AMDGPU/AMDGPUSubtarget.h
+@@ -7,7 +7,8 @@
+ //
+ //==-----------------------------------------------------------------------===//
+ //
+-// This file declares the AMDGPU specific subclass of TargetSubtarget.
++/// \file
++/// \brief AMDGPU specific subclass of TargetSubtarget.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+diff --git a/lib/Target/AMDGPU/AMDGPUTargetMachine.cpp b/lib/Target/AMDGPU/AMDGPUTargetMachine.cpp
+index 50a3f62..e42fa8a 100644
+--- a/lib/Target/AMDGPU/AMDGPUTargetMachine.cpp
++++ b/lib/Target/AMDGPU/AMDGPUTargetMachine.cpp
+@@ -7,8 +7,9 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// The AMDGPU target machine contains all of the hardware specific information
+-// needed to emit code for R600 and SI GPUs.
++/// \file
++/// \brief The AMDGPU target machine contains all of the hardware specific
++/// information  needed to emit code for R600 and SI GPUs.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+diff --git a/lib/Target/AMDGPU/AMDGPUTargetMachine.h b/lib/Target/AMDGPU/AMDGPUTargetMachine.h
+index 7924f10..399e55c 100644
+--- a/lib/Target/AMDGPU/AMDGPUTargetMachine.h
++++ b/lib/Target/AMDGPU/AMDGPUTargetMachine.h
+@@ -7,7 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-//  The AMDGPU TargetMachine interface definition for hw codgen targets.
++/// \file
++/// \brief The AMDGPU TargetMachine interface definition for hw codgen targets.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+diff --git a/lib/Target/AMDGPU/AMDIL.h b/lib/Target/AMDGPU/AMDIL.h
+index d8682fb..4e577dc 100644
+--- a/lib/Target/AMDGPU/AMDIL.h
++++ b/lib/Target/AMDGPU/AMDIL.h
+@@ -7,8 +7,8 @@
+ //
+ //==-----------------------------------------------------------------------===//
+ //
+-// This file contains the entry points for global functions defined in the LLVM
+-// AMDGPU back-end.
++/// This file contains the entry points for global functions defined in the LLVM
++/// AMDGPU back-end.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+@@ -61,13 +61,13 @@ class raw_ostream;
+ class Target;
+ class TargetMachine;
+ 
+-/// Instruction selection passes.
++// Instruction selection passes.
+ FunctionPass*
+   createAMDGPUISelDag(TargetMachine &TM);
+ FunctionPass*
+   createAMDGPUPeepholeOpt(TargetMachine &TM);
+ 
+-/// Pre emit passes.
++// Pre emit passes.
+ FunctionPass*
+   createAMDGPUCFGPreparationPass(TargetMachine &TM);
+ FunctionPass*
+@@ -76,7 +76,7 @@ FunctionPass*
+ extern Target TheAMDGPUTarget;
+ } // end namespace llvm;
+ 
+-/// Include device information enumerations
++// Include device information enumerations
+ #include "AMDILDeviceInfo.h"
+ 
+ namespace llvm {
+@@ -88,15 +88,15 @@ namespace llvm {
+ /// memory locations.
+ namespace AMDGPUAS {
+ enum AddressSpaces {
+-  PRIVATE_ADDRESS  = 0, // Address space for private memory.
+-  GLOBAL_ADDRESS   = 1, // Address space for global memory (RAT0, VTX0).
+-  CONSTANT_ADDRESS = 2, // Address space for constant memory.
+-  LOCAL_ADDRESS    = 3, // Address space for local memory.
+-  REGION_ADDRESS   = 4, // Address space for region memory.
+-  ADDRESS_NONE     = 5, // Address space for unknown memory.
+-  PARAM_D_ADDRESS  = 6, // Address space for direct addressible parameter memory (CONST0)
+-  PARAM_I_ADDRESS  = 7, // Address space for indirect addressible parameter memory (VTX1)
+-  USER_SGPR_ADDRESS = 8, // Address space for USER_SGPRS on SI
++  PRIVATE_ADDRESS  = 0, ///< Address space for private memory.
++  GLOBAL_ADDRESS   = 1, ///< Address space for global memory (RAT0, VTX0).
++  CONSTANT_ADDRESS = 2, ///< Address space for constant memory.
++  LOCAL_ADDRESS    = 3, ///< Address space for local memory.
++  REGION_ADDRESS   = 4, ///< Address space for region memory.
++  ADDRESS_NONE     = 5, ///< Address space for unknown memory.
++  PARAM_D_ADDRESS  = 6, ///< Address space for direct addressible parameter memory (CONST0)
++  PARAM_I_ADDRESS  = 7, ///< Address space for indirect addressible parameter memory (VTX1)
++  USER_SGPR_ADDRESS = 8, ///< Address space for USER_SGPRS on SI
+   LAST_ADDRESS     = 9
+ };
+ 
+diff --git a/lib/Target/AMDGPU/AMDIL7XXDevice.cpp b/lib/Target/AMDGPU/AMDIL7XXDevice.cpp
+index 21879d6..ea6ac34 100644
+--- a/lib/Target/AMDGPU/AMDIL7XXDevice.cpp
++++ b/lib/Target/AMDGPU/AMDIL7XXDevice.cpp
+@@ -5,6 +5,7 @@
+ // This file is distributed under the University of Illinois Open Source
+ // License. See LICENSE.TXT for details.
+ //
++// \file
+ //==-----------------------------------------------------------------------===//
+ #include "AMDIL7XXDevice.h"
+ #include "AMDGPUSubtarget.h"
+diff --git a/lib/Target/AMDGPU/AMDIL7XXDevice.h b/lib/Target/AMDGPU/AMDIL7XXDevice.h
+index 1befb92..1cf4ca4 100644
+--- a/lib/Target/AMDGPU/AMDIL7XXDevice.h
++++ b/lib/Target/AMDGPU/AMDIL7XXDevice.h
+@@ -6,13 +6,12 @@
+ // License. See LICENSE.TXT for details.
+ //
+ //==-----------------------------------------------------------------------===//
+-//
+-// Interface for the subtarget data classes.
+-//
+-//===----------------------------------------------------------------------===//
+-// This file will define the interface that each generation needs to
+-// implement in order to correctly answer queries on the capabilities of the
+-// specific hardware.
++/// \file
++/// \brief Interface for the subtarget data classes.
++///
++/// This file will define the interface that each generation needs to
++/// implement in order to correctly answer queries on the capabilities of the
++/// specific hardware.
+ //===----------------------------------------------------------------------===//
+ #ifndef AMDIL7XXDEVICEIMPL_H
+ #define AMDIL7XXDEVICEIMPL_H
+@@ -25,10 +24,11 @@ class AMDGPUSubtarget;
+ // 7XX generation of devices and their respective sub classes
+ //===----------------------------------------------------------------------===//
+ 
+-// The AMDGPU7XXDevice class represents the generic 7XX device. All 7XX
+-// devices are derived from this class. The AMDGPU7XX device will only
+-// support the minimal features that are required to be considered OpenCL 1.0
+-// compliant and nothing more.
++/// \brief The AMDGPU7XXDevice class represents the generic 7XX device.
++///
++/// All 7XX devices are derived from this class. The AMDGPU7XX device will only
++/// support the minimal features that are required to be considered OpenCL 1.0
++/// compliant and nothing more.
+ class AMDGPU7XXDevice : public AMDGPUDevice {
+ public:
+   AMDGPU7XXDevice(AMDGPUSubtarget *ST);
+@@ -41,12 +41,13 @@ public:
+ 
+ protected:
+   virtual void setCaps();
+-}; // AMDGPU7XXDevice
++};
+ 
+-// The AMDGPU770Device class represents the RV770 chip and it's
+-// derivative cards. The difference between this device and the base
+-// class is this device device adds support for double precision
+-// and has a larger wavefront size.
++/// \brief The AMDGPU770Device class represents the RV770 chip and it's
++/// derivative cards.
++///
++/// The difference between this device and the base class is this device device
++/// adds support for double precision and has a larger wavefront size.
+ class AMDGPU770Device : public AMDGPU7XXDevice {
+ public:
+   AMDGPU770Device(AMDGPUSubtarget *ST);
+@@ -54,17 +55,18 @@ public:
+   virtual size_t getWavefrontSize() const;
+ private:
+   virtual void setCaps();
+-}; // AMDGPU770Device
++};
+ 
+-// The AMDGPU710Device class derives from the 7XX base class, but this
+-// class is a smaller derivative, so we need to overload some of the
+-// functions in order to correctly specify this information.
++/// \brief The AMDGPU710Device class derives from the 7XX base class.
++///
++/// This class is a smaller derivative, so we need to overload some of the
++/// functions in order to correctly specify this information.
+ class AMDGPU710Device : public AMDGPU7XXDevice {
+ public:
+   AMDGPU710Device(AMDGPUSubtarget *ST);
+   virtual ~AMDGPU710Device();
+   virtual size_t getWavefrontSize() const;
+-}; // AMDGPU710Device
++};
+ 
+ } // namespace llvm
+ #endif // AMDILDEVICEIMPL_H
+diff --git a/lib/Target/AMDGPU/AMDILCFGStructurizer.cpp b/lib/Target/AMDGPU/AMDILCFGStructurizer.cpp
+index 948bdb4..1f276dc 100644
+--- a/lib/Target/AMDGPU/AMDILCFGStructurizer.cpp
++++ b/lib/Target/AMDGPU/AMDILCFGStructurizer.cpp
+@@ -5,6 +5,7 @@
+ // This file is distributed under the University of Illinois Open Source
+ // License. See LICENSE.TXT for details.
+ //
++/// \file
+ //==-----------------------------------------------------------------------===//
+ 
+ #define DEBUGME 0
+@@ -1540,7 +1541,6 @@ void CFGStructurizer<PassT>::mergeLoopbreakBlock(BlockT *exitingBlk,
+   DebugLoc DL = branchInstr->getDebugLoc();
+ 
+   BlockT *trueBranch = CFGTraits::getTrueBranch(branchInstr);
+-  int oldOpcode = branchInstr->getOpcode();
+ 
+   //    transform exitingBlk to
+   //    if ( ) {
+diff --git a/lib/Target/AMDGPU/AMDILDevice.cpp b/lib/Target/AMDGPU/AMDILDevice.cpp
+index 3938681..eec5059 100644
+--- a/lib/Target/AMDGPU/AMDILDevice.cpp
++++ b/lib/Target/AMDGPU/AMDILDevice.cpp
+@@ -5,6 +5,7 @@
+ // This file is distributed under the University of Illinois Open Source
+ // License. See LICENSE.TXT for details.
+ //
++/// \file
+ //==-----------------------------------------------------------------------===//
+ #include "AMDILDevice.h"
+ #include "AMDGPUSubtarget.h"
+diff --git a/lib/Target/AMDGPU/AMDILDevice.h b/lib/Target/AMDGPU/AMDILDevice.h
+index 3740e3b..b9a1560 100644
+--- a/lib/Target/AMDGPU/AMDILDevice.h
++++ b/lib/Target/AMDGPU/AMDILDevice.h
+@@ -7,12 +7,12 @@
+ //
+ //==-----------------------------------------------------------------------===//
+ //
+-// Interface for the subtarget data classes.
++/// \file
++/// \brief Interface for the subtarget data classes.
+ //
+-//===----------------------------------------------------------------------===//
+-// This file will define the interface that each generation needs to
+-// implement in order to correctly answer queries on the capabilities of the
+-// specific hardware.
++/// This file will define the interface that each generation needs to
++/// implement in order to correctly answer queries on the capabilities of the
++/// specific hardware.
+ //===----------------------------------------------------------------------===//
+ #ifndef AMDILDEVICEIMPL_H
+ #define AMDILDEVICEIMPL_H
+@@ -42,43 +42,43 @@ public:
+     MAX_IDS      = 7
+   } IO_TYPE_IDS;
+ 
+-  // Returns the max LDS size that the hardware supports.  Size is in
+-  // bytes.
++  /// \returns The max LDS size that the hardware supports.  Size is in
++  /// bytes.
+   virtual size_t getMaxLDSSize() const = 0;
+ 
+-  // Returns the max GDS size that the hardware supports if the GDS is
+-  // supported by the hardware.  Size is in bytes.
++  /// \returns The max GDS size that the hardware supports if the GDS is
++  /// supported by the hardware.  Size is in bytes.
+   virtual size_t getMaxGDSSize() const;
+ 
+-  // Returns the max number of hardware constant address spaces that
+-  // are supported by this device.
++  /// \returns The max number of hardware constant address spaces that
++  /// are supported by this device.
+   virtual size_t getMaxNumCBs() const;
+ 
+-  // Returns the max number of bytes a single hardware constant buffer
+-  // can support.  Size is in bytes.
++  /// \returns The max number of bytes a single hardware constant buffer
++  /// can support.  Size is in bytes.
+   virtual size_t getMaxCBSize() const;
+ 
+-  // Returns the max number of bytes allowed by the hardware scratch
+-  // buffer.  Size is in bytes.
++  /// \returns The max number of bytes allowed by the hardware scratch
++  /// buffer.  Size is in bytes.
+   virtual size_t getMaxScratchSize() const;
+ 
+-  // Get the flag that corresponds to the device.
++  /// \brief Get the flag that corresponds to the device.
+   virtual uint32_t getDeviceFlag() const;
+ 
+-  // Returns the number of work-items that exist in a single hardware
+-  // wavefront.
++  /// \returns The number of work-items that exist in a single hardware
++  /// wavefront.
+   virtual size_t getWavefrontSize() const = 0;
+ 
+-  // Get the generational name of this specific device.
++  /// \brief Get the generational name of this specific device.
+   virtual uint32_t getGeneration() const = 0;
+ 
+-  // Get the stack alignment of this specific device.
++  /// \brief Get the stack alignment of this specific device.
+   virtual uint32_t getStackAlignment() const;
+ 
+-  // Get the resource ID for this specific device.
++  /// \brief Get the resource ID for this specific device.
+   virtual uint32_t getResourceID(uint32_t DeviceID) const = 0;
+ 
+-  // Get the max number of UAV's for this device.
++  /// \brief Get the max number of UAV's for this device.
+   virtual uint32_t getMaxNumUAVs() const = 0;
+ 
+ 
+@@ -92,6 +92,7 @@ public:
+   // software that emulates it with possibly using the hardware for
+   // support since the hardware does not fully comply with OpenCL
+   // specs.
++
+   bool isSupported(AMDGPUDeviceInfo::Caps Mode) const;
+   bool usesHardware(AMDGPUDeviceInfo::Caps Mode) const;
+   bool usesSoftware(AMDGPUDeviceInfo::Caps Mode) const;
+@@ -110,7 +111,7 @@ protected:
+ private:
+   AMDGPUDeviceInfo::ExecutionMode
+   getExecutionMode(AMDGPUDeviceInfo::Caps Caps) const;
+-}; // AMDGPUDevice
++};
+ 
+ } // namespace llvm
+ #endif // AMDILDEVICEIMPL_H
+diff --git a/lib/Target/AMDGPU/AMDILDeviceInfo.cpp b/lib/Target/AMDGPU/AMDILDeviceInfo.cpp
+index 8c6c734..9605fbe 100644
+--- a/lib/Target/AMDGPU/AMDILDeviceInfo.cpp
++++ b/lib/Target/AMDGPU/AMDILDeviceInfo.cpp
+@@ -7,7 +7,8 @@
+ //
+ //==-----------------------------------------------------------------------===//
+ //
+-// Function that creates DeviceInfo from a device name and other information.
++/// \file
++/// \brief Function that creates DeviceInfo from a device name and other information.
+ //
+ //==-----------------------------------------------------------------------===//
+ #include "AMDILDevices.h"
+diff --git a/lib/Target/AMDGPU/AMDILDeviceInfo.h b/lib/Target/AMDGPU/AMDILDeviceInfo.h
+index 0eb3989..4b2c3a5 100644
+--- a/lib/Target/AMDGPU/AMDILDeviceInfo.h
++++ b/lib/Target/AMDGPU/AMDILDeviceInfo.h
+@@ -5,6 +5,7 @@
+ // This file is distributed under the University of Illinois Open Source
+ // License. See LICENSE.TXT for details.
+ //
++/// \file
+ //==-----------------------------------------------------------------------===//
+ #ifndef AMDILDEVICEINFO_H
+ #define AMDILDEVICEINFO_H
+@@ -16,66 +17,65 @@ namespace llvm {
+   class AMDGPUDevice;
+   class AMDGPUSubtarget;
+   namespace AMDGPUDeviceInfo {
+-    // Each Capabilities can be executed using a hardware instruction,
+-    // emulated with a sequence of software instructions, or not
+-    // supported at all.
++    /// Each Capabilities can be executed using a hardware instruction,
++    /// emulated with a sequence of software instructions, or not
++    /// supported at all.
+     enum ExecutionMode {
+-      Unsupported = 0, // Unsupported feature on the card(Default value)
+-      Software, // This is the execution mode that is set if the
+-      // feature is emulated in software
+-      Hardware  // This execution mode is set if the feature exists
+-        // natively in hardware
++      Unsupported = 0, ///< Unsupported feature on the card(Default value)
++       /// This is the execution mode that is set if the feature is emulated in
++       /// software.
++      Software,
++      /// This execution mode is set if the feature exists natively in hardware
++      Hardware
+     };
+ 
+-    // Any changes to this needs to have a corresponding update to the
+-    // twiki page GPUMetadataABI
+     enum Caps {
+-      HalfOps          = 0x1,  // Half float is supported or not.
+-      DoubleOps        = 0x2,  // Double is supported or not.
+-      ByteOps          = 0x3,  // Byte(char) is support or not.
+-      ShortOps         = 0x4,  // Short is supported or not.
+-      LongOps          = 0x5,  // Long is supported or not.
+-      Images           = 0x6,  // Images are supported or not.
+-      ByteStores       = 0x7,  // ByteStores available(!HD4XXX).
+-      ConstantMem      = 0x8,  // Constant/CB memory.
+-      LocalMem         = 0x9,  // Local/LDS memory.
+-      PrivateMem       = 0xA,  // Scratch/Private/Stack memory.
+-      RegionMem        = 0xB,  // OCL GDS Memory Extension.
+-      FMA              = 0xC,  // Use HW FMA or SW FMA.
+-      ArenaSegment     = 0xD,  // Use for Arena UAV per pointer 12-1023.
+-      MultiUAV         = 0xE,  // Use for UAV per Pointer 0-7.
+-      Reserved0        = 0xF,  // ReservedFlag
+-      NoAlias          = 0x10, // Cached loads.
+-      Signed24BitOps   = 0x11, // Peephole Optimization.
+-      // Debug mode implies that no hardware features or optimizations
+-      // are performned and that all memory access go through a single
+-      // uav(Arena on HD5XXX/HD6XXX and Raw on HD4XXX).
+-      Debug            = 0x12, // Debug mode is enabled.
+-      CachedMem        = 0x13, // Cached mem is available or not.
+-      BarrierDetect    = 0x14, // Detect duplicate barriers.
+-      Reserved1        = 0x15, // Reserved flag
+-      ByteLDSOps       = 0x16, // Flag to specify if byte LDS ops are available.
+-      ArenaVectors     = 0x17, // Flag to specify if vector loads from arena work.
+-      TmrReg           = 0x18, // Flag to specify if Tmr register is supported.
+-      NoInline         = 0x19, // Flag to specify that no inlining should occur.
+-      MacroDB          = 0x1A, // Flag to specify that backend handles macrodb.
+-      HW64BitDivMod    = 0x1B, // Flag for backend to generate 64bit div/mod.
+-      ArenaUAV         = 0x1C, // Flag to specify that arena uav is supported.
+-      PrivateUAV       = 0x1D, // Flag to specify that private memory uses uav's.
+-      // If more capabilities are required, then
+-      // this number needs to be increased.
+-      // All capabilities must come before this
+-      // number.
++      HalfOps          = 0x1,  ///< Half float is supported or not.
++      DoubleOps        = 0x2,  ///< Double is supported or not.
++      ByteOps          = 0x3,  ///< Byte(char) is support or not.
++      ShortOps         = 0x4,  ///< Short is supported or not.
++      LongOps          = 0x5,  ///< Long is supported or not.
++      Images           = 0x6,  ///< Images are supported or not.
++      ByteStores       = 0x7,  ///< ByteStores available(!HD4XXX).
++      ConstantMem      = 0x8,  ///< Constant/CB memory.
++      LocalMem         = 0x9,  ///< Local/LDS memory.
++      PrivateMem       = 0xA,  ///< Scratch/Private/Stack memory.
++      RegionMem        = 0xB,  ///< OCL GDS Memory Extension.
++      FMA              = 0xC,  ///< Use HW FMA or SW FMA.
++      ArenaSegment     = 0xD,  ///< Use for Arena UAV per pointer 12-1023.
++      MultiUAV         = 0xE,  ///< Use for UAV per Pointer 0-7.
++      Reserved0        = 0xF,  ///< ReservedFlag
++      NoAlias          = 0x10, ///< Cached loads.
++      Signed24BitOps   = 0x11, ///< Peephole Optimization.
++      /// Debug mode implies that no hardware features or optimizations
++      /// are performned and that all memory access go through a single
++      /// uav(Arena on HD5XXX/HD6XXX and Raw on HD4XXX).
++      Debug            = 0x12,
++      CachedMem        = 0x13, ///< Cached mem is available or not.
++      BarrierDetect    = 0x14, ///< Detect duplicate barriers.
++      Reserved1        = 0x15, ///< Reserved flag
++      ByteLDSOps       = 0x16, ///< Flag to specify if byte LDS ops are available.
++      ArenaVectors     = 0x17, ///< Flag to specify if vector loads from arena work.
++      TmrReg           = 0x18, ///< Flag to specify if Tmr register is supported.
++      NoInline         = 0x19, ///< Flag to specify that no inlining should occur.
++      MacroDB          = 0x1A, ///< Flag to specify that backend handles macrodb.
++      HW64BitDivMod    = 0x1B, ///< Flag for backend to generate 64bit div/mod.
++      ArenaUAV         = 0x1C, ///< Flag to specify that arena uav is supported.
++      PrivateUAV       = 0x1D, ///< Flag to specify that private memory uses uav's.
++      /// If more capabilities are required, then
++      /// this number needs to be increased.
++      /// All capabilities must come before this
++      /// number.
+       MaxNumberCapabilities = 0x20
+     };
+-    // These have to be in order with the older generations
+-    // having the lower number enumerations.
++    /// These have to be in order with the older generations
++    /// having the lower number enumerations.
+     enum Generation {
+-      HD4XXX = 0, // 7XX based devices.
+-      HD5XXX, // Evergreen based devices.
+-      HD6XXX, // NI/Evergreen+ based devices.
+-      HD7XXX,
+-      HDTEST, // Experimental feature testing device.
++      HD4XXX = 0, ///< 7XX based devices.
++      HD5XXX, ///< Evergreen based devices.
++      HD6XXX, ///< NI/Evergreen+ based devices.
++      HD7XXX, ///< Southern Islands based devices.
++      HDTEST, ///< Experimental feature testing device.
+       HDNUMGEN
+     };
+ 
+diff --git a/lib/Target/AMDGPU/AMDILDevices.h b/lib/Target/AMDGPU/AMDILDevices.h
+index befdf8f..636fa6d 100644
+--- a/lib/Target/AMDGPU/AMDILDevices.h
++++ b/lib/Target/AMDGPU/AMDILDevices.h
+@@ -5,11 +5,11 @@
+ // This file is distributed under the University of Illinois Open Source
+ // License. See LICENSE.TXT for details.
+ //
++/// \file
+ //==-----------------------------------------------------------------------===//
+ #ifndef AMDIL_DEVICES_H
+ #define AMDIL_DEVICES_H
+ // Include all of the device specific header files
+-// This file is for Internal use only!
+ #include "AMDIL7XXDevice.h"
+ #include "AMDILDevice.h"
+ #include "AMDILEvergreenDevice.h"
+diff --git a/lib/Target/AMDGPU/AMDILEvergreenDevice.cpp b/lib/Target/AMDGPU/AMDILEvergreenDevice.cpp
+index 052238c..c5213a0 100644
+--- a/lib/Target/AMDGPU/AMDILEvergreenDevice.cpp
++++ b/lib/Target/AMDGPU/AMDILEvergreenDevice.cpp
+@@ -5,6 +5,7 @@
+ // This file is distributed under the University of Illinois Open Source
+ // License. See LICENSE.TXT for details.
+ //
++/// \file
+ //==-----------------------------------------------------------------------===//
+ #include "AMDILEvergreenDevice.h"
+ 
+diff --git a/lib/Target/AMDGPU/AMDILEvergreenDevice.h b/lib/Target/AMDGPU/AMDILEvergreenDevice.h
+index d1a42ef..6dc2deb 100644
+--- a/lib/Target/AMDGPU/AMDILEvergreenDevice.h
++++ b/lib/Target/AMDGPU/AMDILEvergreenDevice.h
+@@ -7,12 +7,12 @@
+ //
+ //==-----------------------------------------------------------------------===//
+ //
+-// Interface for the subtarget data classes.
+-//
+-//===----------------------------------------------------------------------===//
+-// This file will define the interface that each generation needs to
+-// implement in order to correctly answer queries on the capabilities of the
+-// specific hardware.
++/// \file
++/// \brief Interface for the subtarget data classes.
++///
++/// This file will define the interface that each generation needs to
++/// implement in order to correctly answer queries on the capabilities of the
++/// specific hardware.
+ //===----------------------------------------------------------------------===//
+ #ifndef AMDILEVERGREENDEVICE_H
+ #define AMDILEVERGREENDEVICE_H
+@@ -26,10 +26,12 @@ namespace llvm {
+ //===----------------------------------------------------------------------===//
+ 
+ 
+-// The AMDGPUEvergreenDevice is the base device class for all of the Evergreen
+-// series of cards. This class contains information required to differentiate
+-// the Evergreen device from the generic AMDGPUDevice. This device represents
+-// that capabilities of the 'Juniper' cards, also known as the HD57XX.
++/// \brief The AMDGPUEvergreenDevice is the base device class for all of the Evergreen
++/// series of cards.
++///
++/// This class contains information required to differentiate
++/// the Evergreen device from the generic AMDGPUDevice. This device represents
++/// that capabilities of the 'Juniper' cards, also known as the HD57XX.
+ class AMDGPUEvergreenDevice : public AMDGPUDevice {
+ public:
+   AMDGPUEvergreenDevice(AMDGPUSubtarget *ST);
+@@ -42,25 +44,27 @@ public:
+   virtual uint32_t getResourceID(uint32_t) const;
+ protected:
+   virtual void setCaps();
+-}; // AMDGPUEvergreenDevice
++};
+ 
+-// The AMDGPUCypressDevice is similiar to the AMDGPUEvergreenDevice, except it has
+-// support for double precision operations. This device is used to represent
+-// both the Cypress and Hemlock cards, which are commercially known as HD58XX
+-// and HD59XX cards.
++/// The AMDGPUCypressDevice is similiar to the AMDGPUEvergreenDevice, except it has
++/// support for double precision operations. This device is used to represent
++/// both the Cypress and Hemlock cards, which are commercially known as HD58XX
++/// and HD59XX cards.
+ class AMDGPUCypressDevice : public AMDGPUEvergreenDevice {
+ public:
+   AMDGPUCypressDevice(AMDGPUSubtarget *ST);
+   virtual ~AMDGPUCypressDevice();
+ private:
+   virtual void setCaps();
+-}; // AMDGPUCypressDevice
++};
+ 
+ 
+-// The AMDGPUCedarDevice is the class that represents all of the 'Cedar' based
+-// devices. This class differs from the base AMDGPUEvergreenDevice in that the
+-// device is a ~quarter of the 'Juniper'. These are commercially known as the
+-// HD54XX and HD53XX series of cards.
++/// \brief The AMDGPUCedarDevice is the class that represents all of the 'Cedar' based
++/// devices.
++///
++/// This class differs from the base AMDGPUEvergreenDevice in that the
++/// device is a ~quarter of the 'Juniper'. These are commercially known as the
++/// HD54XX and HD53XX series of cards.
+ class AMDGPUCedarDevice : public AMDGPUEvergreenDevice {
+ public:
+   AMDGPUCedarDevice(AMDGPUSubtarget *ST);
+@@ -68,12 +72,14 @@ public:
+   virtual size_t getWavefrontSize() const;
+ private:
+   virtual void setCaps();
+-}; // AMDGPUCedarDevice
++};
+ 
+-// The AMDGPURedwoodDevice is the class the represents all of the 'Redwood' based
+-// devices. This class differs from the base class, in that these devices are
+-// considered about half of a 'Juniper' device. These are commercially known as
+-// the HD55XX and HD56XX series of cards.
++/// \brief The AMDGPURedwoodDevice is the class the represents all of the 'Redwood' based
++/// devices.
++///
++/// This class differs from the base class, in that these devices are
++/// considered about half of a 'Juniper' device. These are commercially known as
++/// the HD55XX and HD56XX series of cards.
+ class AMDGPURedwoodDevice : public AMDGPUEvergreenDevice {
+ public:
+   AMDGPURedwoodDevice(AMDGPUSubtarget *ST);
+@@ -81,7 +87,7 @@ public:
+   virtual size_t getWavefrontSize() const;
+ private:
+   virtual void setCaps();
+-}; // AMDGPURedwoodDevice
++};
+   
+ } // namespace llvm
+ #endif // AMDILEVERGREENDEVICE_H
+diff --git a/lib/Target/AMDGPU/AMDILFrameLowering.cpp b/lib/Target/AMDGPU/AMDILFrameLowering.cpp
+index 7410108..9ad495a 100644
+--- a/lib/Target/AMDGPU/AMDILFrameLowering.cpp
++++ b/lib/Target/AMDGPU/AMDILFrameLowering.cpp
+@@ -7,7 +7,9 @@
+ //
+ //==-----------------------------------------------------------------------===//
+ //
+-// Interface to describe a layout of a stack frame on a AMDIL target machine
++/// \file
++/// \brief Interface to describe a layout of a stack frame on a AMDGPU target
++/// machine.
+ //
+ //===----------------------------------------------------------------------===//
+ #include "AMDILFrameLowering.h"
+@@ -22,8 +24,6 @@ AMDGPUFrameLowering::AMDGPUFrameLowering(StackDirection D, unsigned StackAl,
+ AMDGPUFrameLowering::~AMDGPUFrameLowering() {
+ }
+ 
+-/// getFrameIndexOffset - Returns the displacement from the frame register to
+-/// the stack frame of the specified index.
+ int AMDGPUFrameLowering::getFrameIndexOffset(const MachineFunction &MF,
+                                          int FI) const {
+   const MachineFrameInfo *MFI = MF.getFrameInfo();
+diff --git a/lib/Target/AMDGPU/AMDILFrameLowering.h b/lib/Target/AMDGPU/AMDILFrameLowering.h
+index 81c09a5..51337c3 100644
+--- a/lib/Target/AMDGPU/AMDILFrameLowering.h
++++ b/lib/Target/AMDGPU/AMDILFrameLowering.h
+@@ -5,16 +5,11 @@
+ // This file is distributed under the University of Illinois Open Source
+ // License. See LICENSE.TXT for details.
+ //
+-//==-----------------------------------------------------------------------===//
+-//
+-//                     The LLVM Compiler Infrastructure
+-//
+-// This file is distributed under the University of Illinois Open Source
+-// License. See LICENSE.TXT for details.
+-//
+ //===----------------------------------------------------------------------===//
+ //
+-// Interface to describe a layout of a stack frame on a AMDIL target machine
++/// \file
++/// \brief Interface to describe a layout of a stack frame on a AMDIL target
++/// machine.
+ //
+ //===----------------------------------------------------------------------===//
+ #ifndef AMDILFRAME_LOWERING_H
+@@ -23,24 +18,23 @@
+ #include "llvm/CodeGen/MachineFunction.h"
+ #include "llvm/Target/TargetFrameLowering.h"
+ 
+-/// Information about the stack frame layout on the AMDGPU targets. It holds
+-/// the direction of the stack growth, the known stack alignment on entry to
+-/// each function, and the offset to the locals area.
+-/// See TargetFrameInfo for more comments.
+-
+ namespace llvm {
+-  class AMDGPUFrameLowering : public TargetFrameLowering {
+-    public:
+-      AMDGPUFrameLowering(StackDirection D, unsigned StackAl, int LAO, unsigned
+-          TransAl = 1);
+-      virtual ~AMDGPUFrameLowering();
+-      virtual int getFrameIndexOffset(const MachineFunction &MF,
+-                                         int FI) const;
+-      virtual const SpillSlot *
+-        getCalleeSavedSpillSlots(unsigned &NumEntries) const;
+-      virtual void emitPrologue(MachineFunction &MF) const;
+-      virtual void emitEpilogue(MachineFunction &MF, MachineBasicBlock &MBB) const;
+-      virtual bool hasFP(const MachineFunction &MF) const;
+-  }; // class AMDGPUFrameLowering
++
++/// \brief Information about the stack frame layout on the AMDGPU targets.
++///
++/// It holds the direction of the stack growth, the known stack alignment on
++/// entry to each function, and the offset to the locals area.
++/// See TargetFrameInfo for more comments.
++class AMDGPUFrameLowering : public TargetFrameLowering {
++public:
++  AMDGPUFrameLowering(StackDirection D, unsigned StackAl, int LAO,
++                      unsigned TransAl = 1);
++  virtual ~AMDGPUFrameLowering();
++  virtual int getFrameIndexOffset(const MachineFunction &MF, int FI) const;
++  virtual const SpillSlot *getCalleeSavedSpillSlots(unsigned &NumEntries) const;
++  virtual void emitPrologue(MachineFunction &MF) const;
++  virtual void emitEpilogue(MachineFunction &MF, MachineBasicBlock &MBB) const;
++  virtual bool hasFP(const MachineFunction &MF) const;
++};
+ } // namespace llvm
+ #endif // AMDILFRAME_LOWERING_H
+diff --git a/lib/Target/AMDGPU/AMDILISelDAGToDAG.cpp b/lib/Target/AMDGPU/AMDILISelDAGToDAG.cpp
+index e7115bc..a765438 100644
+--- a/lib/Target/AMDGPU/AMDILISelDAGToDAG.cpp
++++ b/lib/Target/AMDGPU/AMDILISelDAGToDAG.cpp
+@@ -7,7 +7,8 @@
+ //
+ //==-----------------------------------------------------------------------===//
+ //
+-// This file defines an instruction selector for the AMDIL target.
++/// \file
++/// \brief Defines an instruction selector for the AMDGPU target.
+ //
+ //===----------------------------------------------------------------------===//
+ #include "AMDGPUInstrInfo.h"
+@@ -28,11 +29,9 @@ using namespace llvm;
+ // Instruction Selector Implementation
+ //===----------------------------------------------------------------------===//
+ 
+-//===----------------------------------------------------------------------===//
+-// AMDGPUDAGToDAGISel - AMDGPU specific code to select AMDGPU machine instructions
+-// //for SelectionDAG operations.
+-//
+ namespace {
++/// AMDGPU specific code to select AMDGPU machine instructions for
++/// SelectionDAG operations.
+ class AMDGPUDAGToDAGISel : public SelectionDAGISel {
+   // Subtarget - Keep a pointer to the AMDGPU Subtarget around so that we can
+   // make the right decision when generating code for different targets.
+@@ -76,9 +75,8 @@ private:
+ };
+ }  // end anonymous namespace
+ 
+-// createAMDGPUISelDag - This pass converts a legalized DAG into a AMDGPU-specific
++/// \brief This pass converts a legalized DAG into a AMDGPU-specific
+ // DAG, ready for instruction scheduling.
+-//
+ FunctionPass *llvm::createAMDGPUISelDag(TargetMachine &TM
+                                        ) {
+   return new AMDGPUDAGToDAGISel(TM);
+diff --git a/lib/Target/AMDGPU/AMDILISelLowering.cpp b/lib/Target/AMDGPU/AMDILISelLowering.cpp
+index e8cb703..6a5d841 100644
+--- a/lib/Target/AMDGPU/AMDILISelLowering.cpp
++++ b/lib/Target/AMDGPU/AMDILISelLowering.cpp
+@@ -7,7 +7,8 @@
+ //
+ //==-----------------------------------------------------------------------===//
+ //
+-// This file contains TargetLowering functions borrowed from AMDLI.
++/// \file
++/// \brief TargetLowering functions borrowed from AMDIL.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+diff --git a/lib/Target/AMDGPU/AMDILIntrinsicInfo.cpp b/lib/Target/AMDGPU/AMDILIntrinsicInfo.cpp
+index 0f65ce9..02d06d6 100644
+--- a/lib/Target/AMDGPU/AMDILIntrinsicInfo.cpp
++++ b/lib/Target/AMDGPU/AMDILIntrinsicInfo.cpp
+@@ -7,7 +7,8 @@
+ //
+ //==-----------------------------------------------------------------------===//
+ //
+-// This file contains the AMDGPU Implementation of the IntrinsicInfo class.
++/// \file
++/// \brief AMDGPU Implementation of the IntrinsicInfo class.
+ //
+ //===-----------------------------------------------------------------------===//
+ 
+diff --git a/lib/Target/AMDGPU/AMDILIntrinsicInfo.h b/lib/Target/AMDGPU/AMDILIntrinsicInfo.h
+index 70c15d3..83f4933 100644
+--- a/lib/Target/AMDGPU/AMDILIntrinsicInfo.h
++++ b/lib/Target/AMDGPU/AMDILIntrinsicInfo.h
+@@ -7,7 +7,8 @@
+ //
+ //==-----------------------------------------------------------------------===//
+ //
+-//   Interface for the AMDGPU Implementation of the Intrinsic Info class.
++/// \file
++/// \brief Interface for the AMDGPU Implementation of the Intrinsic Info class.
+ //
+ //===-----------------------------------------------------------------------===//
+ #ifndef AMDIL_INTRINSICS_H
+@@ -17,31 +18,32 @@
+ #include "llvm/Target/TargetIntrinsicInfo.h"
+ 
+ namespace llvm {
+-  class TargetMachine;
+-  namespace AMDGPUIntrinsic {
+-    enum ID {
+-      last_non_AMDGPU_intrinsic = Intrinsic::num_intrinsics - 1,
++class TargetMachine;
++
++namespace AMDGPUIntrinsic {
++enum ID {
++  last_non_AMDGPU_intrinsic = Intrinsic::num_intrinsics - 1,
+ #define GET_INTRINSIC_ENUM_VALUES
+ #include "AMDGPUGenIntrinsics.inc"
+ #undef GET_INTRINSIC_ENUM_VALUES
+       , num_AMDGPU_intrinsics
+-    };
+-
+-  }
+-
+-
+-  class AMDGPUIntrinsicInfo : public TargetIntrinsicInfo {
+-    public:
+-      AMDGPUIntrinsicInfo(TargetMachine *tm);
+-      std::string getName(unsigned int IntrId, Type **Tys = 0,
+-          unsigned int numTys = 0) const;
+-      unsigned int lookupName(const char *Name, unsigned int Len) const;
+-      bool isOverloaded(unsigned int IID) const;
+-      Function *getDeclaration(Module *M, unsigned int ID,
+-          Type **Tys = 0,
+-          unsigned int numTys = 0) const;
+-  }; // AMDGPUIntrinsicInfo
+-}
++};
++
++} // end namespace AMDGPUIntrinsic
++
++class AMDGPUIntrinsicInfo : public TargetIntrinsicInfo {
++public:
++  AMDGPUIntrinsicInfo(TargetMachine *tm);
++  std::string getName(unsigned int IntrId, Type **Tys = 0,
++                      unsigned int numTys = 0) const;
++  unsigned int lookupName(const char *Name, unsigned int Len) const;
++  bool isOverloaded(unsigned int IID) const;
++  Function *getDeclaration(Module *M, unsigned int ID,
++                           Type **Tys = 0,
++                           unsigned int numTys = 0) const;
++};
++
++} // end namespace llvm
+ 
+ #endif // AMDIL_INTRINSICS_H
+ 
+diff --git a/lib/Target/AMDGPU/AMDILNIDevice.cpp b/lib/Target/AMDGPU/AMDILNIDevice.cpp
+index 6681e19..b82da59 100644
+--- a/lib/Target/AMDGPU/AMDILNIDevice.cpp
++++ b/lib/Target/AMDGPU/AMDILNIDevice.cpp
+@@ -5,6 +5,7 @@
+ // This file is distributed under the University of Illinois Open Source
+ // License. See LICENSE.TXT for details.
+ //
++/// \file
+ //==-----------------------------------------------------------------------===//
+ #include "AMDILNIDevice.h"
+ #include "AMDILEvergreenDevice.h"
+diff --git a/lib/Target/AMDGPU/AMDILNIDevice.h b/lib/Target/AMDGPU/AMDILNIDevice.h
+index 0579489..bc7df37 100644
+--- a/lib/Target/AMDGPU/AMDILNIDevice.h
++++ b/lib/Target/AMDGPU/AMDILNIDevice.h
+@@ -6,13 +6,12 @@
+ // License. See LICENSE.TXT for details.
+ //
+ //==-----------------------------------------------------------------------===//
+-//
+-// Interface for the subtarget data classes.
+-//
+-//===---------------------------------------------------------------------===//
+-// This file will define the interface that each generation needs to
+-// implement in order to correctly answer queries on the capabilities of the
+-// specific hardware.
++/// \file
++/// \brief Interface for the subtarget data classes.
++///
++/// This file will define the interface that each generation needs to
++/// implement in order to correctly answer queries on the capabilities of the
++/// specific hardware.
+ //===---------------------------------------------------------------------===//
+ #ifndef AMDILNIDEVICE_H
+ #define AMDILNIDEVICE_H
+@@ -20,40 +19,39 @@
+ #include "AMDGPUSubtarget.h"
+ 
+ namespace llvm {
+-  class AMDGPUSubtarget;
++
++class AMDGPUSubtarget;
+ //===---------------------------------------------------------------------===//
+ // NI generation of devices and their respective sub classes
+ //===---------------------------------------------------------------------===//
+ 
+-// The AMDGPUNIDevice is the base class for all Northern Island series of
+-// cards. It is very similiar to the AMDGPUEvergreenDevice, with the major
+-// exception being differences in wavefront size and hardware capabilities.  The
+-// NI devices are all 64 wide wavefronts and also add support for signed 24 bit
+-// integer operations
+-
+-  class AMDGPUNIDevice : public AMDGPUEvergreenDevice {
+-    public:
+-      AMDGPUNIDevice(AMDGPUSubtarget*);
+-      virtual ~AMDGPUNIDevice();
+-      virtual size_t getMaxLDSSize() const;
+-      virtual uint32_t getGeneration() const;
+-    protected:
+-  }; // AMDGPUNIDevice
++/// \brief The AMDGPUNIDevice is the base class for all Northern Island series of
++/// cards.
++///
++/// It is very similiar to the AMDGPUEvergreenDevice, with the major
++/// exception being differences in wavefront size and hardware capabilities.  The
++/// NI devices are all 64 wide wavefronts and also add support for signed 24 bit
++/// integer operations
++class AMDGPUNIDevice : public AMDGPUEvergreenDevice {
++public:
++  AMDGPUNIDevice(AMDGPUSubtarget*);
++  virtual ~AMDGPUNIDevice();
++  virtual size_t getMaxLDSSize() const;
++  virtual uint32_t getGeneration() const;
++};
+ 
+-// Just as the AMDGPUCypressDevice is the double capable version of the
+-// AMDGPUEvergreenDevice, the AMDGPUCaymanDevice is the double capable version of
+-// the AMDGPUNIDevice.  The other major difference that is not as useful from
+-// standpoint is that the Cayman Device has 4 wide ALU's, whereas the rest of the
+-// NI family is a 5 wide.
+-     
+-  class AMDGPUCaymanDevice: public AMDGPUNIDevice {
+-    public:
+-      AMDGPUCaymanDevice(AMDGPUSubtarget*);
+-      virtual ~AMDGPUCaymanDevice();
+-    private:
+-      virtual void setCaps();
+-  }; // AMDGPUCaymanDevice
++/// Just as the AMDGPUCypressDevice is the double capable version of the
++/// AMDGPUEvergreenDevice, the AMDGPUCaymanDevice is the double capable version
++/// of the AMDGPUNIDevice.  The other major difference is that the Cayman Device
++/// has 4 wide ALU's, whereas the rest of the NI family is a 5 wide.
++class AMDGPUCaymanDevice: public AMDGPUNIDevice {
++public:
++  AMDGPUCaymanDevice(AMDGPUSubtarget*);
++  virtual ~AMDGPUCaymanDevice();
++private:
++  virtual void setCaps();
++};
+ 
+-  static const unsigned int MAX_LDS_SIZE_900 = AMDGPUDevice::MAX_LDS_SIZE_800;
++static const unsigned int MAX_LDS_SIZE_900 = AMDGPUDevice::MAX_LDS_SIZE_800;
+ } // namespace llvm
+ #endif // AMDILNIDEVICE_H
+diff --git a/lib/Target/AMDGPU/AMDILPeepholeOptimizer.cpp b/lib/Target/AMDGPU/AMDILPeepholeOptimizer.cpp
+index 6114ba3..57317ac 100644
+--- a/lib/Target/AMDGPU/AMDILPeepholeOptimizer.cpp
++++ b/lib/Target/AMDGPU/AMDILPeepholeOptimizer.cpp
+@@ -5,6 +5,7 @@
+ // This file is distributed under the University of Illinois Open Source
+ // License. See LICENSE.TXT for details.
+ //
++/// \file
+ //==-----------------------------------------------------------------------===//
+ 
+ #define DEBUG_TYPE "PeepholeOpt"
+diff --git a/lib/Target/AMDGPU/AMDILSIDevice.cpp b/lib/Target/AMDGPU/AMDILSIDevice.cpp
+index b0a87d7..7c2710f 100644
+--- a/lib/Target/AMDGPU/AMDILSIDevice.cpp
++++ b/lib/Target/AMDGPU/AMDILSIDevice.cpp
+@@ -5,6 +5,7 @@
+ // This file is distributed under the University of Illinois Open Source
+ // License. See LICENSE.TXT for details.
+ //
++/// \file
+ //==-----------------------------------------------------------------------===//
+ #include "AMDILSIDevice.h"
+ #include "AMDILEvergreenDevice.h"
+diff --git a/lib/Target/AMDGPU/AMDILSIDevice.h b/lib/Target/AMDGPU/AMDILSIDevice.h
+index 2272d85..5b2cb25 100644
+--- a/lib/Target/AMDGPU/AMDILSIDevice.h
++++ b/lib/Target/AMDGPU/AMDILSIDevice.h
+@@ -7,39 +7,33 @@
+ //
+ //==-----------------------------------------------------------------------===//
+ //
+-// Interface for the subtarget data classes.
+-//
+-//===---------------------------------------------------------------------===//
+-// This file will define the interface that each generation needs to
+-// implement in order to correctly answer queries on the capabilities of the
+-// specific hardware.
++/// \file
++/// \brief Interface for the subtarget data classes.
++///
++/// This file will define the interface that each generation needs to
++/// implement in order to correctly answer queries on the capabilities of the
++/// specific hardware.
+ //===---------------------------------------------------------------------===//
+ #ifndef AMDILSIDEVICE_H
+ #define AMDILSIDEVICE_H
+ #include "AMDILEvergreenDevice.h"
+-#include "AMDGPUSubtarget.h"
+ 
+ namespace llvm {
+-  class AMDGPUSubtarget;
++class AMDGPUSubtarget;
+ //===---------------------------------------------------------------------===//
+ // SI generation of devices and their respective sub classes
+ //===---------------------------------------------------------------------===//
+ 
+-// The AMDGPUSIDevice is the base class for all Northern Island series of
+-// cards. It is very similiar to the AMDGPUEvergreenDevice, with the major
+-// exception being differences in wavefront size and hardware capabilities.  The
+-// SI devices are all 64 wide wavefronts and also add support for signed 24 bit
+-// integer operations
+-
+-  class AMDGPUSIDevice : public AMDGPUEvergreenDevice {
+-    public:
+-      AMDGPUSIDevice(AMDGPUSubtarget*);
+-      virtual ~AMDGPUSIDevice();
+-      virtual size_t getMaxLDSSize() const;
+-      virtual uint32_t getGeneration() const;
+-      virtual std::string getDataLayout() const;
+-    protected:
+-  }; // AMDGPUSIDevice
++/// \brief The AMDGPUSIDevice is the base class for all Southern Island series
++/// of cards.
++class AMDGPUSIDevice : public AMDGPUEvergreenDevice {
++public:
++  AMDGPUSIDevice(AMDGPUSubtarget*);
++  virtual ~AMDGPUSIDevice();
++  virtual size_t getMaxLDSSize() const;
++  virtual uint32_t getGeneration() const;
++  virtual std::string getDataLayout() const;
++};
+ 
+ } // namespace llvm
+ #endif // AMDILSIDEVICE_H
+diff --git a/lib/Target/AMDGPU/InstPrinter/AMDGPUInstPrinter.cpp b/lib/Target/AMDGPU/InstPrinter/AMDGPUInstPrinter.cpp
+index 5e315ff..7e1064e 100644
+--- a/lib/Target/AMDGPU/InstPrinter/AMDGPUInstPrinter.cpp
++++ b/lib/Target/AMDGPU/InstPrinter/AMDGPUInstPrinter.cpp
+@@ -5,6 +5,7 @@
+ // This file is distributed under the University of Illinois Open Source
+ // License. See LICENSE.TXT for details.
+ //
++// \file
+ //===----------------------------------------------------------------------===//
+ 
+ #include "AMDGPUInstPrinter.h"
+diff --git a/lib/Target/AMDGPU/InstPrinter/AMDGPUInstPrinter.h b/lib/Target/AMDGPU/InstPrinter/AMDGPUInstPrinter.h
+index 1f70ef5..96e0e46 100644
+--- a/lib/Target/AMDGPU/InstPrinter/AMDGPUInstPrinter.h
++++ b/lib/Target/AMDGPU/InstPrinter/AMDGPUInstPrinter.h
+@@ -6,6 +6,9 @@
+ // License. See LICENSE.TXT for details.
+ //
+ //===----------------------------------------------------------------------===//
++//
++/// \file
++//===----------------------------------------------------------------------===//
+ 
+ #ifndef AMDGPUINSTPRINTER_H
+ #define AMDGPUINSTPRINTER_H
+@@ -26,12 +29,10 @@ public:
+   void printInstruction(const MCInst *MI, raw_ostream &O);
+   static const char *getRegisterName(unsigned RegNo);
+ 
+-//  virtual void printRegName(raw_ostream &OS, unsigned RegNo) const;
+   virtual void printInst(const MCInst *MI, raw_ostream &O, StringRef Annot);
+ 
+ private:
+   void printOperand(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+-//  void printUnsignedImm(const MCInst *MI, int OpNo, raw_ostream &O);
+   void printMemOperand(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+   void printIfSet(const MCInst *MI, unsigned OpNo, raw_ostream &O, StringRef Asm);
+   void printAbs(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+diff --git a/lib/Target/AMDGPU/MCTargetDesc/AMDGPUAsmBackend.cpp b/lib/Target/AMDGPU/MCTargetDesc/AMDGPUAsmBackend.cpp
+index 5010fb1..3417fbc 100644
+--- a/lib/Target/AMDGPU/MCTargetDesc/AMDGPUAsmBackend.cpp
++++ b/lib/Target/AMDGPU/MCTargetDesc/AMDGPUAsmBackend.cpp
+@@ -5,6 +5,7 @@
+ // This file is distributed under the University of Illinois Open Source
+ // License. See LICENSE.TXT for details.
+ //
++/// \file
+ //===----------------------------------------------------------------------===//
+ 
+ #include "MCTargetDesc/AMDGPUMCTargetDesc.h"
+diff --git a/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCAsmInfo.cpp b/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCAsmInfo.cpp
+index a0b7c32..4d3d3e7 100644
+--- a/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCAsmInfo.cpp
++++ b/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCAsmInfo.cpp
+@@ -5,6 +5,7 @@
+ // This file is distributed under the University of Illinois Open Source
+ // License. See LICENSE.TXT for details.
+ //
++/// \file
+ //===----------------------------------------------------------------------===//
+ 
+ #include "AMDGPUMCAsmInfo.h"
+diff --git a/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCAsmInfo.h b/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCAsmInfo.h
+index d829f56..3ad0fa6 100644
+--- a/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCAsmInfo.h
++++ b/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCAsmInfo.h
+@@ -1,4 +1,4 @@
+-//===-- MCTargetDesc/AMDGPUMCAsmInfo.h - TODO: Add brief description -------===//
++//===-- MCTargetDesc/AMDGPUMCAsmInfo.h - AMDGPU MCAsm Interface  ----------===//
+ //
+ //                     The LLVM Compiler Infrastructure
+ //
+@@ -7,7 +7,7 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// TODO: Add full description
++/// \file
+ //
+ //===----------------------------------------------------------------------===//
+ 
+@@ -16,15 +16,15 @@
+ 
+ #include "llvm/MC/MCAsmInfo.h"
+ namespace llvm {
+-  class Target;
+-  class StringRef;
+ 
+-  class AMDGPUMCAsmInfo : public MCAsmInfo {
+-    public:
+-      explicit AMDGPUMCAsmInfo(const Target &T, StringRef &TT);
+-      const char*
+-        getDataASDirective(unsigned int Size, unsigned int AS) const;
+-      const MCSection* getNonexecutableStackSection(MCContext &CTX) const;
+-  };
++class Target;
++class StringRef;
++
++class AMDGPUMCAsmInfo : public MCAsmInfo {
++public:
++  explicit AMDGPUMCAsmInfo(const Target &T, StringRef &TT);
++  const char* getDataASDirective(unsigned int Size, unsigned int AS) const;
++  const MCSection* getNonexecutableStackSection(MCContext &CTX) const;
++};
+ } // namespace llvm
+ #endif // AMDGPUMCASMINFO_H
+diff --git a/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCCodeEmitter.h b/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCCodeEmitter.h
+index a75a841..9d0d6cf 100644
+--- a/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCCodeEmitter.h
++++ b/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCCodeEmitter.h
+@@ -7,7 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// CodeEmitter interface for R600 and SI codegen.
++/// \file
++/// \brief CodeEmitter interface for R600 and SI codegen.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+@@ -19,40 +20,40 @@
+ 
+ namespace llvm {
+ 
+-  class MCInst;
+-  class MCOperand;
++class MCInst;
++class MCOperand;
+ 
+-  class AMDGPUMCCodeEmitter : public MCCodeEmitter {
+-  public:
++class AMDGPUMCCodeEmitter : public MCCodeEmitter {
++public:
+ 
+-    uint64_t getBinaryCodeForInstr(const MCInst &MI,
+-                                   SmallVectorImpl<MCFixup> &Fixups) const;
++  uint64_t getBinaryCodeForInstr(const MCInst &MI,
++                                 SmallVectorImpl<MCFixup> &Fixups) const;
+ 
+-    virtual uint64_t getMachineOpValue(const MCInst &MI, const MCOperand &MO,
+-                                       SmallVectorImpl<MCFixup> &Fixups) const {
+-      return 0;
+-    }
+-
+-    virtual unsigned GPR4AlignEncode(const MCInst  &MI, unsigned OpNo,
+-                                     SmallVectorImpl<MCFixup> &Fixups) const {
+-      return 0;
+-    }
+-    virtual unsigned GPR2AlignEncode(const MCInst &MI, unsigned OpNo,
+-                                     SmallVectorImpl<MCFixup> &Fixups) const {
+-      return 0;
+-    }
+-    virtual uint64_t VOPPostEncode(const MCInst &MI, uint64_t Value) const {
+-      return Value;
+-    }
+-    virtual uint64_t i32LiteralEncode(const MCInst &MI, unsigned OpNo,
+-                                     SmallVectorImpl<MCFixup> &Fixups) const {
+-      return 0;
+-    }
+-    virtual uint32_t SMRDmemriEncode(const MCInst &MI, unsigned OpNo,
++  virtual uint64_t getMachineOpValue(const MCInst &MI, const MCOperand &MO,
+                                      SmallVectorImpl<MCFixup> &Fixups) const {
+-      return 0;
+-    }
+-  };
++    return 0;
++  }
++
++  virtual unsigned GPR4AlignEncode(const MCInst  &MI, unsigned OpNo,
++                                   SmallVectorImpl<MCFixup> &Fixups) const {
++    return 0;
++  }
++  virtual unsigned GPR2AlignEncode(const MCInst &MI, unsigned OpNo,
++                                   SmallVectorImpl<MCFixup> &Fixups) const {
++    return 0;
++  }
++  virtual uint64_t VOPPostEncode(const MCInst &MI, uint64_t Value) const {
++    return Value;
++  }
++  virtual uint64_t i32LiteralEncode(const MCInst &MI, unsigned OpNo,
++                                   SmallVectorImpl<MCFixup> &Fixups) const {
++    return 0;
++  }
++  virtual uint32_t SMRDmemriEncode(const MCInst &MI, unsigned OpNo,
++                                   SmallVectorImpl<MCFixup> &Fixups) const {
++    return 0;
++  }
++};
+ 
+ } // End namespace llvm
+ 
+diff --git a/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCTargetDesc.cpp b/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCTargetDesc.cpp
+index 87f6372..5006bfd 100644
+--- a/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCTargetDesc.cpp
++++ b/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCTargetDesc.cpp
+@@ -7,7 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// This file provides AMDGPU specific target descriptions.
++/// \file
++/// \brief This file provides AMDGPU specific target descriptions.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+diff --git a/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCTargetDesc.h b/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCTargetDesc.h
+index bca4e9f..363a4af 100644
+--- a/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCTargetDesc.h
++++ b/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCTargetDesc.h
+@@ -7,7 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// This file provides AMDGPU specific target descriptions.
++/// \file
++/// \brief Provides AMDGPU specific target descriptions.
+ //
+ //===----------------------------------------------------------------------===//
+ //
+diff --git a/lib/Target/AMDGPU/MCTargetDesc/R600MCCodeEmitter.cpp b/lib/Target/AMDGPU/MCTargetDesc/R600MCCodeEmitter.cpp
+index d61bc0b..756f945 100644
+--- a/lib/Target/AMDGPU/MCTargetDesc/R600MCCodeEmitter.cpp
++++ b/lib/Target/AMDGPU/MCTargetDesc/R600MCCodeEmitter.cpp
+@@ -7,12 +7,14 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// This code emitters outputs bytecode that is understood by the r600g driver
+-// in the Mesa [1] project.  The bytecode is very similar to the hardware's ISA,
+-// except that the size of the instruction fields are rounded up to the
+-// nearest byte.
+-//
+-// [1] http://www.mesa3d.org/
++/// \file
++///
++/// This code emitter outputs bytecode that is understood by the r600g driver
++/// in the Mesa [1] project.  The bytecode is very similar to the hardware's ISA,
++/// but it still needs to be run through a finalizer in order to be executed
++/// by the GPU.
++///
++/// [1] http://www.mesa3d.org/
+ //
+ //===----------------------------------------------------------------------===//
+ 
+@@ -50,11 +52,11 @@ public:
+                     const MCSubtargetInfo &sti, MCContext &ctx)
+     : MCII(mcii), MRI(mri), STI(sti), Ctx(ctx) { }
+ 
+-  /// EncodeInstruction - Encode the instruction and write it to the OS.
++  /// \brief Encode the instruction and write it to the OS.
+   virtual void EncodeInstruction(const MCInst &MI, raw_ostream &OS,
+                          SmallVectorImpl<MCFixup> &Fixups) const;
+ 
+-  /// getMachineOpValue - Reutrn the encoding for an MCOperand.
++  /// \returns the encoding for an MCOperand.
+   virtual uint64_t getMachineOpValue(const MCInst &MI, const MCOperand &MO,
+                                      SmallVectorImpl<MCFixup> &Fixups) const;
+ private:
+diff --git a/lib/Target/AMDGPU/MCTargetDesc/SIMCCodeEmitter.cpp b/lib/Target/AMDGPU/MCTargetDesc/SIMCCodeEmitter.cpp
+index f907a53..7f271d1 100644
+--- a/lib/Target/AMDGPU/MCTargetDesc/SIMCCodeEmitter.cpp
++++ b/lib/Target/AMDGPU/MCTargetDesc/SIMCCodeEmitter.cpp
+@@ -7,8 +7,9 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// The SI code emitter produces machine code that can be executed directly on
+-// the GPU device.
++/// \file
++/// \brief The SI code emitter produces machine code that can be executed
++/// directly on the GPU device.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+@@ -69,46 +70,46 @@ public:
+ 
+   ~SIMCCodeEmitter() { }
+ 
+-  /// EncodeInstruction - Encode the instruction and write it to the OS.
++  /// \breif Encode the instruction and write it to the OS.
+   virtual void EncodeInstruction(const MCInst &MI, raw_ostream &OS,
+                          SmallVectorImpl<MCFixup> &Fixups) const;
+ 
+-  /// getMachineOpValue - Reutrn the encoding for an MCOperand.
++  /// \returns the encoding for an MCOperand.
+   virtual uint64_t getMachineOpValue(const MCInst &MI, const MCOperand &MO,
+                                      SmallVectorImpl<MCFixup> &Fixups) const;
+ 
+ public:
+ 
+-  /// GPRAlign - Encode a sequence of registers with the correct alignment.
++  /// \brief Encode a sequence of registers with the correct alignment.
+   unsigned GPRAlign(const MCInst &MI, unsigned OpNo, unsigned shift) const;
+ 
+-  /// GPR2AlignEncode - Encoding for when 2 consecutive registers are used
++  /// \brief Encoding for when 2 consecutive registers are used
+   virtual unsigned GPR2AlignEncode(const MCInst &MI, unsigned OpNo,
+                                    SmallVectorImpl<MCFixup> &Fixup) const;
+ 
+-  /// GPR4AlignEncode - Encoding for when 4 consectuive registers are used
++  /// \brief Encoding for when 4 consectuive registers are used
+   virtual unsigned GPR4AlignEncode(const MCInst &MI, unsigned OpNo,
+                                    SmallVectorImpl<MCFixup> &Fixup) const;
+ 
+-  /// SMRDmemriEncode - Encoding for SMRD indexed loads
++  /// \brief Encoding for SMRD indexed loads
+   virtual uint32_t SMRDmemriEncode(const MCInst &MI, unsigned OpNo,
+                                    SmallVectorImpl<MCFixup> &Fixup) const;
+ 
+-  /// VOPPostEncode - Post-Encoder method for VOP instructions
++  /// \brief Post-Encoder method for VOP instructions
+   virtual uint64_t VOPPostEncode(const MCInst &MI, uint64_t Value) const;
+ 
+ private:
+ 
+-  ///getEncodingType =  Return this SIInstrEncodingType for this instruction.
++  /// \returns this SIInstrEncodingType for this instruction.
+   unsigned getEncodingType(const MCInst &MI) const;
+ 
+-  ///getEncodingBytes - Get then size in bytes of this instructions encoding.
++  /// \brief Get then size in bytes of this instructions encoding.
+   unsigned getEncodingBytes(const MCInst &MI) const;
+ 
+-  /// getRegBinaryCode - Returns the hardware encoding for a register
++  /// \returns the hardware encoding for a register
+   unsigned getRegBinaryCode(unsigned reg) const;
+ 
+-  /// getHWRegNum - Generated function that returns the hardware encoding for
++  /// \brief Generated function that returns the hardware encoding for
+   /// a register
+   unsigned getHWRegNum(unsigned reg) const;
+ 
+@@ -180,7 +181,7 @@ unsigned SIMCCodeEmitter::GPR4AlignEncode(const MCInst &MI,
+ #define SMRD_IMM_SHIFT 8
+ #define SMRD_SBASE_MASK 0x3f
+ #define SMRD_SBASE_SHIFT 9
+-/// SMRDmemriEncode - This function is responsibe for encoding the offset
++/// This function is responsibe for encoding the offset
+ /// and the base ptr for SMRD instructions it should return a bit string in
+ /// this format:
+ ///
+diff --git a/lib/Target/AMDGPU/R600Defines.h b/lib/Target/AMDGPU/R600Defines.h
+index 4a0e238..7dea8e4 100644
+--- a/lib/Target/AMDGPU/R600Defines.h
++++ b/lib/Target/AMDGPU/R600Defines.h
+@@ -5,6 +5,7 @@
+ // This file is distributed under the University of Illinois Open Source
+ // License. See LICENSE.TXT for details.
+ //
++/// \file
+ //===----------------------------------------------------------------------===//
+ 
+ #ifndef R600DEFINES_H_
+@@ -22,8 +23,8 @@
+ #define MO_FLAG_LAST  (1 << 6)
+ #define NUM_MO_FLAGS 7
+ 
+-// Helper for finding getting the operand index for the instruction flags
+-// operand.
++/// \brief Helper for getting the operand index for the instruction flags
++/// operand.
+ #define GET_FLAG_OPERAND_IDX(Flags) (((Flags) >> 7) & 0x3)
+ 
+ namespace R600_InstFlag {
+@@ -44,7 +45,7 @@ namespace R600_InstFlag {
+ 
+ #define HAS_NATIVE_OPERANDS(Flags) ((Flags) & R600_InstFlag::NATIVE_OPERANDS)
+ 
+-// Defines for extracting register infomation from register encoding
++/// \brief Defines for extracting register infomation from register encoding
+ #define HW_REG_MASK 0x1ff
+ #define HW_CHAN_SHIFT 9
+ 
+diff --git a/lib/Target/AMDGPU/R600ExpandSpecialInstrs.cpp b/lib/Target/AMDGPU/R600ExpandSpecialInstrs.cpp
+index dc73fa8..58221f9 100644
+--- a/lib/Target/AMDGPU/R600ExpandSpecialInstrs.cpp
++++ b/lib/Target/AMDGPU/R600ExpandSpecialInstrs.cpp
+@@ -6,9 +6,12 @@
+ // License. See LICENSE.TXT for details.
+ //
+ //===----------------------------------------------------------------------===//
+-// Vector, Reduction, and Cube instructions need to fill the entire instruction
+-// group to work correctly.  This pass expands these individual instructions
+-// into several instructions that will completely fill the instruction group.
++//
++/// \file
++/// Vector, Reduction, and Cube instructions need to fill the entire instruction
++/// group to work correctly.  This pass expands these individual instructions
++/// into several instructions that will completely fill the instruction group.
++//
+ //===----------------------------------------------------------------------===//
+ 
+ #include "AMDGPU.h"
+diff --git a/lib/Target/AMDGPU/R600ISelLowering.cpp b/lib/Target/AMDGPU/R600ISelLowering.cpp
+index d6c18b0..f5220b5 100644
+--- a/lib/Target/AMDGPU/R600ISelLowering.cpp
++++ b/lib/Target/AMDGPU/R600ISelLowering.cpp
+@@ -7,8 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// Most of the DAG lowering is handled in AMDGPUISelLowering.cpp.  This file
+-// is mostly EmitInstrWithCustomInserter().
++/// \file
++/// \brief Custom DAG lowering for R600
+ //
+ //===----------------------------------------------------------------------===//
+ 
+@@ -766,10 +766,9 @@ SDValue R600TargetLowering::LowerFPOW(SDValue Op,
+   return DAG.getNode(ISD::FEXP2, DL, VT, MulLogBase);
+ }
+ 
+-// XXX Only kernel functions are supporte, so we can assume for now that
+-// every function is a kernel function, but in the future we should use
+-// separate calling conventions for kernel and non-kernel functions.
+-// Only kernel functions are supported, so we can assume for now
++/// XXX Only kernel functions are supported, so we can assume for now that
++/// every function is a kernel function, but in the future we should use
++/// separate calling conventions for kernel and non-kernel functions.
+ SDValue R600TargetLowering::LowerFormalArguments(
+                                       SDValue Chain,
+                                       CallingConv::ID CallConv,
+diff --git a/lib/Target/AMDGPU/R600ISelLowering.h b/lib/Target/AMDGPU/R600ISelLowering.h
+index 53e7988..bdb0a55 100644
+--- a/lib/Target/AMDGPU/R600ISelLowering.h
++++ b/lib/Target/AMDGPU/R600ISelLowering.h
+@@ -7,7 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// R600 DAG Lowering interface definition
++/// \file
++/// \brief R600 DAG Lowering interface definition
+ //
+ //===----------------------------------------------------------------------===//
+ 
+@@ -41,10 +42,10 @@ public:
+ private:
+   const R600InstrInfo * TII;
+ 
+-  /// lowerImplicitParameter - Each OpenCL kernel has nine implicit parameters
+-  /// that are stored in the first nine dwords of a Vertex Buffer.  These
+-  /// implicit parameters are lowered to load instructions which retreive the
+-  /// values from the Vertex Buffer.
++  /// Each OpenCL kernel has nine implicit parameters that are stored in the
++  /// first nine dwords of a Vertex Buffer.  These implicit parameters are
++  /// lowered to load instructions which retreive the values from the Vertex
++  /// Buffer.
+   SDValue LowerImplicitParameter(SelectionDAG &DAG, EVT VT,
+                                  DebugLoc DL, unsigned DwordOffset) const;
+ 
+@@ -53,7 +54,7 @@ private:
+ 
+   SDValue LowerBR_CC(SDValue Op, SelectionDAG &DAG) const;
+ 
+-  /// LowerROTL - Lower ROTL opcode to BITALIGN
++  /// \brief Lower ROTL opcode to BITALIGN
+   SDValue LowerROTL(SDValue Op, SelectionDAG &DAG) const;
+ 
+   SDValue LowerSELECT_CC(SDValue Op, SelectionDAG &DAG) const;
+diff --git a/lib/Target/AMDGPU/R600InstrInfo.cpp b/lib/Target/AMDGPU/R600InstrInfo.cpp
+index b9ade1e..a60a180 100644
+--- a/lib/Target/AMDGPU/R600InstrInfo.cpp
++++ b/lib/Target/AMDGPU/R600InstrInfo.cpp
+@@ -7,7 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// R600 Implementation of TargetInstrInfo.
++/// \file
++/// \brief R600 Implementation of TargetInstrInfo.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+diff --git a/lib/Target/AMDGPU/R600InstrInfo.h b/lib/Target/AMDGPU/R600InstrInfo.h
+index 81e1828..6bb0ca9 100644
+--- a/lib/Target/AMDGPU/R600InstrInfo.h
++++ b/lib/Target/AMDGPU/R600InstrInfo.h
+@@ -7,7 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// Interface definition for R600InstrInfo
++/// \file
++/// \brief Interface definition for R600InstrInfo
+ //
+ //===----------------------------------------------------------------------===//
+ 
+@@ -50,10 +51,10 @@ namespace llvm {
+   bool isReductionOp(unsigned opcode) const;
+   bool isCubeOp(unsigned opcode) const;
+ 
+-  /// isALUInstr - Returns true if this Opcode represents an ALU instruction.
++  /// \returns true if this \p Opcode represents an ALU instruction.
+   bool isALUInstr(unsigned Opcode) const;
+ 
+-  /// isVector - Vector instructions are instructions that must fill all
++  /// \breif Vector instructions are instructions that must fill all
+   /// instruction slots within an instruction group.
+   bool isVector(const MachineInstr &MI) const;
+ 
+@@ -113,10 +114,11 @@ namespace llvm {
+   virtual int getInstrLatency(const InstrItineraryData *ItinData,
+                               SDNode *Node) const { return 1;}
+ 
+-  ///buildDefaultInstruction - This function returns a MachineInstr with
+-  /// all the instruction modifiers initialized to their default values.
+   /// You can use this function to avoid manually specifying each instruction
+   /// modifier operand when building a new instruction.
++  ///
++  /// \returns a MachineInstr with all the instruction modifiers initialized
++  /// to their default values.
+   MachineInstrBuilder buildDefaultInstruction(MachineBasicBlock &MBB,
+                                               MachineBasicBlock::iterator I,
+                                               unsigned Opcode,
+@@ -129,34 +131,36 @@ namespace llvm {
+                                   unsigned DstReg,
+                                   uint64_t Imm) const;
+ 
+-  /// getOperandIdx - Get the index of Op in the MachineInstr.  Returns -1
+-  /// if the Instruction does not contain the specified Op.
++  /// \brief Get the index of Op in the MachineInstr.
++  ///
++  /// \returns -1 if the Instruction does not contain the specified \p Op.
+   int getOperandIdx(const MachineInstr &MI, R600Operands::Ops Op) const;
+ 
+-  /// getOperandIdx - Get the index of Op for the given Opcode.  Returns -1
+-  /// if the Instruction does not contain the specified Op.
++  /// \brief Get the index of \p Op for the given Opcode.
++  ///
++  /// \returns -1 if the Instruction does not contain the specified \p Op.
+   int getOperandIdx(unsigned Opcode, R600Operands::Ops Op) const;
+ 
+-  /// setImmOperand - Helper function for setting instruction flag values.
++  /// \brief Helper function for setting instruction flag values.
+   void setImmOperand(MachineInstr *MI, R600Operands::Ops Op, int64_t Imm) const;
+ 
+-  ///hasFlagOperand - Returns true if this instruction has an operand for
+-  /// storing target flags.
++  /// \returns true if this instruction has an operand for storing target flags.
+   bool hasFlagOperand(const MachineInstr &MI) const;
+ 
+-  ///addFlag - Add one of the MO_FLAG* flags to the specified Operand.
++  ///\brief Add one of the MO_FLAG* flags to the specified \p Operand.
+   void addFlag(MachineInstr *MI, unsigned Operand, unsigned Flag) const;
+ 
+-  ///isFlagSet - Determine if the specified flag is set on this Operand.
++  ///\brief Determine if the specified \p Flag is set on this \p Operand.
+   bool isFlagSet(const MachineInstr &MI, unsigned Operand, unsigned Flag) const;
+ 
+-  ///getFlagOp - Return the operand containing the flags for this instruction.
+-  /// SrcIdx is the register source to set the flag on (e.g src0, src1, src2)
+-  /// Flag is the flag being set.
++  /// \param SrcIdx The register source to set the flag on (e.g src0, src1, src2)
++  /// \param Flag The flag being set.
++  ///
++  /// \returns the operand containing the flags for this instruction.
+   MachineOperand &getFlagOp(MachineInstr *MI, unsigned SrcIdx = 0,
+                             unsigned Flag = 0) const;
+ 
+-  ///clearFlag - Clear the specified flag on the instruction.
++  /// \brief Clear the specified flag on the instruction.
+   void clearFlag(MachineInstr *MI, unsigned Operand, unsigned Flag) const;
+ };
+ 
+diff --git a/lib/Target/AMDGPU/R600MachineFunctionInfo.cpp b/lib/Target/AMDGPU/R600MachineFunctionInfo.cpp
+index d710e3a..bcb7f94 100644
+--- a/lib/Target/AMDGPU/R600MachineFunctionInfo.cpp
++++ b/lib/Target/AMDGPU/R600MachineFunctionInfo.cpp
+@@ -5,6 +5,7 @@
+ // This file is distributed under the University of Illinois Open Source
+ // License. See LICENSE.TXT for details.
+ //
++/// \file
+ //===----------------------------------------------------------------------===//
+ 
+ #include "R600MachineFunctionInfo.h"
+diff --git a/lib/Target/AMDGPU/R600MachineFunctionInfo.h b/lib/Target/AMDGPU/R600MachineFunctionInfo.h
+index 9f01379..91f9de2 100644
+--- a/lib/Target/AMDGPU/R600MachineFunctionInfo.h
++++ b/lib/Target/AMDGPU/R600MachineFunctionInfo.h
+@@ -7,9 +7,7 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// R600MachineFunctionInfo is used for keeping track of which registers have
+-// been reserved by the llvm.AMDGPU.reserve.reg intrinsic.
+-//
++/// \file
+ //===----------------------------------------------------------------------===//
+ 
+ #ifndef R600MACHINEFUNCTIONINFO_H
+diff --git a/lib/Target/AMDGPU/R600RegisterInfo.cpp b/lib/Target/AMDGPU/R600RegisterInfo.cpp
+index c7c8150..a39f83d 100644
+--- a/lib/Target/AMDGPU/R600RegisterInfo.cpp
++++ b/lib/Target/AMDGPU/R600RegisterInfo.cpp
+@@ -7,7 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// The file contains the R600 implementation of the TargetRegisterInfo class.
++/// \file
++/// \brief R600 implementation of the TargetRegisterInfo class.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+diff --git a/lib/Target/AMDGPU/R600RegisterInfo.h b/lib/Target/AMDGPU/R600RegisterInfo.h
+index 9188b93..5636788 100644
+--- a/lib/Target/AMDGPU/R600RegisterInfo.h
++++ b/lib/Target/AMDGPU/R600RegisterInfo.h
+@@ -7,7 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// Interface definition for R600RegisterInfo
++/// \file
++/// \brief Interface definition for R600RegisterInfo
+ //
+ //===----------------------------------------------------------------------===//
+ 
+@@ -30,20 +31,21 @@ struct R600RegisterInfo : public AMDGPURegisterInfo {
+ 
+   virtual BitVector getReservedRegs(const MachineFunction &MF) const;
+ 
+-  /// getISARegClass - rc is an AMDIL reg class.  This function returns the
+-  /// R600 reg class that is equivalent to the given AMDIL reg class.
+-  virtual const TargetRegisterClass * getISARegClass(
+-    const TargetRegisterClass * rc) const;
++  /// \param RC is an AMDIL reg class. 
++  ///
++  /// \returns the R600 reg class that is equivalent to \p RC.
++  virtual const TargetRegisterClass *getISARegClass(
++    const TargetRegisterClass *RC) const;
+ 
+-  /// getHWRegChan - get the HW encoding for a register's channel.
++  /// \brief get the HW encoding for a register's channel.
+   unsigned getHWRegChan(unsigned reg) const;
+ 
+-  /// getCFGStructurizerRegClass - get the register class of the specified
+-  /// type to use in the CFGStructurizer
++  /// \brief get the register class of the specified type to use in the
++  /// CFGStructurizer
+   virtual const TargetRegisterClass * getCFGStructurizerRegClass(MVT VT) const;
+ 
+-  /// getSubRegFromChannel - Return the sub reg enum value for the given
+-  /// Channel (e.g. getSubRegFromChannel(0) -> AMDGPU::sel_x)
++  /// \returns the sub reg enum value for the given \p Channel
++  /// (e.g. getSubRegFromChannel(0) -> AMDGPU::sel_x)
+   unsigned getSubRegFromChannel(unsigned Channel) const;
+ 
+ };
+diff --git a/lib/Target/AMDGPU/SIAssignInterpRegs.cpp b/lib/Target/AMDGPU/SIAssignInterpRegs.cpp
+index 03d2eaf..832e44d 100644
+--- a/lib/Target/AMDGPU/SIAssignInterpRegs.cpp
++++ b/lib/Target/AMDGPU/SIAssignInterpRegs.cpp
+@@ -7,12 +7,15 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// This pass maps the pseudo interpolation registers to the correct physical
+-// registers.  Prior to executing a fragment shader, the GPU loads interpolation
+-// parameters into physical registers.  The specific physical register that each
+-// interpolation parameter ends up in depends on the type of the interpolation
+-// parameter as well as how many interpolation parameters are used by the
+-// shader.
++/// \file
++/// \brief This pass maps the pseudo interpolation registers to the correct physical
++/// registers.
++//
++/// Prior to executing a fragment shader, the GPU loads interpolation
++/// parameters into physical registers.  The specific physical register that each
++/// interpolation parameter ends up in depends on the type of the interpolation
++/// parameter as well as how many interpolation parameters are used by the
++/// shader.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+diff --git a/lib/Target/AMDGPU/SIFixSGPRLiveness.cpp b/lib/Target/AMDGPU/SIFixSGPRLiveness.cpp
+index de3a060..0fecd7a 100644
+--- a/lib/Target/AMDGPU/SIFixSGPRLiveness.cpp
++++ b/lib/Target/AMDGPU/SIFixSGPRLiveness.cpp
+@@ -7,8 +7,10 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// SGPRs are not affected by control flow. This pass adjust SGPR liveness in
+-// so that the register allocator can still correctly allocate them.
++/// \file
++///
++/// SGPRs are not affected by control flow. This pass adjusts SGPR liveness in
++/// so that the register allocator can still correctly allocate them.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+diff --git a/lib/Target/AMDGPU/SIISelLowering.cpp b/lib/Target/AMDGPU/SIISelLowering.cpp
+index 889eeb4..3bb5f14 100644
+--- a/lib/Target/AMDGPU/SIISelLowering.cpp
++++ b/lib/Target/AMDGPU/SIISelLowering.cpp
+@@ -7,8 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// Most of the DAG lowering is handled in AMDGPUISelLowering.cpp.  This file is
+-// mostly EmitInstrWithCustomInserter().
++/// \file
++/// \brief Custom DAG lowering for SI
+ //
+ //===----------------------------------------------------------------------===//
+ 
+@@ -274,8 +274,10 @@ SDValue SITargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
+   return SDValue();
+ }
+ 
+-/// Loweri1ContextSwitch - The function is for lowering i1 operations on the
+-/// VCC register.  In the VALU context, VCC is a one bit register, but in the
++/// \brief The function is for lowering i1 operations on the
++/// VCC register.
++///
++/// In the VALU context, VCC is a one bit register, but in the
+ /// SALU context the VCC is a 64-bit register (1-bit per thread).  Since only
+ /// the SALU can perform operations on the VCC register, we need to promote
+ /// the operand types from i1 to i64 in order for tablegen to be able to match
+diff --git a/lib/Target/AMDGPU/SIISelLowering.h b/lib/Target/AMDGPU/SIISelLowering.h
+index c82af86..27c2a1c 100644
+--- a/lib/Target/AMDGPU/SIISelLowering.h
++++ b/lib/Target/AMDGPU/SIISelLowering.h
+@@ -7,7 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// SI DAG Lowering interface definition
++/// \file
++/// \brief SI DAG Lowering interface definition
+ //
+ //===----------------------------------------------------------------------===//
+ 
+@@ -22,10 +23,9 @@ namespace llvm {
+ class SITargetLowering : public AMDGPUTargetLowering {
+   const SIInstrInfo * TII;
+ 
+-  /// AppendS_WAITCNT - Memory reads and writes are syncronized using the
+-  /// S_WAITCNT instruction.  This function takes the most conservative
+-  /// approach and inserts an S_WAITCNT instruction after every read and
+-  /// write.
++  /// Memory reads and writes are syncronized using the S_WAITCNT instruction.
++  /// This function takes the most conservative approach and inserts an
++  /// S_WAITCNT instruction after every read and write.
+   void AppendS_WAITCNT(MachineInstr *MI, MachineBasicBlock &BB,
+               MachineBasicBlock::iterator I) const;
+   void LowerMOV_IMM(MachineInstr *MI, MachineBasicBlock &BB,
+diff --git a/lib/Target/AMDGPU/SIInstrInfo.cpp b/lib/Target/AMDGPU/SIInstrInfo.cpp
+index 3c773a0..4aa4a45 100644
+--- a/lib/Target/AMDGPU/SIInstrInfo.cpp
++++ b/lib/Target/AMDGPU/SIInstrInfo.cpp
+@@ -7,7 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// SI Implementation of TargetInstrInfo.
++/// \file
++/// \brief SI Implementation of TargetInstrInfo.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+diff --git a/lib/Target/AMDGPU/SIInstrInfo.h b/lib/Target/AMDGPU/SIInstrInfo.h
+index d20c733..32211ee 100644
+--- a/lib/Target/AMDGPU/SIInstrInfo.h
++++ b/lib/Target/AMDGPU/SIInstrInfo.h
+@@ -7,7 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// Interface definition for SIInstrInfo.
++/// \file
++/// \brief Interface definition for SIInstrInfo.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+@@ -34,11 +35,10 @@ public:
+                            unsigned DestReg, unsigned SrcReg,
+                            bool KillSrc) const;
+ 
+-  /// getEncodingType - Returns the encoding type of this instruction.  
++  /// \returns the encoding type of this instruction.  
+   unsigned getEncodingType(const MachineInstr &MI) const;
+ 
+-  /// getEncodingBytes - Returns the size of this instructions encoding in
+-  /// number of bytes.
++  /// \returns the size of this instructions encoding in number of bytes.
+   unsigned getEncodingBytes(const MachineInstr &MI) const;
+ 
+   virtual MachineInstr * getMovImmInstr(MachineFunction *MF, unsigned DstReg,
+diff --git a/lib/Target/AMDGPU/SILowerControlFlow.cpp b/lib/Target/AMDGPU/SILowerControlFlow.cpp
+index 5e7c3fa..277b647 100644
+--- a/lib/Target/AMDGPU/SILowerControlFlow.cpp
++++ b/lib/Target/AMDGPU/SILowerControlFlow.cpp
+@@ -7,44 +7,45 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// This pass lowers the pseudo control flow instructions (SI_IF_NZ, ELSE, ENDIF)
+-// to predicated instructions.
+-//
+-// All control flow (except loops) is handled using predicated instructions and
+-// a predicate stack.  Each Scalar ALU controls the operations of 64 Vector
+-// ALUs.  The Scalar ALU can update the predicate for any of the Vector ALUs
+-// by writting to the 64-bit EXEC register (each bit corresponds to a
+-// single vector ALU).  Typically, for predicates, a vector ALU will write
+-// to its bit of the VCC register (like EXEC VCC is 64-bits, one for each
+-// Vector ALU) and then the ScalarALU will AND the VCC register with the
+-// EXEC to update the predicates.
+-//
+-// For example:
+-// %VCC = V_CMP_GT_F32 %VGPR1, %VGPR2
+-// SI_IF_NZ %VCC
+-//   %VGPR0 = V_ADD_F32 %VGPR0, %VGPR0
+-// ELSE
+-//   %VGPR0 = V_SUB_F32 %VGPR0, %VGPR0
+-// ENDIF
+-//
+-// becomes:
+-//
+-// %SGPR0 = S_AND_SAVEEXEC_B64 %VCC  // Save and update the exec mask
+-// %SGPR0 = S_XOR_B64 %SGPR0, %EXEC  // Clear live bits from saved exec mask
+-// S_CBRANCH_EXECZ label0            // This instruction is an
+-//                                   // optimization which allows us to
+-//                                   // branch if all the bits of
+-//                                   // EXEC are zero.
+-// %VGPR0 = V_ADD_F32 %VGPR0, %VGPR0 // Do the IF block of the branch
+-//
+-// label0:
+-// %SGPR0 = S_OR_SAVEEXEC_B64 %EXEC   // Restore the exec mask for the Then block
+-// %EXEC = S_XOR_B64 %SGPR0, %EXEC    // Clear live bits from saved exec mask
+-// S_BRANCH_EXECZ label1              // Use our branch optimization
+-//                                    // instruction again.
+-// %VGPR0 = V_SUB_F32 %VGPR0, %VGPR   // Do the THEN block
+-// label1:
+-// %EXEC = S_OR_B64 %EXEC, %SGPR2     // Re-enable saved exec mask bits
++/// \file
++/// \brief This pass lowers the pseudo control flow instructions (SI_IF_NZ, ELSE, ENDIF)
++/// to predicated instructions.
++///
++/// All control flow (except loops) is handled using predicated instructions and
++/// a predicate stack.  Each Scalar ALU controls the operations of 64 Vector
++/// ALUs.  The Scalar ALU can update the predicate for any of the Vector ALUs
++/// by writting to the 64-bit EXEC register (each bit corresponds to a
++/// single vector ALU).  Typically, for predicates, a vector ALU will write
++/// to its bit of the VCC register (like EXEC VCC is 64-bits, one for each
++/// Vector ALU) and then the ScalarALU will AND the VCC register with the
++/// EXEC to update the predicates.
++///
++/// For example:
++/// %VCC = V_CMP_GT_F32 %VGPR1, %VGPR2
++/// SI_IF_NZ %VCC
++///   %VGPR0 = V_ADD_F32 %VGPR0, %VGPR0
++/// ELSE
++///   %VGPR0 = V_SUB_F32 %VGPR0, %VGPR0
++/// ENDIF
++///
++/// becomes:
++///
++/// %SGPR0 = S_AND_SAVEEXEC_B64 %VCC  // Save and update the exec mask
++/// %SGPR0 = S_XOR_B64 %SGPR0, %EXEC  // Clear live bits from saved exec mask
++/// S_CBRANCH_EXECZ label0            // This instruction is an
++///                                   // optimization which allows us to
++///                                   // branch if all the bits of
++///                                   // EXEC are zero.
++/// %VGPR0 = V_ADD_F32 %VGPR0, %VGPR0 // Do the IF block of the branch
++///
++/// label0:
++/// %SGPR0 = S_OR_SAVEEXEC_B64 %EXEC   // Restore the exec mask for the Then block
++/// %EXEC = S_XOR_B64 %SGPR0, %EXEC    // Clear live bits from saved exec mask
++/// S_BRANCH_EXECZ label1              // Use our branch optimization
++///                                    // instruction again.
++/// %VGPR0 = V_SUB_F32 %VGPR0, %VGPR   // Do the THEN block
++/// label1:
++/// %EXEC = S_OR_B64 %EXEC, %SGPR2     // Re-enable saved exec mask bits
+ //===----------------------------------------------------------------------===//
+ 
+ #include "AMDGPU.h"
+diff --git a/lib/Target/AMDGPU/SILowerLiteralConstants.cpp b/lib/Target/AMDGPU/SILowerLiteralConstants.cpp
+index 6f4a0d6..2d5ab0b 100644
+--- a/lib/Target/AMDGPU/SILowerLiteralConstants.cpp
++++ b/lib/Target/AMDGPU/SILowerLiteralConstants.cpp
+@@ -6,23 +6,25 @@
+ // License. See LICENSE.TXT for details.
+ //
+ //===----------------------------------------------------------------------===//
+-// This pass performs the following transformation on instructions with
+-// literal constants:
+ //
+-// %VGPR0 = V_MOV_IMM_I32 1
+-//
+-// becomes:
+-//
+-// BUNDLE
+-//   * %VGPR = V_MOV_B32_32 SI_LITERAL_CONSTANT
+-//   * SI_LOAD_LITERAL 1
+-//
+-// The resulting sequence matches exactly how the hardware handles immediate
+-// operands, so this transformation greatly simplifies the code generator.
+-//
+-// Only the *_MOV_IMM_* support immediate operands at the moment, but when
+-// support for immediate operands is added to other instructions, they
+-// will be lowered here as well.
++/// \file
++/// \brief This pass performs the following transformation on instructions with
++/// literal constants:
++///
++/// %VGPR0 = V_MOV_IMM_I32 1
++///
++/// becomes:
++///
++/// BUNDLE
++///   * %VGPR = V_MOV_B32_32 SI_LITERAL_CONSTANT
++///   * SI_LOAD_LITERAL 1
++///
++/// The resulting sequence matches exactly how the hardware handles immediate
++/// operands, so this transformation greatly simplifies the code generator.
++///
++/// Only the *_MOV_IMM_* support immediate operands at the moment, but when
++/// support for immediate operands is added to other instructions, they
++/// will be lowered here as well.
+ //===----------------------------------------------------------------------===//
+ 
+ #include "AMDGPU.h"
+diff --git a/lib/Target/AMDGPU/SIMachineFunctionInfo.cpp b/lib/Target/AMDGPU/SIMachineFunctionInfo.cpp
+index 3cc1cd6..7e59b42 100644
+--- a/lib/Target/AMDGPU/SIMachineFunctionInfo.cpp
++++ b/lib/Target/AMDGPU/SIMachineFunctionInfo.cpp
+@@ -5,6 +5,7 @@
+ // This file is distributed under the University of Illinois Open Source
+ // License. See LICENSE.TXT for details.
+ //
++/// \file
+ //===----------------------------------------------------------------------===//
+ 
+ 
+diff --git a/lib/Target/AMDGPU/SIMachineFunctionInfo.h b/lib/Target/AMDGPU/SIMachineFunctionInfo.h
+index 26902fa..47271f5 100644
+--- a/lib/Target/AMDGPU/SIMachineFunctionInfo.h
++++ b/lib/Target/AMDGPU/SIMachineFunctionInfo.h
+@@ -7,9 +7,7 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// SIMachineFunctionInfo is used to keep track of the spi_sp_input_addr config
+-// register, which is to tell the hardware which interpolation parameters to
+-// load.
++/// \file
+ //
+ //===----------------------------------------------------------------------===//
+ 
+@@ -21,15 +19,13 @@
+ 
+ namespace llvm {
+ 
++/// This class keeps track of the SPI_SP_INPUT_ADDR config register, which
++/// tells the hardware which interpolation parameters to load.
+ class SIMachineFunctionInfo : public MachineFunctionInfo {
+-
+-  private:
+-
+-  public:
+-    SIMachineFunctionInfo(const MachineFunction &MF);
+-    unsigned SPIPSInputAddr;
+-    unsigned ShaderType;
+-
++public:
++  SIMachineFunctionInfo(const MachineFunction &MF);
++  unsigned SPIPSInputAddr;
++  unsigned ShaderType;
+ };
+ 
+ } // End namespace llvm
+diff --git a/lib/Target/AMDGPU/SIRegisterInfo.cpp b/lib/Target/AMDGPU/SIRegisterInfo.cpp
+index 7ffd29a..88275c5 100644
+--- a/lib/Target/AMDGPU/SIRegisterInfo.cpp
++++ b/lib/Target/AMDGPU/SIRegisterInfo.cpp
+@@ -7,7 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// This file contains the SI implementation of the TargetRegisterInfo class.
++/// \file
++/// \brief SI implementation of the TargetRegisterInfo class.
+ //
+ //===----------------------------------------------------------------------===//
+ 
+diff --git a/lib/Target/AMDGPU/SIRegisterInfo.h b/lib/Target/AMDGPU/SIRegisterInfo.h
+index e70ab95..40171e4 100644
+--- a/lib/Target/AMDGPU/SIRegisterInfo.h
++++ b/lib/Target/AMDGPU/SIRegisterInfo.h
+@@ -7,7 +7,8 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// Interface definition for SIRegisterInfo
++/// \file
++/// \brief Interface definition for SIRegisterInfo
+ //
+ //===----------------------------------------------------------------------===//
+ 
+@@ -30,15 +31,15 @@ struct SIRegisterInfo : public AMDGPURegisterInfo {
+ 
+   virtual BitVector getReservedRegs(const MachineFunction &MF) const;
+ 
+-  /// getISARegClass - rc is an AMDIL reg class.  This function returns the
+-  /// SI register class that is equivalent to the given AMDIL register class.
++  /// \param RC is an AMDIL reg class.
++  ///
++  /// \returns the SI register class that is equivalent to \p RC.
+   virtual const TargetRegisterClass *
+-    getISARegClass(const TargetRegisterClass * rc) const;
++    getISARegClass(const TargetRegisterClass *RC) const;
+ 
+-  /// getCFGStructurizerRegClass - get the register class of the specified
+-  /// type to use in the CFGStructurizer
++  /// \brief get the register class of the specified type to use in the
++  /// CFGStructurizer
+   virtual const TargetRegisterClass * getCFGStructurizerRegClass(MVT VT) const;
+-
+ };
+ 
+ } // End namespace llvm
+diff --git a/lib/Target/AMDGPU/TargetInfo/AMDGPUTargetInfo.cpp b/lib/Target/AMDGPU/TargetInfo/AMDGPUTargetInfo.cpp
+index 380e7de..0508afc 100644
+--- a/lib/Target/AMDGPU/TargetInfo/AMDGPUTargetInfo.cpp
++++ b/lib/Target/AMDGPU/TargetInfo/AMDGPUTargetInfo.cpp
+@@ -1,4 +1,4 @@
+-//===-- TargetInfo/AMDGPUTargetInfo.cpp - TODO: Add brief description -------===//
++//===-- TargetInfo/AMDGPUTargetInfo.cpp - TargetInfo for AMDGPU -----------===//
+ //
+ //                     The LLVM Compiler Infrastructure
+ //
+@@ -7,7 +7,7 @@
+ //
+ //===----------------------------------------------------------------------===//
+ //
+-// TODO: Add full description
++/// \file
+ //
+ //===----------------------------------------------------------------------===//
+ 
+@@ -16,10 +16,10 @@
+ 
+ using namespace llvm;
+ 
+-/// The target for the AMDGPU backend
++/// \brief The target for the AMDGPU backend
+ Target llvm::TheAMDGPUTarget;
+ 
+-/// Extern function to initialize the targets for the AMDGPU backend
++/// \brief Extern function to initialize the targets for the AMDGPU backend
+ extern "C" void LLVMInitializeAMDGPUTargetInfo() {
+   RegisterTarget<Triple::r600, false>
+     R600(TheAMDGPUTarget, "r600", "AMD GPUs HD2XXX-HD6XXX");
+-- 
+1.7.11.4
+
