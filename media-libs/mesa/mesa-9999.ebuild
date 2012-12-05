@@ -267,6 +267,9 @@ src_configure() {
 		"
 	fi
 
+	# build fails with BSD indent, bug #428112
+	use userland_GNU || export INDENT=cat
+
 	econf \
 		--enable-dri \
 		--enable-glx \

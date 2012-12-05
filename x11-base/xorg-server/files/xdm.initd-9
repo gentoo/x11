@@ -72,8 +72,8 @@ setup_dm() {
 			PIDFILE=/var/run/kdm.pid
 			;;
 		entrance*)
-			EXE=/usr/sbin/entranced
-			PIDFILE=/var/lib/entranced.pid
+			EXE=/usr/sbin/entrance
+			PIDFILE=/var/run/entrance.pid
 			;;
 		gdm|gnome)
 			EXE=/usr/bin/gdm

@@ -25,11 +25,12 @@ fi
 LICENSE="CCPL-Attribution-ShareAlike-3.0 MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~hppa ~ppc64 ~x86"
-IUSE="static-libs"
+IUSE="doc static-libs"
 
 RDEPEND="dev-libs/expat
 	dev-libs/libffi"
-DEPEND="${RDEPEND}"
+DEPEND="${RDEPEND}
+	doc? ( app-doc/doxygen )"
 
 src_prepare() {
 	if [[ ${PV} = 9999* ]]; then
@@ -38,9 +39,10 @@ src_prepare() {
 }
 
 src_configure() {
+	myconf="$(use_enable static-libs static) \
+			$(use_enable doc documentation)"
 	if tc-is-cross-compiler ; then
-		econf $(use_enable static-libs static) --disable-scanner
-	else
-		econf $(use_enable static-libs static)
+		myconf+=" --disable-scanner"
 	fi
+	econf ${myconf}
 }
