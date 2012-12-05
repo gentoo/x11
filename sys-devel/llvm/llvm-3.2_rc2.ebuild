@@ -100,8 +100,6 @@ src_prepare() {
 
 	# add opencl r600 patches needed for mesa-9.1
 	epatch "${FILESDIR}/R600.patch"
-	epatch "${FILESDIR}/0001-AMDGPU-Various-coding-style-fixes.patch"
-	epatch "${FILESDIR}/0002-AMDGPU-Doxygen-fixes.patch"
 	
 	# User patches
 	epatch_user
@@ -115,7 +113,7 @@ src_configure() {
 		$(use_enable debug expensive-checks)"
 
 	if use multitarget; then
-		CONF_FLAGS="${CONF_FLAGS} --enable-targets=all"
+		CONF_FLAGS="${CONF_FLAGS} --enable-targets=all --enable-experimental-targets=R600"
 	else
 		CONF_FLAGS="${CONF_FLAGS} --enable-targets=host,cpp"
 	fi

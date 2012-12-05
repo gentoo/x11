@@ -119,11 +119,11 @@ done
 DEPEND="${RDEPEND}
 	llvm? (
 		>=sys-devel/llvm-2.9
-		r600-llvm-compiler? ( >=sys-devel/llvm-3.2 )
-		video_cards_radeonsi? ( >=sys-devel/llvm-3.2 )
+		r600-llvm-compiler? ( >=sys-devel/llvm-3.1 )
+		video_cards_radeonsi? ( >=sys-devel/llvm-3.1 )
 	)
 	opencl? (
-				>=sys-devel/clang-3.2
+				>=sys-devel/clang-3.1
 				>=sys-devel/gcc-4.6
 	)
 	=dev-lang/python-2*
@@ -144,6 +144,7 @@ S="${WORKDIR}/${MY_P}"
 PATCHES=(
 		"${FILESDIR}/0002-radeong-opencl-rename-target-from-r600-to-r600-amd-n.patch"
 		"${FILESDIR}/0003-clover-fix-building-and-add-standart-locations-for-l.patch"
+		"${FILESDIR}/0001-XXX-Hacks-for-R600-rename.patch"
 		)
 
 # It is slow without texrels, if someone wants slow
