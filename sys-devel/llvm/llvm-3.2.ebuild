@@ -1,6 +1,6 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-devel/llvm/llvm-3.2_rc2.ebuild,v 1.1 2012/12/03 20:36:17 voyageur Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-devel/llvm/llvm-3.2.ebuild,v 1.1 2012/12/21 09:18:12 voyageur Exp $
 
 EAPI=5
 PYTHON_DEPEND="2"
@@ -8,15 +8,15 @@ inherit eutils flag-o-matic multilib toolchain-funcs python pax-utils
 
 DESCRIPTION="Low Level Virtual Machine"
 HOMEPAGE="http://llvm.org/"
-SRC_URI="http://llvm.org/pre-releases/${PV/_rc*}/${PV/3.2_}/${P/_}.src.tar.gz"
+SRC_URI="http://llvm.org/releases/${PV}/${P}.src.tar.gz"
 
 LICENSE="UoI-NCSA"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~ppc ~x86 ~amd64-fbsd ~x86-fbsd ~x64-freebsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos"
-IUSE="debug gold +libffi multitarget ocaml test udis86 vim-syntax"
+IUSE="debug doc gold +libffi multitarget ocaml test udis86 vim-syntax"
 
 DEPEND="dev-lang/perl
-	dev-python/docutils
+	dev-python/sphinx
 	>=sys-devel/make-3.79
 	>=sys-devel/flex-2.5.4
 	>=sys-devel/bison-1.875d
@@ -32,7 +32,7 @@ RDEPEND="dev-lang/perl
 	libffi? ( virtual/libffi )
 	vim-syntax? ( || ( app-editors/vim app-editors/gvim ) )"
 
-S=${WORKDIR}/${PN}.src
+S=${WORKDIR}/${P}.src
 
 pkg_setup() {
 	# Required for test and build
@@ -92,15 +92,17 @@ src_prepare() {
 			-i tools/gold/Makefile || die "gold rpath sed failed"
 	fi
 
+	# FileCheck is needed at least for dragonegg tests
+	sed -e "/NO_INSTALL = 1/s/^/#/" -i utils/FileCheck/Makefile \
+		|| die "FileCheck Makefile sed failed"
+
 	# Specify python version
 	python_convert_shebangs -r 2 test/Scripts
 
 	epatch "${FILESDIR}"/${PN}-3.2-nodoctargz.patch
 	epatch "${FILESDIR}"/${PN}-3.0-PPC_macro.patch
+	epatch "${FILESDIR}"/0001-Add-R600-backend.patch
 
-	# add opencl r600 patches needed for mesa-9.1
-	epatch "${FILESDIR}/R600.patch"
-	
 	# User patches
 	epatch_user
 }
@@ -113,7 +115,7 @@ src_configure() {
 		$(use_enable debug expensive-checks)"
 
 	if use multitarget; then
-		CONF_FLAGS="${CONF_FLAGS} --enable-targets=all --enable-experimental-targets=R600"
+		CONF_FLAGS="${CONF_FLAGS} --enable-targets=all"
 	else
 		CONF_FLAGS="${CONF_FLAGS} --enable-targets=host,cpp"
 	fi
@@ -148,6 +150,9 @@ src_configure() {
 src_compile() {
 	emake VERBOSE=1 KEEP_SYMBOLS=1 REQUIRES_RTTI=1
 
+	emake -C docs -f Makefile.sphinx man
+	use doc && emake -C docs -f Makefile.sphinx html
+
 	pax-mark m Release/bin/lli
 	if use test; then
 		pax-mark m unittests/ExecutionEngine/JIT/Release/JITTests
@@ -156,6 +161,9 @@ src_compile() {
 
 src_install() {
 	emake KEEP_SYMBOLS=1 DESTDIR="${D}" install
+
+	doman docs/_build/man/*.1
+	use doc && dohtml -r docs/_build/html/
 
 	if use vim-syntax; then
 		insinto /usr/share/vim/vimfiles/syntax
