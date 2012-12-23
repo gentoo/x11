@@ -14,7 +14,7 @@ SRC_URI="http://www2.ati.com/drivers/linux/amd-driver-installer-catalyst-12.10-x
 FOLDER_PREFIX="common/"
 IUSE="debug +modules multilib qt4 static-libs disable-watermark"
 
-LICENSE="AMD GPL-2 QPL-1.0 as-is"
+LICENSE="AMD GPL-2 QPL-1.0"
 KEYWORDS="-* ~amd64 ~x86"
 SLOT="1"
 
