@@ -626,6 +626,13 @@ pkg_postinst() {
 	use modules && linux-mod_pkg_postinst
 	"${ROOT}"/usr/bin/eselect opengl set --use-old ati
 	"${ROOT}"/usr/bin/eselect opencl set --use-old amd
+
+	if has_version ">=x11-drivers/xf86-video-intel-2.20.3"; then
+		ewarn "It is reported that xf86-video-intel-2.20.3 and later cause the X server"
+		ewarn "to crash on systems that use hybrid AMD/Intel graphics. If you experience"
+		ewarn "this crash, downgrade to xf86-video-intel-2.20.2 or earlier."
+		ewarn "For details, see https://bugs.gentoo.org/show_bug.cgi?id=430000"
+	fi
 }
 
 pkg_preinst() {
