@@ -326,6 +326,10 @@ src_prepare() {
 	#fixes bug #420751
 	epatch "${FILESDIR}"/ati-drivers-do_mmap.patch
 
+	# Use ACPI_DEVICE_HANDLE wrapper to make driver build on linux-3.8
+	# see https://bugs.gentoo.org/show_bug.cgi?id=448216 
+	epatch "${FILESDIR}/ati-drivers-kernel-3.8-acpihandle.patch"
+
 	cd "${MODULE_DIR}"
 
 	# bugged fglrx build system, this file should be copied by hand
