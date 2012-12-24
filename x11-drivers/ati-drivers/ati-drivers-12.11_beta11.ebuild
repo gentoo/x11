@@ -42,7 +42,7 @@ RDEPEND="
 			x11-libs/libXfixes
 			x11-libs/libXxf86vm
 			x11-libs/qt-core:4
-			x11-libs/qt-gui:4
+			x11-libs/qt-gui:4[accessibility]
 	)
 "
 
