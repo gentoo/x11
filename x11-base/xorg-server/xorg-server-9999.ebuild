@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -12,7 +12,7 @@ DESCRIPTION="X.Org X servers"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd"
 
 IUSE_SERVERS="dmx kdrive xnest xorg xvfb"
-IUSE="${IUSE_SERVERS} ipv6 minimal nptl selinux tslib +udev"
+IUSE="${IUSE_SERVERS} ipv6 minimal nptl selinux +suid tslib +udev"
 
 RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	dev-libs/openssl
@@ -21,6 +21,7 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	>=x11-apps/rgb-1.0.3
 	>=x11-apps/xauth-1.0.3
 	x11-apps/xkbcomp
+	>=x11-libs/libdrm-2.4.20
 	>=x11-libs/libpciaccess-0.12.901
 	>=x11-libs/libXau-1.0.4
 	>=x11-libs/libXdmcp-1.0.2
@@ -53,7 +54,7 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 		>=media-libs/mesa-8[nptl=]
 	)
 	tslib? ( >=x11-libs/tslib-1.0 )
-	udev? ( >=sys-fs/udev-150 )
+	udev? ( >=virtual/udev-150 )
 	>=x11-apps/xinit-1.3
 	selinux? ( sec-policy/selinux-xserver )"
 
@@ -94,7 +95,6 @@ DEPEND="${RDEPEND}
 	!minimal? (
 		>=x11-proto/xf86driproto-2.1.0
 		>=x11-proto/dri2proto-2.8
-		>=x11-libs/libdrm-2.4.20
 	)"
 
 PDEPEND="
@@ -111,19 +111,20 @@ REQUIRED_USE="!minimal? (
 PATCHES=(
 	"${UPSTREAMED_PATCHES[@]}"
 	"${FILESDIR}"/${PN}-1.12-disable-acpi.patch
+	"${FILESDIR}"/${PN}-1.13.0-exa-track-source-pixmaps.patch
+	"${FILESDIR}"/${PN}-1.13.0-zaphod-screen-crossing.patch
 )
 
 pkg_pretend() {
 	# older gcc is not supported
 	[[ "${MERGE_TYPE}" != "binary" && $(gcc-major-version) -lt 4 ]] && \
-		die "Sorry, but gcc earlier than 4.0 wont work for xorg-server."
+		die "Sorry, but gcc earlier than 4.0 will not work for xorg-server."
 }
 
 src_configure() {
 	# localstatedir is used for the log location; we need to override the default
 	#	from ebuild.sh
 	# sysconfdir is used for the xorg.conf location; same applies
-	#	--enable-install-setuid needed because sparcs default off
 	# NOTE: fop is used for doc generating ; and i have no idea if gentoo
 	#	package it somewhere
 	XORG_CONFIGURE_OPTIONS=(
@@ -133,6 +134,7 @@ src_configure() {
 		$(use_enable kdrive kdrive-kbd)
 		$(use_enable kdrive kdrive-mouse)
 		$(use_enable kdrive kdrive-evdev)
+		$(use_enable suid install-setuid)
 		$(use_enable tslib)
 		$(use_enable !minimal record)
 		$(use_enable !minimal xfree86-utils)
@@ -140,7 +142,6 @@ src_configure() {
 		$(use_enable !minimal dri)
 		$(use_enable !minimal dri2)
 		$(use_enable !minimal glx)
-		$(use_enable !minimal libdrm)
 		$(use_enable xnest)
 		$(use_enable xorg)
 		$(use_enable xvfb)
@@ -148,9 +149,9 @@ src_configure() {
 		$(use_enable udev config-udev)
 		$(use_with doc doxygen)
 		$(use_with doc xmlto)
+		--enable-libdrm
 		--sysconfdir=/etc/X11
 		--localstatedir=/var
-		--enable-install-setuid
 		--with-fontrootdir=/usr/share/fonts
 		--with-xkb-output=/var/lib/xkb
 		--disable-config-hal
@@ -200,7 +201,7 @@ pkg_postinst() {
 
 	if [[ ${PV} != 9999 && $(get_version_component_range 2 ${REPLACING_VERSIONS}) != $(get_version_component_range 2 ${PV}) ]]; then
 		elog "You should consider reading upgrade guide for this release:"
-		elog "	http://www.gentoo.org/proj/en/desktop/x/x11/xorg-server-$(get_version_component_range 1-2)-upgrade-guide.xml"
+		elog "  http://www.gentoo.org/proj/en/desktop/x/x11/xorg-server-$(get_version_component_range 1-2)-upgrade-guide.xml"
 		echo
 		ewarn "You must rebuild all drivers if upgrading from <xorg-server-$(get_version_component_range 1-2)"
 		ewarn "because the ABI changed. If you cannot start X because"
@@ -214,8 +215,8 @@ pkg_postinst() {
 		ewarn "	emerge @x11-module-rebuild"
 	fi
 
-	if use udev && has_version sys-fs/udev[-keymap]; then
-		ewarn "sys-fs/udev was built without keymap support. This may cause input device"
+	if use udev && has_version virtual/udev[-keymap]; then
+		ewarn "virtual/udev was built without keymap support. This may cause input device"
 		ewarn "autoconfiguration to fail."
 	fi
 }
