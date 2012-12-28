@@ -111,8 +111,6 @@ REQUIRED_USE="!minimal? (
 PATCHES=(
 	"${UPSTREAMED_PATCHES[@]}"
 	"${FILESDIR}"/${PN}-1.12-disable-acpi.patch
-	"${FILESDIR}"/${PN}-1.13.0-exa-track-source-pixmaps.patch
-	"${FILESDIR}"/${PN}-1.13.0-zaphod-screen-crossing.patch
 )
 
 pkg_pretend() {
