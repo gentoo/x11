@@ -21,7 +21,7 @@ fi
 IUSE="debug +modules multilib qt4 static-libs"
 
 LICENSE="AMD GPL-2 QPL-1.0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 x86"
 SLOT="1"
 
 RESTRICT="bindist"
@@ -47,8 +47,8 @@ RDEPEND="
 			x11-libs/libXcursor
 			x11-libs/libXfixes
 			x11-libs/libXxf86vm
-			x11-libs/qt-core
-			x11-libs/qt-gui
+			x11-libs/qt-core:4
+			x11-libs/qt-gui:4
 	)
 "
 
@@ -585,11 +585,20 @@ src_install-libs() {
 		dosym ${soname} /usr/$(get_libdir)/$(scanelf -qF "#f%S" ${so})
 	done
 
+	# See https://bugs.gentoo.org/show_bug.cgi?id=443466
+	dodir /etc/revdep-rebuild/
+	echo "SEARCH_DIRS_MASK=\"/opt/bin/clinfo\"" > "${ED}/etc/revdep-rebuild/62-ati-drivers"
+
 	#remove static libs if not wanted
 	use static-libs || rm -rf "${D}"/usr/$(get_libdir)/libfglrx_dm.a
 }
 
 pkg_postinst() {
+	if has_version ">=x11-base/xorg-server-1.11.99"; then
+		ewarn "Problems have been reported with this driver and xorg-server-1.12."
+		ewarn "Stay with xorg-server-1.11 if you experience hangs (bug #436252)."
+	fi
+
 	elog "To switch to AMD OpenGL, run \"eselect opengl set ati\""
 	elog "To change your xorg.conf you can use the bundled \"aticonfig\""
 	elog
