@@ -6,22 +6,28 @@ EAPI=4
 
 inherit eutils multilib linux-info linux-mod toolchain-funcs versionator
 
-DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and newer chipsets"
+DESCRIPTION="Ati precompiled drivers for radeon r600 (HD Series) and newer chipsets"
 HOMEPAGE="http://www.amd.com"
 MY_V=( $(get_version_components) )
-#RUN="${WORKDIR}/amd-driver-installer-9.00-x86.x86_64.run"
-SRC_URI="http://www2.ati.com/drivers/beta/amd-driver-installer-catalyst-12.11-beta11-x86.x86_64.zip"
-FOLDER_PREFIX="common/"
-IUSE="debug +modules multilib qt4 static-libs disable-watermark"
+if [[ ${MY_V[2]} != beta ]]; then
+	ATI_URL="http://www2.ati.com/drivers/linux/"
+	SRC_URI="${ATI_URL}/amd-driver-installer-${PV/./-}-x86.x86_64.run"
+	FOLDER_PREFIX="common/"
+else
+	#SRC_URI="https://launchpad.net/ubuntu/natty/+source/fglrx-installer/2:${PV}-0ubuntu1/+files/fglrx-installer_${PV}.orig.tar.gz"
+	SRC_URI="http://www2.ati.com/drivers/legacy/amd-driver-installer-12.6-legacy-x86.x86_64.zip"
+	FOLDER_PREFIX="common/"
+fi
+IUSE="debug +modules multilib qt4 static-libs"
 
 LICENSE="AMD GPL-2 QPL-1.0"
-KEYWORDS="-* ~amd64 ~x86"
+KEYWORDS="amd64 x86"
 SLOT="1"
 
 RESTRICT="bindist"
 
 RDEPEND="
-	<=x11-base/xorg-server-1.13.49[-minimal]
+	<=x11-base/xorg-server-1.12.49[-minimal]
 	>=app-admin/eselect-opengl-1.0.7
 	app-admin/eselect-opencl
 	sys-power/acpid
@@ -31,6 +37,7 @@ RDEPEND="
 	x11-libs/libXinerama
 	x11-libs/libXrandr
 	x11-libs/libXrender
+	virtual/glu
 	multilib? (
 			app-emulation/emul-linux-x86-opengl
 			app-emulation/emul-linux-x86-xlibs
@@ -42,7 +49,7 @@ RDEPEND="
 			x11-libs/libXfixes
 			x11-libs/libXxf86vm
 			x11-libs/qt-core:4
-			x11-libs/qt-gui:4[accessibility]
+			x11-libs/qt-gui:4
 	)
 "
 
@@ -219,14 +226,6 @@ _check_kernel_config() {
 		failed=1
 	fi
 
-	#if linux_chkconfig_present X86_X32; then
-	#	eerror "You've enabled x32 in the kernel."
-	#	eerror "Unfortunately, this option is not supported yet and prevents the fglrx"
-	#	eerror "kernel module from loading."
-	#	error+=" X86_32 enabled;"
-	#	failed=1
-	#fi
-
 	[[ ${failed} -ne 0 ]] && die "${error}"
 }
 
@@ -270,8 +269,8 @@ pkg_setup() {
 
 	elog
 	elog "Please note that this driver supports only graphic cards based on"
-	elog "Evergreen chipset and newer."
-	elog "This represent the AMD Radeon HD 5400+ series at this moment."
+	elog "r600 chipset and newer."
+	elog "This represent the AMD Radeon HD series at this moment."
 	elog
 	elog "If your card is older then use ${CATEGORY}/xf86-video-ati"
 	elog "For migration informations please reffer to:"
@@ -280,18 +279,14 @@ pkg_setup() {
 }
 
 src_unpack() {
-	if [[ ${A} =~ .*\.tar\.gz ]]; then
+	if [[ ${MY_V[2]} == beta ]]; then
 		unpack ${A}
+		RUN=${A/%.zip/.run}
 	else
-		#please note, RUN may be insanely assigned at top near SRC_URI
-		if [[ ${A} =~ .*\.zip ]]; then
-			unpack ${A}
-			[[ -z "$RUN" ]] && RUN="${S}/${A/%.zip/.run}"
-		else
-			RUN="${DISTDIR}/${A}"
-		fi
-		sh ${RUN} --extract "${S}" 2>&1 > /dev/null || die
+		RUN=${A}
 	fi
+	sh "${S}"/${RUN} --extract "${S}"  2>&1 > /dev/null || die \
+	'unpack failed'
 }
 
 src_prepare() {
@@ -328,19 +323,14 @@ src_prepare() {
 		|| die "Replacing 'finger' with 'who' failed."
 	# Adjust paths in the script from /usr/X11R6/bin/ to /opt/bin/ and
 	# add function to detect default state.
-	epatch "${FILESDIR}"/ati-powermode-opt-path-3.patch
+	epatch "${FILESDIR}"/ati-powermode-opt-path-2.patch
 
-	# see http://ati.cchtml.com/show_bug.cgi?id=495
-	#epatch "${FILESDIR}"/ati-drivers-old_rsp.patch
-	# first hunk applied upstream second (x32 related) was not
-	epatch "${FILESDIR}"/ati-drivers-x32_something_something.patch
+	#fixes bug #420751
+	epatch "${FILESDIR}"/ati-drivers-do_mmap.patch
 
 	# compile fix for linux-3.7
 	# https://bugs.gentoo.org/show_bug.cgi?id=438516
 	epatch "${FILESDIR}/ati-drivers-vm-reserverd.patch"
-
-	# compile fix for AGP-less kernel, bug #435322
-	epatch "${FILESDIR}"/ati-drivers-12.9-KCL_AGP_FindCapsRegisters-stub.patch
 
 	# Use ACPI_DEVICE_HANDLE wrapper to make driver build on linux-3.8
 	# see https://bugs.gentoo.org/show_bug.cgi?id=448216 
@@ -369,14 +359,12 @@ src_prepare() {
 
 	# Get rid of watermark. Oldest known reference:
 	# http://phoronix.com/forums/showthread.php?19875-Unsupported-Hardware-watermark
-	if use disable-watermark; then
-		ebegin "Disabling watermark"
-		driver="${MY_BASE_DIR}"/usr/X11R6/${PKG_LIBDIR}/modules/drivers/fglrx_drv.so
-		for x in $(objdump -d ${driver}|awk '/call/&&/EnableLogo/{print "\\x"$2"\\x"$3"\\x"$4"\\x"$5"\\x"$6}'); do
-		sed -i "s/${x/x5b/\x5b}/\x90\x90\x90\x90\x90/g" ${driver} || break 1
-		done
-		eend $? || die "Disabling watermark failed"
-	fi
+	ebegin "Disabling watermark"
+	driver="${MY_BASE_DIR}"/usr/X11R6/${PKG_LIBDIR}/modules/drivers/fglrx_drv.so
+	for x in $(objdump -d ${driver}|awk '/call/&&/EnableLogo/{print "\\x"$2"\\x"$3"\\x"$4"\\x"$5"\\x"$6}'); do
+		sed -i "s/${x}/\x90\x90\x90\x90\x90/g" ${driver} || break 1
+	done
+	eend $? || die "Disabling watermark failed"
 }
 
 src_compile() {
@@ -593,10 +581,9 @@ src_install-libs() {
 	for so in $(find "${D}"/usr/$(get_libdir) -maxdepth 1 -name *.so.[0-9].[0-9])
 	do
 		local soname=${so##*/}
-		local soname_one=${soname%.[0-9]}
-		local soname_zero=${soname_one%.[0-9]}
-		dosym ${soname} /usr/$(get_libdir)/${soname_one}
-		dosym ${soname_one} /usr/$(get_libdir)/${soname_zero}
+		## let's keep also this alternative way ;)
+		#dosym ${soname} /usr/$(get_libdir)/${soname%.[0-9]}
+		dosym ${soname} /usr/$(get_libdir)/$(scanelf -qF "#f%S" ${so})
 	done
 
 	# See https://bugs.gentoo.org/show_bug.cgi?id=443466
@@ -608,6 +595,11 @@ src_install-libs() {
 }
 
 pkg_postinst() {
+	if has_version ">=x11-base/xorg-server-1.11.99"; then
+		ewarn "Problems have been reported with this driver and xorg-server-1.12."
+		ewarn "Stay with xorg-server-1.11 if you experience hangs (bug #436252)."
+	fi
+
 	elog "To switch to AMD OpenGL, run \"eselect opengl set ati\""
 	elog "To change your xorg.conf you can use the bundled \"aticonfig\""
 	elog
@@ -626,13 +618,6 @@ pkg_postinst() {
 	use modules && linux-mod_pkg_postinst
 	"${ROOT}"/usr/bin/eselect opengl set --use-old ati
 	"${ROOT}"/usr/bin/eselect opencl set --use-old amd
-
-	if has_version ">=x11-drivers/xf86-video-intel-2.20.3"; then
-		ewarn "It is reported that xf86-video-intel-2.20.3 and later cause the X server"
-		ewarn "to crash on systems that use hybrid AMD/Intel graphics. If you experience"
-		ewarn "this crash, downgrade to xf86-video-intel-2.20.2 or earlier."
-		ewarn "For details, see https://bugs.gentoo.org/show_bug.cgi?id=430000"
-	fi
 }
 
 pkg_preinst() {
