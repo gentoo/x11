@@ -11,7 +11,8 @@ IUSE="minimal zlib"
 
 DEPEND="!<x11-base/xorg-server-1.5
 	zlib? ( sys-libs/zlib )"
-RDEPEND="${DEPEND}"
+RDEPEND="${DEPEND}
+	sys-apps/hwids"
 
 src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
