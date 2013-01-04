@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -148,10 +148,10 @@ src_configure() {
 		$(use_with doc doxygen)
 		$(use_with doc xmlto)
 		--enable-libdrm
-		--sysconfdir=/etc/X11
-		--localstatedir=/var
-		--with-fontrootdir=/usr/share/fonts
-		--with-xkb-output=/var/lib/xkb
+		--sysconfdir="${EPREFIX}"/etc/X11
+		--localstatedir="${EPREFIX}"/var
+		--with-fontrootdir="${EPREFIX}"/usr/share/fonts
+		--with-xkb-output="${EPREFIX}"/var/lib/xkb
 		--disable-config-hal
 		--without-dtrace
 		--without-fop
@@ -221,8 +221,8 @@ pkg_postinst() {
 
 pkg_postrm() {
 	# Get rid of module dir to ensure opengl-update works properly
-	if [[ -z ${REPLACED_BY_VERSION} && -e ${ROOT}/usr/$(get_libdir)/xorg/modules ]]; then
-		rm -rf "${ROOT}"/usr/$(get_libdir)/xorg/modules
+	if [[ -z ${REPLACED_BY_VERSION} && -e ${EROOT}/usr/$(get_libdir)/xorg/modules ]]; then
+		rm -rf "${EROOT}"/usr/$(get_libdir)/xorg/modules
 	fi
 }
 
@@ -231,9 +231,9 @@ dynamic_libgl_install() {
 	ebegin "Moving GL files for dynamic switching"
 		dodir /usr/$(get_libdir)/opengl/xorg-x11/extensions
 		local x=""
-		for x in "${D}"/usr/$(get_libdir)/xorg/modules/extensions/lib{glx,dri,dri2}*; do
+		for x in "${ED}"/usr/$(get_libdir)/xorg/modules/extensions/lib{glx,dri,dri2}*; do
 			if [ -f ${x} -o -L ${x} ]; then
-				mv -f ${x} "${D}"/usr/$(get_libdir)/opengl/xorg-x11/extensions
+				mv -f ${x} "${ED}"/usr/$(get_libdir)/opengl/xorg-x11/extensions
 			fi
 		done
 	eend 0
@@ -241,9 +241,9 @@ dynamic_libgl_install() {
 
 server_based_install() {
 	if ! use xorg; then
-		rm "${D}"/usr/share/man/man1/Xserver.1x \
-			"${D}"/usr/$(get_libdir)/xserver/SecurityPolicy \
-			"${D}"/usr/$(get_libdir)/pkgconfig/xorg-server.pc \
-			"${D}"/usr/share/man/man1/Xserver.1x
+		rm "${ED}"/usr/share/man/man1/Xserver.1x \
+			"${ED}"/usr/$(get_libdir)/xserver/SecurityPolicy \
+			"${ED}"/usr/$(get_libdir)/pkgconfig/xorg-server.pc \
+			"${ED}"/usr/share/man/man1/Xserver.1x
 	fi
 }
