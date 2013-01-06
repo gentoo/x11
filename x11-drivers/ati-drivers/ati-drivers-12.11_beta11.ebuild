@@ -1,8 +1,8 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
 inherit eutils multilib linux-info linux-mod toolchain-funcs versionator
 
@@ -10,7 +10,9 @@ DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and ne
 HOMEPAGE="http://www.amd.com"
 MY_V=( $(get_version_components) )
 #RUN="${WORKDIR}/amd-driver-installer-9.00-x86.x86_64.run"
-SRC_URI="http://www2.ati.com/drivers/beta/amd-driver-installer-catalyst-12.11-beta11-x86.x86_64.zip"
+DRIVERS_URI="http://www2.ati.com/drivers/beta/amd-driver-installer-catalyst-12.11-beta11-x86.x86_64.zip"
+XVBA_SDK_URI="http://developer.amd.com.php53-23.ord1-1.websitetestlink.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
+SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
 FOLDER_PREFIX="common/"
 IUSE="debug +modules multilib qt4 static-libs disable-watermark"
 
@@ -281,18 +283,26 @@ pkg_setup() {
 }
 
 src_unpack() {
-	if [[ ${A} =~ .*\.tar\.gz ]]; then
-		unpack ${A}
+	local DRIVERS_DISTFILE XVBA_SDK_DISTFILE
+	DRIVERS_DISTFILE=${DRIVERS_URI/*\//}
+	XVBA_SDK_DISTFILE=${XVBA_SDK_URI/*\//}
+
+	if [[ ${DRIVERS_DISTFILE} =~ .*\.tar\.gz ]]; then
+		unpack ${DRIVERS_DISTFILE}
 	else
 		#please note, RUN may be insanely assigned at top near SRC_URI
-		if [[ ${A} =~ .*\.zip ]]; then
-			unpack ${A}
-			[[ -z "$RUN" ]] && RUN="${S}/${A/%.zip/.run}"
+		if [[ ${DRIVERS_DISTFILE} =~ .*\.zip ]]; then
+			unpack ${DRIVERS_DISTFILE}
+			[[ -z "$RUN" ]] && RUN="${S}/${DRIVERS_DISTFILE/%.zip/.run}"
 		else
-			RUN="${DISTDIR}/${A}"
+			RUN="${DISTDIR}/${DRIVERS_DISTFILE}"
 		fi
 		sh ${RUN} --extract "${S}" 2>&1 > /dev/null || die
 	fi
+
+	mkdir xvba_sdk
+	cd xvba_sdk
+	unpack ${XVBA_SDK_DISTFILE}
 }
 
 src_prepare() {
@@ -606,6 +616,9 @@ src_install-libs() {
 
 	#remove static libs if not wanted
 	use static-libs || rm -rf "${D}"/usr/$(get_libdir)/libfglrx_dm.a
+
+	#install xvba sdk headers
+	doheader xvba_sdk/include/amdxvba.h
 }
 
 pkg_postinst() {
