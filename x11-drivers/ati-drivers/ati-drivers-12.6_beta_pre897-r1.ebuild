@@ -1,33 +1,29 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
 inherit eutils multilib linux-info linux-mod toolchain-funcs versionator
 
 DESCRIPTION="Ati precompiled drivers for radeon r600 (HD Series) and newer chipsets"
 HOMEPAGE="http://www.amd.com"
 MY_V=( $(get_version_components) )
-if [[ ${MY_V[2]} != beta ]]; then
-	ATI_URL="http://www2.ati.com/drivers/linux/"
-	SRC_URI="${ATI_URL}/amd-driver-installer-${PV/./-}-x86.x86_64.run"
-	FOLDER_PREFIX="common/"
-else
-	#SRC_URI="https://launchpad.net/ubuntu/natty/+source/fglrx-installer/2:${PV}-0ubuntu1/+files/fglrx-installer_${PV}.orig.tar.gz"
-	SRC_URI="http://www2.ati.com/drivers/legacy/amd-driver-installer-12.6-legacy-x86.x86_64.zip"
-	FOLDER_PREFIX="common/"
-fi
+#RUN="${WORKDIR}/amd-driver-installer-9.00-x86.x86_64.run"
+DRIVERS_URI="http://www2.ati.com/drivers/legacy/amd-driver-installer-12.6-legacy-x86.x86_64.zip"
+XVBA_SDK_URI="http://developer.amd.com.php53-23.ord1-1.websitetestlink.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
+SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
+FOLDER_PREFIX="common/"
 IUSE="debug +modules multilib qt4 static-libs"
 
 LICENSE="AMD GPL-2 QPL-1.0"
-KEYWORDS="amd64 x86"
+KEYWORDS="-* amd64 x86"
 SLOT="1"
 
 RESTRICT="bindist"
 
 RDEPEND="
-	<=x11-base/xorg-server-1.12.49[-minimal]
+	<=x11-base/xorg-server-1.13.49[-minimal]
 	>=app-admin/eselect-opengl-1.0.7
 	app-admin/eselect-opencl
 	sys-power/acpid
@@ -49,7 +45,7 @@ RDEPEND="
 			x11-libs/libXfixes
 			x11-libs/libXxf86vm
 			x11-libs/qt-core:4
-			x11-libs/qt-gui:4
+			x11-libs/qt-gui:4[accessibility]
 	)
 "
 
@@ -279,14 +275,26 @@ pkg_setup() {
 }
 
 src_unpack() {
-	if [[ ${MY_V[2]} == beta ]]; then
-		unpack ${A}
-		RUN=${A/%.zip/.run}
+	local DRIVERS_DISTFILE XVBA_SDK_DISTFILE
+	DRIVERS_DISTFILE=${DRIVERS_URI/*\//}
+	XVBA_SDK_DISTFILE=${XVBA_SDK_URI/*\//}
+
+	if [[ ${DRIVERS_DISTFILE} =~ .*\.tar\.gz ]]; then
+		unpack ${DRIVERS_DISTFILE}
 	else
-		RUN=${A}
+		#please note, RUN may be insanely assigned at top near SRC_URI
+		if [[ ${DRIVERS_DISTFILE} =~ .*\.zip ]]; then
+			unpack ${DRIVERS_DISTFILE}
+			[[ -z "$RUN" ]] && RUN="${S}/${DRIVERS_DISTFILE/%.zip/.run}"
+		else
+			RUN="${DISTDIR}/${DRIVERS_DISTFILE}"
+		fi
+		sh ${RUN} --extract "${S}" 2>&1 > /dev/null || die
 	fi
-	sh "${S}"/${RUN} --extract "${S}"  2>&1 > /dev/null || die \
-	'unpack failed'
+
+	mkdir xvba_sdk
+	cd xvba_sdk
+	unpack ${XVBA_SDK_DISTFILE}
 }
 
 src_prepare() {
@@ -333,7 +341,7 @@ src_prepare() {
 	epatch "${FILESDIR}/ati-drivers-vm-reserverd.patch"
 
 	# Use ACPI_DEVICE_HANDLE wrapper to make driver build on linux-3.8
-	# see https://bugs.gentoo.org/show_bug.cgi?id=448216 
+	# see https://bugs.gentoo.org/show_bug.cgi?id=448216
 	epatch "${FILESDIR}/ati-drivers-kernel-3.8-acpihandle.patch"
 
 	cd "${MODULE_DIR}"
@@ -581,9 +589,10 @@ src_install-libs() {
 	for so in $(find "${D}"/usr/$(get_libdir) -maxdepth 1 -name *.so.[0-9].[0-9])
 	do
 		local soname=${so##*/}
-		## let's keep also this alternative way ;)
-		#dosym ${soname} /usr/$(get_libdir)/${soname%.[0-9]}
-		dosym ${soname} /usr/$(get_libdir)/$(scanelf -qF "#f%S" ${so})
+		local soname_one=${soname%.[0-9]}
+		local soname_zero=${soname_one%.[0-9]}
+		dosym ${soname} /usr/$(get_libdir)/${soname_one}
+		dosym ${soname_one} /usr/$(get_libdir)/${soname_zero}
 	done
 
 	# See https://bugs.gentoo.org/show_bug.cgi?id=443466
@@ -592,6 +601,9 @@ src_install-libs() {
 
 	#remove static libs if not wanted
 	use static-libs || rm -rf "${D}"/usr/$(get_libdir)/libfglrx_dm.a
+
+	#install xvba sdk headers
+	doheader xvba_sdk/include/amdxvba.h
 }
 
 pkg_postinst() {

@@ -222,14 +222,6 @@ _check_kernel_config() {
 		failed=1
 	fi
 
-	#if linux_chkconfig_present X86_X32; then
-	#	eerror "You've enabled x32 in the kernel."
-	#	eerror "Unfortunately, this option is not supported yet and prevents the fglrx"
-	#	eerror "kernel module from loading."
-	#	error+=" X86_32 enabled;"
-	#	failed=1
-	#fi
-
 	[[ ${failed} -ne 0 ]] && die "${error}"
 }
 
