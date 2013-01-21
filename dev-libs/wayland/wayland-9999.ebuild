@@ -28,7 +28,7 @@ KEYWORDS="~amd64 ~arm ~hppa ~ppc64 ~x86"
 IUSE="doc static-libs"
 
 RDEPEND="dev-libs/expat
-	dev-libs/libffi"
+	virtual/libffi"
 DEPEND="${RDEPEND}
 	doc? ( app-doc/doxygen )"
 
