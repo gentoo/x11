@@ -91,7 +91,7 @@ RDEPEND="
 	x11-libs/libXxf86vm
 	>=x11-libs/libxcb-1.8.1
 	vdpau? ( >=x11-libs/libvdpau-0.4.1 )
-	wayland? ( dev-libs/wayland )
+	wayland? ( >=dev-libs/wayland-1.0.3 )
 	xorg? (
 		x11-base/xorg-server
 		x11-libs/libdrm[libkms]
