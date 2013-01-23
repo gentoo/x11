@@ -20,7 +20,7 @@ LICENSE="AMD GPL-2 QPL-1.0"
 KEYWORDS="-* ~amd64 ~x86"
 SLOT="1"
 
-RESTRICT="bindist"
+RESTRICT="bindist test"
 
 RDEPEND="
 	<=x11-base/xorg-server-1.13.49[-minimal]
@@ -397,8 +397,6 @@ src_compile() {
 		-lGL -lGLU -lX11 -lm || die "fgl_glxgears build failed"
 	eend $?
 }
-
-src_test() { :; } # no tests present
 
 src_install() {
 	use modules && linux-mod_src_install
