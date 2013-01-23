@@ -264,20 +264,20 @@ pkg_setup() {
 	fi
 
 	elog
-	elog "Please note that this driver supports only graphic cards based on"
+	elog "Please note that this driver only supports graphic cards based on"
 	elog "Evergreen chipset and newer."
-	elog "This represent the AMD Radeon HD 5400+ series at this moment."
+	elog "This includes the AMD Radeon HD 5400+ series at this moment."
 	elog
 	elog "If your card is older then use ${CATEGORY}/xf86-video-ati"
-	elog "For migration informations please reffer to:"
+	elog "For migration informations please refer to:"
 	elog "http://www.gentoo.org/proj/en/desktop/x/x11/ati-migration-guide.xml"
 	einfo
 }
 
 src_unpack() {
 	local DRIVERS_DISTFILE XVBA_SDK_DISTFILE
-	DRIVERS_DISTFILE=${DRIVERS_URI/*\//}
-	XVBA_SDK_DISTFILE=${XVBA_SDK_URI/*\//}
+	DRIVERS_DISTFILE=${DRIVERS_URI##*/}
+	XVBA_SDK_DISTFILE=${XVBA_SDK_URI##*/}
 
 	if [[ ${DRIVERS_DISTFILE} =~ .*\.tar\.gz ]]; then
 		unpack ${DRIVERS_DISTFILE}
@@ -298,10 +298,7 @@ src_unpack() {
 }
 
 src_prepare() {
-	# All kernel options for prepare are ment to be in here
 	if use modules; then
-		# version patches
-		# epatch "${FILESDIR}"/kernel/${PV}-*.patch
 		if use debug; then
 			sed -i '/^#define DRM_DEBUG_CODE/s/0/1/' \
 				"${MODULE_DIR}/firegl_public.c" \
@@ -323,7 +320,7 @@ src_prepare() {
 		-e "s:/var/lib/xdm/authdir/authfiles/:/var/run/xauth/:" \
 		-e "s:/var/lib/gdm/:/var/gdm/:" \
 		"${S}/${FOLDER_PREFIX}etc/ati/authatieventsd.sh" \
-		|| die "sed failed."
+		|| die "ACPI fixups failed."
 
 	# Since "who" is in coreutils, we're using that one instead of "finger".
 	sed -i -e 's:finger:who:' \
@@ -366,7 +363,7 @@ src_prepare() {
 		|| die "MODVERSIONS sed failed"
 	cd "${S}"
 
-	mkdir extra || die "mkdir failed"
+	mkdir extra || die "mkdir extra failed"
 	cd extra
 	unpack ./../${FOLDER_PREFIX}usr/src/ati/fglrx_sample_source.tgz
 
