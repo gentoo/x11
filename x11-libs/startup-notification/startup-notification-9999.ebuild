@@ -1,8 +1,8 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/x11-libs/startup-notification/startup-notification-0.10_p20110426.ebuild,v 1.4 2011/04/26 15:25:18 ssuominen Exp $
 
-EAPI=4
+EAPI=5
 XORG_EAUTORECONF=yes
 inherit xorg-2
 
