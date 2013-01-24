@@ -10,7 +10,12 @@ DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and ne
 HOMEPAGE="http://www.amd.com"
 MY_V=( $(get_version_components) )
 #RUN="${WORKDIR}/amd-driver-installer-9.00-x86.x86_64.run"
-DRIVERS_URI="http://www2.ati.com/drivers/linux/amd-driver-installer-catalyst-${PV}-linux-x86.x86_64.zip"
+SLOT="nonlegacy"
+if [[ legacy != ${SLOT} ]]; then
+	DRIVERS_URI="http://www2.ati.com/drivers/linux/amd-driver-installer-catalyst-${PV}-linux-x86.x86_64.zip"
+else
+	DRIVERS_URI="http://www2.ati.com/drivers/legacy/amd-driver-installer-catalyst-${PV}-legacy-linux-x86.x86_64.zip"
+fi
 XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
 SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
 FOLDER_PREFIX="common/"
@@ -18,7 +23,6 @@ IUSE="debug +modules multilib qt4 static-libs disable-watermark"
 
 LICENSE="AMD GPL-2 QPL-1.0"
 KEYWORDS="-* ~amd64 ~x86"
-SLOT="1"
 
 RESTRICT="bindist test"
 
@@ -48,6 +52,13 @@ RDEPEND="
 			x11-libs/qt-gui:4[accessibility]
 	)
 "
+if [[ legacy != ${SLOT} ]]; then
+	RDEPEND="${RDEPEND}
+		!x11-drivers/ati-drivers:legacy"
+else
+	RDEPEND="${RDEPEND}
+		!x11-drivers/ati-drivers:nonlegacy"
+fi
 
 DEPEND="${RDEPEND}
 	x11-proto/inputproto

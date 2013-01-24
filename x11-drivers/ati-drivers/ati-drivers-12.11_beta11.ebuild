@@ -18,7 +18,7 @@ IUSE="debug +modules multilib qt4 static-libs disable-watermark"
 
 LICENSE="AMD GPL-2 QPL-1.0"
 KEYWORDS="-* ~amd64 ~x86"
-SLOT="1"
+SLOT="nonlegacy"
 
 RESTRICT="bindist"
 
