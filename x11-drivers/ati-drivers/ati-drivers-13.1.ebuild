@@ -133,96 +133,25 @@ QA_DT_HASH="
 	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libOpenCL.so.1
 "
 
+CONFIG_CHECK="~MTRR ~!DRM ACPI PCI_MSI !LOCKDEP"
+use amd64 && CONFIG_CHECK="${CONFIG_CHECK} COMPAT"
+ERROR_MTRR="CONFIG_MTRR required for direct rendering."
+ERROR_DRM="CONFIG_DRM must be disabled or compiled as a module for direct
+	rendering."
+ERROR_LOCKDEP="CONFIG_LOCKDEP (lock tracking) exports the symbol lock_acquire
+	as GPL-only. This prevents ${P} from compiling with an error like this:
+	FATAL: modpost: GPL-incompatible module fglrx.ko uses GPL-only symbol 'lock_acquire'"
+
 _check_kernel_config() {
-	local failed=0
-	local error=""
-	if ! kernel_is ge 2 6; then
-		eerror "You need a 2.6 linux kernel to compile against!"
-		die "No 2.6 Kernel found"
-	fi
-
-	if ! linux_chkconfig_present MTRR; then
-		ewarn "You don't have MTRR support enabled in the kernel."
-		ewarn "Direct rendering will not work."
-	fi
-
-	if linux_chkconfig_builtin DRM; then
-		ewarn "You have DRM support built in to the kernel"
-		ewarn "Direct rendering will not work."
-	fi
-
 	if ! linux_chkconfig_present AGP && \
 		! linux_chkconfig_present PCIEPORTBUS; then
 		ewarn "You don't have AGP and/or PCIe support enabled in the kernel"
 		ewarn "Direct rendering will not work."
 	fi
 
-	if ! linux_chkconfig_present ACPI; then
-		eerror "${P} requires the ACPI support in the kernel"
-		eerror "Please enable it:"
-		eerror "    CONFIG_ACPI=y"
-		eerror "in /usr/src/linux/.config or"
-		eerror "    Power management and ACPI options --->"
-		eerror "        [*] Power Management support"
-		eerror "in the 'menuconfig'"
-		error+=" CONFIG_ACPI disabled;"
-		failed=1
-	fi
-
-	if ! linux_chkconfig_present PCI_MSI; then
-		eerror "${P} requires MSI in the kernel."
-		eerror "Please enable it:"
-		eerror "    CONFIG_PCI_MSI=y"
-		eerror "in /usr/src/linux/.config or"
-		eerror "    Bus options (PCI etc.)  --->"
-		eerror "        [*] Message Signaled Interrupts (MSI and MSI-X)"
-		eerror "in the kernel config."
-		error+=" CONFIG_PCI_MSI disabled;"
-		failed=1
-	fi
-
-	if linux_chkconfig_present LOCKDEP; then
-		eerror "You've enabled LOCKDEP -- lock tracking -- in the kernel."
-		eerror "Unfortunately, this option exports the symbol lock_acquire as GPL-only."
-		eerror "This prevents ${P} from compiling with an error like this:"
-		eerror "FATAL: modpost: GPL-incompatible module fglrx.ko uses GPL-only symbol 'lock_acquire'"
-		eerror "Please make sure the following options have been unset:"
-		eerror "    Kernel hacking  --->"
-		eerror "        [ ] Lock debugging: detect incorrect freeing of live locks"
-		eerror "        [ ] Lock debugging: prove locking correctness"
-		eerror "        [ ] Lock usage statistics"
-		eerror "in 'menuconfig'"
-		error+=" LOCKDEP enabled;"
-		failed=1
-	fi
-
-	use amd64 && if ! linux_chkconfig_present COMPAT; then
-		eerror "${P} requires COMPAT."
-		eerror "Please enable the 32 bit emulation:"
-		eerror "Executable file formats / Emulations  --->"
-		eerror "    [*] IA32 Emulation"
-		eerror "in the kernel config."
-		eerror "if this doesn't enable CONFIG_COMPAT add"
-		eerror "    CONFIG_COMPAT=y"
-		eerror "in /usr/src/linux/.config"
-		error+=" COMPAT disabled;"
-		failed=1
-	fi
-
 	kernel_is ge 2 6 37 && kernel_is le 2 6 38 && if ! linux_chkconfig_present BKL ; then
-		eerror "${P} requires BKL."
-		eerror "Please enable the Big Kernel Lock:"
-		eerror "Kernel hacking  --->"
-		eerror "    [*] Big Kernel Lock"
-		eerror "in the kernel config."
-		eerror "or add"
-		eerror "    CONFIG_BKL=y"
-		eerror "in /usr/src/linux/.config"
-		error+=" BKL disabled;"
-		failed=1
+		die "CONFIG_BKL must be enabled for kernels 2.6.37-2.6.38."
 	fi
-
-	[[ ${failed} -ne 0 ]] && die "${error}"
 }
 
 pkg_pretend() {
