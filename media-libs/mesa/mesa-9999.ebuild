@@ -275,11 +275,6 @@ src_install() {
 		dodoc docs/patents.txt
 	fi
 
-	# Save the glsl-compiler for later use
-	if ! tc-is-cross-compiler; then
-		dobin "${S}"/src/glsl/glsl_compiler
-	fi
-
 	# Install config file for eselect mesa
 	insinto /usr/share/mesa
 	newins "${FILESDIR}/eselect-mesa.conf.8.1" eselect-mesa.conf
