@@ -82,7 +82,7 @@ RDEPEND="
 	!<=x11-proto/xf86driproto-2.0.3
 	classic? ( app-admin/eselect-mesa )
 	gallium? ( app-admin/eselect-mesa )
-	>=app-admin/eselect-opengl-1.2.6
+	>=app-admin/eselect-opengl-1.2.7
 	dev-libs/expat
 	gbm? ( sys-fs/udev )
 	>=x11-libs/libX11-1.3.99.901
