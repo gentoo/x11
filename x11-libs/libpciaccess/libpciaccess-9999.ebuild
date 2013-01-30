@@ -3,6 +3,8 @@
 # $Header: $
 
 EAPI=5
+
+XORG_MULTILIB=yes
 inherit xorg-2
 
 DESCRIPTION="Library providing generic access to the PCI bus and devices"
@@ -24,8 +26,16 @@ src_configure() {
 
 src_install() {
 	xorg-2_src_install
+
 	if ! use minimal; then
+		scanpci_install() {
+			${BASH} "${AUTOTOOLS_BUILD_DIR:-${S}}/libtool" \
+				--mode=install "$(type -P install)" -c \
+				"${AUTOTOOLS_BUILD_DIR:-${S}}/scanpci/scanpci" \
+				"${ED}"/usr/bin || die
+		}
+
 		dodir /usr/bin || die
-		${BASH} "${AUTOTOOLS_BUILD_DIR:-${S}}/libtool" --mode=install "$(type -P install)" -c "${AUTOTOOLS_BUILD_DIR:-${S}}/scanpci/scanpci" "${ED}"/usr/bin || die
+		multilib_foreach_impl scanpci_install
 	fi
 }

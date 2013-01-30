@@ -5,6 +5,7 @@
 EAPI=5
 
 XORG_DOC=doc
+XORG_MULTILIB=yes
 inherit xorg-2
 
 DESCRIPTION="X.Org XExt protocol headers"

@@ -5,6 +5,7 @@
 EAPI=5
 
 XORG_DOC=doc
+XORG_MULTILIB=yes
 inherit xorg-2
 
 DESCRIPTION="X.Org ICE library"
@@ -13,7 +14,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86
 IUSE="ipv6"
 
 RDEPEND="x11-libs/xtrans
-	x11-proto/xproto"
+	x11-proto/xproto[${MULTILIB_USEDEP}]"
 DEPEND="${RDEPEND}"
 
 src_configure() {

@@ -5,6 +5,7 @@
 EAPI=5
 
 XORG_DOC=doc
+XORG_MULTILIB=yes
 inherit xorg-2
 
 DESCRIPTION="X C-language Bindings library"
@@ -16,9 +17,9 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/git/xcb/libxcb"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 IUSE="selinux"
 
-RDEPEND="dev-libs/libpthread-stubs
-	x11-libs/libXau
-	x11-libs/libXdmcp"
+RDEPEND="dev-libs/libpthread-stubs[${MULTILIB_USEDEP}]
+	x11-libs/libXau[${MULTILIB_USEDEP}]
+	x11-libs/libXdmcp[${MULTILIB_USEDEP}]"
 DEPEND="${RDEPEND}
 	dev-lang/python[xml]
 	dev-libs/libxslt
