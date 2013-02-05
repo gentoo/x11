@@ -14,7 +14,7 @@ IUSE="glamor udev"
 
 RDEPEND=">=x11-libs/libdrm-2.4.36[video_cards_radeon]
 	glamor? ( x11-libs/glamor )
-	udev? ( sys-fs/udev )"
+	udev? ( virtual/udev )"
 DEPEND="${RDEPEND}"
 
 src_configure() {

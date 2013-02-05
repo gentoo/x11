@@ -25,7 +25,7 @@ RDEPEND="x11-libs/libXext
 		>=x11-base/xorg-server-1.10
 	)
 	udev? (
-		sys-fs/udev
+		virtual/udev
 	)
 	xvmc? (
 		x11-libs/libXvMC
