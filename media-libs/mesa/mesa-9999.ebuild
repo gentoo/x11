@@ -54,6 +54,8 @@ REQUIRED_USE="
 	llvm?   ( gallium )
 	openvg? ( egl gallium )
 	gbm?    ( shared-glapi )
+	gles1?  ( egl )
+	gles2?  ( egl )
 	r600-llvm-compiler? ( gallium llvm || ( video_cards_r600 video_cards_radeon ) )
 	xa?  ( gallium )
 	xorg?  ( gallium )
