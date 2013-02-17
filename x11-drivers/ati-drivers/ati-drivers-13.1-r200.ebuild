@@ -19,7 +19,7 @@ fi
 XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
 SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
 FOLDER_PREFIX="common/"
-IUSE="debug +modules multilib qt4 static-libs disable-watermark"
+IUSE="debug +modules multilib qt4 static-libs disable-watermark pax_kernel"
 
 LICENSE="AMD GPL-2 QPL-1.0"
 KEYWORDS="-* ~amd64 ~x86"
@@ -285,6 +285,9 @@ src_prepare() {
 	# Use ACPI_DEVICE_HANDLE wrapper to make driver build on linux-3.8
 	# see https://bugs.gentoo.org/show_bug.cgi?id=448216
 	epatch "${FILESDIR}/ati-drivers-kernel-3.8-acpihandle.patch"
+
+	# Compile fix, https://bugs.gentoo.org/show_bug.cgi?id=454870
+	use pax_kernel && epatch "${FILESDIR}/const-notifier-block.patch"
 
 	cd "${MODULE_DIR}"
 
