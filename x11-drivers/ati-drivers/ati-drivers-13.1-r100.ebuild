@@ -57,7 +57,7 @@ if [[ legacy != ${SLOT} ]]; then
 		!x11-drivers/ati-drivers:legacy"
 else
 	RDEPEND="${RDEPEND}
-		!x11-drivers/ati-drivers:nonlegacy"
+		!x11-drivers/ati-drivers:1"
 fi
 
 DEPEND="${RDEPEND}

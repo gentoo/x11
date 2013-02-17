@@ -10,7 +10,7 @@ DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and ne
 HOMEPAGE="http://www.amd.com"
 MY_V=( $(get_version_components) )
 #RUN="${WORKDIR}/amd-driver-installer-9.00-x86.x86_64.run"
-SLOT="nonlegacy"
+SLOT="1"
 if [[ legacy != ${SLOT} ]]; then
 	DRIVERS_URI="http://www2.ati.com/drivers/linux/amd-driver-installer-catalyst-${PV}-linux-x86.x86_64.zip"
 else
@@ -57,7 +57,7 @@ if [[ legacy != ${SLOT} ]]; then
 		!x11-drivers/ati-drivers:legacy"
 else
 	RDEPEND="${RDEPEND}
-		!x11-drivers/ati-drivers:nonlegacy"
+		!x11-drivers/ati-drivers:1"
 fi
 
 DEPEND="${RDEPEND}
