@@ -3,7 +3,9 @@
 # $Header: $
 
 EAPI=5
+
 PYTHON_DEPEND="*"
+XORG_MULTILIB=yes
 
 inherit python xorg-2
 
