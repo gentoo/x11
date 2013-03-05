@@ -103,6 +103,7 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-3.2-nodoctargz.patch
 	epatch "${FILESDIR}"/${PN}-3.0-PPC_macro.patch
 	epatch "${FILESDIR}"/R600-Mesa-9.1.patch
+	epatch "${FILESDIR}"/R600-add-to-all.patch
 
 	# User patches
 	epatch_user

@@ -1,0 +1,11 @@
+--- configure.old	2013-03-05 10:25:16.000000000 +0400
++++ configure	2013-03-05 10:25:57.000000000 +0400
+@@ -5419,7 +5419,7 @@
+   enableval=host
+ fi
+ case "$enableval" in
+-  all) TARGETS_TO_BUILD="X86 Sparc PowerPC ARM Mips CellSPU XCore MSP430 CppBackend MBlaze NVPTX Hexagon" ;;
++  all) TARGETS_TO_BUILD="X86 Sparc PowerPC ARM Mips CellSPU XCore MSP430 CppBackend MBlaze NVPTX Hexagon R600" ;;
+   *)for a_target in `echo $enableval|sed -e 's/,/ /g' ` ; do
+       case "$a_target" in
+         x86)      TARGETS_TO_BUILD="X86 $TARGETS_TO_BUILD" ;;
