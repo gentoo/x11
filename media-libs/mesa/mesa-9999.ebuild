@@ -141,7 +141,6 @@ S="${WORKDIR}/${MY_P}"
 
 PATCHES=(
 		"${FILESDIR}/0002-radeong-opencl-rename-target-from-r600-to-r600-amd-n.patch"
-		"${FILESDIR}/0003-clover-fix-building-and-add-standart-locations-for-l.patch"
 		"${FILESDIR}/0001-XXX-Hacks-for-R600-rename.patch"
 		)
 
