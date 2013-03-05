@@ -1,8 +1,8 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-drivers/xf86-input-wacom/xf86-input-wacom-0.10.8-r1.ebuild,v 1.2 2011/02/20 10:54:27 ssuominen Exp $
+# $Header: $
 
-EAPI=4
+EAPI=5
 
 inherit linux-info xorg-2
 
@@ -13,34 +13,30 @@ EGIT_REPO_URI="git://linuxwacom.git.sourceforge.net/gitroot/linuxwacom/${PN}"
 [[ ${PV} != 9999* ]] && \
 	SRC_URI="mirror://sourceforge/linuxwacom/${PN}/${P}.tar.bz2"
 
-KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
+KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~x86"
 IUSE="debug"
 
-RDEPEND="!x11-drivers/linuxwacom
-	>=x11-base/xorg-server-1.7
+RDEPEND=">=x11-base/xorg-server-1.7
 	x11-libs/libX11
 	x11-libs/libXext
 	x11-libs/libXi
-	x11-libs/libXrandr"
+	x11-libs/libXrandr
+	x11-libs/libXinerama"
 DEPEND="${RDEPEND}
 	x11-proto/randrproto"
 
 pkg_setup() {
 	linux-info_pkg_setup
-	xorg-2_pkg_setup
-}
 
-src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable debug)
 	)
-	xorg-2_src_configure
 }
 
 src_install() {
 	xorg-2_src_install
 
-	rm -rf "${D}"/usr/share/hal
+	rm -rf "${ED}"/usr/share/hal
 }
 
 pkg_pretend() {
@@ -55,7 +51,7 @@ pkg_pretend() {
 		ewarn "    Input device support --->"
 		ewarn "      <*>   Event interface"
 		ewarn "      [*]   Tablets  --->"
-		ewarn "	<*>   Wacom Intuos/Graphire tablet support (USB)"
+		ewarn "        <*>   Wacom Intuos/Graphire tablet support (USB)"
 		echo
 	fi
 }

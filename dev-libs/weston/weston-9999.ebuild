@@ -1,8 +1,8 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/wayland/${PN}"
 
@@ -32,7 +32,7 @@ RDEPEND="dev-libs/wayland
 	media-libs/mesa[egl,gles2,wayland]
 	x11-libs/pixman
 	x11? ( x11-libs/libxcb x11-libs/libX11 )
-	drm? ( >=sys-fs/udev-136 >=x11-libs/libdrm-2.4.23 media-libs/mesa[gbm] )
+	drm? ( >=virtual/udev-136 >=x11-libs/libdrm-2.4.23 media-libs/mesa[gbm] )
 	clients? ( >=x11-libs/cairo-1.10.0 x11-libs/gdk-pixbuf dev-libs/glib:2
 			   x11-libs/libxkbcommon media-libs/libpng app-text/poppler )"
 DEPEND="${RDEPEND}"

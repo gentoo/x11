@@ -1,8 +1,8 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
 XORG_DRI=always
 inherit xorg-2
@@ -14,7 +14,7 @@ IUSE="glamor udev"
 
 RDEPEND=">=x11-libs/libdrm-2.4.36[video_cards_radeon]
 	glamor? ( x11-libs/glamor )
-	udev? ( sys-fs/udev )"
+	udev? ( virtual/udev )"
 DEPEND="${RDEPEND}"
 
 src_configure() {
