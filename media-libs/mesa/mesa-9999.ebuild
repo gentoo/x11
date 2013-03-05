@@ -250,7 +250,6 @@ src_configure() {
 			myconf+="
 				$(use_enable opencl)
 				--with-opencl-libdir="${EPREFIX}/usr/$(get_libdir)/OpenCL/vendors/mesa"
-				--with-libclc-path="${EPREFIX}/usr"
 				--with-clang-libdir="${EPREFIX}/usr/$(get_libdir)"
 				"
 		fi
