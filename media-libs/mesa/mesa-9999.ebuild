@@ -89,7 +89,7 @@ RDEPEND="
 	x11-libs/libXext
 	x11-libs/libXxf86vm
 	>=x11-libs/libxcb-1.8.1
-	opencl? ( 
+	opencl? (
 				app-admin/eselect-opencl
 				dev-libs/libclc
 			)
@@ -121,7 +121,8 @@ DEPEND="${RDEPEND}
 		video_cards_radeonsi? ( >=sys-devel/llvm-3.1 )
 	)
 	opencl? (
-				>=sys-devel/clang-3.1
+				>=sys-devel/llvm-3.2[multitarget]
+				>=sys-devel/clang-3.2[multitarget]
 				>=sys-devel/gcc-4.6
 	)
 	=dev-lang/python-2*
