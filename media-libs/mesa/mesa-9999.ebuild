@@ -11,7 +11,9 @@ if [[ ${PV} = 9999* ]]; then
 	EXPERIMENTAL="true"
 fi
 
-inherit base autotools multilib flag-o-matic toolchain-funcs ${GIT_ECLASS}
+PYTHON_COMPAT=( python{2_6,2_7} )
+
+inherit base autotools multilib flag-o-matic python-single-r1 toolchain-funcs ${GIT_ECLASS}
 
 OPENGL_DIR="xorg-x11"
 
@@ -36,7 +38,7 @@ fi
 # GLES[2]/gl[2]{,ext,platform}.h are SGI-B-2.0
 LICENSE="MIT SGI-B-2.0"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~sparc-solaris ~x64-solaris ~x86-solaris"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~amd64-linux ~arm-linux ~ia64-linux ~x86-linux ~sparc-solaris ~x64-solaris ~x86-solaris"
 
 INTEL_CARDS="i915 i965 intel"
 RADEON_CARDS="r100 r200 r300 r600 radeon radeonsi"
@@ -115,8 +117,8 @@ DEPEND="${RDEPEND}
 		r600-llvm-compiler? ( >=sys-devel/llvm-3.1 )
 		video_cards_radeonsi? ( >=sys-devel/llvm-3.1 )
 	)
-	=dev-lang/python-2*
-	dev-libs/libxml2[python]
+	${PYTHON_DEPS}
+	dev-libs/libxml2[python,${PYTHON_USEDEP}]
 	sys-devel/bison
 	sys-devel/flex
 	virtual/pkgconfig
@@ -139,6 +141,8 @@ QA_WX_LOAD="usr/lib*/opengl/xorg-x11/lib/libGL.so*"
 pkg_setup() {
 	# workaround toc-issue wrt #386545
 	use ppc64 && append-flags -mminimal-toc
+
+	python-single-r1_pkg_setup
 }
 
 src_unpack() {
@@ -260,6 +264,7 @@ src_configure() {
 		$(use_enable xorg) \
 		--with-dri-drivers=${DRI_DRIVERS} \
 		--with-gallium-drivers=${GALLIUM_DRIVERS} \
+		PYTHON2="${PYTHON}" \
 		${myconf}
 }
 
