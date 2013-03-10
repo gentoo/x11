@@ -24,8 +24,11 @@ DOCS=( NEWS README )
 
 pkg_setup() {
 	python-single-r1_pkg_setup
-	xorg-2_pkg_setup
+}
+
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable selinux xselinux)
 	)
+	xorg-2_src_configure
 }

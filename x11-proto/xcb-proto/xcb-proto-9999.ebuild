@@ -23,5 +23,8 @@ DEPEND="${RDEPEND}
 
 pkg_setup() {
 	python-single-r1_pkg_setup
-	xorg-2_pkg_setup
+}
+
+src_configure() {
+	xorg-2_src_configure
 }

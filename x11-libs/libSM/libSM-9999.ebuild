@@ -25,9 +25,8 @@ RDEPEND=">=x11-libs/libICE-1.0.5[${MULTILIB_USEDEP}]
 	) )"
 DEPEND="${RDEPEND}"
 
-pkg_setup() {
+src_configure() {
 	local withuuid=$(use_with uuid libuuid)
-	xorg-2_pkg_setup
 
 	# do not use uuid even if available in libc (like on FreeBSD)
 	use uuid || export ac_cv_func_uuid_create=no
@@ -59,4 +58,5 @@ pkg_setup() {
 		${withuuid}
 		--without-fop
 	)
+	xorg-2_src_configure
 }
