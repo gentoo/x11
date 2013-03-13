@@ -6,7 +6,7 @@ EAPI=5
 
 inherit eutils multilib linux-info linux-mod toolchain-funcs versionator
 
-DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and newer chipsets"
+DESCRIPTION="Ati precompiled drivers for legacy Radeon R600 (HD2000 Series) and newer chipsets"
 HOMEPAGE="http://www.amd.com"
 MY_V=( $(get_version_components) )
 #RUN="${WORKDIR}/amd-driver-installer-9.00-x86.x86_64.run"
