@@ -148,8 +148,8 @@ QA_DT_HASH="
 CONFIG_CHECK="~MTRR ~!DRM ACPI PCI_MSI !LOCKDEP"
 use amd64 && CONFIG_CHECK="${CONFIG_CHECK} COMPAT"
 ERROR_MTRR="CONFIG_MTRR required for direct rendering."
-ERROR_DRM="CONFIG_DRM must be disabled or compiled as a module for direct
-	rendering."
+ERROR_DRM="CONFIG_DRM must be disabled or compiled as a module and not loaded for direct
+	rendering to work."
 ERROR_LOCKDEP="CONFIG_LOCKDEP (lock tracking) exports the symbol lock_acquire
 	as GPL-only. This prevents ${P} from compiling with an error like this:
 	FATAL: modpost: GPL-incompatible module fglrx.ko uses GPL-only symbol 'lock_acquire'"
@@ -575,7 +575,8 @@ pkg_postinst() {
 	if has_version ">=x11-drivers/xf86-video-intel-2.20.3"; then
 		ewarn "It is reported that xf86-video-intel-2.20.3 and later cause the X server"
 		ewarn "to crash on systems that use hybrid AMD/Intel graphics. If you experience"
-		ewarn "this crash, downgrade to xf86-video-intel-2.20.2 or earlier."
+		ewarn "this crash, downgrade to xf86-video-intel-2.20.2 or earlier or"
+		ewarn "try disabling sna for xf86-video-intel."
 		ewarn "For details, see https://bugs.gentoo.org/show_bug.cgi?id=430000"
 	fi
 }
