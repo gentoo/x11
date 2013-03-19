@@ -5,7 +5,7 @@
 EAPI=5
 
 XORG_DRI=always
-inherit xorg-2
+inherit linux-info xorg-2
 
 DESCRIPTION="ATI video driver"
 
@@ -16,6 +16,8 @@ RDEPEND=">=x11-libs/libdrm-2.4.36[video_cards_radeon]
 	glamor? ( x11-libs/glamor )
 	udev? ( virtual/udev )"
 DEPEND="${RDEPEND}"
+
+CONFIG_CHECK="~DRM_RADEON_KMS ~!FB_RADEON"
 
 src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
