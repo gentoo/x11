@@ -9,5 +9,6 @@
 		<flag name='pango'>Enable pango font rendering</flag>
 		<flag name='pixman'>Enable pixman font rendering</flag>
 		<flag name='multiseat'>Enable multiseat support via systemd</flag>
+		<flag name='optimizations'>Enable optimizations</flag>
 	</use>
 </pkgmetadata>

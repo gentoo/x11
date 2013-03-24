@@ -24,8 +24,8 @@ HOMEPAGE="http://www.freedesktop.org/wiki/Software/kmscon"
 
 LICENSE="MIT LGPL-2.1 BSD-2"
 SLOT="0"
-IUSE="dbus doc +drm +fbdev truetype +gles2 +pango cairo pixman
-static-libs systemd debug multiseat +unicode wayland udev"
+IUSE="cairo dbus debug doc +drm +fbdev +gles2 multiseat +optimizations +pango pixman
+static-libs systemd truetype udev +unicode wayland"
 
 RDEPEND="
 	dev-libs/glib:2
