@@ -145,7 +145,6 @@ src_configure() {
 		$(use_enable systemd) \
 		$(use_enable udev) \
 		$(use_enable dbus) \
-		$(use_enable bblit) \
 		$(use_enable debug) \
 		$(use_enable optimizations) \
 		$(use_enable multiseat multi-seat) \
