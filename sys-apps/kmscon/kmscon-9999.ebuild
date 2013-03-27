@@ -141,10 +141,8 @@ src_configure() {
 	# xkbcommon not in portage
 	econf \
 		$(use_enable static-libs static) \
-		$(use_enable doc gtk-doc) \
-		$(use_enable systemd) \
-		$(use_enable udev) \
-		$(use_enable dbus) \
+		$(use_enable udev hotplug) \
+		$(use_enable dbus eloop) \
 		$(use_enable debug) \
 		$(use_enable optimizations) \
 		$(use_enable multiseat multi-seat) \
