@@ -37,10 +37,8 @@ RDEPEND="
 # when building EGL/GLESv1/GLESv2 programs. They are not actually required
 # by the installed programs.
 DEPEND="${RDEPEND}
-	egl? (
-		media-libs/glew
-		virtual/glu
-	)
+	media-libs/glew
+	virtual/glu
 	x11-proto/xproto"
 
 S=${WORKDIR}/${MY_P}
