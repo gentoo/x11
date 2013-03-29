@@ -6,6 +6,8 @@ EAPI=5
 
 XORG_DRI=always
 XORG_EAUTORECONF=yes
+XORG_MODULE_REBUILD=yes
+
 inherit xorg-2
 
 DESCRIPTION="OpenGL based 2D rendering acceleration library"
@@ -31,9 +33,4 @@ src_configure() {
 		$(use_enable gles glamor-gles2)
 	)
 	xorg-2_src_configure
-}
-
-src_prepare() {
-	sed -i 's/inst_LTLIBRARIES/lib_LTLIBRARIES/' src/Makefile.am || die
-	xorg-2_src_prepare
 }
