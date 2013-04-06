@@ -32,10 +32,6 @@ RDEPEND="
 	>=sys-devel/llvm-3.2"
 DEPEND="${RDEPEND}"
 
-PATCHES=(
-		"${FILESDIR}/0001-Rename-target-to-r600-amd-none.patch"
-)
-
 src_configure() {
 	./configure.py \
 		--with-llvm-config="${EPREFIX}/usr/bin/llvm-config" \
