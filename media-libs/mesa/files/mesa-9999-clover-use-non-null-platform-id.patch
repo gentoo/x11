@@ -1,0 +1,87 @@
+From: Tom Stellard <thomas.stellard at amd.com>
+
+Using a NULL value for the platform_id is legal according to the spec,
+however, passing a NULL value as the platform parameter to
+clGetPlatformInfo() results in implementation defined behavior.
+
+In order to avoid implementation defined behavior some apps require that
+the platfrom_id is non-NULL.  To statisfy this requirement, we just need
+to hard-code clover's platform_id to something other than NULL.
+
+v2:
+  - Handle platform check in clGetDeviceIDs()
+  - Use a macro for MESA_PLATFORM_ID
+
+v3:
+  - Use MESA_PLATFORM_ID when calling clGetDeviceIDs() from
+    clCreateContextFromType()
+---
+ src/gallium/state_trackers/clover/api/context.cpp  | 2 +-
+ src/gallium/state_trackers/clover/api/device.cpp   | 2 +-
+ src/gallium/state_trackers/clover/api/platform.cpp | 4 ++--
+ src/gallium/state_trackers/clover/api/util.hpp     | 2 ++
+ 4 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/src/gallium/state_trackers/clover/api/context.cpp b/src/gallium/state_trackers/clover/api/context.cpp
+index 80afb6b..d509619 100644
+--- a/src/gallium/state_trackers/clover/api/context.cpp
++++ b/src/gallium/state_trackers/clover/api/context.cpp
+@@ -65,7 +65,7 @@ clCreateContextFromType(const cl_context_properties *props,
+    cl_device_id dev;
+    cl_int ret;
+ 
+-   ret = clGetDeviceIDs(0, type, 1, &dev, 0);
++   ret = clGetDeviceIDs(MESA_PLATFORM_ID, type, 1, &dev, 0);
+    if (ret) {
+       ret_error(errcode_ret, ret);
+       return NULL;
+diff --git a/src/gallium/state_trackers/clover/api/device.cpp b/src/gallium/state_trackers/clover/api/device.cpp
+index cf68d0f..d9b0223 100644
+--- a/src/gallium/state_trackers/clover/api/device.cpp
++++ b/src/gallium/state_trackers/clover/api/device.cpp
+@@ -33,7 +33,7 @@ clGetDeviceIDs(cl_platform_id platform, cl_device_type device_type,
+                cl_uint *num_devices) {
+    std::vector<cl_device_id> devs;
+ 
+-   if (platform != NULL)
++   if (platform != MESA_PLATFORM_ID)
+       return CL_INVALID_PLATFORM;
+ 
+    if ((!num_entries && devices) ||
+diff --git a/src/gallium/state_trackers/clover/api/platform.cpp b/src/gallium/state_trackers/clover/api/platform.cpp
+index f99b694..3a988a6 100644
+--- a/src/gallium/state_trackers/clover/api/platform.cpp
++++ b/src/gallium/state_trackers/clover/api/platform.cpp
+@@ -34,7 +34,7 @@ clGetPlatformIDs(cl_uint num_entries, cl_platform_id *platforms,
+    if (num_platforms)
+       *num_platforms = 1;
+    if (platforms)
+-      *platforms = NULL;
++      *platforms = MESA_PLATFORM_ID;
+ 
+    return CL_SUCCESS;
+ }
+@@ -42,7 +42,7 @@ clGetPlatformIDs(cl_uint num_entries, cl_platform_id *platforms,
+ PUBLIC cl_int
+ clGetPlatformInfo(cl_platform_id platform, cl_platform_info param_name,
+                   size_t size, void *buf, size_t *size_ret) {
+-   if (platform != NULL)
++   if (platform != MESA_PLATFORM_ID)
+       return CL_INVALID_PLATFORM;
+ 
+    switch (param_name) {
+diff --git a/src/gallium/state_trackers/clover/api/util.hpp b/src/gallium/state_trackers/clover/api/util.hpp
+index 2f9ec1f..0e80cda 100644
+--- a/src/gallium/state_trackers/clover/api/util.hpp
++++ b/src/gallium/state_trackers/clover/api/util.hpp
+@@ -31,6 +31,8 @@
+ #include "core/base.hpp"
+ #include "pipe/p_compiler.h"
+ 
++#define MESA_PLATFORM_ID ((cl_platform_id)0xc1c1c1c1)
++
+ namespace clover {
+    ///
+    /// Return a matrix (a container of containers) in \a buf with
+-- 
+1.7.11.4

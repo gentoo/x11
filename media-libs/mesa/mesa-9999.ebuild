@@ -172,6 +172,9 @@ src_prepare() {
 	# relax the requirement that r300 must have llvm, bug 380303
 	epatch "${FILESDIR}"/${P}-dont-require-llvm-for-r300.patch
 
+	# use non-NULL platform id
+	epatch "${FILESDIR}/${P}-clover-use-non-null-platform-id.patch"
+
 	# fix for hardened pax_kernel, bug 240956
 	[[ ${PV} != 9999* ]] && epatch "${FILESDIR}"/glx_ro_text_segm.patch
 
