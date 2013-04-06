@@ -123,7 +123,7 @@ DEPEND="${RDEPEND}
 		video_cards_radeonsi? ( sys-devel/llvm[video_cards_radeon] )
 	)
 	opencl? (
-				>=sys-devel/llvm[video_cards_radeon]
+				>=sys-devel/llvm-3.3[video_cards_radeon]
 				>=sys-devel/clang-3.3
 				>=sys-devel/gcc-4.6
 	)
@@ -140,10 +140,6 @@ DEPEND="${RDEPEND}
 "
 
 S="${WORKDIR}/${MY_P}"
-
-PATCHES=(
-		"${FILESDIR}/0002-radeong-opencl-rename-target-from-r600-to-r600-amd-n.patch"
-		)
 
 # It is slow without texrels, if someone wants slow
 # mesa without texrels +pic use is worth the shot
