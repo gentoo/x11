@@ -8,9 +8,9 @@ DESCRIPTION="Meta package containing deps on all xorg drivers"
 HOMEPAGE="http://www.gentoo.org/"
 SRC_URI=""
 
-LICENSE="as-is"
+LICENSE="metapackage"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~arm-linux ~x86-linux"
 
 IUSE_INPUT_DEVICES="
 	input_devices_acecad
@@ -32,7 +32,6 @@ IUSE_INPUT_DEVICES="
 "
 IUSE_VIDEO_CARDS="
 	video_cards_apm
-	video_cards_ark
 	video_cards_ast
 	video_cards_chips
 	video_cards_cirrus
@@ -47,8 +46,6 @@ IUSE_VIDEO_CARDS="
 	video_cards_mach64
 	video_cards_mga
 	video_cards_modesetting
-	video_cards_neomagic
-	video_cards_newport
 	video_cards_nouveau
 	video_cards_nv
 	video_cards_omap
@@ -57,11 +54,9 @@ IUSE_VIDEO_CARDS="
 	video_cards_r128
 	video_cards_radeon
 	video_cards_rendition
-	video_cards_s3
 	video_cards_s3virge
 	video_cards_savage
 	video_cards_siliconmotion
-	video_cards_sis
 	video_cards_sisusb
 	video_cards_sunbw2
 	video_cards_suncg14
@@ -105,7 +100,6 @@ PDEPEND="
 	input_devices_wacom?       ( x11-drivers/xf86-input-wacom )
 
 	video_cards_apm?           ( x11-drivers/xf86-video-apm )
-	video_cards_ark?           ( x11-drivers/xf86-video-ark )
 	video_cards_ast?           ( x11-drivers/xf86-video-ast )
 	video_cards_chips?         ( x11-drivers/xf86-video-chips )
 	video_cards_cirrus?        ( x11-drivers/xf86-video-cirrus )
@@ -119,8 +113,6 @@ PDEPEND="
 	video_cards_mach64?        ( x11-drivers/xf86-video-mach64 )
 	video_cards_mga?           ( x11-drivers/xf86-video-mga )
 	video_cards_modesetting?   ( x11-drivers/xf86-video-modesetting )
-	video_cards_neomagic?      ( x11-drivers/xf86-video-neomagic )
-	video_cards_newport?       ( x11-drivers/xf86-video-newport )
 	video_cards_nouveau?       ( x11-drivers/xf86-video-nouveau )
 	video_cards_nv?            ( x11-drivers/xf86-video-nv )
 	video_cards_omap?          ( x11-drivers/xf86-video-omap )
@@ -131,11 +123,9 @@ PDEPEND="
 	video_cards_r128?          ( x11-drivers/xf86-video-r128 )
 	video_cards_radeon?        ( x11-drivers/xf86-video-ati )
 	video_cards_rendition?     ( x11-drivers/xf86-video-rendition )
-	video_cards_s3?            ( x11-drivers/xf86-video-s3 )
 	video_cards_s3virge?       ( x11-drivers/xf86-video-s3virge )
 	video_cards_savage?        ( x11-drivers/xf86-video-savage )
 	video_cards_siliconmotion? ( x11-drivers/xf86-video-siliconmotion )
-	video_cards_sis?           ( x11-drivers/xf86-video-sis )
 	video_cards_sisusb?        ( x11-drivers/xf86-video-sisusb )
 	video_cards_suncg14?       ( x11-drivers/xf86-video-suncg14 )
 	video_cards_suncg3?        ( x11-drivers/xf86-video-suncg3 )
@@ -159,4 +149,9 @@ PDEPEND="
 	!x11-drivers/xf86-video-impact
 	!x11-drivers/xf86-video-nsc
 	!x11-drivers/xf86-video-sunbw2
+	!<=x11-drivers/xf86-video-ark-0.7.5
+	!<=x11-drivers/xf86-video-neomagic-1.2.7
+	!<=x11-drivers/xf86-video-newport-0.2.4
+	!<=x11-drivers/xf86-video-s3-0.6.5
+	!<=x11-drivers/xf86-video-sis-0.10.7
 "

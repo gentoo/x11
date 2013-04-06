@@ -4,7 +4,7 @@
 
 EAPI=5
 
-inherit eutils multilib linux-info linux-mod toolchain-funcs versionator
+inherit eutils multilib linux-info linux-mod toolchain-funcs versionator pax-utils
 
 DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and newer chipsets"
 HOMEPAGE="http://www.amd.com"
@@ -145,14 +145,18 @@ QA_DT_HASH="
 	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libOpenCL.so.1
 "
 
-CONFIG_CHECK="~MTRR ~!DRM ACPI PCI_MSI !LOCKDEP"
+CONFIG_CHECK="~MTRR ~!DRM ACPI PCI_MSI !LOCKDEP !PAX_KERNEXEC_PLUGIN_METHOD_OR"
 use amd64 && CONFIG_CHECK="${CONFIG_CHECK} COMPAT"
 ERROR_MTRR="CONFIG_MTRR required for direct rendering."
-ERROR_DRM="CONFIG_DRM must be disabled or compiled as a module for direct
-	rendering."
+ERROR_DRM="CONFIG_DRM must be disabled or compiled as a module and not loaded for direct
+	rendering to work."
 ERROR_LOCKDEP="CONFIG_LOCKDEP (lock tracking) exports the symbol lock_acquire
 	as GPL-only. This prevents ${P} from compiling with an error like this:
 	FATAL: modpost: GPL-incompatible module fglrx.ko uses GPL-only symbol 'lock_acquire'"
+ERROR_PAX_KERNEXEC_PLUGIN_METHOD_OR="This config option will cause
+	kernel to reject loading the fglrx module with
+	\"ERROR: could not insert 'fglrx': Exec format error.\"
+	You may want to try CONFIG_PAX_KERNEXEC_PLUGIN_METHOD_BTS instead."
 
 _check_kernel_config() {
 	if ! linux_chkconfig_present AGP && \
@@ -276,16 +280,8 @@ src_prepare() {
 	# first hunk applied upstream second (x32 related) was not
 	epatch "${FILESDIR}"/ati-drivers-x32_something_something.patch
 
-	# compile fix for linux-3.7
-	# https://bugs.gentoo.org/show_bug.cgi?id=438516
-	epatch "${FILESDIR}/ati-drivers-vm-reserverd.patch"
-
 	# compile fix for AGP-less kernel, bug #435322
 	epatch "${FILESDIR}"/ati-drivers-12.9-KCL_AGP_FindCapsRegisters-stub.patch
-
-	# Use ACPI_DEVICE_HANDLE wrapper to make driver build on linux-3.8
-	# see https://bugs.gentoo.org/show_bug.cgi?id=448216
-	epatch "${FILESDIR}/ati-drivers-kernel-3.8-acpihandle.patch"
 
 	# Compile fix, https://bugs.gentoo.org/show_bug.cgi?id=454870
 	use pax_kernel && epatch "${FILESDIR}/const-notifier-block.patch"
@@ -550,6 +546,10 @@ src_install-libs() {
 
 	#install xvba sdk headers
 	doheader xvba_sdk/include/amdxvba.h
+
+	if use pax_kernel; then
+		pax-mark Cm "${D}"/usr/lib*/opengl/ati/lib/libGL.so.1.2 || die "pax-mark failed"
+	fi
 }
 
 pkg_postinst() {
@@ -572,11 +572,18 @@ pkg_postinst() {
 	"${ROOT}"/usr/bin/eselect opengl set --use-old ati
 	"${ROOT}"/usr/bin/eselect opencl set --use-old amd
 
-	if has_version ">=x11-drivers/xf86-video-intel-2.20.3"; then
-		ewarn "It is reported that xf86-video-intel-2.20.3 and later cause the X server"
+	if has_version "x11-drivers/xf86-video-intel[sna]"; then
+		ewarn "It is reported that xf86-video-intel built with USE=\"sna\" causes the X server"
 		ewarn "to crash on systems that use hybrid AMD/Intel graphics. If you experience"
-		ewarn "this crash, downgrade to xf86-video-intel-2.20.2 or earlier."
+		ewarn "this crash, downgrade to xf86-video-intel-2.20.2 or earlier or"
+		ewarn "try disabling sna for xf86-video-intel."
 		ewarn "For details, see https://bugs.gentoo.org/show_bug.cgi?id=430000"
+	fi
+
+	if use pax_kernel; then
+		ewarn "Please run \"revdep-pax -s libGL.so.1 -me\" after installation and"
+		ewarn "after you have run \"eselect opengl set ati\". Executacle"
+		ewarn "revdep-pax is part of package sys-apps/elfix."
 	fi
 }
 
