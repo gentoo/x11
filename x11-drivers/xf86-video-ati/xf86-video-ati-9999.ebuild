@@ -17,7 +17,16 @@ RDEPEND=">=x11-libs/libdrm-2.4.36[video_cards_radeon]
 	udev? ( virtual/udev )"
 DEPEND="${RDEPEND}"
 
-CONFIG_CHECK="~DRM_RADEON_KMS ~!FB_RADEON"
+pkg_pretend() {
+	if use kernel_linux ; then
+		if kernel_is -ge 3 9; then
+			CONFIG_CHECK="~DRM_RADEON ~!FB_RADEON"
+		else
+			CONFIG_CHECK="~DRM_RADEON_KMS ~!FB_RADEON"
+		fi
+	fi
+	check_extra_config
+}
 
 src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
