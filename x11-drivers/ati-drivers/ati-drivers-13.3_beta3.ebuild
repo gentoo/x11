@@ -176,6 +176,13 @@ pkg_pretend() {
 		linux-info_pkg_setup
 		require_configured_kernel
 		_check_kernel_config
+
+		if [[ "${KV_EXTRA}" != -hardened ]] && use pax_kernel; then
+			eerror "USE pax_kernel enabled for a non-hardened kernel."
+			eerror "If you know this kernel supports pax_kernel, open a bug at"
+			eerror "https://bugs.gentoo.org"
+			die "USE pax_kernel enabled for a non-hardened kernel"
+		fi
 	fi
 }
 
@@ -548,7 +555,7 @@ src_install-libs() {
 	doheader xvba_sdk/include/amdxvba.h
 
 	if use pax_kernel; then
-		pax-mark Cm "${D}"/usr/lib*/opengl/ati/lib/libGL.so.1.2 || die "pax-mark failed"
+		pax-mark m "${D}"/usr/lib*/opengl/ati/lib/libGL.so.1.2 || die "pax-mark failed"
 	fi
 }
 
