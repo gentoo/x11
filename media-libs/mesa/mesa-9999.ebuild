@@ -174,9 +174,6 @@ src_prepare() {
 
 	# use non-NULL platform id
 	epatch "${FILESDIR}/${P}-clover-use-non-null-platform-id.patch"
-	epatch "${FILESDIR}/0001-R600-Add-basic-64-bit-float-load-support-to-GPRs.patch"
-	epatch "${FILESDIR}/0002-R600-Add-64-bit-v2f32-v2i32-store.patch"
-	epatch "${FILESDIR}/0003-R600-Add-test-for-64-bit-v2f32-v2i32.patch"
 
 	# fix for hardened pax_kernel, bug 240956
 	[[ ${PV} != 9999* ]] && epatch "${FILESDIR}"/glx_ro_text_segm.patch
