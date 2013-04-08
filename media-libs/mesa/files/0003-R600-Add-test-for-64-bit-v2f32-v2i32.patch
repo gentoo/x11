@@ -1,0 +1,63 @@
+From d01a8de8442b2ee3b7b49fb9cb5cb39d238116f6 Mon Sep 17 00:00:00 2001
+From: Dmitry Cherkassov <dcherkassov@gmail.com>
+Date: Thu, 7 Mar 2013 20:18:01 +0400
+Subject: [PATCH 3/3] R600: Add test for 64-bit v2f32/v2i32
+
+Added tests for checking v2f32/v2i32 load, store and element extract
+
+Signed-off-by: Dmitry Cherkassov <dcherkassov@gmail.com>
+---
+ test/CodeGen/R600/64bit-kernel-args.ll | 41 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 test/CodeGen/R600/64bit-kernel-args.ll
+
+diff --git a/test/CodeGen/R600/64bit-kernel-args.ll b/test/CodeGen/R600/64bit-kernel-args.ll
+new file mode 100644
+index 0000000..fe86fcf
+--- /dev/null
++++ b/test/CodeGen/R600/64bit-kernel-args.ll
+@@ -0,0 +1,41 @@
++;RUN: llc < %s -march=r600 -mcpu=redwood | FileCheck %s
++
++; CHECK: @v2i32_kernel_arg
++; CHECK: VTX_READ_64 T{{[0-9]+}}.XY, T{{[0-9]+}}.X, 40
++define void @v2i32_load_extract_store(i32 addrspace(1)* nocapture %out, <2 x i32> %in)  {
++entry:
++  %0 = extractelement <2 x i32> %in, i32 0
++  store i32 %0, i32 addrspace(1)* %out, align 4
++  %1 = extractelement <2 x i32> %in, i32 1
++  %arrayidx1 = getelementptr inbounds i32 addrspace(1)* %out, i32 1
++  store i32 %1, i32 addrspace(1)* %arrayidx1, align 4
++  ret void
++}
++
++; CHECK: @v2f32_kernel_arg
++; CHECK: VTX_READ_64 T{{[0-9]+}}.XY, T{{[0-9]+}}.X, 40
++define void @v2f32_load_extract_store(float addrspace(1)* nocapture %out, <2 x float> %in)  {
++entry:
++  %0 = extractelement <2 x float> %in, i32 0
++  store float %0, float addrspace(1)* %out, align 4
++  %1 = extractelement <2 x float> %in, i32 1
++  %arrayidx1 = getelementptr inbounds float addrspace(1)* %out, i32 1
++  store float %1, float addrspace(1)* %arrayidx1, align 4
++  ret void
++}
++
++; CHECK: @v2i32_kernel_arg
++; CHECK: VTX_READ_64 T{{[0-9]+}}.XY, T{{[0-9]+}}.X, 40
++define void @v2i32_load_store(<2 x i32> addrspace(1)* %out, <2 x i32>  %in) {
++entry:
++  store <2 x i32> %in, <2 x i32> addrspace(1)* %out
++  ret void
++}
++
++; CHECK: @v2f32_kernel_arg
++; CHECK: VTX_READ_64 T{{[0-9]+}}.XY, T{{[0-9]+}}.X, 40
++define void @v2f32_load_store(<2 x float> addrspace(1)* %out, <2 x float>  %in) {
++entry:
++  store <2 x float> %in, <2 x float> addrspace(1)* %out
++  ret void
++}
+-- 
+1.8.1.5
+

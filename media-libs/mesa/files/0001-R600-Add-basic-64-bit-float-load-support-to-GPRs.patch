@@ -1,0 +1,181 @@
+From ecf4eaedd349d007227f07c145efcd37f4014067 Mon Sep 17 00:00:00 2001
+From: Dmitry Cherkassov <dcherkassov@gmail.com>
+Date: Thu, 7 Mar 2013 20:17:59 +0400
+Subject: [PATCH 1/3] R600: Add basic 64-bit float load support to GPRs
+
+* Added R600_Reg64 class
+* Added T#Index#.XY registers definition
+* Added v2i32 register reads from parameter and global space
+* Added f32 and i32 elements extraction from v2f32 and v2i32
+* Added v2i32 -> v2f32 conversions
+
+Signed-off-by: Dmitry Cherkassov <dcherkassov@gmail.com>
+---
+ lib/Target/R600/AMDGPUISelLowering.cpp             |  3 ++
+ lib/Target/R600/MCTargetDesc/R600MCCodeEmitter.cpp |  2 ++
+ lib/Target/R600/R600ISelLowering.cpp               |  3 ++
+ lib/Target/R600/R600Instructions.td                | 37 ++++++++++++++++++++++
+ lib/Target/R600/R600RegisterInfo.td                | 16 ++++++++++
+ 5 files changed, 61 insertions(+)
+
+diff --git a/lib/Target/R600/AMDGPUISelLowering.cpp b/lib/Target/R600/AMDGPUISelLowering.cpp
+index a266df5..8c26922 100644
+--- a/lib/Target/R600/AMDGPUISelLowering.cpp
++++ b/lib/Target/R600/AMDGPUISelLowering.cpp
+@@ -60,6 +60,9 @@ AMDGPUTargetLowering::AMDGPUTargetLowering(TargetMachine &TM) :
+   setOperationAction(ISD::LOAD, MVT::v4f32, Promote);
+   AddPromotedToType(ISD::LOAD, MVT::v4f32, MVT::v4i32);
+ 
++  setOperationAction(ISD::LOAD, MVT::v2f32, Promote);
++  AddPromotedToType(ISD::LOAD, MVT::v2f32, MVT::v2i32);
++
+   setOperationAction(ISD::MUL, MVT::i64, Expand);
+ 
+   setOperationAction(ISD::UDIV, MVT::i32, Expand);
+diff --git a/lib/Target/R600/MCTargetDesc/R600MCCodeEmitter.cpp b/lib/Target/R600/MCTargetDesc/R600MCCodeEmitter.cpp
+index 469a8ad..82fef06 100644
+--- a/lib/Target/R600/MCTargetDesc/R600MCCodeEmitter.cpp
++++ b/lib/Target/R600/MCTargetDesc/R600MCCodeEmitter.cpp
+@@ -162,9 +162,11 @@ void R600MCCodeEmitter::EncodeInstruction(const MCInst &MI, raw_ostream &OS,
+     case AMDGPU::VTX_READ_PARAM_8_eg:
+     case AMDGPU::VTX_READ_PARAM_16_eg:
+     case AMDGPU::VTX_READ_PARAM_32_eg:
++    case AMDGPU::VTX_READ_PARAM_64_eg:
+     case AMDGPU::VTX_READ_PARAM_128_eg:
+     case AMDGPU::VTX_READ_GLOBAL_8_eg:
+     case AMDGPU::VTX_READ_GLOBAL_32_eg:
++    case AMDGPU::VTX_READ_GLOBAL_64_eg:
+     case AMDGPU::VTX_READ_GLOBAL_128_eg:
+     case AMDGPU::TEX_VTX_CONSTBUF:
+     case AMDGPU::TEX_VTX_TEXBUF : {
+diff --git a/lib/Target/R600/R600ISelLowering.cpp b/lib/Target/R600/R600ISelLowering.cpp
+index 53e6e51..953f22d 100644
+--- a/lib/Target/R600/R600ISelLowering.cpp
++++ b/lib/Target/R600/R600ISelLowering.cpp
+@@ -32,6 +32,9 @@ R600TargetLowering::R600TargetLowering(TargetMachine &TM) :
+   addRegisterClass(MVT::f32, &AMDGPU::R600_Reg32RegClass);
+   addRegisterClass(MVT::v4i32, &AMDGPU::R600_Reg128RegClass);
+   addRegisterClass(MVT::i32, &AMDGPU::R600_Reg32RegClass);
++  addRegisterClass(MVT::v2f32, &AMDGPU::R600_Reg64RegClass);
++  addRegisterClass(MVT::v2i32, &AMDGPU::R600_Reg64RegClass);
++
+   computeRegisterProperties();
+ 
+   setOperationAction(ISD::FADD, MVT::v4f32, Expand);
+diff --git a/lib/Target/R600/R600Instructions.td b/lib/Target/R600/R600Instructions.td
+index b4c45e1..716c90d 100644
+--- a/lib/Target/R600/R600Instructions.td
++++ b/lib/Target/R600/R600Instructions.td
+@@ -1824,6 +1824,18 @@ class VTX_READ_32_eg <bits<8> buffer_id, list<dag> pattern>
+   let Constraints = "$ptr.ptr = $dst";
+ }
+ 
++class VTX_READ_64_eg <bits<8> buffer_id, list<dag> pattern>
++    : VTX_READ_eg <"VTX_READ_64", buffer_id, (outs R600_Reg64:$dst),
++                   pattern> {
++
++  let MEGA_FETCH_COUNT = 8;
++  let DST_SEL_X        =  0;
++  let DST_SEL_Y        =  1;
++  let DST_SEL_Z        =  7;
++  let DST_SEL_W        =  7;
++  let DATA_FORMAT      =  0x1D; // COLOR_32_32
++}
++
+ class VTX_READ_128_eg <bits<8> buffer_id, list<dag> pattern>
+     : VTX_READ_eg <"VTX_READ_128", buffer_id, (outs R600_Reg128:$dst),
+                    pattern> {
+@@ -1857,6 +1869,11 @@ def VTX_READ_PARAM_32_eg : VTX_READ_32_eg <0,
+   [(set (i32 R600_TReg32_X:$dst), (load_param ADDRVTX_READ:$ptr))]
+ >;
+ 
++def VTX_READ_PARAM_64_eg : VTX_READ_64_eg <0,
++  [(set (v2i32 R600_Reg64:$dst), (load_param ADDRVTX_READ:$ptr))]
++>;
++
++
+ def VTX_READ_PARAM_128_eg : VTX_READ_128_eg <0,
+   [(set (v4i32 R600_Reg128:$dst), (load_param ADDRVTX_READ:$ptr))]
+ >;
+@@ -1875,6 +1892,12 @@ def VTX_READ_GLOBAL_32_eg : VTX_READ_32_eg <1,
+   [(set (i32 R600_TReg32_X:$dst), (global_load ADDRVTX_READ:$ptr))]
+ >;
+ 
++// 64-bit reads
++def VTX_READ_GLOBAL_64_eg : VTX_READ_64_eg <1,
++  [(set (v2i32 R600_Reg64:$dst), (global_load ADDRVTX_READ:$ptr))]
++>;
++
++
+ // 128-bit reads
+ def VTX_READ_GLOBAL_128_eg : VTX_READ_128_eg <1,
+   [(set (v4i32 R600_Reg128:$dst), (global_load ADDRVTX_READ:$ptr))]
+@@ -2352,10 +2375,24 @@ def : Insert_Element <i32, v4i32, R600_Reg32, R600_Reg128, 3, sub3>;
+ def : Vector4_Build <v4f32, R600_Reg128, f32, R600_Reg32>;
+ def : Vector4_Build <v4i32, R600_Reg128, i32, R600_Reg32>;
+ 
++def : Extract_Element <f32, v2f32, R600_Reg64, 0, sub0>;
++def : Extract_Element <f32, v2f32, R600_Reg64, 1, sub1>;
++
++def : Insert_Element <f32, v2f32, R600_Reg32, R600_Reg64, 0, sub0>;
++def : Insert_Element <f32, v2f32, R600_Reg32, R600_Reg64, 1, sub1>;
++
++def : Extract_Element <i32, v2i32, R600_Reg64, 0, sub0>;
++def : Extract_Element <i32, v2i32, R600_Reg64, 1, sub1>;
++
++def : Insert_Element <i32, v2i32, R600_Reg32, R600_Reg64, 0, sub0>;
++def : Insert_Element <i32, v2i32, R600_Reg32, R600_Reg64, 1, sub1>;
++
+ // bitconvert patterns
+ 
+ def : BitConvert <i32, f32, R600_Reg32>;
+ def : BitConvert <f32, i32, R600_Reg32>;
++def : BitConvert <v2f32, v2i32, R600_Reg64>;
++def : BitConvert <v2i32, v2f32, R600_Reg64>;
+ def : BitConvert <v4f32, v4i32, R600_Reg128>;
+ def : BitConvert <v4i32, v4f32, R600_Reg128>;
+ 
+diff --git a/lib/Target/R600/R600RegisterInfo.td b/lib/Target/R600/R600RegisterInfo.td
+index 03f4976..33593bc 100644
+--- a/lib/Target/R600/R600RegisterInfo.td
++++ b/lib/Target/R600/R600RegisterInfo.td
+@@ -23,6 +23,14 @@ class R600Reg_128<string n, list<Register> subregs, bits<16> encoding> :
+   let HWEncoding = encoding;
+ }
+ 
++class R600Reg_64<string n, list<Register> subregs, bits<16> encoding> :
++    RegisterWithSubRegs<n, subregs> {
++  let Namespace = "AMDGPU";
++  let SubRegIndices = [sub0, sub1];
++  let HWEncoding = encoding;
++}
++
++
+ foreach Index = 0-127 in {
+   foreach Chan = [ "X", "Y", "Z", "W" ] in {
+     // 32-bit Temporary Registers
+@@ -41,6 +49,11 @@ foreach Index = 0-127 in {
+                                     !cast<Register>("T"#Index#"_Z"),
+                                     !cast<Register>("T"#Index#"_W")],
+                                    Index>;
++
++  def T#Index#_XY : R600Reg_64 <"T"#Index#".XY",
++                                   [!cast<Register>("T"#Index#"_X"),
++                                    !cast<Register>("T"#Index#"_Y")],
++                                   Index>;
+ }
+ 
+ // KCACHE_BANK0
+@@ -178,6 +191,9 @@ def R600_Reg128 : RegisterClass<"AMDGPU", [v4f32, v4i32], 128,
+   let CopyCost = -1;
+ }
+ 
++def R600_Reg64 : RegisterClass<"AMDGPU", [v2f32, v2i32], 64,
++                                (add (sequence "T%u_XY", 0, 63))>;
++
+ //===----------------------------------------------------------------------===//
+ // Register classes for indirect addressing
+ //===----------------------------------------------------------------------===//
+-- 
+1.8.1.5
+

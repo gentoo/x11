@@ -1,0 +1,57 @@
+From f48f6462adc38526a710626743863ba3915c68b4 Mon Sep 17 00:00:00 2001
+From: Dmitry Cherkassov <dcherkassov@gmail.com>
+Date: Thu, 7 Mar 2013 20:18:00 +0400
+Subject: [PATCH 2/3] R600: Add 64-bit v2f32/v2i32 store
+
+Signed-off-by: Dmitry Cherkassov <dcherkassov@gmail.com>
+---
+ lib/Target/R600/MCTargetDesc/R600MCCodeEmitter.cpp | 1 +
+ lib/Target/R600/R600ISelLowering.cpp               | 1 +
+ lib/Target/R600/R600Instructions.td                | 7 +++++++
+ 3 files changed, 9 insertions(+)
+
+diff --git a/lib/Target/R600/MCTargetDesc/R600MCCodeEmitter.cpp b/lib/Target/R600/MCTargetDesc/R600MCCodeEmitter.cpp
+index 82fef06..e529f76 100644
+--- a/lib/Target/R600/MCTargetDesc/R600MCCodeEmitter.cpp
++++ b/lib/Target/R600/MCTargetDesc/R600MCCodeEmitter.cpp
+@@ -152,6 +152,7 @@ void R600MCCodeEmitter::EncodeInstruction(const MCInst &MI, raw_ostream &OS,
+       break;
+     }
+     case AMDGPU::RAT_WRITE_CACHELESS_32_eg:
++    case AMDGPU::RAT_WRITE_CACHELESS_64_eg:
+     case AMDGPU::RAT_WRITE_CACHELESS_128_eg: {
+       uint64_t inst = getBinaryCodeForInstr(MI, Fixups);
+       EmitByte(INSTR_NATIVE, OS);
+diff --git a/lib/Target/R600/R600ISelLowering.cpp b/lib/Target/R600/R600ISelLowering.cpp
+index 953f22d..9980fe1 100644
+--- a/lib/Target/R600/R600ISelLowering.cpp
++++ b/lib/Target/R600/R600ISelLowering.cpp
+@@ -160,6 +160,7 @@ MachineBasicBlock * R600TargetLowering::EmitInstrWithCustomInserter(
+   }
+ 
+   case AMDGPU::RAT_WRITE_CACHELESS_32_eg:
++  case AMDGPU::RAT_WRITE_CACHELESS_64_eg:
+   case AMDGPU::RAT_WRITE_CACHELESS_128_eg: {
+     unsigned EOP = (llvm::next(I)->getOpcode() == AMDGPU::RETURN) ? 1 : 0;
+ 
+diff --git a/lib/Target/R600/R600Instructions.td b/lib/Target/R600/R600Instructions.td
+index 716c90d..8c926cd 100644
+--- a/lib/Target/R600/R600Instructions.td
++++ b/lib/Target/R600/R600Instructions.td
+@@ -1719,6 +1719,13 @@ def RAT_WRITE_CACHELESS_32_eg : RAT_WRITE_CACHELESS_eg <
+   [(global_store (i32 R600_TReg32_X:$rw_gpr), R600_TReg32_X:$index_gpr)]
+ >;
+ 
++// 64-bit store
++def RAT_WRITE_CACHELESS_64_eg : RAT_WRITE_CACHELESS_eg <
++  (ins R600_Reg64:$rw_gpr, R600_TReg32_X:$index_gpr, InstFlag:$eop),
++  0x3, "RAT_WRITE_CACHELESS_64_eg",
++  [(global_store (v2i32 R600_Reg64:$rw_gpr), R600_TReg32_X:$index_gpr)]
++>;
++
+ //128-bit store
+ def RAT_WRITE_CACHELESS_128_eg : RAT_WRITE_CACHELESS_eg <
+   (ins R600_Reg128:$rw_gpr, R600_TReg32_X:$index_gpr, InstFlag:$eop),
+-- 
+1.8.1.5
+
