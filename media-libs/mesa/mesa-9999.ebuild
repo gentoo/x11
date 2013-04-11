@@ -174,6 +174,7 @@ src_prepare() {
 
 	# use non-NULL platform id
 	epatch "${FILESDIR}/${P}-use-a-struct-for-cl_platform_id.patch"
+	epatch "${FILESDIR}/0001-clover-Support-multiple-devices-in-clCreateContextFr.patch"
 
 	# fix for hardened pax_kernel, bug 240956
 	[[ ${PV} != 9999* ]] && epatch "${FILESDIR}"/glx_ro_text_segm.patch

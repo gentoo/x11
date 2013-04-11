@@ -1,0 +1,51 @@
+From 7ab4839745069e22ff2e2636fd27b463fa308838 Mon Sep 17 00:00:00 2001
+From: Tom Stellard <thomas.stellard@amd.com>
+Date: Thu, 11 Apr 2013 10:37:55 -0400
+Subject: [PATCH] clover: Support multiple devices in clCreateContextFromType()
+
+---
+ src/gallium/state_trackers/clover/api/context.cpp | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/src/gallium/state_trackers/clover/api/context.cpp b/src/gallium/state_trackers/clover/api/context.cpp
+index 99b9566..5caa48c 100644
+--- a/src/gallium/state_trackers/clover/api/context.cpp
++++ b/src/gallium/state_trackers/clover/api/context.cpp
+@@ -22,6 +22,7 @@
+ 
+ #include "api/util.hpp"
+ #include "core/context.hpp"
++#include "core/platform.hpp"
+ 
+ using namespace clover;
+ 
+@@ -63,18 +64,22 @@ clCreateContextFromType(const cl_context_properties *props,
+                         void *user_data, cl_int *errcode_ret) try {
+    cl_platform_id platform;
+    cl_uint num_platforms;
+-   cl_device_id dev;
+    cl_int ret;
++   std::vector<cl_device_id> devs;
+ 
+    ret = clGetPlatformIDs(1, &platform, &num_platforms);
+    if (ret || !num_platforms)
+       throw error(CL_INVALID_PLATFORM);
+ 
+-   ret = clGetDeviceIDs(platform, type, 1, &dev, 0);
+-   if (ret)
++   if (platform->begin() == platform->end())
+       throw error(CL_DEVICE_NOT_FOUND);
+ 
+-   return clCreateContext(props, 1, &dev, pfn_notify, user_data, errcode_ret);
++   for (clover::platform::iterator i = platform->begin(), e = platform->end();
++                                                         i != e; ++i) {
++      devs.push_back(&*i);
++   }
++
++   return clCreateContext(props, devs.size(), devs.data(), pfn_notify, user_data, errcode_ret);
+ 
+ } catch(error &e) {
+    ret_error(errcode_ret, e);
+-- 
+1.8.1.5
+
