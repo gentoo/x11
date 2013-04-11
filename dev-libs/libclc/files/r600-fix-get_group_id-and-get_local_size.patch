@@ -1,0 +1,64 @@
+From f66311f8f1fa4590c7e94da9b50ace728aaed1ae Mon Sep 17 00:00:00 2001
+From: Tom Stellard <thomas.stellard@amd.com>
+Date: Wed, 10 Apr 2013 19:18:12 +0000
+Subject: r600: Fix implementations of get_group_id.ll and get_local_size.ll
+
+---
+diff --git a/r600/lib/workitem/get_group_id.ll b/r600/lib/workitem/get_group_id.ll
+index 5131648..0dc86e5 100644
+--- a/r600/lib/workitem/get_group_id.ll
++++ b/r600/lib/workitem/get_group_id.ll
+@@ -1,17 +1,17 @@
+-declare i32 @llvm.r600.read.local.size.x() nounwind readnone
+-declare i32 @llvm.r600.read.local.size.y() nounwind readnone
+-declare i32 @llvm.r600.read.local.size.z() nounwind readnone
++declare i32 @llvm.r600.read.tgid.x() nounwind readnone
++declare i32 @llvm.r600.read.tgid.y() nounwind readnone
++declare i32 @llvm.r600.read.tgid.z() nounwind readnone
+ 
+ define i32 @get_group_id(i32 %dim) nounwind readnone alwaysinline {
+   switch i32 %dim, label %default [i32 0, label %x_dim i32 1, label %y_dim i32 2, label %z_dim]
+ x_dim:
+-  %x = call i32 @llvm.r600.read.local.size.x() nounwind readnone
++  %x = call i32 @llvm.r600.read.tgid.x() nounwind readnone
+   ret i32 %x
+ y_dim:
+-  %y = call i32 @llvm.r600.read.local.size.y() nounwind readnone
++  %y = call i32 @llvm.r600.read.tgid.y() nounwind readnone
+   ret i32 %y
+ z_dim:
+-  %z = call i32 @llvm.r600.read.local.size.z() nounwind readnone
++  %z = call i32 @llvm.r600.read.tgid.z() nounwind readnone
+   ret i32 %z
+ default:
+   ret i32 0
+diff --git a/r600/lib/workitem/get_local_size.ll b/r600/lib/workitem/get_local_size.ll
+index 6a71f75..0a98de6 100644
+--- a/r600/lib/workitem/get_local_size.ll
++++ b/r600/lib/workitem/get_local_size.ll
+@@ -1,17 +1,17 @@
+-declare i32 @llvm.r600.read.tgid.x() nounwind readnone
+-declare i32 @llvm.r600.read.tgid.y() nounwind readnone
+-declare i32 @llvm.r600.read.tgid.z() nounwind readnone
++declare i32 @llvm.r600.read.local.size.x() nounwind readnone
++declare i32 @llvm.r600.read.local.size.y() nounwind readnone
++declare i32 @llvm.r600.read.local.size.z() nounwind readnone
+ 
+ define i32 @get_local_size(i32 %dim) nounwind readnone alwaysinline {
+   switch i32 %dim, label %default [i32 0, label %x_dim i32 1, label %y_dim i32 2, label %z_dim]
+ x_dim:
+-  %x = call i32 @llvm.r600.read.tgid.x() nounwind readnone
++  %x = call i32 @llvm.r600.read.local.size.x() nounwind readnone
+   ret i32 %x
+ y_dim:
+-  %y = call i32 @llvm.r600.read.tgid.y() nounwind readnone
++  %y = call i32 @llvm.r600.read.local.size.y() nounwind readnone
+   ret i32 %y
+ z_dim:
+-  %z = call i32 @llvm.r600.read.tgid.z() nounwind readnone
++  %z = call i32 @llvm.r600.read.local.size.z() nounwind readnone
+   ret i32 %z
+ default:
+   ret i32 0
+--
+cgit v0.9.0.2-2-gbebe
