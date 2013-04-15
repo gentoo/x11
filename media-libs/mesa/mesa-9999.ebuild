@@ -173,7 +173,6 @@ src_prepare() {
 	epatch "${FILESDIR}"/${P}-dont-require-llvm-for-r300.patch
 
 	# use non-NULL platform id
-	epatch "${FILESDIR}/${P}-use-a-struct-for-cl_platform_id.patch"
 	epatch "${FILESDIR}/0001-clover-Support-multiple-devices-in-clCreateContextFr.patch"
 
 	# fix for hardened pax_kernel, bug 240956
