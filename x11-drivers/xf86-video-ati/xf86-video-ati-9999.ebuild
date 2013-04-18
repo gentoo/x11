@@ -20,7 +20,7 @@ DEPEND="${RDEPEND}"
 pkg_pretend() {
 	if use kernel_linux ; then
 		if kernel_is -ge 3 9; then
-			CONFIG_CHECK="~DRM_RADEON ~!FB_RADEON"
+			CONFIG_CHECK="~!DRM_RADEON_UMS ~!FB_RADEON"
 		else
 			CONFIG_CHECK="~DRM_RADEON_KMS ~!FB_RADEON"
 		fi
