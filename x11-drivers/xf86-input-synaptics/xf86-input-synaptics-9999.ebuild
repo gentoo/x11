@@ -13,11 +13,12 @@ KEYWORDS="~amd64 ~arm ~mips ~ppc ~ppc64 ~x86"
 IUSE=""
 
 RDEPEND="sys-libs/mtdev
-	>=x11-base/xorg-server-1.8
+	>=x11-base/xorg-server-1.12
 	>=x11-libs/libXi-1.2
 	>=x11-libs/libXtst-1.1.0"
 DEPEND="${RDEPEND}
 	>=sys-kernel/linux-headers-2.6.37
+	>=x11-proto/inputproto-2.1.99.3
 	>=x11-proto/recordproto-1.14"
 
 DOCS=( "README" )
