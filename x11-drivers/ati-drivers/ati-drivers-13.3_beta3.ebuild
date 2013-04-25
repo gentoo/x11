@@ -193,6 +193,12 @@ pkg_pretend() {
 			die "USE pax_kernel enabled for a non-hardened kernel"
 		fi
 	fi
+
+	if ! [[ "${PAX_MARKINGS}" =~ "XT" ]] && use pax_kernel; then
+		ewarn "You have disabled xattr pax markings for portage."
+		ewarn "This will likely cause programs using ati-drivers provided"
+		ewarn "libraries to be killed kernel."
+	fi
 }
 
 pkg_setup() {
