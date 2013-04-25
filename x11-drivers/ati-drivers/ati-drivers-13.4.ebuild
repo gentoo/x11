@@ -11,9 +11,13 @@ HOMEPAGE="http://www.amd.com"
 MY_V=( $(get_version_components) )
 #RUN="${WORKDIR}/amd-driver-installer-9.00-x86.x86_64.run"
 SLOT="1"
-[[ "${MY_V[2]}" =~  beta.* ]] && BETADIR="beta/"
+if [[ "${MY_V[2]}" =~  beta.* ]]; then
+	BETADIR="beta/"
+else
+	BETADIR="linux/"
+fi
 if [[ legacy != ${SLOT} ]]; then
-	DRIVERS_URI="http://www2.ati.com/drivers/${BETADIR}amd-driver-installer-catalyst-${PV/_beta/-beta}-linux-x86.x86_64.zip"
+	DRIVERS_URI="http://www2.ati.com/drivers/${BETADIR}amd-catalyst-${PV/_beta/-beta}-linux-x86.x86_64.zip"
 else
 	DRIVERS_URI="http://www2.ati.com/drivers/legacy/amd-driver-installer-catalyst-$(get_version_component_range 1-2)-$(get_version_component_range 3)-legacy-linux-x86.x86_64.zip"
 fi
