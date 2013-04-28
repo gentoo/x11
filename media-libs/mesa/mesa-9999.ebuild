@@ -313,7 +313,7 @@ src_install() {
 
 	if use classic || use gallium; then
 			ebegin "Moving DRI/Gallium drivers for dynamic switching"
-			local gallium_drivers=( i915_dri.so ilo_dri.so r300_dri.so r600_dri.so swrast_dri.so )
+			local gallium_drivers=( i915_dri.so i965_dri.so r300_dri.so r600_dri.so swrast_dri.so )
 			keepdir /usr/$(get_libdir)/dri
 			dodir /usr/$(get_libdir)/mesa
 			for x in ${gallium_drivers[@]}; do
