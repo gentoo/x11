@@ -11,9 +11,13 @@ HOMEPAGE="http://www.amd.com"
 MY_V=( $(get_version_components) )
 #RUN="${WORKDIR}/amd-driver-installer-9.00-x86.x86_64.run"
 SLOT="1"
-[[ "${MY_V[2]}" =~  beta.* ]] && BETADIR="beta/"
+if [[ "${MY_V[2]}" =~  beta.* ]]; then
+	BETADIR="beta/"
+else
+	BETADIR="linux/"
+fi
 if [[ legacy != ${SLOT} ]]; then
-	DRIVERS_URI="http://www2.ati.com/drivers/${BETADIR}amd-driver-installer-catalyst-${PV/_beta/-beta}-linux-x86.x86_64.zip"
+	DRIVERS_URI="http://www2.ati.com/drivers/${BETADIR}amd-catalyst-${PV/_beta/-beta}-linux-x86.x86_64.zip"
 else
 	DRIVERS_URI="http://www2.ati.com/drivers/legacy/amd-driver-installer-catalyst-$(get_version_component_range 1-2)-$(get_version_component_range 3)-legacy-linux-x86.x86_64.zip"
 fi
@@ -41,7 +45,16 @@ RDEPEND="
 	virtual/glu
 	multilib? (
 			app-emulation/emul-linux-x86-opengl
-			app-emulation/emul-linux-x86-xlibs
+			|| (
+				(
+					x11-libs/libX11[abi_x86_32]
+					x11-libs/libXext[abi_x86_32]
+					x11-libs/libXinerama[abi_x86_32]
+					x11-libs/libXrandr[abi_x86_32]
+					x11-libs/libXrender[abi_x86_32]
+				)
+				app-emulation/emul-linux-x86-xlibs
+			)
 	)
 	qt4? (
 			x11-libs/libICE
@@ -183,6 +196,12 @@ pkg_pretend() {
 			eerror "https://bugs.gentoo.org"
 			die "USE pax_kernel enabled for a non-hardened kernel"
 		fi
+	fi
+
+	if ! [[ "${PAX_MARKINGS}" =~ "XT" ]] && use pax_kernel; then
+		ewarn "You have disabled xattr pax markings for portage."
+		ewarn "This will likely cause programs using ati-drivers provided"
+		ewarn "libraries to be killed kernel."
 	fi
 }
 

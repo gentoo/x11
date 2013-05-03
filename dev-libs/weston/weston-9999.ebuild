@@ -25,13 +25,14 @@ fi
 LICENSE="CCPL-Attribution-ShareAlike-3.0 MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="+clients +drm +simple-clients static-libs +tablet +wayland-compositor +x11"
+IUSE="+clients debug +drm +simple-clients static-libs +tablet +wayland-compositor +x11"
 
 RDEPEND="dev-libs/wayland
 	gnome-base/librsvg
 	media-libs/mesa[egl,gles2,wayland]
 	x11-libs/pixman
 	x11? ( x11-libs/libxcb x11-libs/libX11 )
+	debug? ( sys-libs/libunwind )
 	drm? ( >=virtual/udev-136 >=x11-libs/libdrm-2.4.23 media-libs/mesa[gbm] )
 	clients? ( >=x11-libs/cairo-1.10.0 x11-libs/gdk-pixbuf dev-libs/glib:2
 			   x11-libs/libxkbcommon media-libs/libpng app-text/poppler )"
@@ -45,6 +46,7 @@ src_prepare() {
 
 src_configure() {
 	econf --disable-setuid-install \
+		  $(use_enable debug libunwind) \
 		  $(use_enable static-libs static) \
 		  $(use_enable drm drm-compositor) \
 		  $(use_enable wayland-compositor) \

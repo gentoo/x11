@@ -3,6 +3,7 @@
 # $Header: $
 
 EAPI=5
+XORG_EAUTORECONF="yes"
 
 if [[ ${PV} = *9999* ]]; then
 	GIT_ECLASS="git-2"
@@ -18,7 +19,6 @@ fi
 inherit xorg-2 ${GIT_ECLASS}
 
 DESCRIPTION="X.Org xkbcommon library"
-XORG_EAUTORECONF="yes"
 
 IUSE="doc"
 

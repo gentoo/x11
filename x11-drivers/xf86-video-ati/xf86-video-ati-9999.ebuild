@@ -12,7 +12,7 @@ DESCRIPTION="ATI video driver"
 KEYWORDS="~alpha ~amd64 ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~amd64-fbsd ~x86-fbsd"
 IUSE="glamor udev"
 
-RDEPEND=">=x11-libs/libdrm-2.4.36[video_cards_radeon]
+RDEPEND=">=x11-libs/libdrm-2.4.44[video_cards_radeon]
 	glamor? ( x11-libs/glamor )
 	udev? ( virtual/udev )"
 DEPEND="${RDEPEND}"
@@ -20,7 +20,7 @@ DEPEND="${RDEPEND}"
 pkg_pretend() {
 	if use kernel_linux ; then
 		if kernel_is -ge 3 9; then
-			CONFIG_CHECK="~DRM_RADEON ~!FB_RADEON"
+			CONFIG_CHECK="~!DRM_RADEON_UMS ~!FB_RADEON"
 		else
 			CONFIG_CHECK="~DRM_RADEON_KMS ~!FB_RADEON"
 		fi
