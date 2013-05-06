@@ -1,7 +1,4 @@
-From cc0fb86ba8ca9c96806f05e71b70db3da5edf4fd Mon Sep 17 00:00:00 2001
-From: Tom Stellard <thomas.stellard@amd.com>
-Date: Fri, 5 Apr 2013 13:23:01 -0700
-Subject: [PATCH] clover: Use a non-NULL value to represent the platform_id v3
+From: Tom Stellard <thomas.stellard at amd.com>
 
 Using a NULL value for the platform_id is legal according to the spec,
 however, passing a NULL value as the platform parameter to
@@ -18,29 +15,17 @@ v2:
 v3:
   - Use MESA_PLATFORM_ID when calling clGetDeviceIDs() from
     clCreateContextFromType()
-
-v4:
-  - Use MESA_PLATFORM_ID when checking the CL_CONTEXT_PLATFORM property
 ---
- src/gallium/state_trackers/clover/api/context.cpp  | 4 ++--
+ src/gallium/state_trackers/clover/api/context.cpp  | 2 +-
  src/gallium/state_trackers/clover/api/device.cpp   | 2 +-
  src/gallium/state_trackers/clover/api/platform.cpp | 4 ++--
  src/gallium/state_trackers/clover/api/util.hpp     | 2 ++
- 4 files changed, 7 insertions(+), 5 deletions(-)
+ 4 files changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/src/gallium/state_trackers/clover/api/context.cpp b/src/gallium/state_trackers/clover/api/context.cpp
-index 80afb6b..f25856f 100644
+index 80afb6b..d509619 100644
 --- a/src/gallium/state_trackers/clover/api/context.cpp
 +++ b/src/gallium/state_trackers/clover/api/context.cpp
-@@ -42,7 +42,7 @@ clCreateContext(const cl_context_properties *props, cl_uint num_devs,
- 
-    for (auto p : mprops) {
-       if (!(p.first == CL_CONTEXT_PLATFORM &&
--            (cl_platform_id)p.second == NULL))
-+            (cl_platform_id)p.second == MESA_PLATFORM_ID))
-          throw error(CL_INVALID_PROPERTY);
-    }
- 
 @@ -65,7 +65,7 @@ clCreateContextFromType(const cl_context_properties *props,
     cl_device_id dev;
     cl_int ret;
@@ -99,5 +84,4 @@ index 2f9ec1f..0e80cda 100644
     ///
     /// Return a matrix (a container of containers) in \a buf with
 -- 
-1.8.1.5
-
+1.7.11.4
