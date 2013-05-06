@@ -174,7 +174,7 @@ src_prepare() {
 	epatch "${FILESDIR}"/${P}-dont-require-llvm-for-r300.patch
 
 	# use non-NULL platform id
-	epatch "${FILESDIR}/${P}-use-a-struct-for-cl_platform_id.patch"
+	epatch "${FILESDIR}/${P}-clover-use-non-null-platform-id.patch"
 
 	# fix for hardened pax_kernel, bug 240956
 	[[ ${PV} != 9999* ]] && epatch "${FILESDIR}"/glx_ro_text_segm.patch
