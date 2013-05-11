@@ -198,7 +198,7 @@ pkg_pretend() {
 		fi
 	fi
 
-	if ! [[ "${PAX_MARKINGS}" =~ "XT" ]] && use pax_kernel; then
+	if ! has XT ${PAX_MARKINGS} && use pax_kernel; then
 		ewarn "You have disabled xattr pax markings for portage."
 		ewarn "This will likely cause programs using ati-drivers provided"
 		ewarn "libraries to be killed kernel."
