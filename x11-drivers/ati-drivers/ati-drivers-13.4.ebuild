@@ -159,7 +159,6 @@ QA_DT_HASH="
 "
 
 CONFIG_CHECK="~MTRR ~!DRM ACPI PCI_MSI !LOCKDEP !PAX_KERNEXEC_PLUGIN_METHOD_OR"
-use amd64 && CONFIG_CHECK="${CONFIG_CHECK} COMPAT"
 ERROR_MTRR="CONFIG_MTRR required for direct rendering."
 ERROR_DRM="CONFIG_DRM must be disabled or compiled as a module and not loaded for direct
 	rendering to work."
@@ -180,6 +179,10 @@ _check_kernel_config() {
 
 	kernel_is ge 2 6 37 && kernel_is le 2 6 38 && if ! linux_chkconfig_present BKL ; then
 		die "CONFIG_BKL must be enabled for kernels 2.6.37-2.6.38."
+	fi
+
+	if use amd64 && ! linux_chkconfig_present COMPAT; then
+		die "CONFIG_COMPAT must be enabled for amd64 kernels."
 	fi
 }
 
