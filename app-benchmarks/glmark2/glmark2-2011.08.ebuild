@@ -19,7 +19,7 @@ RDEPEND="media-libs/libpng
 	media-libs/mesa[gles2?]
 	x11-libs/libX11"
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig"
+	virtual/pkgconfig"
 
 src_prepare() {
 	rm -rf ${S}/src/libpng
