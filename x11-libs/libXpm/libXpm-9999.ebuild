@@ -27,4 +27,3 @@ src_compile() {
 	[[ ${CHOST} == *-solaris* ]] && append-libs -lintl
 	xorg-2_src_compile
 }
-

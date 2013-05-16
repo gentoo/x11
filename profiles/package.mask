@@ -91,7 +91,6 @@
 =x11-misc/xcb-demo-9999
 =x11-misc/xkeyboard-config-9999
 =x11-proto/bigreqsproto-9999
-=x11-proto/calibrateproto-9999
 =x11-proto/compositeproto-9999
 =x11-proto/damageproto-9999
 =x11-proto/dmxproto-9999
@@ -103,7 +102,6 @@
 =x11-proto/glproto-9999
 =x11-proto/inputproto-9999
 =x11-proto/kbproto-9999
-=x11-proto/lg3dproto-9999
 =x11-proto/printproto-9999
 =x11-proto/randrproto-9999
 =x11-proto/recordproto-9999

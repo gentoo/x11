@@ -22,8 +22,8 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 src_prepare() {
-	rm -rf ${S}/src/libpng
-	sed -i -e 's#libpng12#libpng#g' ${S}/wscript ${S}/src/wscript_build || die
+	rm -rf "${S}/src/libpng"
+	sed -i -e 's#libpng12#libpng#g' "${S}/wscript ${S}/src/wscript_build" || die
 }
 
 src_configure() {

@@ -16,4 +16,3 @@ IUSE=""
 RDEPEND="x11-libs/libxcb"
 DEPEND="${RDEPEND}
 	>=x11-proto/xcb-proto-9999"
-
