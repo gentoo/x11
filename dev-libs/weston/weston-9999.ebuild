@@ -22,7 +22,7 @@ else
 	SRC_URI="http://wayland.freedesktop.org/releases/${P}.tar.xz"
 fi
 
-LICENSE="CCPL-Attribution-ShareAlike-3.0 MIT"
+LICENSE="MIT CC-BY-SA-3.0"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="+clients debug +drm +simple-clients static-libs +tablet +wayland-compositor +x11"
