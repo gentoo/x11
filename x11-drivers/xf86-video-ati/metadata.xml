@@ -6,4 +6,7 @@
 	<name>Tomas Chvatal</name>
 </maintainer>
 <herd>x11</herd>
+<use>
+	<flag name='glamor'>Enable glamor support, it can change performace depends on card.</flag>
+</use>
 </pkgmetadata>
