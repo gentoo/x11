@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=5
-inherit xorg-2
+inherit xorg-2 flag-o-matic
 
 DESCRIPTION="query configuration information of DRI drivers"
 
