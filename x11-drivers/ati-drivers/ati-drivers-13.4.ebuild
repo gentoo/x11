@@ -315,6 +315,8 @@ src_prepare() {
 	# Compile fix for kernel typesafe uid types #469160
 	epatch "${FILESDIR}/linux-3.9-kuid.diff"
 
+	epatch "${FILESDIR}/linux-3.10-proc.diff"
+
 	# Compile fix, https://bugs.gentoo.org/show_bug.cgi?id=454870
 	use pax_kernel && epatch "${FILESDIR}/const-notifier-block.patch"
 
