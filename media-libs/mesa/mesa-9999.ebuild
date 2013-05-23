@@ -65,7 +65,7 @@ REQUIRED_USE="
 	xorg?  ( gallium )
 	video_cards_intel?  ( || ( classic gallium ) )
 	video_cards_i915?   ( || ( classic gallium ) )
-	video_cards_i965?   ( || ( classic gallium ) )
+	video_cards_i965?   ( classic )
 	video_cards_ilo?    ( gallium )
 	video_cards_nouveau? ( || ( classic gallium ) )
 	video_cards_radeon? ( || ( classic gallium ) )
@@ -239,7 +239,8 @@ src_configure() {
 		gallium_enable video_cards_i915 i915
 		gallium_enable video_cards_ilo ilo
 		if ! use video_cards_i915 && \
-			! use video_cards_ilo; then
+			! use video_cards_i965 && \
+				! use video_cards_ilo; then
 			gallium_enable video_cards_intel i915 ilo
 		fi
 
