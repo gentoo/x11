@@ -4,6 +4,7 @@
 <herd>x11</herd>
 <use>
 	<flag name='clients'>Enable support for clients.</flag>
+	<flag name='colord'>Allow setting color managment.</flag>
 	<flag name='drm'>Enable drm compositor support.</flag>
 	<flag name='simple-clients'>Enable simple-clients?.</flag>
 	<flag name='tablet'>Enable interface for tablets.</flag>
