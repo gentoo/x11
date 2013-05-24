@@ -48,6 +48,7 @@ RDEPEND="
 		>=x11-libs/libdrm-2.4.30
 		media-libs/mesa[gbm] )
 	egl? ( media-libs/mesa[egl] )
+	gles2? ( x11-libs/cairo[gles2] )
 	rdp? ( >=net-misc/freerdp-1.1.0_beta1 )
 	x11? ( x11-libs/libxcb
 		x11-libs/libX11 )"
