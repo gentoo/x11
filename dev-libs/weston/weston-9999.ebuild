@@ -25,7 +25,7 @@ fi
 LICENSE="MIT CC-BY-SA-3.0"
 SLOT="0"
 KEYWORDS="~arm ~amd64 ~x86 ~arm-linux"
-IUSE="+clients colord debug +drm +egl fbdev gles2 rdp +resize-optimization -rpi +simple-clients static-libs +tablet +wayland-compositor +x11"
+IUSE="+clients colord debug +drm +egl headless fbdev gles2 rdp +resize-optimization -rpi +simple-clients static-libs +tablet +wayland-compositor +xwayland +x11"
 
 REQUIRED_USE="
 	rpi?   ( !drm !egl gles2 )
@@ -67,6 +67,7 @@ src_configure() {
 		  $(use_enable drm drm-compositor) \
 		  $(use_enable egl) \
 		  $(use_enable fbdev fbdev-compositor) \
+		  $(use_enable headless headless-compositor) \
 		  $(use_enable rdp rdp-compositor) \
 		  $(use_enable resize-optimization) \
 		  $(use_enable rpi rpi-compositor) \
@@ -74,6 +75,7 @@ src_configure() {
 		  $(use_enable static-libs static) \
 		  $(use_enable tablet tablet-shell) \
 		  $(use_enable wayland-compositor) \
+		  $(use_enable xwayland xwayland-compositor) \
 		  $(use_enable x11 x11-compositor) \
 		  $(use_with gles2 cairo-glesv2)
 }
