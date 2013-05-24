@@ -142,8 +142,7 @@ src_configure() {
 }
 
 src_install() {
-	# parallel make install fails
-	emake -j1 DESTDIR="${D}" install
+	emake DESTDIR="${D}" install
 	find "${ED}" -name '*.la' -exec rm -f {} +
 	dodoc AUTHORS ChangeLog NEWS README
 }
