@@ -25,12 +25,16 @@ fi
 LICENSE="MIT CC-BY-SA-3.0"
 SLOT="0"
 KEYWORDS="~arm ~amd64 ~x86 ~arm-linux"
-IUSE="+clients colord debug +drm fbdev rdp +resize-optimization -rpi +simple-clients static-libs +tablet +wayland-compositor +x11"
+IUSE="+clients colord debug +drm +egl fbdev gles2 rdp +resize-optimization -rpi +simple-clients static-libs +tablet +wayland-compositor +x11"
+
+REQUIRED_USE="
+	rpi?   ( !drm !egl gles2 )
+"
 
 RDEPEND="
 	>=dev-libs/wayland-1.1.90
 	gnome-base/librsvg
-	media-libs/mesa[egl,gles2,wayland]
+	media-libs/mesa[gles2,wayland]
 	x11-libs/pixman
 	clients? ( >=x11-libs/cairo-1.10.0
 		x11-libs/gdk-pixbuf
@@ -43,6 +47,7 @@ RDEPEND="
 	drm? ( >=virtual/udev-136
 		>=x11-libs/libdrm-2.4.30
 		media-libs/mesa[gbm] )
+	egl? ( media-libs/mesa[egl] )
 	rdp? ( >=net-misc/freerdp-1.1.0_beta1 )
 	x11? ( x11-libs/libxcb
 		x11-libs/libX11 )"
@@ -60,6 +65,7 @@ src_configure() {
 		  $(use_enable colord) \
 		  $(use_enable debug libunwind) \
 		  $(use_enable drm drm-compositor) \
+		  $(use_enable egl) \
 		  $(use_enable fbdev fbdev-compositor) \
 		  $(use_enable rdp rdp-compositor) \
 		  $(use_enable resize-optimization) \
@@ -68,5 +74,6 @@ src_configure() {
 		  $(use_enable static-libs static) \
 		  $(use_enable tablet tablet-shell) \
 		  $(use_enable wayland-compositor) \
-		  $(use_enable x11 x11-compositor)
+		  $(use_enable x11 x11-compositor) \
+		  $(use_with gles2 cairo-glesv2)
 }
