@@ -20,7 +20,7 @@ DESCRIPTION="A vector graphics library with cross-device output support"
 HOMEPAGE="http://cairographics.org/"
 LICENSE="|| ( LGPL-2.1 MPL-1.1 )"
 SLOT="0"
-IUSE="X aqua debug directfb doc drm gallium gles2 +glib legacy-drivers opengl openvg qt4 static-libs +svg xcb"
+IUSE="X aqua debug directfb doc drm gallium gles2 +glib legacy-drivers opengl openvg qt4 static-libs +svg valgrind xcb"
 
 # Test causes a circular depend on gtk+... since gtk+ needs cairo but test needs gtk+ so we need to block it
 RESTRICT="test"
@@ -95,31 +95,22 @@ src_prepare() {
 src_configure() {
 	local myopts
 
-	# SuperH doesn't have native atomics yet
-	use sh && myopts+=" --disable-atomic"
-
 	[[ ${CHOST} == *-interix* ]] && append-flags -D_REENTRANT
-	# http://bugs.freedesktop.org/show_bug.cgi?id=15463
-	[[ ${CHOST} == *-solaris* ]] && append-flags -D_POSIX_PTHREAD_SEMANTICS
-
-	#gets rid of fbmmx.c inlining warnings
-	append-flags -finline-limit=1200
-
-	use X && myopts+=" --enable-tee=yes"
 
 	use elibc_FreeBSD && myopts+=" --disable-symbol-lookup"
 
-	# --disable-valgrind:
-	#   valgrind code is busted as per upstream
 	econf \
 		--disable-dependency-tracking \
 		$(use_with X x) \
+		$(use_enable X tee) \
 		$(use_enable X xlib) \
 		$(use_enable X xlib-xrender) \
 		$(use_enable aqua quartz) \
 		$(use_enable aqua quartz-image) \
 		$(use_enable debug test-surfaces) \
+		$(use_enable drm) \
 		$(use_enable directfb) \
+		$(use_enable gallium) \
 		$(use_enable gles2 glesv2) \
 		$(use_enable glib gobject) \
 		$(use_enable doc gtk-doc) \
@@ -128,16 +119,14 @@ src_configure() {
 		$(use_enable qt4 qt) \
 		$(use_enable static-libs static) \
 		$(use_enable svg) \
+		$(use_enable valgrind) \
 		$(use_enable xcb) \
 		$(use_enable xcb xcb-shm) \
 		$(use_enable xcb xlib-xcb) \
-		$(use_enable drm) \
-		$(use_enable gallium) \
 		--enable-ft \
 		--enable-pdf \
 		--enable-png \
 		--enable-ps \
-		--disable-valgrind \
 		${myopts}
 }
 
