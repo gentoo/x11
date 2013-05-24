@@ -130,7 +130,7 @@ src_configure() {
 		$(use_enable svg) \
 		$(use_enable xcb) \
 		$(use_enable xcb xcb-shm) \
-#		$(use_enable xcb xlib-xcb) \
+		$(use_enable xcb xlib-xcb) \
 		$(use_enable drm) \
 		$(use_enable gallium) \
 		--enable-ft \
