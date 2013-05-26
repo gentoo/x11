@@ -202,7 +202,6 @@ src_configure() {
 		driver_enable video_cards_i965 i965
 		if ! use video_cards_i915 && \
 			! use video_cards_i965 && \
-				! use video_cards_ilo; then
 			driver_enable video_cards_intel i915 i965
 		fi
 
@@ -240,8 +239,7 @@ src_configure() {
 		gallium_enable video_cards_ilo ilo
 		if ! use video_cards_i915 && \
 			! use video_cards_i965 && \
-				! use video_cards_ilo; then
-			gallium_enable video_cards_intel i915 ilo
+			gallium_enable video_cards_intel i915
 		fi
 
 		gallium_enable video_cards_r300 r300
