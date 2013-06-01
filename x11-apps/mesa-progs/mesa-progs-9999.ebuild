@@ -30,14 +30,13 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-
 IUSE="egl gles1 gles2"
 
 RDEPEND="
+	egl? ( media-libs/glew )
+	gles1? ( media-libs/glew )
+	gles2? ( media-libs/glew )
 	media-libs/mesa[egl?,gles1?,gles2?]
 	virtual/opengl
 	x11-libs/libX11"
-# glew and glu are only needed by the configure script which is only used
-# when building EGL/GLESv1/GLESv2 programs. They are not actually required
-# by the installed programs.
 DEPEND="${RDEPEND}
-	media-libs/glew
 	virtual/glu
 	x11-proto/xproto"
 
