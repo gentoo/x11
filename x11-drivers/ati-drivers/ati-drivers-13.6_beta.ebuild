@@ -193,7 +193,7 @@ pkg_pretend() {
 		require_configured_kernel
 		_check_kernel_config
 
-		if [[ "${KV_EXTRA}" != -hardened ]] && use pax_kernel; then
+		if ! [[ "${KV_EXTRA}" =~ -hardened.* ]] && use pax_kernel; then
 			eerror "USE pax_kernel enabled for a non-hardened kernel."
 			eerror "If you know this kernel supports pax_kernel, open a bug at"
 			eerror "https://bugs.gentoo.org"
