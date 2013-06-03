@@ -40,7 +40,16 @@ RDEPEND="
 	virtual/glu
 	multilib? (
 			app-emulation/emul-linux-x86-opengl
-			app-emulation/emul-linux-x86-xlibs
+			|| (
+				(
+					x11-libs/libX11[abi_x86_32]
+					x11-libs/libXext[abi_x86_32]
+					x11-libs/libXinerama[abi_x86_32]
+					x11-libs/libXrandr[abi_x86_32]
+					x11-libs/libXrender[abi_x86_32]
+				)
+				app-emulation/emul-linux-x86-xlibs
+			)
 	)
 	qt4? (
 			x11-libs/libICE
