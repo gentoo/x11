@@ -4,9 +4,8 @@
 
 EAPI=5
 
-EGIT_REPO_URI="git://anongit.freedesktop.org/git/${PN}/${PN}"
-
 if [[ ${PV} = 9999* ]]; then
+	EGIT_REPO_URI="git://anongit.freedesktop.org/git/${PN}/${PN}"
 	GIT_ECLASS="git-2"
 	EXPERIMENTAL="true"
 fi
@@ -18,13 +17,14 @@ HOMEPAGE="http://wayland.freedesktop.org/"
 
 if [[ $PV = 9999* ]]; then
 	SRC_URI="${SRC_PATCHES}"
+	KEYWORDS=""
 else
 	SRC_URI="http://wayland.freedesktop.org/releases/${P}.tar.xz"
+	KEYWORDS="~amd64 ~arm ~hppa ~ppc64 ~x86"
 fi
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="~amd64 ~arm ~hppa ~ppc64 ~x86"
 IUSE="doc static-libs"
 
 RDEPEND="dev-libs/expat
