@@ -25,14 +25,14 @@ fi
 
 LICENSE="MIT CC-BY-SA-3.0"
 SLOT="0"
-IUSE="+clients colord debug +drm +egl headless fbdev gles2 rdp +resize-optimization -rpi +simple-clients static-libs +tablet +wayland-compositor +xwayland +x11"
+IUSE="+clients debug +drm +egl headless fbdev gles2 rdp -rpi +simple-clients static-libs +tablet +wayland-compositor +x11"
 
 REQUIRED_USE="
 	rpi?   ( !drm !egl gles2 )
 "
 
 RDEPEND="
-	>=dev-libs/wayland-1.1.90
+	>=dev-libs/wayland-1.1.0
 	gnome-base/librsvg
 	media-libs/mesa[gles2,wayland]
 	x11-libs/pixman
@@ -42,7 +42,6 @@ RDEPEND="
 		x11-libs/libxkbcommon
 		media-libs/libpng
 		app-text/poppler )
-	colord? ( x11-misc/colord )
 	debug? ( sys-libs/libunwind )
 	drm? ( >=virtual/udev-136
 		>=x11-libs/libdrm-2.4.30
@@ -63,20 +62,17 @@ src_prepare() {
 src_configure() {
 	econf --disable-setuid-install \
 		  $(use_enable clients) \
-		  $(use_enable colord) \
 		  $(use_enable debug libunwind) \
 		  $(use_enable drm drm-compositor) \
 		  $(use_enable egl) \
 		  $(use_enable fbdev fbdev-compositor) \
 		  $(use_enable headless headless-compositor) \
 		  $(use_enable rdp rdp-compositor) \
-		  $(use_enable resize-optimization) \
 		  $(use_enable rpi rpi-compositor) \
 		  $(use_enable simple-clients) \
 		  $(use_enable static-libs static) \
 		  $(use_enable tablet tablet-shell) \
 		  $(use_enable wayland-compositor) \
-		  $(use_enable xwayland xwayland-compositor) \
 		  $(use_enable x11 x11-compositor) \
 		  $(use_with gles2 cairo-glesv2)
 }
