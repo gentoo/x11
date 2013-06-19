@@ -366,10 +366,16 @@ src_install() {
 		eend $?
 	fi
 	if use opencl; then
-		ebegin "Moving Gallium/Clover OpenCL implentation for dynamic switching"
+		ebegin "Moving Gallium/Clover OpenCL implementation for dynamic switching"
+		local cl_dir="/usr/$(get_libdir)/OpenCL/vendors/mesa"
+		dodir ${cl_dir}/{lib,include}
 		if [ -f "${ED}/usr/$(get_libdir)/libOpenCL.so" ]; then
 			mv -f "${ED}"/usr/$(get_libdir)/libOpenCL.so* \
-			"${ED}"/usr/$(get_libdir)/OpenCL/vendors/mesa
+			"${ED}"${cl_dir}
+		fi
+		if [ -f "${ED}/usr/include/CL/opencl.h" ]; then
+			mv -f "${ED}"/usr/include/CL \
+			"${ED}"${cl_dir}/include
 		fi
 		eend $?
 	fi
@@ -390,6 +396,11 @@ pkg_postinst() {
 	# Select classic/gallium drivers
 	if use classic || use gallium; then
 		eselect mesa set --auto
+	fi
+
+	# Switch to mesa opencl
+	if use opencl; then
+		eselect opencl set --use-old ${PN}
 	fi
 
 	# warn about patent encumbered texture-float
