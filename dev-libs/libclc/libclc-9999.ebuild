@@ -14,12 +14,12 @@ fi
 inherit base $GIT_ECLASS
 
 DESCRIPTION="OpenCL C library"
-HOMEPAGE="http://libclc.llvm.org/"
+HOMEPAGE="http://libclc.llvm.org/ http://cgit.freedesktop.org/~tstellar/libclc/"
 
 if [[ $PV = 9999* ]]; then
 	SRC_URI="${SRC_PATCHES}"
 else
-	SRC_URI=""
+	SRC_URI="mirror://gentoo/${P}.tar.xz ${SRC_PATCHES}"
 fi
 
 LICENSE="MIT BSD"
@@ -31,6 +31,15 @@ RDEPEND="
 	>=sys-devel/clang-3.2
 	>=sys-devel/llvm-3.2"
 DEPEND="${RDEPEND}"
+
+src_unpack() {
+	if [[ $PV = 9999* ]]; then
+		git-2_src_unpack
+	else
+		_default
+		mv ${PN}-*/ ${P} || die
+	fi
+}
 
 src_configure() {
 	./configure.py \

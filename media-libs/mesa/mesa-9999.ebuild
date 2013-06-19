@@ -371,6 +371,7 @@ src_install() {
 			mv -f "${ED}"/usr/$(get_libdir)/libOpenCL.so* \
 			"${ED}"/usr/$(get_libdir)/OpenCL/vendors/mesa
 		fi
+		eend $?
 	fi
 }
 
