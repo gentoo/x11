@@ -3,6 +3,7 @@
 # $Header: $
 
 EAPI=5
+PYTHON_COMPAT=( python{2_5,2_6,2_7} )
 
 EGIT_REPO_URI="git://people.freedesktop.org/~tstellar/${PN}"
 
@@ -11,7 +12,7 @@ if [[ ${PV} = 9999* ]]; then
 	EXPERIMENTAL="true"
 fi
 
-inherit base $GIT_ECLASS
+inherit base python-any-r1 $GIT_ECLASS
 
 DESCRIPTION="OpenCL C library"
 HOMEPAGE="http://libclc.llvm.org/ http://cgit.freedesktop.org/~tstellar/libclc/"
@@ -22,7 +23,7 @@ else
 	SRC_URI="mirror://gentoo/${P}.tar.xz ${SRC_PATCHES}"
 fi
 
-LICENSE="MIT BSD"
+LICENSE="|| ( MIT BSD )"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
@@ -36,7 +37,7 @@ src_unpack() {
 	if [[ $PV = 9999* ]]; then
 		git-2_src_unpack
 	else
-		_default
+		default
 		mv ${PN}-*/ ${P} || die
 	fi
 }
