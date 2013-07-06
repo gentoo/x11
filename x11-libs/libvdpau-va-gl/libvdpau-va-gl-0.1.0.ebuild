@@ -4,14 +4,15 @@
 
 EAPI=5
 
-inherit cmake-utils git-2
+inherit cmake-utils
 
 DESCRIPTION="VDPAU driver with VA-API/OpenGL backend."
 HOMEPAGE="https://github.com/i-rinat/libvdpau-va-gl/"
-EGIT_REPO_URI="git://github.com/i-rinat/libvdpau-va-gl.git"
+SRC_URI="https://github.com/i-rinat/${PN}/archive/v${PV}.tar.gz"
 
 LICENSE="LGPL-3"
 SLOT="0"
+KEYWORDS="~amd64 ~x86"
 
 RDEPEND="
 	dev-libs/glib:2
