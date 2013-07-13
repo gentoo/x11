@@ -13,7 +13,7 @@ if [[ ${PV} = *9999* ]]; then
 else
 	XORG_BASE_INDIVIDUAL_URI=""
 	SRC_URI="http://xkbcommon.org/download/${P}.tar.xz"
-	KEYWORDS="~amd64 ~x86"
+	KEYWORDS="~amd64 ~arm ~x86"
 fi
 
 inherit xorg-2 ${GIT_ECLASS}
