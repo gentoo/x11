@@ -49,7 +49,7 @@ RDEPEND="
 		media-libs/mesa[gbm] )
 	egl? ( media-libs/mesa[egl] )
 	gles2? ( x11-libs/cairo[gles2] )
-	rdp? ( >=net-misc/freerdp-1.1.0_beta1 )
+	rdp? ( >=net-misc/freerdp-1.1.0_beta1_beta1_p20130710 )
 	x11? ( x11-libs/libxcb
 		x11-libs/libX11 )"
 DEPEND="${RDEPEND}"
