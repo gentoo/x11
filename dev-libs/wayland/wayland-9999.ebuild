@@ -8,16 +8,16 @@ AUTOTOOLS_PRUNE_LIBTOOL_FILES=all
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/${PN}/${PN}"
 
 inherit autotools-utils toolchain-funcs
-[[ ${PV} == *9999* ]] && inherit git-2
+[[ ${PV} == 9999* ]] && inherit git-2
 
 DESCRIPTION="Wayland protocol libraries"
 HOMEPAGE="http://wayland.freedesktop.org/"
-[[ ${PV} == *9999* ]] || \
+[[ ${PV} == 9999* ]] || \
 SRC_URI="http://wayland.freedesktop.org/releases/${P}.tar.xz"
 
 LICENSE="MIT"
 SLOT="0"
-[[ ${PV} == *9999* ]] || \
+[[ ${PV} == 9999* ]] || \
 KEYWORDS="~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~x86"
 IUSE="doc static-libs"
 
