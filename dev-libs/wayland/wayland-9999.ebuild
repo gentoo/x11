@@ -3,41 +3,49 @@
 # $Header: $
 
 EAPI=5
-AUTOTOOLS_AUTORECONF=1
-AUTOTOOLS_PRUNE_LIBTOOL_FILES=all
-EGIT_REPO_URI="git://anongit.freedesktop.org/git/${PN}/${PN}"
 
-inherit autotools-utils toolchain-funcs
-[[ ${PV} == 9999* ]] && inherit git-2
+if [[ ${PV} = 9999* ]]; then
+	EGIT_REPO_URI="git://anongit.freedesktop.org/git/${PN}/${PN}"
+	GIT_ECLASS="git-2"
+	EXPERIMENTAL="true"
+fi
+
+inherit autotools toolchain-funcs $GIT_ECLASS
 
 DESCRIPTION="Wayland protocol libraries"
 HOMEPAGE="http://wayland.freedesktop.org/"
-[[ ${PV} == 9999* ]] || \
-SRC_URI="http://wayland.freedesktop.org/releases/${P}.tar.xz"
+
+if [[ $PV = 9999* ]]; then
+	SRC_URI="${SRC_PATCHES}"
+	KEYWORDS=""
+else
+	SRC_URI="http://wayland.freedesktop.org/releases/${P}.tar.xz"
+	KEYWORDS="~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~x86"
+fi
 
 LICENSE="MIT"
 SLOT="0"
-[[ ${PV} == 9999* ]] || \
-KEYWORDS="~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~x86"
 IUSE="doc static-libs"
 
-RDEPEND="
-	dev-libs/expat
-	virtual/libffi
-"
+RDEPEND="dev-libs/expat
+	virtual/libffi"
 DEPEND="${RDEPEND}
-	virtual/pkgconfig
 	doc? ( app-doc/doxygen )
-"
+	virtual/pkgconfig"
+
+src_prepare() {
+	if [[ ${PV} = 9999* ]]; then
+		eautoreconf
+	fi
+}
 
 src_configure() {
-	local myeconfargs=(
-		$(use_enable doc documentation)
-	)
+	myconf="$(use_enable static-libs static) \
+			$(use_enable doc documentation)"
 	if tc-is-cross-compiler ; then
-		myeconfargs+=( --disable-scanner )
+		myconf+=" --disable-scanner"
 	fi
-	autotools-utils_src_configure
+	econf ${myconf}
 }
 
 src_test() {
@@ -45,5 +53,5 @@ src_test() {
 	mkdir "${XDG_RUNTIME_DIR}" || die
 	chmod 0700 "${XDG_RUNTIME_DIR}" || die
 
-	autotools-utils_src_test
+	default
 }
