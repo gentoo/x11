@@ -8,6 +8,7 @@
 	<flag name='egl'>Enable EGL support.</flag>
 	<flag name='fbdev'>Enable fbdev backend.</flag>
 	<flag name='headless'>Enable headless backend and a noop renderer, mainly for testing purposes.</flag>
+	<flag name='pango'>Install examples which require <pkg>x11-libs/pango</pkg>.</flag>
 	<flag name='rdp'>Enable Remote Desktop Protocol compositor support.</flag>
 	<flag name='resize-optimization'>Increase performance, allocate more RAM. Recommended to disable on Raspberry Pi.</flag>
 	<flag name='rpi'>Raspberry Pi GPU support.</flag>

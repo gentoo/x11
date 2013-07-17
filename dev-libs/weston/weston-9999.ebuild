@@ -24,11 +24,13 @@ LICENSE="MIT CC-BY-SA-3.0"
 SLOT="0"
 [[ ${PV} == 9999* ]] || \
 KEYWORDS="~arm ~amd64 ~x86 ~arm-linux"
-IUSE="colord +drm +egl headless fbdev rdp +resize-optimization rpi static-libs +suid systemd tablet test unwind wayland-compositor X xwayland"
+IUSE="colord +drm +egl examples headless fbdev pango pdf rdp +resize-optimization rpi static-libs +suid systemd tablet test unwind wayland-compositor X xwayland"
 
 REQUIRED_USE="
 	drm? ( egl )
 	fbdev? ( drm )
+	pango? ( examples )
+	pdf? ( examples )
 	rpi? ( !drm !egl )
 	wayland-compositor? ( egl )
 "
@@ -58,6 +60,13 @@ RDEPEND="
 	egl? (
 		>=x11-libs/cairo-1.11.3[opengl]
 		media-libs/glu
+	)
+	examples? (
+		pango? ( x11-libs/pango )
+		pdf? (
+			app-text/poppler
+			dev-libs/glib:2
+		)
 	)
 	rdp? ( >=net-misc/freerdp-1.1.0_beta1_p20130710 )
 	rpi? (
@@ -118,10 +127,18 @@ src_configure() {
 		$(use_enable tablet tablet-shell)
 		$(use_enable xwayland)
 		$(use_enable xwayland xwayland-test)
-		# required for tests
-		$(use_enable test simple-clients)
-		$(use_enable test simple-egl-clients)
 	)
+	if use examples || use test; then
+		myeconfargs+=(
+			--enable-simple-clients
+			$(use_enable egl simple-egl-clients)
+		)
+	else
+		myeconfargs+=(
+			--disable-simple-clients
+			--disable-simple-egl-clients
+		)
+	fi
 	autotools-utils_src_configure
 }
 
@@ -131,4 +148,26 @@ src_test() {
 	chmod 0700 "${XDG_RUNTIME_DIR}" || die
 
 	autotools-utils_src_test
+}
+
+src_install() {
+	autotools-utils_src_install
+
+	dodoc "${FILESDIR}"/README.gentoo
+
+	cd "${BUILD_DIR}" || die
+	use egl && newbin clients/gears weston-gears
+	if use examples; then
+		use egl && newbin clients/simple-egl weston-simple-egl
+		use pango && newbin clients/editor weston-editor
+		use pdf && newbin clients/view weston-view
+		local i
+		for i in calibrator clickdot cliptest dnd eventdemo flower fullscreen image resizor simple-shm simple-touch smoke transformed; do
+			newbin "clients/${i}" "weston-${i}"
+		done
+	fi
+}
+
+pkg_postinst() {
+	elog "You may need to edit ~/.bash_profile, read /usr/share/doc/${PF}/README.gentoo*"
 }
