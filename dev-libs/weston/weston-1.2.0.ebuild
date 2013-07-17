@@ -11,8 +11,9 @@ EAPI=5
 AUTOTOOLS_AUTORECONF=1
 AUTOTOOLS_PRUNE_LIBTOOL_FILES=all
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/wayland/${PN}"
+VIRTUALX_REQUIRED="test"
 
-inherit autotools-utils linux-info
+inherit autotools-utils linux-info virtualx
 [[ ${PV} == 9999* ]] && inherit git-2
 
 DESCRIPTION="Wayland reference compositor"
@@ -24,7 +25,7 @@ LICENSE="MIT CC-BY-SA-3.0"
 SLOT="0"
 [[ ${PV} == 9999* ]] || \
 KEYWORDS="~arm ~amd64 ~x86 ~arm-linux"
-IUSE="colord +drm +egl examples headless fbdev pango pdf rdp +resize-optimization rpi static-libs +suid systemd tablet test unwind wayland-compositor X xwayland"
+IUSE="colord +drm +egl examples headless fbdev pango pdf rdp +resize-optimization rpi static-libs +suid systemd tablet test unwind wayland-compositor +X xwayland"
 
 REQUIRED_USE="
 	drm? ( egl )
@@ -32,6 +33,7 @@ REQUIRED_USE="
 	pango? ( examples )
 	pdf? ( examples )
 	rpi? ( !drm !egl )
+	test? ( X )
 	wayland-compositor? ( egl )
 "
 
@@ -147,7 +149,8 @@ src_test() {
 	mkdir "${XDG_RUNTIME_DIR}" || die
 	chmod 0700 "${XDG_RUNTIME_DIR}" || die
 
-	autotools-utils_src_test
+	cd "${BUILD_DIR}" || die
+	Xemake check
 }
 
 src_install() {
