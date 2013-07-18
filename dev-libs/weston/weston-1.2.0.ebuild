@@ -66,7 +66,7 @@ RDEPEND="
 	examples? (
 		pango? ( x11-libs/pango )
 		pdf? (
-			app-text/poppler
+			app-text/poppler:=[cairo]
 			dev-libs/glib:2
 		)
 	)
