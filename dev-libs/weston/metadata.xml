@@ -7,6 +7,7 @@
 	<flag name='drm'>Enable DRM backend, uses Linux KMS for output and evdev devices for input.</flag>
 	<flag name='egl'>Enable EGL support.</flag>
 	<flag name='fbdev'>Enable fbdev backend.</flag>
+	<flag name='gles2'>Use GLESv2 cairo instead of full GL</flag>
 	<flag name='headless'>Enable headless backend and a noop renderer, mainly for testing purposes.</flag>
 	<flag name='pango'>Install examples which require <pkg>x11-libs/pango</pkg>.</flag>
 	<flag name='rdp'>Enable Remote Desktop Protocol compositor support.</flag>

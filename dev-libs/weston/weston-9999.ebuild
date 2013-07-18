@@ -25,11 +25,13 @@ LICENSE="MIT CC-BY-SA-3.0"
 SLOT="0"
 [[ ${PV} == 9999* ]] || \
 KEYWORDS="~arm ~amd64 ~x86 ~arm-linux"
-IUSE="colord +drm +egl examples headless fbdev pango pdf rdp +resize-optimization rpi static-libs +suid systemd tablet test unwind wayland-compositor +X xwayland"
+IUSE="colord +drm +egl examples fbdev gles2 headless +opengl pango pdf rdp +resize-optimization rpi static-libs +suid systemd tablet test unwind wayland-compositor +X xwayland"
 
 REQUIRED_USE="
 	drm? ( egl )
+	egl? ( || ( gles2 opengl ) )
 	fbdev? ( drm )
+	gles2? ( !opengl )
 	pango? ( examples )
 	pdf? ( examples )
 	rpi? ( !drm !egl )
@@ -45,7 +47,7 @@ RDEPEND="
 	media-libs/libwebp
 	virtual/jpeg
 	sys-libs/pam
-	>=x11-libs/cairo-1.10.0
+	>=x11-libs/cairo-1.11.3[gles2?,opengl?]
 	>=x11-libs/libdrm-2.4.30
 	x11-libs/libxkbcommon
 	x11-libs/pixman
@@ -60,7 +62,6 @@ RDEPEND="
 		>=virtual/udev-136
 	)
 	egl? (
-		>=x11-libs/cairo-1.11.3[opengl]
 		media-libs/glu
 	)
 	examples? (
@@ -124,13 +125,14 @@ src_configure() {
 		$(use_enable egl)
 		$(use_enable unwind libunwind)
 		# misc
+		$(use_with gles2 cairo-glesv2)
 		$(use_enable resize-optimization)
 		$(use_enable suid setuid-install)
 		$(use_enable tablet tablet-shell)
 		$(use_enable xwayland)
 		$(use_enable xwayland xwayland-test)
 	)
-	if use examples || use test; then
+	if use examples || use gles2 || use test; then
 		myeconfargs+=(
 			--enable-simple-clients
 			$(use_enable egl simple-egl-clients)
@@ -159,7 +161,7 @@ src_install() {
 	dodoc "${FILESDIR}"/README.gentoo
 
 	cd "${BUILD_DIR}" || die
-	use egl && newbin clients/gears weston-gears
+	use opengl && newbin clients/gears weston-gears
 	if use examples; then
 		use egl && newbin clients/simple-egl weston-simple-egl
 		use pango && newbin clients/editor weston-editor
