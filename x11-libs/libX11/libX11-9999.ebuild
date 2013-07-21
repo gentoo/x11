@@ -46,7 +46,12 @@ src_compile() {
 	if tc-is-cross-compiler; then
 		(
 			filter-flags -m*
-			emake -C "${AUTOTOOLS_BUILD_DIR}"/src/util CC=$(tc-getBUILD_CC) CFLAGS="${CFLAGS}" LDFLAGS="" clean all || die
+			multilib_for_best_abi run_in_build_dir \
+				emake -C src/util \
+				CC=$(tc-getBUILD_CC) \
+				CFLAGS="${CFLAGS}" \
+				LDFLAGS="" \
+				clean all || die
 		)
 	fi
 	xorg-2_src_compile
