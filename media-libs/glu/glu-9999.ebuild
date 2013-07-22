@@ -7,6 +7,7 @@ EAPI=5
 EGIT_REPO_URI="git://anongit.freedesktop.org/mesa/glu"
 
 if [[ ${PV} = 9999* ]]; then
+	AUTOTOOLS_AUTORECONF=1
 	GIT_ECLASS="git-2"
 	EXPERIMENTAL="true"
 fi
@@ -47,10 +48,6 @@ foreachabi() {
 src_unpack() {
 	default
 	[[ $PV = 9999* ]] && git-2_src_unpack
-}
-
-src_prepare() {
-	AUTOTOOLS_AUTORECONF=1 autotools-utils_src_prepare
 }
 
 src_configure() {
