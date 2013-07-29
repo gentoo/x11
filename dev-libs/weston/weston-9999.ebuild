@@ -2,52 +2,53 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-# TODO
-# make building and installing clients_programs optional
-# fix systemd automagic
-#	$(use_enable systemd libsystemd-login)
-
 EAPI=5
-AUTOTOOLS_AUTORECONF=1
-AUTOTOOLS_PRUNE_LIBTOOL_FILES=all
-EGIT_REPO_URI="git://anongit.freedesktop.org/git/wayland/${PN}"
+
+if [[ ${PV} = 9999* ]]; then
+	EGIT_REPO_URI="git://anongit.freedesktop.org/git/wayland/${PN}"
+	GIT_ECLASS="git-2"
+	EXPERIMENTAL="true"
+fi
 VIRTUALX_REQUIRED="test"
 
-inherit autotools-utils linux-info virtualx
-[[ ${PV} == 9999* ]] && inherit git-2
+inherit autotools readme.gentoo toolchain-funcs virtualx $GIT_ECLASS
 
 DESCRIPTION="Wayland reference compositor"
 HOMEPAGE="http://wayland.freedesktop.org/"
-[[ ${PV} == 9999* ]] || \
-SRC_URI="http://wayland.freedesktop.org/releases/${P}.tar.xz"
+
+if [[ $PV = 9999* ]]; then
+	SRC_URI="${SRC_PATCHES}"
+	KEYWORDS=""
+else
+	SRC_URI="http://wayland.freedesktop.org/releases/${P}.tar.xz"
+	KEYWORDS="~arm ~amd64 ~x86 ~arm-linux"
+fi
 
 LICENSE="MIT CC-BY-SA-3.0"
 SLOT="0"
-[[ ${PV} == 9999* ]] || \
-KEYWORDS="~arm ~amd64 ~x86 ~arm-linux"
-IUSE="colord +drm +egl examples fbdev gles2 headless +opengl pango pdf rdp +resize-optimization rpi static-libs +suid systemd tablet test unwind wayland-compositor +X xwayland"
+IUSE="colord +drm +egl editor examples fbdev gles2 headless +opengl rdp +resize-optimization rpi static-libs +suid systemd tablet test unwind view wayland-compositor +X xwayland"
 
 REQUIRED_USE="
 	drm? ( egl )
+	editor? ( examples )
 	egl? ( || ( gles2 opengl ) )
 	fbdev? ( drm )
 	gles2? ( !opengl )
-	pango? ( examples )
-	pdf? ( examples )
-	rpi? ( !drm !egl )
+	rpi? ( gles2 )
 	test? ( X )
+	view? ( examples )
 	wayland-compositor? ( egl )
 "
 
 RDEPEND="
 	>=dev-libs/wayland-1.1.90
-	media-libs/mesa[egl?,gles2,wayland]
+	media-libs/mesa[egl?,wayland]
 	media-libs/lcms:2
 	media-libs/libpng:=
 	media-libs/libwebp
 	virtual/jpeg
 	sys-libs/pam
-	>=x11-libs/cairo-1.11.3[gles2?,opengl?]
+	>=x11-libs/cairo-1.11.3[gles2(-)?,opengl?]
 	>=x11-libs/libdrm-2.4.30
 	x11-libs/libxkbcommon
 	x11-libs/pixman
@@ -63,10 +64,11 @@ RDEPEND="
 	)
 	egl? (
 		media-libs/glu
+		media-libs/mesa[gles2]
 	)
 	examples? (
-		pango? ( x11-libs/pango )
-		pdf? (
+		editor? ( x11-libs/pango )
+		view? (
 			app-text/poppler:=[cairo]
 			dev-libs/glib:2
 		)
@@ -96,54 +98,40 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 "
 
-pkg_pretend() {
-	if use kernel_linux && use drm; then
-		CONFIG_CHECK="~DRM ~INPUT_EVDEV"
-	fi
-	check_extra_config
-}
 
 src_prepare() {
-	# Gentoo uses "video" group for this purpose
-	sed -e '/getgrnam/s/"weston-launch"/"video"/' -i src/weston-launch.c || die
-
-	autotools-utils_src_prepare
+	if [[ ${PV} = 9999* ]]; then
+		eautoreconf
+	fi
 }
 
 src_configure() {
-	local myeconfargs=(
-		# backends
-		$(use_enable fbdev fbdev-compositor)
-		$(use_enable drm drm-compositor)
-		$(use_enable headless headless-compositor)
-		$(use_enable rdp rdp-compositor)
-		$(use_enable rpi rpi-compositor)
-		$(use_enable wayland-compositor)
-		$(use_enable X x11-compositor)
-		# optional deps
-		$(use_enable colord)
-		$(use_enable egl)
-		$(use_enable unwind libunwind)
-		# misc
-		$(use_with gles2 cairo-glesv2)
-		$(use_enable resize-optimization)
-		$(use_enable suid setuid-install)
-		$(use_enable tablet tablet-shell)
-		$(use_enable xwayland)
-		$(use_enable xwayland xwayland-test)
-	)
+	local myconf
 	if use examples || use gles2 || use test; then
-		myeconfargs+=(
-			--enable-simple-clients
-			$(use_enable egl simple-egl-clients)
-		)
+		myconf="--enable-simple-clients 
+			$(use_enable egl simple-egl-clients)"
 	else
-		myeconfargs+=(
-			--disable-simple-clients
-			--disable-simple-egl-clients
-		)
+		myconf="--disable-simple-clients 
+			--disable-simple-egl-clients"
 	fi
-	autotools-utils_src_configure
+	econf \
+		$(use_enable fbdev fbdev-compositor) \
+		$(use_enable drm drm-compositor) \
+		$(use_enable headless headless-compositor) \
+		$(use_enable rdp rdp-compositor) \
+		$(use_enable rpi rpi-compositor) \
+		$(use_enable wayland-compositor) \
+		$(use_enable X x11-compositor) \
+		$(use_enable colord) \
+		$(use_enable egl) \
+		$(use_enable unwind libunwind) \
+		$(use_with gles2 cairo-glesv2) \
+		$(use_enable resize-optimization) \
+		$(use_enable suid setuid-install) \
+		$(use_enable tablet tablet-shell) \
+		$(use_enable xwayland) \
+		$(use_enable xwayland xwayland-test) \
+		${myconf}
 }
 
 src_test() {
@@ -156,23 +144,21 @@ src_test() {
 }
 
 src_install() {
-	autotools-utils_src_install
+	default
 
-	dodoc "${FILESDIR}"/README.gentoo
+	readme.gentoo_src_install
 
 	cd "${BUILD_DIR}" || die
-	use opengl && newbin clients/gears weston-gears
+	if use opengl && use egl; then
+		newbin clients/gears weston-gears
+	fi
 	if use examples; then
 		use egl && newbin clients/simple-egl weston-simple-egl
-		use pango && newbin clients/editor weston-editor
-		use pdf && newbin clients/view weston-view
+		use editor && newbin clients/editor weston-editor
+		use view && newbin clients/view weston-view
 		local i
 		for i in calibrator clickdot cliptest dnd eventdemo flower fullscreen image resizor simple-shm simple-touch smoke transformed; do
 			newbin "clients/${i}" "weston-${i}"
 		done
 	fi
-}
-
-pkg_postinst() {
-	elog "You may need to edit ~/.bash_profile, read /usr/share/doc/${PF}/README.gentoo*"
 }
