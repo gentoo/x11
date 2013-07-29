@@ -5,7 +5,7 @@
 EAPI=5
 PYTHON_COMPAT=( python{2_5,2_6,2_7} )
 
-EGIT_REPO_URI="git://people.freedesktop.org/~tstellar/${PN}"
+EGIT_REPO_URI="http://llvm.org/git/${PN}.git"
 
 if [[ ${PV} = 9999* ]]; then
 	GIT_ECLASS="git-2"
@@ -15,7 +15,7 @@ fi
 inherit base python-any-r1 $GIT_ECLASS
 
 DESCRIPTION="OpenCL C library"
-HOMEPAGE="http://libclc.llvm.org/ http://cgit.freedesktop.org/~tstellar/libclc/"
+HOMEPAGE="http://libclc.llvm.org/"
 
 if [[ $PV = 9999* ]]; then
 	SRC_URI="${SRC_PATCHES}"
