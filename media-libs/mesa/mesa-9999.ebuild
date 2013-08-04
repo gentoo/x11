@@ -58,7 +58,7 @@ REQUIRED_USE="
 	opencl? ( gallium r600-llvm-compiler )
 	gles1?  ( egl )
 	gles2?  ( egl )
-	r600-llvm-compiler? ( gallium llvm || ( video_cards_r600 video_cards_radeon ) )
+	r600-llvm-compiler? ( gallium llvm || ( video_cards_r600 video_cards_radeonsi video_cards_radeon ) )
 	wayland? ( egl )
 	xa?  ( gallium )
 	xorg?  ( gallium )
