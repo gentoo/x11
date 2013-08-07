@@ -53,6 +53,7 @@ IUSE_VIDEO_CARDS="
 	video_cards_qxl
 	video_cards_r128
 	video_cards_radeon
+	video_cards_radeonsi
 	video_cards_rendition
 	video_cards_s3virge
 	video_cards_savage
@@ -122,6 +123,7 @@ PDEPEND="
 	video_cards_fglrx?         ( x11-drivers/ati-drivers )
 	video_cards_r128?          ( x11-drivers/xf86-video-r128 )
 	video_cards_radeon?        ( x11-drivers/xf86-video-ati )
+	video_cards_radeonsi?      ( x11-drivers/xf86-video-ati[glamor] )
 	video_cards_rendition?     ( x11-drivers/xf86-video-rendition )
 	video_cards_s3virge?       ( x11-drivers/xf86-video-s3virge )
 	video_cards_savage?        ( x11-drivers/xf86-video-savage )
