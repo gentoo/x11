@@ -121,6 +121,3 @@
 =x11-proto/xf86vidmodeproto-9999
 =x11-proto/xineramaproto-9999
 =x11-proto/xproto-9999
-
-# Known to broken/untested
-=x11-drivers/ati-drivers-13.8_beta

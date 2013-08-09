@@ -301,6 +301,7 @@ src_prepare() {
 	epatch "${FILESDIR}/ati-drivers-13.8-beta-include-seq_file.patch"
 
 	epatch "${FILESDIR}/check-for-iommu-only-if-iommu-is-supported.patch"
+	epatch "${FILESDIR}/ati-drivers-13.8-proc-permissions.diff"
 
 	# Compile fix, https://bugs.gentoo.org/show_bug.cgi?id=454870
 	use pax_kernel && epatch "${FILESDIR}/const-notifier-block.patch"
