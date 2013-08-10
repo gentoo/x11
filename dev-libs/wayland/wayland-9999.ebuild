@@ -8,9 +8,10 @@ if [[ ${PV} = 9999* ]]; then
 	EGIT_REPO_URI="git://anongit.freedesktop.org/git/${PN}/${PN}"
 	GIT_ECLASS="git-2"
 	EXPERIMENTAL="true"
+	AUTOTOOLS_AUTORECONF=1
 fi
 
-inherit autotools toolchain-funcs $GIT_ECLASS
+inherit autotools-multilib toolchain-funcs $GIT_ECLASS
 
 DESCRIPTION="Wayland protocol libraries"
 HOMEPAGE="http://wayland.freedesktop.org/"
@@ -33,19 +34,16 @@ DEPEND="${RDEPEND}
 	doc? ( app-doc/doxygen )
 	virtual/pkgconfig"
 
-src_prepare() {
-	if [[ ${PV} = 9999* ]]; then
-		eautoreconf
-	fi
-}
-
 src_configure() {
-	myconf="$(use_enable static-libs static) \
-			$(use_enable doc documentation)"
+	local myeconfargs=(
+		$(use_enable static-libs static)
+		$(use_enable doc documentation)
+	)
 	if tc-is-cross-compiler ; then
-		myconf+=" --disable-scanner"
+		myeconfargs+=( --disable-scanner )
 	fi
-	econf ${myconf}
+
+	autotools-multilib_src_configure
 }
 
 src_test() {
@@ -53,5 +51,5 @@ src_test() {
 	mkdir "${XDG_RUNTIME_DIR}" || die
 	chmod 0700 "${XDG_RUNTIME_DIR}" || die
 
-	default
+	autotools-multilib_src_test
 }
