@@ -13,7 +13,8 @@ fi
 
 PYTHON_COMPAT=( python{2_6,2_7} )
 
-inherit base autotools multilib flag-o-matic python-single-r1 toolchain-funcs ${GIT_ECLASS}
+inherit base autotools multilib multilib-minimal flag-o-matic \
+	python-single-r1 toolchain-funcs ${GIT_ECLASS}
 
 OPENGL_DIR="xorg-x11"
 
@@ -83,28 +84,29 @@ LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.46"
 RDEPEND="
 	!<x11-base/xorg-server-1.7
 	!<=x11-proto/xf86driproto-2.0.3
+	abi_x86_32? ( !app-emulation/emul-linux-x86-opengl[-abi_x86_32(-)] )
 	classic? ( app-admin/eselect-mesa )
 	gallium? ( app-admin/eselect-mesa )
 	>=app-admin/eselect-opengl-1.2.7
-	dev-libs/expat
-	gbm? ( virtual/udev )
-	>=x11-libs/libX11-1.3.99.901
-	x11-libs/libXdamage
-	x11-libs/libXext
-	x11-libs/libXxf86vm
-	>=x11-libs/libxcb-1.8.1
+	dev-libs/expat[${MULTILIB_USEDEP}]
+	gbm? ( virtual/udev[${MULTILIB_USEDEP}] )
+	>=x11-libs/libX11-1.3.99.901[${MULTILIB_USEDEP}]
+	x11-libs/libXdamage[${MULTILIB_USEDEP}]
+	x11-libs/libXext[${MULTILIB_USEDEP}]
+	x11-libs/libXxf86vm[${MULTILIB_USEDEP}]
+	>=x11-libs/libxcb-1.8.1[${MULTILIB_USEDEP}]
 	opencl? (
 				app-admin/eselect-opencl
 				dev-libs/libclc
 			)
-	vdpau? ( >=x11-libs/libvdpau-0.4.1 )
-	wayland? ( >=dev-libs/wayland-1.0.3 )
+	vdpau? ( >=x11-libs/libvdpau-0.4.1[${MULTILIB_USEDEP}] )
+	wayland? ( >=dev-libs/wayland-1.0.3[${MULTILIB_USEDEP}] )
 	xorg? (
 		x11-base/xorg-server:=
 		x11-libs/libdrm[libkms]
 	)
-	xvmc? ( >=x11-libs/libXvMC-1.0.6 )
-	${LIBDRM_DEPSTRING}[video_cards_freedreno?,video_cards_nouveau?,video_cards_vmware?]
+	xvmc? ( >=x11-libs/libXvMC-1.0.6[${MULTILIB_USEDEP}] )
+	${LIBDRM_DEPSTRING}[video_cards_freedreno?,video_cards_nouveau?,video_cards_vmware?,${MULTILIB_USEDEP}]
 "
 for card in ${INTEL_CARDS}; do
 	RDEPEND="${RDEPEND}
@@ -120,13 +122,13 @@ done
 
 DEPEND="${RDEPEND}
 	llvm? (
-		>=sys-devel/llvm-2.9
+		>=sys-devel/llvm-2.9[${MULTILIB_USEDEP}]
 		r600-llvm-compiler? ( sys-devel/llvm[video_cards_radeon] )
 		video_cards_radeonsi? ( sys-devel/llvm[video_cards_radeon] )
 	)
 	opencl? (
-				>=sys-devel/llvm-3.3-r1[video_cards_radeon]
-				>=sys-devel/clang-3.3
+				>=sys-devel/llvm-3.3-r1[video_cards_radeon,${MULTILIB_USEDEP}]
+				>=sys-devel/clang-3.3[${MULTILIB_USEDEP}]
 				>=sys-devel/gcc-4.6
 	)
 	${PYTHON_DEPS}
@@ -134,11 +136,11 @@ DEPEND="${RDEPEND}
 	sys-devel/bison
 	sys-devel/flex
 	virtual/pkgconfig
-	>=x11-proto/dri2proto-2.6
-	>=x11-proto/glproto-1.4.15-r1
-	>=x11-proto/xextproto-7.0.99.1
-	x11-proto/xf86driproto
-	x11-proto/xf86vidmodeproto
+	>=x11-proto/dri2proto-2.6[${MULTILIB_USEDEP}]
+	>=x11-proto/glproto-1.4.15-r1[${MULTILIB_USEDEP}]
+	>=x11-proto/xextproto-7.0.99.1[${MULTILIB_USEDEP}]
+	x11-proto/xf86driproto[${MULTILIB_USEDEP}]
+	x11-proto/xf86vidmodeproto[${MULTILIB_USEDEP}]
 "
 
 S="${WORKDIR}/${MY_P}"
@@ -182,15 +184,13 @@ src_prepare() {
 		sed -i -e "s/-DSVR4/-D_POSIX_C_SOURCE=200112L/" configure.ac || die
 	fi
 
-	# Tests fail against python-3, bug #407887
-	sed -i 's|/usr/bin/env python|/usr/bin/env python2|' src/glsl/tests/compare_ir || die
-
 	base_src_prepare
 
 	eautoreconf
+	multilib_copy_sources
 }
 
-src_configure() {
+multilib_src_configure() {
 	local myconf
 
 	if use classic; then
@@ -256,7 +256,7 @@ src_configure() {
 			myconf+="
 				$(use_enable opencl)
 				--with-opencl-libdir="${EPREFIX}/usr/$(get_libdir)/OpenCL/vendors/mesa"
-				--with-clang-libdir="${EPREFIX}/usr/$(get_libdir)"
+				--with-clang-libdir="${EPREFIX}/usr/lib"
 				"
 		fi
 	fi
@@ -270,6 +270,11 @@ src_configure() {
 
 	# build fails with BSD indent, bug #428112
 	use userland_GNU || export INDENT=cat
+
+	if ! multilib_is_native_abi; then
+		myconf+="--disable-xorg
+			LLVM_CONFIG=${EPREFIX}/usr/bin/llvm-config.${ABI}"
+	fi
 
 	econf \
 		--enable-dri \
@@ -292,18 +297,8 @@ src_configure() {
 		${myconf}
 }
 
-src_install() {
-	base_src_install
-
-	find "${ED}" -name '*.la' -exec rm -f {} + || die
-
-	if use !bindist; then
-		dodoc docs/patents.txt
-	fi
-
-	# Install config file for eselect mesa
-	insinto /usr/share/mesa
-	newins "${FILESDIR}/eselect-mesa.conf.9.2" eselect-mesa.conf
+multilib_src_install() {
+	emake install DESTDIR="${D}"
 
 	# Move libGL and others from /usr/lib to /usr/lib/opengl/blah/lib
 	# because user can eselect desired GL provider.
@@ -378,6 +373,18 @@ src_install() {
 		fi
 		eend $?
 	fi
+}
+
+multilib_src_install_all() {
+	find "${ED}" -name '*.la' -exec rm -f {} + || die
+
+	if use !bindist; then
+		dodoc docs/patents.txt
+	fi
+
+	# Install config file for eselect mesa
+	insinto /usr/share/mesa
+	newins "${FILESDIR}/eselect-mesa.conf.9.2" eselect-mesa.conf
 }
 
 pkg_postinst() {
