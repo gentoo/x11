@@ -46,6 +46,7 @@ IUSE_VIDEO_CARDS="
 	video_cards_mach64
 	video_cards_mga
 	video_cards_modesetting
+	video_cards_neomagic
 	video_cards_nouveau
 	video_cards_nv
 	video_cards_omap
@@ -114,6 +115,7 @@ PDEPEND="
 	video_cards_mach64?        ( x11-drivers/xf86-video-mach64 )
 	video_cards_mga?           ( x11-drivers/xf86-video-mga )
 	video_cards_modesetting?   ( x11-drivers/xf86-video-modesetting )
+	video_cards_neomagic?      ( x11-drivers/xf86-video-neomagic )
 	video_cards_nouveau?       ( x11-drivers/xf86-video-nouveau )
 	video_cards_nv?            ( x11-drivers/xf86-video-nv )
 	video_cards_omap?          ( x11-drivers/xf86-video-omap )
@@ -152,7 +154,6 @@ PDEPEND="
 	!x11-drivers/xf86-video-nsc
 	!x11-drivers/xf86-video-sunbw2
 	!<=x11-drivers/xf86-video-ark-0.7.5
-	!<=x11-drivers/xf86-video-neomagic-1.2.7
 	!<=x11-drivers/xf86-video-newport-0.2.4
 	!<=x11-drivers/xf86-video-s3-0.6.5
 	!<=x11-drivers/xf86-video-sis-0.10.7
