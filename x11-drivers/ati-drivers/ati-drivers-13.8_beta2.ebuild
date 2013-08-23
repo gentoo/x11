@@ -14,7 +14,7 @@ DRIVERS_URI="https://www2.ati.com/drivers/beta/amd-catalyst-13.8-beta2-linux-x86
 XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
 SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
 FOLDER_PREFIX="common/"
-IUSE="debug +modules multilib qt4 static-libs disable-watermark pax_kernel"
+IUSE="debug +modules multilib qt4 static-libs pax_kernel"
 
 LICENSE="AMD GPL-2 QPL-1.0"
 KEYWORDS="-* ~amd64 ~x86"
@@ -326,17 +326,6 @@ src_prepare() {
 	mkdir extra || die "mkdir extra failed"
 	cd extra
 	unpack ./../${FOLDER_PREFIX}usr/src/ati/fglrx_sample_source.tgz
-
-	# Get rid of watermark. Oldest known reference:
-	# http://phoronix.com/forums/showthread.php?19875-Unsupported-Hardware-watermark
-	if use disable-watermark; then
-		ebegin "Disabling watermark"
-		driver="${MY_BASE_DIR}"/usr/X11R6/${PKG_LIBDIR}/modules/drivers/fglrx_drv.so
-		for x in $(objdump -d ${driver}|awk '/call/&&/EnableLogo/{print "\\x"$2"\\x"$3"\\x"$4"\\x"$5"\\x"$6}'); do
-		sed -i "s/${x/x5b/\x5b}/\x90\x90\x90\x90\x90/g" ${driver} || break 1
-		done
-		eend $? || die "Disabling watermark failed"
-	fi
 }
 
 src_compile() {
