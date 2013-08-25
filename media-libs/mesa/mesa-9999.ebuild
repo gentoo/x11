@@ -55,7 +55,12 @@ IUSE="${IUSE_VIDEO_CARDS}
 REQUIRED_USE="
 	llvm?   ( gallium )
 	openvg? ( egl gallium )
-	opencl? ( gallium r600-llvm-compiler )
+	opencl? (
+		gallium
+		video_cards_r600? ( r600-llvm-compiler )
+		video_cards_radeon? ( r600-llvm-compiler )
+		video_cards_radeonsi? ( r600-llvm-compiler )
+	)
 	gles1?  ( egl )
 	gles2?  ( egl )
 	r600-llvm-compiler? ( gallium llvm || ( video_cards_r600 video_cards_radeonsi video_cards_radeon ) )
