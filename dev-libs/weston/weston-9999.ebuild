@@ -30,13 +30,10 @@ IUSE="colord +drm +egl editor examples fbdev gles2 headless +opengl rdp +resize-
 
 REQUIRED_USE="
 	drm? ( egl )
-	editor? ( examples )
 	egl? ( || ( gles2 opengl ) )
 	fbdev? ( drm )
 	gles2? ( !opengl )
-	rpi? ( gles2 )
 	test? ( X )
-	view? ( examples )
 	wayland-compositor? ( egl )
 "
 
@@ -66,12 +63,10 @@ RDEPEND="
 		media-libs/glu
 		media-libs/mesa[gles2]
 	)
-	examples? (
-		editor? ( x11-libs/pango )
-		view? (
-			app-text/poppler:=[cairo]
-			dev-libs/glib:2
-		)
+	editor? ( x11-libs/pango )
+	view? (
+		app-text/poppler:=[cairo]
+		dev-libs/glib:2
 	)
 	rdp? ( >=net-misc/freerdp-1.1.0_beta1_p20130710 )
 	rpi? (
@@ -98,7 +93,6 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 "
 
-
 src_prepare() {
 	if [[ ${PV} = 9999* ]]; then
 		eautoreconf
@@ -108,12 +102,21 @@ src_prepare() {
 src_configure() {
 	local myconf
 	if use examples || use gles2 || use test; then
-		myconf="--enable-simple-clients 
+		myconf="--enable-simple-clients
 			$(use_enable egl simple-egl-clients)"
 	else
-		myconf="--disable-simple-clients 
+		myconf="--disable-simple-clients
 			--disable-simple-egl-clients"
 	fi
+
+	if use gles2; then
+		myconf+=" --with-cairo=glesv2"
+	elif use opengl; then
+		myconf+=" --with-cairo=gl"
+	else
+		myconf+=" --with-cairo=image"
+	fi
+
 	econf \
 		$(use_enable fbdev fbdev-compositor) \
 		$(use_enable drm drm-compositor) \
@@ -125,7 +128,6 @@ src_configure() {
 		$(use_enable colord) \
 		$(use_enable egl) \
 		$(use_enable unwind libunwind) \
-		$(use_with gles2 cairo-glesv2) \
 		$(use_enable resize-optimization) \
 		$(use_enable suid setuid-install) \
 		$(use_enable tablet tablet-shell) \
@@ -148,17 +150,34 @@ src_install() {
 
 	readme.gentoo_src_install
 
-	cd "${BUILD_DIR}" || die
-	if use opengl && use egl; then
-		newbin clients/gears weston-gears
+	pushd clients || die
+
+	if use opengl && use egl && use !gles2; then
+		dobin weston-gears
+	fi
+	if use editor; then
+		dobin weston-editor
+	fi
+	if use view; then
+		dobin weston-view
 	fi
 	if use examples; then
-		use egl && newbin clients/simple-egl weston-simple-egl
-		use editor && newbin clients/editor weston-editor
-		use view && newbin clients/view weston-view
-		local i
-		for i in calibrator clickdot cliptest dnd eventdemo flower fullscreen image resizor simple-shm simple-touch smoke transformed; do
-			newbin "clients/${i}" "weston-${i}"
-		done
+		use egl && dobin weston-simple-egl
+		dobin \
+			weston-calibrator \
+			weston-clickdot \
+			weston-cliptest \
+			weston-dnd \
+			weston-eventdemo \
+			weston-flower \
+			weston-fullscreen \
+			weston-image \
+			weston-resizor \
+			weston-simple-shm \
+			weston-simple-touch \
+			weston-smoke \
+			weston-transformed
 	fi
+	popd
+
 }
