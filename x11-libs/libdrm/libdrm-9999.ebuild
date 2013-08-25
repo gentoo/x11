@@ -3,6 +3,8 @@
 # $Header: $
 
 EAPI=5
+
+XORG_MULTILIB=yes
 inherit xorg-2
 
 DESCRIPTION="X.Org libdrm library"
@@ -22,8 +24,9 @@ done
 IUSE="${IUSE_VIDEO_CARDS} libkms"
 RESTRICT="test" # see bug #236845
 
-RDEPEND="dev-libs/libpthread-stubs
-	video_cards_intel? ( >=x11-libs/libpciaccess-0.10 )"
+RDEPEND="dev-libs/libpthread-stubs[${MULTILIB_USEDEP}]
+	video_cards_intel? ( >=x11-libs/libpciaccess-0.10[${MULTILIB_USEDEP}] )
+	abi_x86_32? ( !app-emulation/emul-linux-x86-opengl[-abi_x86_32(-)] )"
 DEPEND="${RDEPEND}"
 
 PATCHES=(

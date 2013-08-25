@@ -3,6 +3,8 @@
 # $Header: $
 
 EAPI=5
+
+XORG_MULTILIB=yes
 inherit xorg-2
 
 DESCRIPTION="X.Org DRI2 protocol headers"
