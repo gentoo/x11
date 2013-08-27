@@ -105,7 +105,7 @@ RDEPEND="
 				dev-libs/libclc
 			)
 	vdpau? ( >=x11-libs/libvdpau-0.4.1[${MULTILIB_USEDEP}] )
-	wayland? ( >=dev-libs/wayland-1.0.3[${MULTILIB_USEDEP}] )
+	wayland? ( >=dev-libs/wayland-1.2.0[${MULTILIB_USEDEP}] )
 	xorg? (
 		x11-base/xorg-server:=
 		x11-libs/libdrm[libkms]
