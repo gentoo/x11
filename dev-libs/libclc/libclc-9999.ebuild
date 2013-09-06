@@ -45,6 +45,5 @@ src_unpack() {
 src_configure() {
 	./configure.py \
 		--with-llvm-config="${EPREFIX}/usr/bin/llvm-config" \
-		--prefix="${EPREFIX}/usr" \
-		--pkgconfigdir="${EPREFIX}/usr/share/pkgconfig"
+		--prefix="${EPREFIX}/usr"
 }
