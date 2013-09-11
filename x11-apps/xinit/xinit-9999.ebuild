@@ -9,7 +9,7 @@ inherit xorg-2
 DESCRIPTION="X Window System initializer"
 
 LICENSE="${LICENSE} GPL-2"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~arm-linux ~x86-linux"
 IUSE="+minimal"
 
 RDEPEND="
@@ -28,7 +28,7 @@ PDEPEND="x11-apps/xrdb
 "
 
 PATCHES=(
-	"${FILESDIR}/0001-Gentoo-customizations.patch"
+	"${FILESDIR}/${PN}-1.3.3-gentoo-customizations.patch"
 )
 
 src_configure() {

@@ -35,8 +35,8 @@ index 049a8e4..80c3ad9 100644
 +fi
 +
  if [ -d XINITDIR/xinitrc.d ] ; then
--	for f in XINITDIR/xinitrc.dXSLASHGLOB.sh ; do
-+	for f in XINITDIR/xinitrc.dXSLASHGLOB ; do
+-	for f in XINITDIR/xinitrc.d/?*.sh ; do
++	for f in XINITDIR/xinitrc.d/?* ; do
  		[ -x "$f" ] && . "$f"
  	done
  	unset f
