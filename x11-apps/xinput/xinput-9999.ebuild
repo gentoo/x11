@@ -12,6 +12,7 @@ IUSE=""
 
 RDEPEND=">=x11-libs/libX11-1.3
 	x11-libs/libXext
-	>=x11-libs/libXi-1.4.99.1"
+	>=x11-libs/libXi-1.5.99.1
+	x11-libs/libXinerama"
 DEPEND="${RDEPEND}
-	>=x11-proto/inputproto-2.0"
+	>=x11-proto/inputproto-2.1.99.1"
