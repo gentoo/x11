@@ -10,11 +10,11 @@ DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and ne
 HOMEPAGE="http://www.amd.com"
 #RUN="${WORKDIR}/amd-driver-installer-9.00-x86.x86_64.run"
 SLOT="1"
-DRIVERS_URI="http://www2.ati.com/drivers/beta/amd-catalyst-13.8-beta1-linux-x86.x86_64.zip"
+DRIVERS_URI="https://www2.ati.com/drivers/linux/amd-catalyst-13.9-linux-x86.x86_64.zip"
 XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
 SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
 FOLDER_PREFIX="common/"
-IUSE="debug +modules multilib qt4 static-libs disable-watermark pax_kernel"
+IUSE="debug +modules multilib qt4 static-libs pax_kernel"
 
 LICENSE="AMD GPL-2 QPL-1.0"
 KEYWORDS="-* ~amd64 ~x86"
@@ -252,6 +252,10 @@ src_unpack() {
 	mkdir xvba_sdk
 	cd xvba_sdk
 	unpack ${XVBA_SDK_DISTFILE}
+
+	mkdir -p "${WORKDIR}/extra" || die "mkdir extra failed"
+	cd "${WORKDIR}/extra"
+	tar -xf "../${FOLDER_PREFIX}usr/src/ati/fglrx_sample_source.tgz"
 }
 
 src_prepare() {
@@ -298,10 +302,10 @@ src_prepare() {
 	# Compile fix for kernel typesafe uid types #469160
 	epatch "${FILESDIR}/typesafe-kuid.diff"
 
-	epatch "${FILESDIR}/ati-drivers-13.8-beta-include-seq_file.patch"
+	epatch "${FILESDIR}/ati-drivers-13.6-linux-3.10-proc.diff"
 
-	epatch "${FILESDIR}/check-for-iommu-only-if-iommu-is-supported.patch"
-	epatch "${FILESDIR}/ati-drivers-13.8-proc-permissions.diff"
+	# Fix #483400
+	epatch "${FILESDIR}/fgl_glxgears-do-not-include-glATI.patch"
 
 	# Compile fix, https://bugs.gentoo.org/show_bug.cgi?id=454870
 	use pax_kernel && epatch "${FILESDIR}/const-notifier-block.patch"
@@ -321,22 +325,6 @@ src_prepare() {
 	sed -i -e 's/__SMP__/CONFIG_SMP/' *.c *h || die "SMP sed failed"
 	sed -i -e 's/ifdef MODVERSIONS/ifdef CONFIG_MODVERSIONS/' *.c *.h \
 		|| die "MODVERSIONS sed failed"
-	cd "${S}"
-
-	mkdir extra || die "mkdir extra failed"
-	cd extra
-	unpack ./../${FOLDER_PREFIX}usr/src/ati/fglrx_sample_source.tgz
-
-	# Get rid of watermark. Oldest known reference:
-	# http://phoronix.com/forums/showthread.php?19875-Unsupported-Hardware-watermark
-	if use disable-watermark; then
-		ebegin "Disabling watermark"
-		driver="${MY_BASE_DIR}"/usr/X11R6/${PKG_LIBDIR}/modules/drivers/fglrx_drv.so
-		for x in $(objdump -d ${driver}|awk '/call/&&/EnableLogo/{print "\\x"$2"\\x"$3"\\x"$4"\\x"$5"\\x"$6}'); do
-		sed -i "s/${x/x5b/\x5b}/\x90\x90\x90\x90\x90/g" ${driver} || break 1
-		done
-		eend $? || die "Disabling watermark failed"
-	fi
 }
 
 src_compile() {
