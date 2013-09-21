@@ -337,13 +337,13 @@ multilib_src_install() {
 			keepdir /usr/$(get_libdir)/dri
 			dodir /usr/$(get_libdir)/mesa
 			for x in ${gallium_drivers[@]}; do
-				if [ -f "${S}/$(get_libdir)/gallium/${x}" ]; then
+				if [ -f "$(get_libdir)/gallium/${x}" ]; then
 					mv -f "${ED}/usr/$(get_libdir)/dri/${x}" "${ED}/usr/$(get_libdir)/dri/${x/_dri.so/g_dri.so}" \
 						|| die "Failed to move ${x}"
 					insinto "/usr/$(get_libdir)/dri/"
-					if [ -f "${S}/$(get_libdir)/${x}" ]; then
+					if [ -f "$(get_libdir)/${x}" ]; then
 						insopts -m0755
-						doins "${S}/$(get_libdir)/${x}"
+						doins "$(get_libdir)/${x}"
 					fi
 				fi
 			done
