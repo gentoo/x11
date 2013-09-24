@@ -4,9 +4,10 @@
 
 EAPI=5
 
-PYTHON_COMPAT=( python{2_5,2_6,2_7,3_1,3_2,3_3} )
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} )
 XORG_MULTILIB=yes
-inherit python-single-r1 xorg-2
+
+inherit python-r1 xorg-2
 
 DESCRIPTION="X C-language Bindings protocol headers"
 HOMEPAGE="http://xcb.freedesktop.org/"
@@ -21,10 +22,22 @@ RDEPEND="${PYTHON_DEPS}"
 DEPEND="${RDEPEND}
 	dev-libs/libxml2"
 
-pkg_setup() {
-	python-single-r1_pkg_setup
-}
-
 src_configure() {
 	xorg-2_src_configure
+	#Note: multilib is not supported with python, therefore use only one ABI
+	python_foreach_impl autotools-utils_src_configure
+}
+
+src_compile() {
+	xorg-2_src_compile
+
+	python_foreach_impl autotools-utils_src_compile -C xcbgen \
+		top_builddir="${WORKDIR}/${P}-${ABI:-${DEFAULT_ABI}}"
+}
+
+src_install() {
+	xorg-2_src_install
+
+	python_foreach_impl autotools-utils_src_install -C xcbgen \
+		top_builddir="${WORKDIR}/${P}-${ABI:-${DEFAULT_ABI}}"
 }
