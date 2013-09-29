@@ -14,7 +14,7 @@ fi
 PYTHON_COMPAT=( python{2_6,2_7} )
 
 inherit base autotools multilib multilib-minimal flag-o-matic \
-	python-single-r1 toolchain-funcs ${GIT_ECLASS}
+	python-any-r1 toolchain-funcs ${GIT_ECLASS}
 
 OPENGL_DIR="xorg-x11"
 
@@ -136,8 +136,6 @@ DEPEND="${RDEPEND}
 				>=sys-devel/clang-3.3[${MULTILIB_USEDEP}]
 				>=sys-devel/gcc-4.6
 	)
-	${PYTHON_DEPS}
-	dev-libs/libxml2[python,${PYTHON_USEDEP}]
 	sys-devel/bison
 	sys-devel/flex
 	virtual/pkgconfig
@@ -146,7 +144,12 @@ DEPEND="${RDEPEND}
 	>=x11-proto/xextproto-7.0.99.1[${MULTILIB_USEDEP}]
 	x11-proto/xf86driproto[${MULTILIB_USEDEP}]
 	x11-proto/xf86vidmodeproto[${MULTILIB_USEDEP}]
+	$(python_gen_any_dep 'dev-libs/libxml2[python,${PYTHON_USEDEP}]')
 "
+
+python_check_deps() {
+	has_version "dev-libs/libxml2[python,${PYTHON_USEDEP}]"
+}
 
 S="${WORKDIR}/${MY_P}"
 
@@ -161,7 +164,7 @@ pkg_setup() {
 	# workaround toc-issue wrt #386545
 	use ppc64 && append-flags -mminimal-toc
 
-	python-single-r1_pkg_setup
+	python-any-r1_pkg_setup
 }
 
 src_unpack() {
