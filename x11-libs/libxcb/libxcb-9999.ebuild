@@ -9,7 +9,7 @@ PYTHON_REQ_USE=xml
 
 XORG_DOC=doc
 XORG_MULTILIB=yes
-inherit python-single-r1 xorg-2
+inherit python-any-r1 xorg-2
 
 DESCRIPTION="X C-language Bindings library"
 HOMEPAGE="http://xcb.freedesktop.org/"
@@ -23,14 +23,18 @@ IUSE="selinux xkb"
 RDEPEND="dev-libs/libpthread-stubs[${MULTILIB_USEDEP}]
 	x11-libs/libXau[${MULTILIB_USEDEP}]
 	x11-libs/libXdmcp[${MULTILIB_USEDEP}]"
+# Note: ${PYTHON_USEDEP} needs to go verbatim
 DEPEND="${RDEPEND}
-	dev-lang/python[xml]
 	dev-libs/libxslt
-	>=x11-proto/xcb-proto-1.7-r1[${MULTILIB_USEDEP},${PYTHON_USEDEP}]
-	${PYTHON_DEPS}"
+	$(python_gen_any_dep \
+		">=x11-proto/xcb-proto-1.7-r1[${MULTILIB_USEDEP},\${PYTHON_USEDEP}]")"
+
+python_check_deps() {
+	has_version ">=x11-proto/xcb-proto-1.7-r1[${MULTILIB_USEDEP},${PYTHON_USEDEP}]"
+}
 
 pkg_setup() {
-	python-single-r1_pkg_setup
+	python-any-r1_pkg_setup
 }
 
 src_configure() {
