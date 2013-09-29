@@ -23,6 +23,7 @@ DEPEND="${RDEPEND}
 	dev-libs/libxml2"
 
 src_configure() {
+	python_export_best
 	xorg-2_src_configure
 	#Note: multilib is not supported with python, therefore use only one ABI
 	python_foreach_impl autotools-utils_src_configure
