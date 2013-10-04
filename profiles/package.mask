@@ -81,6 +81,7 @@
 =x11-libs/pixman-9999
 =x11-libs/startup-notification-9999
 =x11-libs/xcb-util-9999
+=x11-libs/xcb-util-cursor-9999
 =x11-libs/xcb-util-image-9999
 =x11-libs/xcb-util-keysyms-9999
 =x11-libs/xcb-util-renderutil-9999
