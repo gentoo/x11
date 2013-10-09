@@ -301,6 +301,7 @@ multilib_src_configure() {
 		$(use_enable xorg) \
 		--with-dri-drivers=${DRI_DRIVERS} \
 		--with-gallium-drivers=${GALLIUM_DRIVERS} \
+		--with-llvm-shared-libs \
 		PYTHON2="${PYTHON}" \
 		${myconf}
 }
