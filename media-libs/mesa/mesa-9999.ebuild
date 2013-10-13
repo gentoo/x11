@@ -385,7 +385,8 @@ multilib_src_install() {
 }
 
 multilib_src_install_all() {
-	find "${ED}" -name '*.la' -exec rm -f {} + || die
+	prune_libtool_files --all
+	einstalldocs
 
 	if use !bindist; then
 		dodoc docs/patents.txt
