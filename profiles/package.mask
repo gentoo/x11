@@ -1,4 +1,5 @@
 # Don't let people install these accidentally
+=dev-libs/libevdev-9999
 =dev-libs/wayland-9999
 =dev-libs/weston-9999
 =media-libs/glu-9999
