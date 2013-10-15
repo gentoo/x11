@@ -7,9 +7,11 @@ EAPI=5
 PYTHON_COMPAT=( python{2_6,2_7} )
 inherit waf-utils python-single-r1
 
+REV=${PV#*_p}
+
 DESCRIPTION="Opengl test suite"
 HOMEPAGE="https://launchpad.net/glmark2"
-SRC_URI="http://bazaar.launchpad.net/~glmark2-dev/glmark2/trunk/tarball/280 -> ${P}.tar.gz"
+SRC_URI="http://bazaar.launchpad.net/~glmark2-dev/glmark2/trunk/tarball/${REV} -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -39,47 +41,21 @@ src_configure() {
 	local myconf
 
 	if use X; then
-		if use opengl; then
-			myconf+="x11-gl"
-		fi
-		if use opengl && use gles2; then
-			myconf+=","
-		fi
-		if use gles2; then
-			myconf+="x11-glesv2"
-		fi
-
+		use opengl && myconf+="x11-gl"
+		use gles2 && myconf+=",x11-glesv2"
 	fi
+
 	if use drm; then
-		if use X; then
-			myconf+=","
-		fi
-		if use opengl; then
-			myconf+="drm-gl"
-		fi
-		if use opengl && use gles2; then
-			myconf+=","
-		fi
-		if use gles2; then
-			myconf+="drm-glesv2"
-		fi
-
+		use opengl && myconf+=",drm-gl"
+		use gles2 && myconf+=",drm-glesv2"
 	fi
+
 	if use wayland; then
-		if use X || use drm; then
-			myconf+=","
-		fi
-		if use opengl; then
-			myconf+="wayland-gl"
-		fi
-		if use opengl && use gles2; then
-			myconf+=","
-		fi
-		if use gles2; then
-			myconf+="wayland-glesv2"
-		fi
+		use opengl && myconf+=",wayland-gl"
+		use gles2 && myconf+=",wayland-glesv2"
 
 	fi
+	myconf=${myconf#,}
 
 	# it does not know --libdir specification, dandy huh
 	CCFLAGS="${CFLAGS}" LINKFLAGS="${LDFLAGS}" "${WAF_BINARY}" \
