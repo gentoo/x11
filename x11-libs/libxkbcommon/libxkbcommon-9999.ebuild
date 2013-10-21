@@ -3,30 +3,23 @@
 # $Header: $
 
 EAPI=5
-XORG_EAUTORECONF="yes"
+XORG_DOC="doc"
 
-if [[ ${PV} = *9999* ]]; then
-	GIT_ECLASS="git-2"
-	EXPERIMENTAL="true"
-	EGIT_REPO_URI="git://anongit.freedesktop.org/${PN}"
-	KEYWORDS=""
+if [[ ${PV} = 9999* ]]; then
+	EGIT_REPO_URI="git://github.com/xkbcommon/${PN}"
 else
-	XORG_BASE_INDIVIDUAL_URI=""
 	SRC_URI="http://xkbcommon.org/download/${P}.tar.xz"
-	KEYWORDS="~amd64 ~arm ~x86"
 fi
 
 inherit xorg-2 ${GIT_ECLASS}
 
 DESCRIPTION="X.Org xkbcommon library"
-
-IUSE="doc"
+KEYWORDS="~amd64 ~arm ~x86"
 
 DEPEND="sys-devel/bison
 	sys-devel/flex
 	x11-proto/xproto
-	>=x11-proto/kbproto-1.0.5
-	doc? ( app-doc/doxygen )"
+	>=x11-proto/kbproto-1.0.5"
 RDEPEND=""
 
 XORG_CONFIGURE_OPTIONS=(
