@@ -38,7 +38,7 @@ REQUIRED_USE="
 "
 
 RDEPEND="
-	>=dev-libs/wayland-1.1.90
+	>=dev-libs/wayland-1.1.91
 	media-libs/mesa[egl?,wayland]
 	media-libs/lcms:2
 	media-libs/libpng:=
