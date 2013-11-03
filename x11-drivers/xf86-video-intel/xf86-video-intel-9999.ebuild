@@ -12,7 +12,10 @@ DESCRIPTION="X.Org driver for Intel cards"
 KEYWORDS="~amd64 ~ia64 ~x86 ~amd64-fbsd -x86-fbsd"
 IUSE="glamor +sna +udev uxa xvmc"
 
-REQUIRED_USE="|| ( glamor sna uxa )"
+REQUIRED_USE="
+	|| ( sna uxa )
+	glamor? ( uxa )
+"
 
 RDEPEND="x11-libs/libXext
 	x11-libs/libXfixes
