@@ -28,6 +28,7 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	>=x11-libs/libXdmcp-1.0.2
 	>=x11-libs/libXfont-1.4.2
 	>=x11-libs/libxkbfile-1.0.4
+	>=x11-libs/libxshmfence-1.0
 	>=x11-libs/pixman-0.27.2
 	>=x11-libs/xtrans-1.2.2
 	>=x11-misc/xbitmaps-1.0.1
@@ -77,12 +78,14 @@ DEPEND="${RDEPEND}
 	>=x11-proto/trapproto-3.4.3
 	>=x11-proto/videoproto-2.2.2
 	>=x11-proto/xcmiscproto-1.2.0
-	>=x11-proto/xextproto-7.1.99
+	>=x11-proto/xextproto-7.2.99.901
 	>=x11-proto/xf86dgaproto-2.0.99.1
 	>=x11-proto/xf86rushproto-1.1.2
 	>=x11-proto/xf86vidmodeproto-2.2.99.1
 	>=x11-proto/xineramaproto-1.1.3
 	>=x11-proto/xproto-7.0.22
+	>=x11-proto/presentproto-1.0
+	>=x11-proto/dri3proto-1.0
 	dmx? (
 		>=x11-proto/dmxproto-2.2.99.1
 		doc? (
