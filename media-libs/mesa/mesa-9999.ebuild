@@ -51,7 +51,7 @@ done
 IUSE="${IUSE_VIDEO_CARDS}
 	bindist +classic debug +egl +gallium gbm gles1 gles2 +llvm +nptl opencl
 	openvg osmesa pax_kernel pic r600-llvm-compiler selinux vdpau
-	wayland xvmc xa xorg kernel_FreeBSD"
+	wayland xvmc xa kernel_FreeBSD"
 
 REQUIRED_USE="
 	llvm?   ( gallium )
@@ -67,7 +67,6 @@ REQUIRED_USE="
 	r600-llvm-compiler? ( gallium llvm || ( video_cards_r600 video_cards_radeonsi video_cards_radeon ) )
 	wayland? ( egl )
 	xa?  ( gallium )
-	xorg?  ( gallium )
 	video_cards_freedreno?  ( gallium )
 	video_cards_intel?  ( || ( classic gallium ) )
 	video_cards_i915?   ( || ( classic gallium ) )
@@ -106,10 +105,6 @@ RDEPEND="
 			)
 	vdpau? ( >=x11-libs/libvdpau-0.4.1[${MULTILIB_USEDEP}] )
 	wayland? ( >=dev-libs/wayland-1.2.0[${MULTILIB_USEDEP}] )
-	xorg? (
-		x11-base/xorg-server:=
-		x11-libs/libdrm[libkms]
-	)
 	xvmc? ( >=x11-libs/libXvMC-1.0.6[${MULTILIB_USEDEP}] )
 	${LIBDRM_DEPSTRING}[video_cards_freedreno?,video_cards_nouveau?,video_cards_vmware?,${MULTILIB_USEDEP}]
 "
@@ -280,8 +275,7 @@ multilib_src_configure() {
 	use userland_GNU || export INDENT=cat
 
 	if ! multilib_is_native_abi; then
-		myconf+="--disable-xorg
-			LLVM_CONFIG=${EPREFIX}/usr/bin/llvm-config.${ABI}"
+		myconf+="LLVM_CONFIG=${EPREFIX}/usr/bin/llvm-config.${ABI}"
 	fi
 
 	econf \
@@ -298,7 +292,7 @@ multilib_src_configure() {
 		$(use_enable osmesa) \
 		$(use_enable !pic asm) \
 		$(use_enable xa) \
-		$(use_enable xorg) \
+		--disable-xorg \
 		--with-dri-drivers=${DRI_DRIVERS} \
 		--with-gallium-drivers=${GALLIUM_DRIVERS} \
 		--with-llvm-shared-libs \

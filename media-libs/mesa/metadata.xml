@@ -20,7 +20,6 @@
 	<flag name='vdpau'>Enable the VDPAU acceleration interface for the Gallium3D Video Layer.</flag>
 	<flag name='wayland'>Enable support for dev-libs/wayland</flag>
 	<flag name='xa'>Enable the XA (X Acceleration) API for Gallium3D.</flag>
-	<flag name='xorg'>Enable the Xorg state tracker for Gallium3D. This is not required for OpenGL acceleration in X.</flag>
 	<flag name='xvmc'>Enable the XvMC acceleration interface for the Gallium3D Video Layer.</flag>
 </use>
 </pkgmetadata>
