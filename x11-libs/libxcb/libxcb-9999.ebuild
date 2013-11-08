@@ -27,10 +27,10 @@ RDEPEND="dev-libs/libpthread-stubs[${MULTILIB_USEDEP}]
 DEPEND="${RDEPEND}
 	dev-libs/libxslt
 	$(python_gen_any_dep \
-		">=x11-proto/xcb-proto-1.7-r1[${MULTILIB_USEDEP},\${PYTHON_USEDEP}]")"
+		">=x11-proto/xcb-proto-1.9[${MULTILIB_USEDEP},\${PYTHON_USEDEP}]")"
 
 python_check_deps() {
-	has_version ">=x11-proto/xcb-proto-1.7-r1[${MULTILIB_USEDEP},${PYTHON_USEDEP}]"
+	has_version ">=x11-proto/xcb-proto-1.9[${MULTILIB_USEDEP},${PYTHON_USEDEP}]"
 }
 
 pkg_setup() {
