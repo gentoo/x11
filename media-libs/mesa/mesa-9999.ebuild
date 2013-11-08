@@ -95,10 +95,11 @@ RDEPEND="
 	dev-libs/expat[${MULTILIB_USEDEP}]
 	gbm? ( virtual/udev[${MULTILIB_USEDEP}] )
 	>=x11-libs/libX11-1.3.99.901[${MULTILIB_USEDEP}]
+	>=x11-libs/libxshmfence-1.0[${MULTILIB_USEDEP}]
 	x11-libs/libXdamage[${MULTILIB_USEDEP}]
 	x11-libs/libXext[${MULTILIB_USEDEP}]
 	x11-libs/libXxf86vm[${MULTILIB_USEDEP}]
-	>=x11-libs/libxcb-1.8.1[${MULTILIB_USEDEP}]
+	>=x11-libs/libxcb-1.9.0[${MULTILIB_USEDEP}]
 	opencl? (
 				app-admin/eselect-opencl
 				dev-libs/libclc
@@ -135,6 +136,8 @@ DEPEND="${RDEPEND}
 	sys-devel/flex
 	virtual/pkgconfig
 	>=x11-proto/dri2proto-2.6[${MULTILIB_USEDEP}]
+	>=x11-proto/dri3proto-1.0[${MULTILIB_USEDEP}]
+	>=x11-proto/presentproto-1.0[${MULTILIB_USEDEP}]
 	>=x11-proto/glproto-1.4.15-r1[${MULTILIB_USEDEP}]
 	>=x11-proto/xextproto-7.0.99.1[${MULTILIB_USEDEP}]
 	x11-proto/xf86driproto[${MULTILIB_USEDEP}]
