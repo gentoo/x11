@@ -71,6 +71,7 @@
 =x11-libs/libXrender-9999
 =x11-libs/libXres-9999
 =x11-libs/libXScrnSaver-9999
+=x11-libs/libxshmfence-9999
 =x11-libs/libXt-9999
 =x11-libs/libXTrap-9999
 =x11-libs/libXtst-9999
