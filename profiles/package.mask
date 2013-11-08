@@ -106,6 +106,7 @@
 =x11-proto/glproto-9999
 =x11-proto/inputproto-9999
 =x11-proto/kbproto-9999
+=x11-proto/presentproto-9999
 =x11-proto/printproto-9999
 =x11-proto/randrproto-9999
 =x11-proto/recordproto-9999
