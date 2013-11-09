@@ -234,6 +234,7 @@ multilib_src_configure() {
 			$(use_enable openvg gallium-egl)
 			$(use_enable r600-llvm-compiler)
 			$(use_enable vdpau)
+			$(use_enable xa)
 			$(use_enable xvmc)
 		"
 		gallium_enable swrast
@@ -292,7 +293,6 @@ multilib_src_configure() {
 		$(use_enable nptl glx-tls) \
 		$(use_enable osmesa) \
 		$(use_enable !pic asm) \
-		$(use_enable xa) \
 		--with-dri-drivers=${DRI_DRIVERS} \
 		--with-gallium-drivers=${GALLIUM_DRIVERS} \
 		--with-llvm-shared-libs \
