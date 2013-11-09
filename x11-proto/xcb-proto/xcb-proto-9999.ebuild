@@ -41,4 +41,7 @@ src_install() {
 
 	python_foreach_impl autotools-utils_src_install -C xcbgen \
 		top_builddir="${WORKDIR}/${P}-${ABI:-${DEFAULT_ABI}}"
+
+	sed -i -e '/pythondir/s:=.*$:=/dev/null:' \
+		"${ED}"/usr/lib*/pkgconfig/xcb-proto.pc || die
 }
