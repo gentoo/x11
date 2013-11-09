@@ -293,7 +293,6 @@ multilib_src_configure() {
 		$(use_enable osmesa) \
 		$(use_enable !pic asm) \
 		$(use_enable xa) \
-		--disable-xorg \
 		--with-dri-drivers=${DRI_DRIVERS} \
 		--with-gallium-drivers=${GALLIUM_DRIVERS} \
 		--with-llvm-shared-libs \
