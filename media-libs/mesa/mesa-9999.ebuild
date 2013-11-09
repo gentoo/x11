@@ -99,7 +99,7 @@ RDEPEND="
 	x11-libs/libXdamage[${MULTILIB_USEDEP}]
 	x11-libs/libXext[${MULTILIB_USEDEP}]
 	x11-libs/libXxf86vm[${MULTILIB_USEDEP}]
-	>=x11-libs/libxcb-1.9.0[${MULTILIB_USEDEP}]
+	>=x11-libs/libxcb-1.9.2[${MULTILIB_USEDEP}]
 	opencl? (
 				app-admin/eselect-opencl
 				dev-libs/libclc
