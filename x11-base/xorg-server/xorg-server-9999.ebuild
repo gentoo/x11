@@ -114,7 +114,6 @@ REQUIRED_USE="!minimal? (
 
 PATCHES=(
 	"${UPSTREAMED_PATCHES[@]}"
-	"${FILESDIR}"/${PN}-1.12-disable-acpi.patch
 	"${FILESDIR}"/${PN}-1.12-ia64-fix_inx_outx.patch
 	"${FILESDIR}"/${PN}-1.12-unloadsubmodule.patch
 )
@@ -159,6 +158,7 @@ src_configure() {
 		--with-fontrootdir="${EPREFIX}"/usr/share/fonts
 		--with-xkb-output="${EPREFIX}"/var/lib/xkb
 		--disable-config-hal
+		--disable-linux-acpi
 		--without-dtrace
 		--without-fop
 		--with-os-vendor=Gentoo
