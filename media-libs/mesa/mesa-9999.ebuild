@@ -391,6 +391,10 @@ multilib_src_install_all() {
 	newins "${FILESDIR}/eselect-mesa.conf.9.2" eselect-mesa.conf
 }
 
+multilib_src_test() {
+	emake check
+}
+
 pkg_postinst() {
 	# Switch to the xorg implementation.
 	echo
