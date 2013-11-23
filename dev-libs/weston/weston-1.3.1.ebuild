@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-libs/weston/weston-1.2.1.ebuild,v 1.1 2013/08/25 16:39:48 chithanh Exp $
+# $Header: $
 
 EAPI=5
 
@@ -27,28 +27,26 @@ fi
 
 LICENSE="MIT CC-BY-SA-3.0"
 SLOT="0"
-IUSE="colord +drm +egl editor examples fbdev gles2 headless +opengl rdp +resize-optimization rpi static-libs +suid systemd tablet test unwind view wayland-compositor +X xwayland"
+IUSE="colord +drm +egl editor examples fbdev gles2 headless +opengl rdp +resize-optimization rpi +launch static-libs +suid systemd tablet test unwind view wayland-compositor +X xwayland"
 
 REQUIRED_USE="
 	drm? ( egl )
 	egl? ( || ( gles2 opengl ) )
-	fbdev? ( drm )
 	gles2? ( !opengl )
 	test? ( X )
 	wayland-compositor? ( egl )
 "
 
 RDEPEND="
-	>=dev-libs/wayland-1.1.90
-	media-libs/mesa[egl?,wayland]
+	>=dev-libs/wayland-1.2.90
 	media-libs/lcms:2
 	media-libs/libpng:=
-	media-libs/libwebp
 	virtual/jpeg
 	>=x11-libs/cairo-1.11.3[gles2(-)?,opengl?]
 	>=x11-libs/libdrm-2.4.30
 	x11-libs/libxkbcommon
 	x11-libs/pixman
+	x11-misc/xkeyboard-config
 	fbdev? (
 		>=sys-libs/mtdev-1.1.0
 		>=virtual/udev-136
@@ -77,6 +75,7 @@ RDEPEND="
 		sys-auth/pambase[systemd]
 		sys-apps/systemd[pam]
 	)
+	launch? ( sys-auth/pambase )
 	unwind? ( sys-libs/libunwind )
 	X? (
 		x11-libs/libxcb
@@ -126,6 +125,7 @@ src_configure() {
 		$(use_enable rpi rpi-compositor) \
 		$(use_enable wayland-compositor) \
 		$(use_enable X x11-compositor) \
+		$(use_enable launch weston-launch) \
 		$(use_enable colord) \
 		$(use_enable egl) \
 		$(use_enable unwind libunwind) \

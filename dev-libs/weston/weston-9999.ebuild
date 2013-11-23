@@ -27,12 +27,11 @@ fi
 
 LICENSE="MIT CC-BY-SA-3.0"
 SLOT="0"
-IUSE="colord +drm +egl editor examples fbdev gles2 headless +opengl rdp +resize-optimization rpi static-libs +suid systemd tablet test unwind view wayland-compositor +X xwayland"
+IUSE="colord +drm +egl editor examples fbdev gles2 headless +opengl rdp +resize-optimization rpi +launch static-libs +suid systemd tablet test unwind view wayland-compositor +X xwayland"
 
 REQUIRED_USE="
 	drm? ( egl )
 	egl? ( || ( gles2 opengl ) )
-	fbdev? ( drm )
 	gles2? ( !opengl )
 	test? ( X )
 	wayland-compositor? ( egl )
@@ -40,16 +39,14 @@ REQUIRED_USE="
 
 RDEPEND="
 	>=dev-libs/wayland-1.3.90
-	media-libs/mesa[egl?,wayland]
 	media-libs/lcms:2
 	media-libs/libpng:=
-	media-libs/libwebp
 	virtual/jpeg
-	sys-libs/pam
 	>=x11-libs/cairo-1.11.3[gles2(-)?,opengl?]
 	>=x11-libs/libdrm-2.4.30
 	x11-libs/libxkbcommon
 	x11-libs/pixman
+	x11-misc/xkeyboard-config
 	fbdev? (
 		>=sys-libs/mtdev-1.1.0
 		>=virtual/udev-136
@@ -78,6 +75,7 @@ RDEPEND="
 		sys-auth/pambase[systemd]
 		sys-apps/systemd[pam]
 	)
+	launch? ( sys-auth/pambase )
 	unwind? ( sys-libs/libunwind )
 	X? (
 		x11-libs/libxcb
@@ -127,6 +125,7 @@ src_configure() {
 		$(use_enable rpi rpi-compositor) \
 		$(use_enable wayland-compositor) \
 		$(use_enable X x11-compositor) \
+		$(use_enable launch weston-launch) \
 		$(use_enable colord) \
 		$(use_enable egl) \
 		$(use_enable unwind libunwind) \
