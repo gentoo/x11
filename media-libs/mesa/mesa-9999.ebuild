@@ -49,15 +49,16 @@ for card in ${VIDEO_CARDS}; do
 done
 
 IUSE="${IUSE_VIDEO_CARDS}
-	bindist +classic debug +egl +gallium gbm gles1 gles2 +llvm +nptl opencl
-	openvg osmesa pax_kernel pic r600-llvm-compiler selinux vdpau
-	wayland xvmc xa kernel_FreeBSD"
+	bindist +classic debug +egl +gallium gbm gles1 gles2 +llvm +nptl
+	llvm-shared-libs opencl openvg osmesa pax_kernel pic r600-llvm-compiler
+	selinux vdpau wayland xvmc xa kernel_FreeBSD"
 
 REQUIRED_USE="
 	llvm?   ( gallium )
 	openvg? ( egl gallium )
 	opencl? (
 		gallium
+		llvm-shared-libs
 		video_cards_r600? ( r600-llvm-compiler )
 		video_cards_radeon? ( r600-llvm-compiler )
 		video_cards_radeonsi? ( r600-llvm-compiler )
@@ -293,9 +294,9 @@ multilib_src_configure() {
 		$(use_enable nptl glx-tls) \
 		$(use_enable osmesa) \
 		$(use_enable !pic asm) \
+		$(use_with llvm-shared-libs) \
 		--with-dri-drivers=${DRI_DRIVERS} \
 		--with-gallium-drivers=${GALLIUM_DRIVERS} \
-		--with-llvm-shared-libs \
 		PYTHON2="${PYTHON}" \
 		${myconf}
 }
