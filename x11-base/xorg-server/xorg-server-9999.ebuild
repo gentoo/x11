@@ -53,7 +53,7 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	!minimal? (
 		>=x11-libs/libX11-1.1.5
 		>=x11-libs/libXext-1.0.5
-		>=media-libs/mesa-8[nptl=]
+		>=media-libs/mesa-9.2.0[nptl=]
 	)
 	tslib? ( >=x11-libs/tslib-1.0 )
 	udev? ( >=virtual/udev-150 )
