@@ -5,5 +5,6 @@
 <use>
 	<flag name="loongson2f">Enable Loongson2f MMI optimizations.</flag>
 	<flag name="mmxext">Enable MMX2 support.</flag>
+	<flag name="ssse3">Enable SSSE3 support.</flag>
 </use>
 </pkgmetadata>
