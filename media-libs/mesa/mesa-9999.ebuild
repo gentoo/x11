@@ -58,7 +58,6 @@ REQUIRED_USE="
 	openvg? ( egl gallium )
 	opencl? (
 		gallium
-		llvm-shared-libs
 		video_cards_r600? ( r600-llvm-compiler )
 		video_cards_radeon? ( r600-llvm-compiler )
 		video_cards_radeonsi? ( r600-llvm-compiler )
