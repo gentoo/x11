@@ -38,7 +38,7 @@ REQUIRED_USE="
 "
 
 RDEPEND="
-	>=dev-libs/wayland-1.2.90
+	>=dev-libs/wayland-1.3.91
 	media-libs/lcms:2
 	media-libs/libpng:=
 	virtual/jpeg
@@ -93,7 +93,6 @@ DEPEND="${RDEPEND}
 "
 
 src_prepare() {
-	sed -ie 's/tests //' "${S}"/Makefile.am
 	if [[ ${PV} = 9999* ]]; then
 		eautoreconf
 	fi

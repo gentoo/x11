@@ -6,7 +6,7 @@ EAPI=5
 
 if [[ ${PV} = 9999* ]]; then
 	EGIT_REPO_URI="git://anongit.freedesktop.org/git/wayland/${PN}"
-	GIT_ECLASS="git-2"
+	GIT_ECLASS="git-r3"
 	EXPERIMENTAL="true"
 fi
 VIRTUALX_REQUIRED="test"
@@ -27,7 +27,7 @@ fi
 
 LICENSE="MIT CC-BY-SA-3.0"
 SLOT="0"
-IUSE="colord +drm +egl editor examples fbdev gles2 headless +opengl rdp +resize-optimization rpi +launch static-libs +suid systemd tablet test unwind view wayland-compositor +X xwayland"
+IUSE="colord +drm +egl editor examples fbdev gles2 headless +opengl rdp +resize-optimization rpi +launch static-libs +suid systemd test unwind view wayland-compositor +X xwayland"
 
 REQUIRED_USE="
 	drm? ( egl )
@@ -93,7 +93,6 @@ DEPEND="${RDEPEND}
 "
 
 src_prepare() {
-	sed -ie 's/tests //' "${S}"/Makefile.am
 	if [[ ${PV} = 9999* ]]; then
 		eautoreconf
 	fi
@@ -131,7 +130,6 @@ src_configure() {
 		$(use_enable unwind libunwind) \
 		$(use_enable resize-optimization) \
 		$(use_enable suid setuid-install) \
-		$(use_enable tablet tablet-shell) \
 		$(use_enable xwayland) \
 		$(use_enable xwayland xwayland-test) \
 		${myconf}
