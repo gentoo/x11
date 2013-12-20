@@ -6,7 +6,7 @@ EAPI=5
 
 if [[ ${PV} = 9999* ]]; then
 	EGIT_REPO_URI="git://anongit.freedesktop.org/git/${PN}/${PN}"
-	GIT_ECLASS="git-2"
+	GIT_ECLASS="git-r3"
 	EXPERIMENTAL="true"
 	AUTOTOOLS_AUTORECONF=1
 fi
