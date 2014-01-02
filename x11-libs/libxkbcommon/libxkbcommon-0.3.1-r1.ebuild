@@ -10,17 +10,15 @@ if [[ ${PV} = *9999* ]]; then
 	GIT_ECLASS="git-r3"
 	EXPERIMENTAL="true"
 	EGIT_REPO_URI="git://github.com/xkbcommon/${PN}"
-	KEYWORDS=""
 else
 	XORG_BASE_INDIVIDUAL_URI=""
 	SRC_URI="http://xkbcommon.org/download/${P}.tar.xz"
-	KEYWORDS="~amd64 ~arm ~x86"
 fi
 
 inherit xorg-2 ${GIT_ECLASS}
 
 DESCRIPTION="X.Org xkbcommon library"
-
+KEYWORDS="~amd64 ~arm ~x86"
 IUSE="doc"
 
 DEPEND="sys-devel/bison
