@@ -18,7 +18,7 @@ DEPEND="${RDEPEND}
 
 pkg_pretend() {
 	if use kernel_linux ; then
-		CONFIG_CHECK="INPUT_EVDEV"
+		CONFIG_CHECK="~INPUT_EVDEV"
 	fi
 	check_extra_config
 }
