@@ -18,5 +18,6 @@ else
 	SRC_URI="http://www.freedesktop.org/software/${PN}/${P}.tar.xz"
 fi
 
+RESTRICT="test" # Tests need to run as root.
 KEYWORDS="~amd64"
 IUSE=""
