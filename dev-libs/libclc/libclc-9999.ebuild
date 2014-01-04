@@ -31,7 +31,8 @@ IUSE=""
 RDEPEND="
 	>=sys-devel/clang-3.2
 	>=sys-devel/llvm-3.2"
-DEPEND="${RDEPEND}"
+DEPEND="${RDEPEND}
+	${PYTHON_DEPS}"
 
 src_unpack() {
 	if [[ $PV = 9999* ]]; then

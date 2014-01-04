@@ -21,3 +21,5 @@ fi
 RESTRICT="test" # Tests need to run as root.
 KEYWORDS="~amd64"
 IUSE=""
+
+DEPEND="${PYTHON_DEPS}"

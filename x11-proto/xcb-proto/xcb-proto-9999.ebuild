@@ -22,6 +22,8 @@ RDEPEND="${PYTHON_DEPS}"
 DEPEND="${RDEPEND}
 	dev-libs/libxml2"
 
+REQUIRED_USE="${PYTHON_REQUIRED_USE}"
+
 src_configure() {
 	python_export_best
 	xorg-2_src_configure

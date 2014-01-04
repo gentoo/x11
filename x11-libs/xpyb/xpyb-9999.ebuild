@@ -20,6 +20,8 @@ RDEPEND=">=x11-libs/libxcb-1.7
 	${PYTHON_DEPS}"
 DEPEND="${RDEPEND}"
 
+REQUIRED_USE="${PYTHON_REQUIRED_USE}"
+
 DOCS=( NEWS README )
 
 pkg_setup() {
