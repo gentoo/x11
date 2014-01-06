@@ -29,8 +29,8 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 RDEPEND="
-	>=sys-devel/clang-3.2
-	>=sys-devel/llvm-3.2"
+	>=sys-devel/clang-3.4
+	>=sys-devel/llvm-3.4"
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}"
 
