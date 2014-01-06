@@ -16,7 +16,8 @@ EGIT_REPO_URI="git://linuxwacom.git.sourceforge.net/gitroot/linuxwacom/${PN}"
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86"
 IUSE="debug"
 
-RDEPEND=">=x11-base/xorg-server-1.7
+RDEPEND="virtual/udev
+	>=x11-base/xorg-server-1.7
 	x11-libs/libX11
 	x11-libs/libXext
 	x11-libs/libXi
