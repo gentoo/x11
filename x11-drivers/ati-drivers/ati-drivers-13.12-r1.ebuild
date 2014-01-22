@@ -288,6 +288,9 @@ src_prepare() {
 	# Fix build on new kernels
 	epatch "${FILESDIR}/ati-drivers-13.12-acpi.patch"
 
+	# Add support for linux-3.13. See #498766
+	epatch "${FILESDIR}/ati-drivers-linux-3.13-acpi-handle.patch"
+
 	# Compile fix, https://bugs.gentoo.org/show_bug.cgi?id=454870
 	use pax_kernel && epatch "${FILESDIR}/const-notifier-block.patch"
 
