@@ -10,7 +10,7 @@ inherit linux-info xorg-2
 DESCRIPTION="X.Org driver for Intel cards"
 
 KEYWORDS="~amd64 ~ia64 ~x86 ~amd64-fbsd -x86-fbsd"
-IUSE="glamor +sna +udev uxa xvmc"
+IUSE="debug glamor +sna +udev uxa xvmc"
 
 REQUIRED_USE="
 	|| ( sna uxa )
@@ -42,6 +42,7 @@ DEPEND="${RDEPEND}
 
 src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
+		$(use_enable debug)
 		$(use_enable dri)
 		$(use_enable glamor)
 		$(use_enable sna)
