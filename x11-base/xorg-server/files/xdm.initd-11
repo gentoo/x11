@@ -106,6 +106,10 @@ setup_dm() {
 			PIDFILE=/run/lightdm.pid
 			START_STOP_ARGS="--background"
 			;;
+		sddm)
+			EXE=/usr/bin/sddm
+			START_STOP_ARGS="--background"
+			;;
 		*)
 			# first find out if there is such executable
 			EXE="$(command -v ${MY_XDM} 2>/dev/null)"
