@@ -27,7 +27,7 @@ fi
 
 LICENSE="MIT CC-BY-SA-3.0"
 SLOT="0"
-IUSE="colord +drm +egl editor examples fbdev gles2 headless +opengl rdp +resize-optimization rpi +launch static-libs +suid systemd test unwind view wayland-compositor +X xwayland"
+IUSE="colord +drm dbus +egl editor examples fbdev gles2 headless +opengl rdp +resize-optimization rpi +launch static-libs +suid systemd test unwind view wayland-compositor +X xwayland"
 
 REQUIRED_USE="
 	drm? ( egl )
@@ -38,7 +38,7 @@ REQUIRED_USE="
 "
 
 RDEPEND="
-	>=dev-libs/wayland-1.3.91
+	>=dev-libs/wayland-1.4.0
 	media-libs/lcms:2
 	media-libs/libpng:=
 	virtual/jpeg
@@ -52,6 +52,7 @@ RDEPEND="
 		>=virtual/udev-136
 	)
 	colord? ( >=x11-misc/colord-0.1.27 )
+	dbus? ( sys-apps/dbus )
 	drm? (
 		media-libs/mesa[gbm]
 		>=sys-libs/mtdev-1.1.0
@@ -118,6 +119,7 @@ src_configure() {
 
 	econf \
 		$(use_enable fbdev fbdev-compositor) \
+		$(use_enable dbus) \
 		$(use_enable drm drm-compositor) \
 		$(use_enable headless headless-compositor) \
 		$(use_enable rdp rdp-compositor) \
