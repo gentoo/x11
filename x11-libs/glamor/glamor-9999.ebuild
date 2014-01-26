@@ -18,7 +18,7 @@ else
 fi
 
 KEYWORDS="~amd64 ~ia64 ~x86"
-IUSE="gles"
+IUSE="gles xv"
 
 RDEPEND=">=x11-base/xorg-server-1.10
 	media-libs/mesa[egl,gbm]
@@ -31,6 +31,7 @@ DEPEND="${RDEPEND}"
 src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable gles glamor-gles2)
+		$(use_enable xv)
 	)
 	xorg-2_src_configure
 }
