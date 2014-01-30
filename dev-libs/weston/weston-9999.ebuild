@@ -60,9 +60,15 @@ RDEPEND="
 	)
 	egl? (
 		media-libs/glu
-		media-libs/mesa[gles2]
+		media-libs/mesa[gles2,wayland]
 	)
 	editor? ( x11-libs/pango )
+	gles2? (
+		media-libs/mesa[wayland]
+	)
+	opengl? (
+		media-libs/mesa[wayland]
+	)
 	view? (
 		app-text/poppler:=[cairo]
 		dev-libs/glib:2
