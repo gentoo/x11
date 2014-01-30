@@ -3,21 +3,24 @@
 <pkgmetadata>
 <herd>x11</herd>
 <use>
-	<flag name='colord'>Support color management using <pkg>x11-misc/colord</pkg></flag>
-	<flag name='drm'>Enable DRM backend, uses Linux KMS for output and evdev devices for input.</flag>
+	<flag name='clients'>Enable support for clients</flag>
+	<flag name='colord'>Allow setting color managment</flag>
+	<flag name='drm'>Enable drm compositor support</flag>
 	<flag name='editor'>Install wayland-editor example application</flag>
-	<flag name='egl'>Enable EGL support.</flag>
-	<flag name='fbdev'>Enable fbdev backend.</flag>
+	<flag name='egl'>Enable egl acceleration</flag>
+	<flag name='fbdev'>Enable fbdev compositor support</flag>
 	<flag name='gles2'>Use GLESv2 cairo instead of full GL</flag>
-	<flag name='headless'>Enable headless backend and a noop renderer, mainly for testing purposes.</flag>
-	<flag name='rdp'>Enable Remote Desktop Protocol compositor support.</flag>
-	<flag name='resize-optimization'>Increase performance, allocate more RAM. Recommended to disable on Raspberry Pi.</flag>
-	<flag name='rpi'>Raspberry Pi GPU support.</flag>
-	<flag name='tablet'>Enable Tablet shell, a graphical user interface aimed for tablet-like devices, where usually the only input method is a touch screen.</flag>
-	<flag name='unwind'>Use <pkg>sys-libs/libunwind</pkg> for backtraces.</flag>
+	<flag name='headless'>Headless backend and a noop renderer, mainly for testing purposes</flag>
+	<flag name='launch'>Install weston-launch utility</flag>
+	<flag name='rdp'>Enable Remote Desktop Protocol compositor support</flag>
+	<flag name='resize-optimization'>Increase performance, allocate more RAM. Recommended to disable on Raspberry Pi</flag>
+	<flag name='rpi'>Raspberry Pi GPU support</flag>
+	<flag name='simple-clients'>Enable simple-clients</flag>
+	<flag name='tablet'>Enable interface for tablets</flag>
+	<flag name='unwind'>Enable libunwind usage for backtraces</flag>
 	<flag name='view'>Install wayland-view example application</flag>
-	<flag name='wayland-compositor'>Enable Wayland compositor for running Weston on another Wayland server, a different Weston instance, for example.</flag>
-	<flag name='X'>Enable X11 backend, runs on an X server, each Weston output becomes an X window.</flag>
-	<flag name='xwayland'>Enable XWayland, provides backwards compatibility to X applications in a Wayland stack, requires a special X.org server to be installed.</flag>
+	<flag name='wayland-compositor'>Enable Wayland compositor support</flag>
+	<flag name='x11'>Enable X11 compositor support</flag>
+	<flag name='xwayland'>Enable ability support native X11 applications</flag>
 </use>
 </pkgmetadata>
