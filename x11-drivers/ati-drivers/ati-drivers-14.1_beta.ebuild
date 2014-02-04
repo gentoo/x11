@@ -8,9 +8,11 @@ inherit eutils multilib linux-info linux-mod toolchain-funcs versionator pax-uti
 
 DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and newer chipsets"
 HOMEPAGE="http://www.amd.com"
-#RUN="${WORKDIR}/amd-driver-installer-9.00-x86.x86_64.run"
+RUN="${WORKDIR}/amd-driver-installer-13.35.1005-x86.x86_64.run"
 SLOT="1"
-DRIVERS_URI="http://www2.ati.com/drivers/beta/amd-catalyst-13.10-beta2-linux-x86.x86_64.zip"
+# Uses javascript for download YESSSS
+#DRIVERS_URI="http://www2.ati.com/drivers/linux/amd-catalyst-13.12-linux-x86.x86_64.zip"
+DRIVERS_URI="http://dev.gentooexperimental.org/~scarabeus/amd-catalyst-14.1-betav1.3-linux-x86.x86_64.zip"
 XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
 SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
 FOLDER_PREFIX="common/"
@@ -22,7 +24,7 @@ KEYWORDS="-* ~amd64 ~x86"
 RESTRICT="bindist test"
 
 RDEPEND="
-	<=x11-base/xorg-server-1.14.49[-minimal]
+	<=x11-base/xorg-server-1.15.49[-minimal]
 	>=app-admin/eselect-opengl-1.0.7
 	app-admin/eselect-opencl
 	sys-power/acpid
@@ -148,40 +150,33 @@ QA_DT_HASH="
 	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libOpenCL.so.1
 "
 
-CONFIG_CHECK="~MTRR ~!DRM ACPI PCI_MSI !LOCKDEP !PAX_KERNEXEC_PLUGIN_METHOD_OR"
-ERROR_MTRR="CONFIG_MTRR required for direct rendering."
-ERROR_DRM="CONFIG_DRM must be disabled or compiled as a module and not loaded for direct
-	rendering to work."
-ERROR_LOCKDEP="CONFIG_LOCKDEP (lock tracking) exports the symbol lock_acquire
-	as GPL-only. This prevents ${P} from compiling with an error like this:
-	FATAL: modpost: GPL-incompatible module fglrx.ko uses GPL-only symbol 'lock_acquire'"
-ERROR_PAX_KERNEXEC_PLUGIN_METHOD_OR="This config option will cause
-	kernel to reject loading the fglrx module with
-	\"ERROR: could not insert 'fglrx': Exec format error.\"
-	You may want to try CONFIG_PAX_KERNEXEC_PLUGIN_METHOD_BTS instead."
-
-_check_kernel_config() {
-	if ! linux_chkconfig_present AGP && \
-		! linux_chkconfig_present PCIEPORTBUS; then
-		ewarn "You don't have AGP and/or PCIe support enabled in the kernel"
-		ewarn "Direct rendering will not work."
-	fi
-
-	kernel_is ge 2 6 37 && kernel_is le 2 6 38 && if ! linux_chkconfig_present BKL ; then
-		die "CONFIG_BKL must be enabled for kernels 2.6.37-2.6.38."
-	fi
-
-	if use amd64 && ! linux_chkconfig_present COMPAT; then
-		die "CONFIG_COMPAT must be enabled for amd64 kernels."
-	fi
-}
-
 pkg_pretend() {
+	local CONFIG_CHECK="~MTRR ~!DRM ACPI PCI_MSI !LOCKDEP !PAX_KERNEXEC_PLUGIN_METHOD_OR"
+	use amd64 && CONFIG_CHECK+=" COMPAT"
+
+	local ERROR_MTRR="CONFIG_MTRR required for direct rendering."
+	local ERROR_DRM="CONFIG_DRM must be disabled or compiled as a module and not loaded for direct
+		rendering to work."
+	local ERROR_LOCKDEP="CONFIG_LOCKDEP (lock tracking) exports the symbol lock_acquire
+		as GPL-only. This prevents ${P} from compiling with an error like this:
+		FATAL: modpost: GPL-incompatible module fglrx.ko uses GPL-only symbol 'lock_acquire'"
+	local ERROR_PAX_KERNEXEC_PLUGIN_METHOD_OR="This config option will cause
+		kernel to reject loading the fglrx module with
+		\"ERROR: could not insert 'fglrx': Exec format error.\"
+		You may want to try CONFIG_PAX_KERNEXEC_PLUGIN_METHOD_BTS instead."
+	local ERROR_BKL="CONFIG_BKL must be enabled for kernels 2.6.37-2.6.38."
+
 	# workaround until bug 365543 is solved
 	if use modules; then
 		linux-info_pkg_setup
 		require_configured_kernel
-		_check_kernel_config
+		kernel_is ge 2 6 37 && kernel_is le 2 6 38 && CONFIG_CHECK+=" BKL"
+		check_extra_config
+		if ! linux_chkconfig_present AGP && \
+			! linux_chkconfig_present PCIEPORTBUS; then
+			ewarn "You don't have AGP and/or PCIe support enabled in the kernel"
+			ewarn "Direct rendering will not work."
+		fi
 	fi
 
 	if ! has XT ${PAX_MARKINGS} && use pax_kernel; then
@@ -246,7 +241,7 @@ src_unpack() {
 		else
 			RUN="${DISTDIR}/${DRIVERS_DISTFILE}"
 		fi
-		sh ${RUN} --extract "${S}" 2>&1 > /dev/null || die
+		sh "${RUN}" --extract "${S}" 2>&1 > /dev/null || die
 	fi
 
 	mkdir xvba_sdk
@@ -300,14 +295,20 @@ src_prepare() {
 	epatch "${FILESDIR}"/ati-drivers-12.9-KCL_AGP_FindCapsRegisters-stub.patch
 
 	# Compile fix for kernel typesafe uid types #469160
-	epatch "${FILESDIR}/typesafe-kuid.diff"
+	#epatch "${FILESDIR}/typesafe-kuid.diff"
 
-	epatch "${FILESDIR}/ati-drivers-13.8-beta-include-seq_file.patch"
+	#epatch "${FILESDIR}/ati-drivers-13.8-beta-include-seq_file.patch"
 
 	epatch "${FILESDIR}/check-for-iommu-only-if-iommu-is-supported.patch"
 
 	# Fix #483400
 	epatch "${FILESDIR}/fgl_glxgears-do-not-include-glATI.patch"
+
+	# Fix build on new kernels
+	#epatch "${FILESDIR}/ati-drivers-13.12-acpi.patch"
+
+	# Add support for linux-3.13. See #498766
+	#epatch "${FILESDIR}/ati-drivers-linux-3.13-acpi-handle.patch"
 
 	# Compile fix, https://bugs.gentoo.org/show_bug.cgi?id=454870
 	use pax_kernel && epatch "${FILESDIR}/const-notifier-block.patch"
@@ -419,7 +420,7 @@ src_install() {
 	insinto /etc/ati
 	exeinto /etc/ati
 	# Everything except for the authatieventsd.sh script.
-	doins ${FOLDER_PREFIX}etc/ati/{logo*,control,atiogl.xml,signature,amdpcsdb.default}
+	doins ${FOLDER_PREFIX}etc/ati/{logo*,control,signature,amdpcsdb.default}
 	doexe ${FOLDER_PREFIX}etc/ati/authatieventsd.sh
 
 	# include.

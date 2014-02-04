@@ -130,3 +130,6 @@
 #mask until new multilib is enabled
 =x11-drivers/ati-drivers-13.9-r1
 =x11-drivers/ati-drivers-13.12-r1
+
+# missing distfile, untested xorg-dependency, missing atiogl.xml
+=x11-drivers/ati-drivers-14.1_beta
