@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<longdescription lang="en">
+Orbital is a shell client for Wayland, made in Qt5, with the interface in QtQuick 2. It uses Nuclear, a Weston shell plugin, as the compositor side but theoretically it could be made working with any other Wayland compositor, as long as it implements the necessary protocol. Its goal is to produce a light and self-contained shell running on Wayland, without mandatory dependencies aside Nuclear and Qt, but with some optional ones.
+	</longdescription>
+	<use>
+		<flag name='solid'>Orbital can use Solid from KDE Frameworks 5</flag>
+		<flag name='logind'>Enable for managing user logins and seats</flag>
+	</use>
+</pkgmetadata>
