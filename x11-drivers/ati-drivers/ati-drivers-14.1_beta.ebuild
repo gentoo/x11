@@ -297,7 +297,7 @@ src_prepare() {
 	# Compile fix for kernel typesafe uid types #469160
 	#epatch "${FILESDIR}/typesafe-kuid.diff"
 
-	#epatch "${FILESDIR}/ati-drivers-13.8-beta-include-seq_file.patch"
+	epatch "${FILESDIR}/ati-drivers-13.8-beta-include-seq_file.patch"
 
 	epatch "${FILESDIR}/check-for-iommu-only-if-iommu-is-supported.patch"
 
