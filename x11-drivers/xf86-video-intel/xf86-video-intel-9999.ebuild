@@ -22,7 +22,7 @@ RDEPEND="x11-libs/libXext
 	>=x11-libs/pixman-0.27.1
 	>=x11-libs/libdrm-2.4.29[video_cards_intel]
 	glamor? (
-		x11-libs/glamor
+		>=x11-libs/glamor-0.6.0
 	)
 	sna? (
 		>=x11-base/xorg-server-1.10
