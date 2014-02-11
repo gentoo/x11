@@ -166,6 +166,7 @@ src_configure() {
 		--without-dtrace
 		--without-fop
 		--with-os-vendor=Gentoo
+		--with-sha1=libcrypto
 	)
 
 	# Xorg-server requires includes from OS mesa which are not visible for
