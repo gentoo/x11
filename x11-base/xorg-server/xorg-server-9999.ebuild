@@ -57,7 +57,7 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	)
 	tslib? ( >=x11-libs/tslib-1.0 )
 	udev? ( >=virtual/udev-150 )
-	unwind ( sys-libs/libunwind )
+	unwind? ( sys-libs/libunwind )
 	>=x11-apps/xinit-1.3
 	selinux? ( sec-policy/selinux-xserver )
 	systemd? ( sys-apps/systemd )"
