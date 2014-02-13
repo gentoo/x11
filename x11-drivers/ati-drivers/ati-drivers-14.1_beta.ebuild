@@ -295,7 +295,7 @@ src_prepare() {
 	epatch "${FILESDIR}"/ati-drivers-12.9-KCL_AGP_FindCapsRegisters-stub.patch
 
 	# Compile fix for kernel typesafe uid types #469160
-	#epatch "${FILESDIR}/typesafe-kuid.diff"
+	epatch "${FILESDIR}/typesafe-kuid.diff"
 
 	epatch "${FILESDIR}/ati-drivers-13.8-beta-include-seq_file.patch"
 
