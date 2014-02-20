@@ -50,8 +50,8 @@ done
 
 IUSE="${IUSE_VIDEO_CARDS}
 	bindist +classic debug +egl +gallium gbm gles1 gles2 +llvm +nptl
-	llvm-shared-libs opencl openvg osmesa pax_kernel pic r600-llvm-compiler
-	selinux vdpau wayland xvmc xa kernel_FreeBSD"
+	llvm-shared-libs opencl openvg osmesa pax_kernel openmax pic
+	r600-llvm-compiler selinux vdpau wayland xvmc xa kernel_FreeBSD"
 
 REQUIRED_USE="
 	llvm?   ( gallium )
@@ -62,6 +62,7 @@ REQUIRED_USE="
 		video_cards_radeon? ( r600-llvm-compiler )
 		video_cards_radeonsi? ( r600-llvm-compiler )
 	)
+	openmax? ( gallium )
 	gles1?  ( egl )
 	gles2?  ( egl )
 	r600-llvm-compiler? ( gallium llvm || ( video_cards_r600 video_cards_radeonsi video_cards_radeon ) )
@@ -80,9 +81,10 @@ REQUIRED_USE="
 	video_cards_r600?   ( gallium )
 	video_cards_radeonsi?   ( gallium llvm )
 	video_cards_vmware? ( gallium )
+	${PYTHON_REQUIRED_USE}
 "
 
-LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.46"
+LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.52"
 # keep correct libdrm and dri2proto dep
 # keep blocks in rdepend for binpkg
 RDEPEND="
@@ -104,6 +106,7 @@ RDEPEND="
 				app-admin/eselect-opencl
 				dev-libs/libclc
 			)
+	openmax? ( media-libs/libomxil-bellagio[${MULTILIB_USEDEP}] )
 	vdpau? ( >=x11-libs/libvdpau-0.4.1[${MULTILIB_USEDEP}] )
 	wayland? ( >=dev-libs/wayland-1.2.0[${MULTILIB_USEDEP}] )
 	xvmc? ( >=x11-libs/libXvMC-1.0.6[${MULTILIB_USEDEP}] )
@@ -232,6 +235,7 @@ multilib_src_configure() {
 			$(use_enable llvm gallium-llvm)
 			$(use_enable openvg)
 			$(use_enable openvg gallium-egl)
+			$(use_enable openmax omx)
 			$(use_enable r600-llvm-compiler)
 			$(use_enable vdpau)
 			$(use_enable xa)
