@@ -102,6 +102,23 @@ RDEPEND="
 	x11-libs/libXext[${MULTILIB_USEDEP}]
 	x11-libs/libXxf86vm[${MULTILIB_USEDEP}]
 	>=x11-libs/libxcb-1.9.2[${MULTILIB_USEDEP}]
+	llvm ? (
+		video_cards_radeonsi? ( || (
+			dev-libs/elfutils[${MULTILIB_USEDEP}]
+			dev-libs/libelf[${MULTILIB_USEDEP}]
+			) )
+		video_cards_r600? ( || (
+			dev-libs/elfutils[${MULTILIB_USEDEP}]
+			dev-libs/libelf[${MULTILIB_USEDEP}]
+			) )
+		!video_cards_r600? (
+			video_cards_radeon? ( || (
+				dev-libs/elfutils[${MULTILIB_USEDEP}]
+				dev-libs/libelf[${MULTILIB_USEDEP}]
+				) )
+		)
+		llvm-shared-libs? ( >=sys-devel/llvm-2.9[${MULTILIB_USEDEP}] )
+	)
 	opencl? (
 				app-admin/eselect-opencl
 				dev-libs/libclc
@@ -164,6 +181,12 @@ QA_WX_LOAD="usr/lib*/opengl/xorg-x11/lib/libGL.so*"
 pkg_setup() {
 	# workaround toc-issue wrt #386545
 	use ppc64 && append-flags -mminimal-toc
+
+	# warning message for bug 459306
+	if use llvm && has_version sys-devel/llvm[!debug=]; then
+		ewarn "Mismatch between debug USE flags in media-libs/mesa and sys-devel/llvm"
+		ewarn "detected! This can cause problems. For details, see bug 459306."
+	fi
 
 	python-any-r1_pkg_setup
 }
