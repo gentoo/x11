@@ -40,7 +40,8 @@ REQUIRED_USE="
 RDEPEND="
 	>=dev-libs/wayland-1.4.0
 	media-libs/lcms:2
-	media-libs/libpng:=
+	media-libs/libpng:0=
+	media-libs/libwebp:0=
 	virtual/jpeg
 	>=x11-libs/cairo-1.11.3[gles2(-)?,opengl?]
 	>=x11-libs/libdrm-2.4.30
