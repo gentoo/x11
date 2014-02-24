@@ -102,7 +102,7 @@ RDEPEND="
 	x11-libs/libXext[${MULTILIB_USEDEP}]
 	x11-libs/libXxf86vm[${MULTILIB_USEDEP}]
 	>=x11-libs/libxcb-1.9.2[${MULTILIB_USEDEP}]
-	llvm ? (
+	llvm? (
 		video_cards_radeonsi? ( || (
 			dev-libs/elfutils[${MULTILIB_USEDEP}]
 			dev-libs/libelf[${MULTILIB_USEDEP}]
