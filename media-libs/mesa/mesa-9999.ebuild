@@ -365,13 +365,11 @@ multilib_src_install() {
 				if [ -f "$(get_libdir)/gallium/${x}" ]; then
 					mv -f "${ED}/usr/$(get_libdir)/dri/${x}" "${ED}/usr/$(get_libdir)/dri/${x/_dri.so/g_dri.so}" \
 						|| die "Failed to move ${x}"
-					insinto "/usr/$(get_libdir)/dri/"
-					if [ -f "$(get_libdir)/${x}" ]; then
-						insopts -m0755
-						doins "$(get_libdir)/${x}"
-					fi
 				fi
 			done
+			if use classic; then
+				emake -C "${BUILD_DIR}/src/mesa/drivers/dri" DESTDIR="${D}" install
+			fi
 			for x in "${ED}"/usr/$(get_libdir)/dri/*.so; do
 				if [ -f ${x} -o -L ${x} ]; then
 					mv -f "${x}" "${x/dri/mesa}" \
