@@ -7,7 +7,6 @@ EAPI=5
 MY_PN=${PN/progs/demos}
 MY_P=${MY_PN}-${PV}
 EGIT_REPO_URI="git://anongit.freedesktop.org/${MY_PN/-//}"
-EGIT_PROJECT="mesa-progs"
 
 if [[ ${PV} = 9999* ]]; then
 	GIT_ECLASS="git-r3"

@@ -10,7 +10,6 @@ XORG_DOC=doc
 inherit xorg-2
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xcb/util-renderutil"
-EGIT_HAS_SUBMODULES=yes
 
 DESCRIPTION="X C-language Bindings sample implementations"
 HOMEPAGE="http://xcb.freedesktop.org/"
