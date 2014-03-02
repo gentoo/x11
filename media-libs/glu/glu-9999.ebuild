@@ -8,7 +8,7 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/mesa/glu"
 
 if [[ ${PV} = 9999* ]]; then
 	AUTOTOOLS_AUTORECONF=1
-	GIT_ECLASS="git-2"
+	GIT_ECLASS="git-r3"
 	EXPERIMENTAL="true"
 fi
 
@@ -35,7 +35,7 @@ RDEPEND="${DEPEND}
 
 src_unpack() {
 	default
-	[[ $PV = 9999* ]] && git-2_src_unpack
+	[[ $PV = 9999* ]] && git-r3_src_unpack
 }
 
 src_test() {

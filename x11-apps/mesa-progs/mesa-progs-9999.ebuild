@@ -10,7 +10,7 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/${MY_PN/-//}"
 EGIT_PROJECT="mesa-progs"
 
 if [[ ${PV} = 9999* ]]; then
-	GIT_ECLASS="git-2"
+	GIT_ECLASS="git-r3"
 	EXPERIMENTAL="true"
 fi
 
@@ -41,10 +41,11 @@ DEPEND="${RDEPEND}
 	x11-proto/xproto"
 
 S=${WORKDIR}/${MY_P}
+EGIT_CHECKOUT_DIR=${S}
 
 src_unpack() {
 	default
-	[[ $PV = 9999* ]] && git-2_src_unpack
+	[[ $PV = 9999* ]] && git-r3_src_unpack
 }
 
 src_prepare() {

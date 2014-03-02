@@ -8,7 +8,7 @@ PYTHON_COMPAT=( python{2_5,2_6,2_7} )
 EGIT_REPO_URI="http://llvm.org/git/${PN}.git"
 
 if [[ ${PV} = 9999* ]]; then
-	GIT_ECLASS="git-2"
+	GIT_ECLASS="git-r3"
 	EXPERIMENTAL="true"
 fi
 
@@ -36,7 +36,7 @@ DEPEND="${RDEPEND}
 
 src_unpack() {
 	if [[ $PV = 9999* ]]; then
-		git-2_src_unpack
+		git-r3_src_unpack
 	else
 		default
 		mv ${PN}-*/ ${P} || die

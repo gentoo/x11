@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=5
-inherit eutils toolchain-funcs git-2
+inherit eutils toolchain-funcs git-r3
 
 DESCRIPTION="Utility to view Radeon GPU utilization"
 HOMEPAGE="https://github.com/clbr/radeontop"

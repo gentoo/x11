@@ -4,7 +4,7 @@
 
 EAPI="5"
 
-inherit cmake-utils git-2
+inherit cmake-utils git-r3
 
 DESCRIPTION="Tools for people envious of nvidia's blob driver."
 HOMEPAGE="https://github.com/envytools/envytools"
