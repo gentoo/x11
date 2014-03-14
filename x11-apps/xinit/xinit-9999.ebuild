@@ -46,7 +46,7 @@ src_install() {
 	exeinto /etc/X11/Sessions
 	doexe "${FILESDIR}"/Xsession
 	exeinto /etc/X11/xinit
-	doexe "${FILESDIR}"/xserverrc
+	newexe "${FILESDIR}"/xserverrc.1 xserverrc
 	exeinto /etc/X11/xinit/xinitrc.d/
 	doexe "${FILESDIR}/00-xhost"
 
