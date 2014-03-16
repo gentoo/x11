@@ -23,6 +23,7 @@ IUSE="doc"
 
 DEPEND="sys-devel/bison
 	sys-devel/flex
+	x11-libs/libxcb[${MULTILIB_USEDEP},xkb]
 	x11-proto/xproto[${MULTILIB_USEDEP}]
 	>=x11-proto/kbproto-1.0.5[${MULTILIB_USEDEP}]
 	doc? ( app-doc/doxygen )"
