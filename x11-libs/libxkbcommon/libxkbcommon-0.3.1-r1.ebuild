@@ -28,6 +28,10 @@ DEPEND="sys-devel/bison
 	doc? ( app-doc/doxygen )"
 RDEPEND=""
 
-XORG_CONFIGURE_OPTIONS=(
-	--with-xkb-config-root="${EPREFIX}/usr/share/X11/xkb" $(use_with doc doxygen)
-)
+pkg_setup() {
+	XORG_CONFIGURE_OPTIONS=(
+		--with-xkb-config-root="${EPREFIX}/usr/share/X11/xkb"
+		$(use_with doc doxygen)
+	)
+	xorg-2_pkg_setup
+}
