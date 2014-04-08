@@ -4,33 +4,37 @@
 
 EAPI=5
 
-inherit cmake-utils git-r3
+inherit cmake-utils virtualx pax-utils git-r3
 
 DESCRIPTION="VDPAU driver with VA-API/OpenGL backend."
 HOMEPAGE="https://github.com/i-rinat/libvdpau-va-gl/"
-EGIT_REPO_URI="git://github.com/i-rinat/libvdpau-va-gl.git"
+EGIT_REPO_URI="https://github.com/i-rinat/libvdpau-va-gl.git"
 
 LICENSE="LGPL-3"
 SLOT="0"
 
 RDEPEND="
 	dev-libs/glib:2
-	x11-libs/libva[X,opengl]
+	media-libs/glu
+	virtual/ffmpeg
+	virtual/opengl
+	x11-libs/libva[X]
 	x11-libs/libvdpau
 	x11-libs/libX11
 	x11-libs/libXext
-	media-libs/glu
-	virtual/opengl
-	virtual/ffmpeg
 "
 DEPEND="${RDEPEND}"
 
 DOCS=(ChangeLog README.md)
 
-# https://github.com/i-rinat/libvdpau-va-gl/issues/6
-RESTRICT="test"
+src_compile() {
+	cmake-utils_src_compile
+	if use test; then
+		cmake-utils_src_make build-tests
+		pax-mark m "${BUILD_DIR}"/tests/test-*
+	fi
+}
 
-pkg_postinst() {
-	einfo "In order to use vdpau hardware video acceleration via ${PN}"
-	einfo "you have to add VDPAU_DRIVER=va_gl to your environment"
+src_test() {
+	VIRTUALX_COMMAND=cmake-utils_src_test virtualmake
 }
