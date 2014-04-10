@@ -50,8 +50,8 @@ done
 
 IUSE="${IUSE_VIDEO_CARDS}
 	bindist +classic debug dri3 +egl +gallium gbm gles1 gles2 +llvm +nptl
-	+llvm-shared-libs opencl openvg osmesa pax_kernel openmax pic
-	r600-llvm-compiler selinux vdpau wayland xvmc xa kernel_FreeBSD"
+	opencl openvg osmesa pax_kernel openmax pic r600-llvm-compiler selinux
+	vdpau wayland xvmc xa kernel_FreeBSD"
 
 REQUIRED_USE="
 	llvm?   ( gallium )
@@ -118,7 +118,7 @@ RDEPEND="
 				dev-libs/libelf[${MULTILIB_USEDEP}]
 				) )
 		)
-		llvm-shared-libs? ( >=sys-devel/llvm-2.9[${MULTILIB_USEDEP}] )
+		>=sys-devel/llvm-3.3-r3[${MULTILIB_USEDEP}]
 	)
 	opencl? (
 				app-admin/eselect-opencl
@@ -144,12 +144,11 @@ done
 
 DEPEND="${RDEPEND}
 	llvm? (
-		>=sys-devel/llvm-2.9[${MULTILIB_USEDEP}]
 		r600-llvm-compiler? ( sys-devel/llvm[video_cards_radeon] )
 		video_cards_radeonsi? ( sys-devel/llvm[video_cards_radeon] )
 	)
 	opencl? (
-				>=sys-devel/llvm-3.3-r1[video_cards_radeon,${MULTILIB_USEDEP}]
+				>=sys-devel/llvm-3.3-r3[video_cards_radeon,${MULTILIB_USEDEP}]
 				>=sys-devel/clang-3.3[${MULTILIB_USEDEP}]
 				>=sys-devel/gcc-4.6
 	)
@@ -302,10 +301,6 @@ multilib_src_configure() {
 	# build fails with BSD indent, bug #428112
 	use userland_GNU || export INDENT=cat
 
-	if ! multilib_is_native_abi; then
-		myconf+="LLVM_CONFIG=${EPREFIX}/usr/bin/llvm-config.${ABI}"
-	fi
-
 	econf \
 		--enable-dri \
 		--enable-glx \
@@ -320,7 +315,7 @@ multilib_src_configure() {
 		$(use_enable nptl glx-tls) \
 		$(use_enable osmesa) \
 		$(use_enable !pic asm) \
-		$(use_enable llvm-shared-libs) \
+		--enable-llvm-shared-libs \
 		--with-dri-drivers=${DRI_DRIVERS} \
 		--with-gallium-drivers=${GALLIUM_DRIVERS} \
 		PYTHON2="${PYTHON}" \
