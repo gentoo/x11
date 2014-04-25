@@ -128,5 +128,5 @@
 =x11-proto/xproto-9999
 
 #mask until new multilib is enabled
-=x11-drivers/ati-drivers-13.9-r1
 =x11-drivers/ati-drivers-13.12-r1
+=x11-drivers/ati-drivers-14.4_rc-r1
