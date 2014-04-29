@@ -12,7 +12,7 @@ RUN="${WORKDIR}/fglrx-14.10.1006/amd-driver-installer-14.10.1006-x86.x86_64.run"
 SLOT="1"
 # Uses javascript for download YESSSS
 #DRIVERS_URI="http://www2.ati.com/drivers/linux/amd-catalyst-13.12-linux-x86.x86_64.zip"
-DRIVERS_URI="http://dev.gentooexperimental.org/~scarabeus/amd-catalyst-14-4-linux-x86-x86-64.zip"
+DRIVERS_URI="mirror://gentoo/amd-catalyst-14-4-linux-x86-x86-64.zip"
 XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
 SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
 FOLDER_PREFIX="common/"
@@ -156,11 +156,11 @@ QA_DT_HASH="
 "
 
 pkg_nofetch() {
-	einfo "The driver package"
-	einfo "${DRIVERS_URI##*/}"
-	einfo "needs to be downloaded manually from"
+	einfo "The driver packages"
+	einfo ${A}
+	einfo "need to be downloaded manually from"
 	einfo "http://support.amd.com/en-us/download/desktop?os=Linux%20x86_64"
-
+	einfo "and ${XVBA_SDK_URI}"
 }
 
 pkg_pretend() {
