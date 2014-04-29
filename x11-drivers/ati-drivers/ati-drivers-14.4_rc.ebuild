@@ -157,7 +157,7 @@ QA_DT_HASH="
 
 pkg_nofetch() {
 	einfo "The driver package"
-	einfo "Linux_AMD_Catalyst_14.3_Beta_V1.0_B22_March12_2014.zip"
+	einfo "${DRIVERS_URI##*/}"
 	einfo "needs to be downloaded manually from"
 	einfo "http://support.amd.com/en-us/download/desktop?os=Linux%20x86_64"
 
