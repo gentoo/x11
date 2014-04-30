@@ -12,30 +12,24 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~amd6
 IUSE="minimal zlib"
 
 DEPEND="!<x11-base/xorg-server-1.5
-	zlib? ( sys-libs/zlib )"
+	zlib? (	sys-libs/zlib[${MULTILIB_USEDEP}] )"
 RDEPEND="${DEPEND}
 	sys-apps/hwids"
 
-src_configure() {
+pkg_setup() {
+	xorg-2_pkg_setup
+
 	XORG_CONFIGURE_OPTIONS=(
 		"$(use_with zlib)"
 		"--with-pciids-path=${EPREFIX}/usr/share/misc"
 	)
-	xorg-2_src_configure
 }
 
-src_install() {
-	xorg-2_src_install
+multilib_src_install() {
+	default
 
-	if ! use minimal; then
-		scanpci_install() {
-			${BASH} "${AUTOTOOLS_BUILD_DIR:-${S}}/libtool" \
-				--mode=install "$(type -P install)" -c \
-				"${AUTOTOOLS_BUILD_DIR:-${S}}/scanpci/scanpci" \
-				"${ED}"/usr/bin || die
-		}
-
-		dodir /usr/bin || die
-		multilib_foreach_impl scanpci_install
+	if multilib_is_native_abi; then
+		dodir /usr/bin
+		${BASH} libtool --mode=install "$(type -P install)" -c scanpci/scanpci "${ED}"/usr/bin || die
 	fi
 }
