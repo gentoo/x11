@@ -16,13 +16,9 @@ IUSE="doc ipv6 +uuid"
 RDEPEND=">=x11-libs/libICE-1.0.5[${MULTILIB_USEDEP}]
 	x11-libs/xtrans
 	x11-proto/xproto[${MULTILIB_USEDEP}]
-	!elibc_FreeBSD? ( !elibc_SunOS? (
-		uuid? (
-			>=sys-apps/util-linux-2.16
-			amd64? ( abi_x86_32? (
-				app-emulation/emul-linux-x86-baselibs[development] ) )
-		)
-	) )"
+	!elibc_FreeBSD? ( !elibc_SunOS? ( !elibc_Darwin? (
+		uuid? ( >=sys-apps/util-linux-2.24.1-r3[${MULTILIB_USEDEP}] )
+	) ) )"
 DEPEND="${RDEPEND}"
 
 src_configure() {
