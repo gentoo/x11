@@ -19,11 +19,11 @@ inherit xorg-2 ${GIT_ECLASS}
 
 DESCRIPTION="X.Org xkbcommon library"
 KEYWORDS="~amd64 ~arm ~x86"
-IUSE="doc"
+IUSE="X doc"
 
 DEPEND="sys-devel/bison
 	sys-devel/flex
-	x11-libs/libxcb[${MULTILIB_USEDEP},xkb]
+	X? ( >=x11-libs/libxcb-1.10[${MULTILIB_USEDEP},xkb] )
 	x11-proto/xproto[${MULTILIB_USEDEP}]
 	>=x11-proto/kbproto-1.0.5[${MULTILIB_USEDEP}]
 	doc? ( app-doc/doxygen )"
@@ -32,6 +32,7 @@ RDEPEND=""
 pkg_setup() {
 	XORG_CONFIGURE_OPTIONS=(
 		--with-xkb-config-root="${EPREFIX}/usr/share/X11/xkb"
+		$(use X || use_enable X x11)
 		$(use_with doc doxygen)
 	)
 	xorg-2_pkg_setup
