@@ -4,19 +4,19 @@
 
 EAPI=5
 
-PYTHON_COMPAT=( python{2_6,2_7} )
+PYTHON_COMPAT=( python2_7 )
 inherit waf-utils python-single-r1
 
 REV=${PV#*_p}
 
 DESCRIPTION="Opengl test suite"
 HOMEPAGE="https://launchpad.net/glmark2"
-SRC_URI="http://bazaar.launchpad.net/~glmark2-dev/glmark2/trunk/tarball/${REV} -> ${P}.tar.gz"
+SRC_URI="https://launchpad.net/${PN}/trunk/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~arm ~amd64 ~x86"
-IUSE="drm +gles2 opengl wayland X"
+IUSE="drm gles2 +opengl wayland X"
 
 RDEPEND="media-libs/libpng
 	media-libs/mesa[gles2?]
@@ -27,8 +27,6 @@ DEPEND="${RDEPEND}
 
 REQUIRED_USE="|| ( opengl gles2 )
 			  || ( drm wayland X )"
-
-S="${WORKDIR}/~${PN}-dev/${PN}/trunk/"
 
 src_prepare() {
 	rm -rf "${S}/src/libpng"
