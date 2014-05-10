@@ -165,6 +165,7 @@ DEPEND="${RDEPEND}
 	>=x11-proto/xextproto-7.0.99.1[${MULTILIB_USEDEP}]
 	x11-proto/xf86driproto[${MULTILIB_USEDEP}]
 	x11-proto/xf86vidmodeproto[${MULTILIB_USEDEP}]
+	sys-devel/gettext
 "
 
 S="${WORKDIR}/${MY_P}"
