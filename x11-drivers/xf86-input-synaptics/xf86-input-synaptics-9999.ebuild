@@ -13,7 +13,6 @@ KEYWORDS="~amd64 ~arm ~mips ~ppc ~ppc64 ~x86"
 IUSE="kernel_linux"
 
 RDEPEND="kernel_linux? ( >=dev-libs/libevdev-0.4 )
-	sys-libs/mtdev
 	>=x11-base/xorg-server-1.12
 	>=x11-libs/libXi-1.2
 	>=x11-libs/libXtst-1.1.0"
