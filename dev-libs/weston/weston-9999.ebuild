@@ -19,20 +19,20 @@ HOMEPAGE="http://wayland.freedesktop.org/"
 
 if [[ $PV = 9999* ]]; then
 	SRC_URI="${SRC_PATCHES}"
-	KEYWORDS=""
 else
 	SRC_URI="http://wayland.freedesktop.org/releases/${P}.tar.xz"
-	KEYWORDS="~arm ~amd64 ~x86 ~arm-linux"
 fi
 
 LICENSE="MIT CC-BY-SA-3.0"
 SLOT="0"
-IUSE="colord dbus +drm +egl editor examples fbdev gles2 headless +opengl rdp +resize-optimization rpi +launch static-libs +suid systemd test unwind view wayland-compositor +X xwayland"
+KEYWORDS="~amd64 ~arm ~x86 ~arm-linux"
+IUSE="colord dbus +drm +egl editor examples fbdev gles2 headless +opengl rdp +resize-optimization rpi +launch screen-sharing static-libs +suid systemd test unwind wayland-compositor +X xwayland"
 
 REQUIRED_USE="
 	drm? ( egl )
 	egl? ( || ( gles2 opengl ) )
 	gles2? ( !opengl )
+	screen-sharing? ( rdp )
 	test? ( X )
 	wayland-compositor? ( egl )
 "
@@ -70,10 +70,6 @@ RDEPEND="
 	opengl? (
 		media-libs/mesa[wayland]
 	)
-	view? (
-		app-text/poppler:=[cairo]
-		dev-libs/glib:2
-	)
 	rdp? ( >=net-misc/freerdp-1.1.0_beta1_p20130710 )
 	rpi? (
 		>=sys-libs/mtdev-1.1.0
@@ -90,13 +86,13 @@ RDEPEND="
 		x11-libs/libX11
 	)
 	xwayland? (
+		x11-base/xorg-server[wayland]
 		x11-libs/cairo[xcb]
 		x11-libs/libxcb
 		x11-libs/libXcursor
 	)
 "
 DEPEND="${RDEPEND}
-	gnome-base/librsvg
 	virtual/pkgconfig
 "
 
@@ -125,6 +121,7 @@ src_configure() {
 	fi
 
 	econf \
+		$(use_enable examples demo-clients-install) \
 		$(use_enable fbdev fbdev-compositor) \
 		$(use_enable dbus) \
 		$(use_enable drm drm-compositor) \
@@ -138,9 +135,11 @@ src_configure() {
 		$(use_enable egl) \
 		$(use_enable unwind libunwind) \
 		$(use_enable resize-optimization) \
+		$(use_enable screen-sharing) \
 		$(use_enable suid setuid-install) \
 		$(use_enable xwayland) \
 		$(use_enable xwayland xwayland-test) \
+		--disable-libinput-backend \
 		${myconf}
 }
 
@@ -157,35 +156,4 @@ src_install() {
 	default
 
 	readme.gentoo_src_install
-
-	pushd clients || die
-
-	if use opengl && use egl && use !gles2; then
-		dobin weston-gears
-	fi
-	if use editor; then
-		dobin weston-editor
-	fi
-	if use view; then
-		dobin weston-view
-	fi
-	if use examples; then
-		use egl && dobin weston-simple-egl
-		dobin \
-			weston-calibrator \
-			weston-clickdot \
-			weston-cliptest \
-			weston-dnd \
-			weston-eventdemo \
-			weston-flower \
-			weston-fullscreen \
-			weston-image \
-			weston-resizor \
-			weston-simple-shm \
-			weston-simple-touch \
-			weston-smoke \
-			weston-transformed
-	fi
-	popd
-
 }
