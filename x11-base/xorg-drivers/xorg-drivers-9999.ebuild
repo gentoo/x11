@@ -57,6 +57,7 @@ IUSE_VIDEO_CARDS="
 	video_cards_radeon
 	video_cards_radeonsi
 	video_cards_rendition
+	video_cards_s3
 	video_cards_s3virge
 	video_cards_savage
 	video_cards_siliconmotion
@@ -129,6 +130,7 @@ PDEPEND="
 	video_cards_radeon?        ( x11-drivers/xf86-video-ati )
 	video_cards_radeonsi?      ( x11-drivers/xf86-video-ati[glamor] )
 	video_cards_rendition?     ( x11-drivers/xf86-video-rendition )
+	video_cards_s3?            ( x11-drivers/xf86-video-s3 )
 	video_cards_s3virge?       ( x11-drivers/xf86-video-s3virge )
 	video_cards_savage?        ( x11-drivers/xf86-video-savage )
 	video_cards_siliconmotion? ( x11-drivers/xf86-video-siliconmotion )
@@ -157,6 +159,5 @@ PDEPEND="
 	!x11-drivers/xf86-video-sunbw2
 	!<=x11-drivers/xf86-video-ark-0.7.5
 	!<=x11-drivers/xf86-video-newport-0.2.4
-	!<=x11-drivers/xf86-video-s3-0.6.5
 	!<=x11-drivers/xf86-video-sis-0.10.7
 "
