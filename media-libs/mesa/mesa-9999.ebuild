@@ -484,7 +484,7 @@ pkg_postinst() {
 
 pkg_prerm() {
 	if use openmax; then
-		rm ${EPREFIX}/usr/share/mesa/xdg/.omxregister
+		rm "${EPREFIX}"/usr/share/mesa/xdg/.omxregister
 	fi
 }
 
