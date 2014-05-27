@@ -8,11 +8,11 @@ inherit eutils multilib linux-info linux-mod toolchain-funcs versionator pax-uti
 
 DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and newer chipsets"
 HOMEPAGE="http://www.amd.com"
-RUN="${WORKDIR}/fglrx-14.10/amd-driver-installer-14.10-x86.x86_64.run"
+RUN="${WORKDIR}/fglrx-14.10.1006.1001/amd-driver-installer-14.10.1006.1001-x86.x86_64.run"
 SLOT="1"
 # Uses javascript for download YESSSS
 #DRIVERS_URI="http://www2.ati.com/drivers/linux/amd-catalyst-13.12-linux-x86.x86_64.zip"
-DRIVERS_URI="mirror://gentoo/linux-amd-catalyst-14.4-rc-v1.0-apr17.zip"
+DRIVERS_URI="mirror://gentoo/amd-catalyst-14-4-rev2-linux-x86-x86-64-may6.zip"
 XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
 SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
 FOLDER_PREFIX="common/"
