@@ -13,7 +13,7 @@ SLOT="0/${PV}"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~arm-linux ~x86-linux"
 
 IUSE_SERVERS="dmx kdrive xnest xorg xvfb"
-IUSE="${IUSE_SERVERS} ipv6 minimal nptl selinux +suid systemd tslib +udev unwind wayland"
+IUSE="${IUSE_SERVERS} glamor ipv6 minimal nptl selinux +suid systemd tslib +udev unwind wayland"
 
 RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	dev-libs/openssl
@@ -45,6 +45,10 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 		x11-libs/libXrender
 		>=x11-libs/libXres-1.0.3
 		>=x11-libs/libXtst-1.0.99.2
+	)
+	glamor? (
+		media-libs/libepoxy
+		media-libs/mesa[egl,gbm]
 	)
 	kdrive? (
 		>=x11-libs/libXext-1.0.5
@@ -139,6 +143,7 @@ src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable ipv6)
 		$(use_enable dmx)
+		$(use_enable glamor)
 		$(use_enable kdrive)
 		$(use_enable kdrive kdrive-kbd)
 		$(use_enable kdrive kdrive-mouse)
