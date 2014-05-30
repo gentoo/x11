@@ -68,7 +68,10 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	)
 	>=x11-apps/xinit-1.3
 	selinux? ( sec-policy/selinux-xserver )
-	systemd? ( sys-apps/systemd )"
+	systemd? (
+		sys-apps/dbus
+		sys-apps/systemd
+	)"
 
 DEPEND="${RDEPEND}
 	sys-devel/flex
@@ -166,6 +169,7 @@ src_configure() {
 		$(use_with doc doxygen)
 		$(use_with doc xmlto)
 		$(use_with systemd systemd-daemon)
+		$(use_with systemd systemd-logind)
 		--enable-libdrm
 		--sysconfdir="${EPREFIX}"/etc/X11
 		--localstatedir="${EPREFIX}"/var
