@@ -169,7 +169,7 @@ src_configure() {
 		$(use_with doc doxygen)
 		$(use_with doc xmlto)
 		$(use_with systemd systemd-daemon)
-		$(use_with systemd systemd-logind)
+		$(use_enable systemd systemd-logind)
 		--enable-libdrm
 		--sysconfdir="${EPREFIX}"/etc/X11
 		--localstatedir="${EPREFIX}"/var
