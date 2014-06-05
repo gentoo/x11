@@ -49,6 +49,7 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	glamor? (
 		media-libs/libepoxy
 		media-libs/mesa[egl,gbm]
+		!x11-libs/glamor
 	)
 	kdrive? (
 		>=x11-libs/libXext-1.0.5
