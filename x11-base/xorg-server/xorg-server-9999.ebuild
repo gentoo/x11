@@ -63,7 +63,7 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	udev? ( >=virtual/udev-150 )
 	unwind? ( sys-libs/libunwind )
 	wayland? (
-		dev-libs/wayland
+		>=dev-libs/wayland-1.3.0
 		media-libs/libepoxy
 	)
 	>=x11-apps/xinit-1.3
