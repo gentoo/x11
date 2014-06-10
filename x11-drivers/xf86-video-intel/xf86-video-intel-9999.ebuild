@@ -39,6 +39,8 @@ RDEPEND="x11-libs/libXext
 "
 DEPEND="${RDEPEND}
 	>=x11-proto/dri2proto-2.6
+	x11-proto/dri3proto
+	x11-proto/presentproto
 	x11-proto/resourceproto"
 
 src_configure() {
