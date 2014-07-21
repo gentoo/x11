@@ -21,7 +21,7 @@ KEYWORDS="~amd64 ~ia64 ~x86"
 IUSE="gles xv"
 
 RDEPEND=">=x11-base/xorg-server-1.10
-	media-libs/mesa[egl,gbm]
+	>=media-libs/mesa-10[egl,gbm]
 	gles? (
 		|| ( media-libs/mesa[gles2] media-libs/mesa[gles] )
 	)
