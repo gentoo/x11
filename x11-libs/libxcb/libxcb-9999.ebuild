@@ -30,7 +30,7 @@ DEPEND="${RDEPEND}
 		">=x11-proto/xcb-proto-1.10[${MULTILIB_USEDEP},\${PYTHON_USEDEP}]")"
 
 python_check_deps() {
-	has_version ">=x11-proto/xcb-proto-1.10[${MULTILIB_USEDEP},${PYTHON_USEDEP}]"
+	has_version --host-root ">=x11-proto/xcb-proto-1.10[${MULTILIB_USEDEP},${PYTHON_USEDEP}]"
 }
 
 pkg_setup() {
