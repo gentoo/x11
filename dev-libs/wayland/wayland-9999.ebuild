@@ -27,8 +27,8 @@ SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~x86"
 IUSE="doc static-libs"
 
-RDEPEND="dev-libs/expat[${MULTILIB_USEDEP}]
-	virtual/libffi[${MULTILIB_USEDEP}]"
+RDEPEND=">=dev-libs/expat-2.1.0-r3[${MULTILIB_USEDEP}]
+	>=virtual/libffi-3.0.13-r1[${MULTILIB_USEDEP}]"
 DEPEND="${RDEPEND}
 	doc? ( app-doc/doxygen )
 	virtual/pkgconfig"
