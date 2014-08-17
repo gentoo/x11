@@ -118,7 +118,7 @@ RDEPEND="
 				>=dev-libs/libelf-0.8.13-r2[${MULTILIB_USEDEP}]
 				) )
 		)
-		>=sys-devel/llvm-3.3-r3[${MULTILIB_USEDEP}]
+		>=sys-devel/llvm-3.3-r3:=[${MULTILIB_USEDEP}]
 	)
 	opencl? (
 				app-admin/eselect-opencl
