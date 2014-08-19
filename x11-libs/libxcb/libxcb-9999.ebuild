@@ -20,9 +20,9 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/git/xcb/libxcb"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 IUSE="selinux xkb"
 
-RDEPEND=">=dev-libs/libpthread-stubs-0.3-r1[${MULTILIB_USEDEP}]
-	>=x11-libs/libXau-1.0.7-r1[${MULTILIB_USEDEP}]
-	>=x11-libs/libXdmcp-1.1.1-r1[${MULTILIB_USEDEP}]"
+RDEPEND=">=dev-libs/libpthread-stubs-0.3-r1:=[${MULTILIB_USEDEP}]
+	>=x11-libs/libXau-1.0.7-r1:=[${MULTILIB_USEDEP}]
+	>=x11-libs/libXdmcp-1.1.1-r1:=[${MULTILIB_USEDEP}]"
 # Note: ${PYTHON_USEDEP} needs to go verbatim
 DEPEND="${RDEPEND}
 	dev-libs/libxslt
