@@ -12,7 +12,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~amd6
 IUSE="minimal zlib"
 
 DEPEND="!<x11-base/xorg-server-1.5
-	zlib? (	>=sys-libs/zlib-1.2.8-r1[${MULTILIB_USEDEP}] )"
+	zlib? (	>=sys-libs/zlib-1.2.8-r1:=[${MULTILIB_USEDEP}] )"
 RDEPEND="${DEPEND}
 	sys-apps/hwids"
 

@@ -14,7 +14,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86
 IUSE="ipv6"
 
 RDEPEND="x11-libs/xtrans
-	>=x11-proto/xproto-7.0.24[${MULTILIB_USEDEP}]"
+	>=x11-proto/xproto-7.0.24:=[${MULTILIB_USEDEP}]"
 DEPEND="${RDEPEND}"
 
 src_configure() {

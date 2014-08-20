@@ -12,5 +12,5 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86
 IUSE=""
 
 RDEPEND=""
-DEPEND=">=x11-proto/xproto-7.0.24[${MULTILIB_USEDEP}]
+DEPEND=">=x11-proto/xproto-7.0.24:=[${MULTILIB_USEDEP}]
 	${RDEPEND}"

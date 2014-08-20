@@ -13,10 +13,10 @@ DESCRIPTION="X.Org Xcomposite library"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 IUSE=""
 
-RDEPEND=">=x11-libs/libX11-1.6.2[${MULTILIB_USEDEP}]
-	>=x11-libs/libXfixes-5.0.1[${MULTILIB_USEDEP}]
-	>=x11-proto/compositeproto-0.4.2-r1[${MULTILIB_USEDEP}]
-	>=x11-proto/xproto-7.0.24[${MULTILIB_USEDEP}]"
+RDEPEND=">=x11-libs/libX11-1.6.2:=[${MULTILIB_USEDEP}]
+	>=x11-libs/libXfixes-5.0.1:=[${MULTILIB_USEDEP}]
+	>=x11-proto/compositeproto-0.4.2-r1:=[${MULTILIB_USEDEP}]
+	>=x11-proto/xproto-7.0.24:=[${MULTILIB_USEDEP}]"
 DEPEND="${RDEPEND}"
 
 src_configure() {
