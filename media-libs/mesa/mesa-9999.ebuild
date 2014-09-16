@@ -49,7 +49,7 @@ for card in ${VIDEO_CARDS}; do
 done
 
 IUSE="${IUSE_VIDEO_CARDS}
-	bindist +classic debug +dri3 +egl +gallium gbm gles1 gles2 +llvm +nptl
+	bindist +classic debug +dri3 +egl +gallium +gbm gles1 gles2 +llvm +nptl
 	opencl openvg osmesa pax_kernel openmax pic r600-llvm-compiler selinux
 	vdpau wayland xvmc xa kernel_FreeBSD"
 
