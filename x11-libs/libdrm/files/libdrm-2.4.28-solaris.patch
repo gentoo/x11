@@ -1,7 +1,7 @@
-Index: libdrm-2.4.23/include/drm/drm.h
+Index: include/drm/drm.h
 ===================================================================
---- libdrm-2.4.23.orig/include/drm/drm.h
-+++ libdrm-2.4.23/include/drm/drm.h
+--- include/drm/drm.h
++++ include/drm/drm.h
 @@ -54,7 +54,11 @@ typedef int32_t  __s32;
  typedef uint32_t __u32;
  typedef int64_t  __s64;
@@ -47,10 +47,10 @@ Index: libdrm-2.4.23/include/drm/drm.h
  };
  
  /**
-Index: libdrm-2.4.23/radeon/radeon_bo_gem.c
+Index: radeon/radeon_bo_gem.c
 ===================================================================
---- libdrm-2.4.23.orig/radeon/radeon_bo_gem.c
-+++ libdrm-2.4.23/radeon/radeon_bo_gem.c
+--- radeon/radeon_bo_gem.c
++++ radeon/radeon_bo_gem.c
 @@ -38,6 +38,13 @@
  #include <string.h>
  #include <sys/mman.h>
@@ -62,13 +62,14 @@ Index: libdrm-2.4.23/radeon/radeon_bo_gem.c
 +#include <stropts.h>
 +#endif
 +
+ #include "libdrm.h"
  #include "xf86drm.h"
  #include "xf86atomic.h"
  #include "drm.h"
-Index: libdrm-2.4.23/xf86drm.c
+Index: xf86drm.c
 ===================================================================
---- libdrm-2.4.23.orig/xf86drm.c
-+++ libdrm-2.4.23/xf86drm.c
+--- xf86drm.c
++++ xf86drm.c
 @@ -972,7 +972,11 @@ int drmRmMap(int fd, drm_handle_t handle
  {
      drm_map_t map;
@@ -91,10 +92,10 @@ Index: libdrm-2.4.23/xf86drm.c
      if (drmIoctl(fd, DRM_IOCTL_MAP_BUFS, &bufs))
  	return NULL;
  
-Index: libdrm-2.4.23/xf86drm.h
+Index: xf86drm.h
 ===================================================================
---- libdrm-2.4.23.orig/xf86drm.h
-+++ libdrm-2.4.23/xf86drm.h
+--- xf86drm.h
++++ xf86drm.h
 @@ -64,6 +64,13 @@
  
  #endif
