@@ -8,11 +8,11 @@ inherit eutils multilib-build linux-info linux-mod toolchain-funcs versionator p
 
 DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and newer chipsets"
 HOMEPAGE="http://www.amd.com"
-#RUN="${WORKDIR}/amd-catalyst-13.11-beta1-linux-x86.x86_64.run"
+RUN="${WORKDIR}/fglrx-14.301.1001/amd-driver-installer-14.301.1001-x86.x86_64.run"
 SLOT="1"
 # Uses javascript for download YESSSS
 #DRIVERS_URI="http://www2.ati.com/drivers/linux/amd-catalyst-13.12-linux-x86.x86_64.zip"
-DRIVERS_URI="http://dev.gentooexperimental.org/~scarabeus/amd-catalyst-13.12-linux-x86.x86_64.zip"
+DRIVERS_URI="mirror://gentoo/amd-catalyst-14-9-linux-x86-x86-64.zip"
 XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
 SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
 FOLDER_PREFIX="common/"
@@ -21,14 +21,36 @@ IUSE="debug +modules qt4 static-libs pax_kernel"
 LICENSE="AMD GPL-2 QPL-1.0"
 KEYWORDS="-* ~amd64 ~x86"
 
-RESTRICT="bindist test"
+RESTRICT="bindist test fetch"
 
 RDEPEND="
-	<=x11-base/xorg-server-1.14.49[-minimal]
+	<=x11-base/xorg-server-1.15.49[-minimal]
 	>=app-admin/eselect-opengl-1.0.7
 	app-admin/eselect-opencl
 	sys-power/acpid
 	x11-apps/xauth
+	x11-libs/libX11
+	x11-libs/libXext
+	x11-libs/libXinerama
+	x11-libs/libXrandr
+	x11-libs/libXrender
+	virtual/glu
+	abi_x86_32? (
+			|| (
+				virtual/glu[abi_x86_32]
+				app-emulation/emul-linux-x86-opengl
+			)
+			|| (
+				(
+					x11-libs/libX11[abi_x86_32]
+					x11-libs/libXext[abi_x86_32]
+					x11-libs/libXinerama[abi_x86_32]
+					x11-libs/libXrandr[abi_x86_32]
+					x11-libs/libXrender[abi_x86_32]
+				)
+				app-emulation/emul-linux-x86-xlibs
+			)
+	)
 	qt4? (
 			x11-libs/libICE
 			x11-libs/libSM
@@ -91,6 +113,8 @@ QA_PRESTRIPPED="
 	usr/lib\(32\|64\)\?/libAMDXvBA.so.1.0
 	usr/lib\(32\|64\)\?/libaticaldd.so
 	usr/lib\(32\|64\)\?/dri/fglrx_dri.so
+	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libOpenCL.so.1
+	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libamdocl\(32\|64\).so
 "
 
 QA_SONAME="
@@ -130,6 +154,14 @@ QA_DT_HASH="
 	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libamdocl\(32\|64\)\?.so
 	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libOpenCL.so.1
 "
+
+pkg_nofetch() {
+	einfo "The driver packages"
+	einfo ${A}
+	einfo "need to be downloaded manually from"
+	einfo "http://support.amd.com/en-us/download/desktop?os=Linux%20x86_64"
+	einfo "and ${XVBA_SDK_URI}"
+}
 
 pkg_pretend() {
 	local CONFIG_CHECK="~MTRR ~!DRM ACPI PCI_MSI !LOCKDEP !PAX_KERNEXEC_PLUGIN_METHOD_OR"
@@ -275,21 +307,10 @@ src_prepare() {
 	# compile fix for AGP-less kernel, bug #435322
 	epatch "${FILESDIR}"/ati-drivers-12.9-KCL_AGP_FindCapsRegisters-stub.patch
 
-	# Compile fix for kernel typesafe uid types #469160
-	epatch "${FILESDIR}/typesafe-kuid.diff"
-
 	epatch "${FILESDIR}/ati-drivers-13.8-beta-include-seq_file.patch"
-
-	epatch "${FILESDIR}/check-for-iommu-only-if-iommu-is-supported.patch"
 
 	# Fix #483400
 	epatch "${FILESDIR}/fgl_glxgears-do-not-include-glATI.patch"
-
-	# Fix build on new kernels
-	epatch "${FILESDIR}/ati-drivers-13.12-acpi.patch"
-
-	# Add support for linux-3.13. See #498766
-	epatch "${FILESDIR}/ati-drivers-linux-3.13-acpi-handle.patch"
 
 	# Compile fix, https://bugs.gentoo.org/show_bug.cgi?id=454870
 	use pax_kernel && epatch "${FILESDIR}/const-notifier-block.patch"
@@ -387,7 +408,7 @@ src_install() {
 	insinto /etc/ati
 	exeinto /etc/ati
 	# Everything except for the authatieventsd.sh script.
-	doins ${FOLDER_PREFIX}etc/ati/{logo*,control,atiogl.xml,signature,amdpcsdb.default}
+	doins ${FOLDER_PREFIX}etc/ati/{logo*,control,signature,amdpcsdb.default}
 	doexe ${FOLDER_PREFIX}etc/ati/authatieventsd.sh
 
 	# include.
