@@ -312,6 +312,9 @@ src_prepare() {
 	# Fix #483400
 	epatch "${FILESDIR}/fgl_glxgears-do-not-include-glATI.patch"
 
+	# Fix #524658
+	epatch "${FILESDIR}/fix-the-linux-3.17-no_hotplug-error.patch"
+
 	# Compile fix, https://bugs.gentoo.org/show_bug.cgi?id=454870
 	use pax_kernel && epatch "${FILESDIR}/const-notifier-block.patch"
 
