@@ -9,6 +9,7 @@ PYTHON_REQ_USE=xml
 
 XORG_DOC=doc
 XORG_MULTILIB=yes
+XORG_EAUTORECONF=yes
 inherit python-any-r1 xorg-2
 
 DESCRIPTION="X C-language Bindings library"
@@ -38,6 +39,8 @@ python_check_deps() {
 pkg_setup() {
 	python-any-r1_pkg_setup
 }
+
+PATCHES=( "${FILESDIR}/${P}-xevie-xprint_removal.patch" )
 
 src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
