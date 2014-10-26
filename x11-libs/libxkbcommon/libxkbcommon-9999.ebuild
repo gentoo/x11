@@ -19,7 +19,7 @@ inherit xorg-2 ${GIT_ECLASS}
 
 DESCRIPTION="X.Org xkbcommon library"
 KEYWORDS="~amd64 ~arm ~x86"
-IUSE="X doc"
+IUSE="X doc test"
 
 DEPEND="sys-devel/bison
 	sys-devel/flex
