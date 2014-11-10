@@ -318,6 +318,9 @@ src_prepare() {
 	# Compile fix, https://bugs.gentoo.org/show_bug.cgi?id=454870
 	use pax_kernel && epatch "${FILESDIR}/const-notifier-block.patch"
 
+	# Compile fix, #526602
+	epatch "${FILESDIR}/use-kernel_fpu_begin.patch"
+
 	cd "${MODULE_DIR}"
 
 	# bugged fglrx build system, this file should be copied by hand
