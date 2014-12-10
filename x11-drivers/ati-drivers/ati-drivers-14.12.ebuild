@@ -4,25 +4,27 @@
 
 EAPI=5
 
-inherit eutils multilib linux-info linux-mod toolchain-funcs versionator pax-utils
+inherit eutils multilib-build linux-info linux-mod toolchain-funcs versionator pax-utils
 
 DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and newer chipsets"
 HOMEPAGE="http://www.amd.com"
-#RUN="${WORKDIR}/amd-catalyst-13.11-beta1-linux-x86.x86_64.run"
+RUN="${WORKDIR}/fglrx-14.501.1003/amd-driver-installer-14.501.1003-x86.x86_64.run"
 SLOT="1"
-DRIVERS_URI="http://www2.ati.com/drivers/beta/amd-catalyst-13.11-beta6-linux-x86.x86_64.zip"
+# Uses javascript for download YESSSS
+#DRIVERS_URI="http://www2.ati.com/drivers/linux/amd-catalyst-13.12-linux-x86.x86_64.zip"
+DRIVERS_URI="mirror://gentoo/amd-catalyst-omega-14.12-linux-run-installers.zip"
 XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
 SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
 FOLDER_PREFIX="common/"
-IUSE="debug +modules multilib qt4 static-libs pax_kernel"
+IUSE="debug +modules qt4 static-libs pax_kernel"
 
 LICENSE="AMD GPL-2 QPL-1.0"
 KEYWORDS="-* ~amd64 ~x86"
 
-RESTRICT="bindist test"
+RESTRICT="bindist test fetch"
 
 RDEPEND="
-	<=x11-base/xorg-server-1.14.49[-minimal]
+	<=x11-base/xorg-server-1.16.49[-minimal]
 	>=app-admin/eselect-opengl-1.0.7
 	app-admin/eselect-opencl
 	sys-power/acpid
@@ -33,8 +35,11 @@ RDEPEND="
 	x11-libs/libXrandr
 	x11-libs/libXrender
 	virtual/glu
-	multilib? (
-			app-emulation/emul-linux-x86-opengl
+	abi_x86_32? (
+			|| (
+				virtual/glu[abi_x86_32]
+				app-emulation/emul-linux-x86-opengl
+			)
 			|| (
 				(
 					x11-libs/libX11[abi_x86_32]
@@ -108,6 +113,8 @@ QA_PRESTRIPPED="
 	usr/lib\(32\|64\)\?/libAMDXvBA.so.1.0
 	usr/lib\(32\|64\)\?/libaticaldd.so
 	usr/lib\(32\|64\)\?/dri/fglrx_dri.so
+	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libOpenCL.so.1
+	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libamdocl\(32\|64\).so
 "
 
 QA_SONAME="
@@ -147,6 +154,14 @@ QA_DT_HASH="
 	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libamdocl\(32\|64\)\?.so
 	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libOpenCL.so.1
 "
+
+pkg_nofetch() {
+	einfo "The driver packages"
+	einfo ${A}
+	einfo "need to be downloaded manually from"
+	einfo "http://support.amd.com/en-us/download/desktop?os=Linux%20x86_64"
+	einfo "and ${XVBA_SDK_URI}"
+}
 
 pkg_pretend() {
 	local CONFIG_CHECK="~MTRR ~!DRM ACPI PCI_MSI !LOCKDEP !PAX_KERNEXEC_PLUGIN_METHOD_OR"
@@ -239,7 +254,7 @@ src_unpack() {
 		else
 			RUN="${DISTDIR}/${DRIVERS_DISTFILE}"
 		fi
-		sh ${RUN} --extract "${S}" 2>&1 > /dev/null || die
+		sh "${RUN}" --extract "${S}" 2>&1 > /dev/null || die
 	fi
 
 	mkdir xvba_sdk
@@ -292,18 +307,19 @@ src_prepare() {
 	# compile fix for AGP-less kernel, bug #435322
 	epatch "${FILESDIR}"/ati-drivers-12.9-KCL_AGP_FindCapsRegisters-stub.patch
 
-	# Compile fix for kernel typesafe uid types #469160
-	epatch "${FILESDIR}/typesafe-kuid.diff"
-
 	epatch "${FILESDIR}/ati-drivers-13.8-beta-include-seq_file.patch"
-
-	epatch "${FILESDIR}/check-for-iommu-only-if-iommu-is-supported.patch"
 
 	# Fix #483400
 	epatch "${FILESDIR}/fgl_glxgears-do-not-include-glATI.patch"
 
+	# Fix #524658
+	epatch "${FILESDIR}/fix-the-linux-3.17-no_hotplug-error.patch"
+
 	# Compile fix, https://bugs.gentoo.org/show_bug.cgi?id=454870
 	use pax_kernel && epatch "${FILESDIR}/const-notifier-block.patch"
+
+	# Compile fix, #526602
+	epatch "${FILESDIR}/use-kernel_fpu_begin.patch"
 
 	cd "${MODULE_DIR}"
 
@@ -372,21 +388,7 @@ src_install() {
 	# amd64 are installed in src_install-libs. Everything else
 	# (including libraries only available in native 64bit on amd64)
 	# goes in here.
-
-	# There used to be some code here that tried to detect running
-	# under a "native multilib" portage ((precursor of)
-	# http://dev.gentoo.org/~kanaka/auto-multilib/). I removed that, it
-	# should just work (only doing some duplicate work). --marienz
-	if has_multilib_profile; then
-		local OABI=${ABI}
-		for ABI in $(get_install_abis); do
-			src_install-libs
-		done
-		ABI=${OABI}
-		unset OABI
-	else
-		src_install-libs
-	fi
+	multilib_foreach_abi src_install-libs
 
 	# This is sorted by the order the files occur in the source tree.
 
@@ -412,7 +414,7 @@ src_install() {
 	insinto /etc/ati
 	exeinto /etc/ati
 	# Everything except for the authatieventsd.sh script.
-	doins ${FOLDER_PREFIX}etc/ati/{logo*,control,atiogl.xml,signature,amdpcsdb.default}
+	doins ${FOLDER_PREFIX}etc/ati/{logo*,control,signature,amdpcsdb.default}
 	doexe ${FOLDER_PREFIX}etc/ati/authatieventsd.sh
 
 	# include.
