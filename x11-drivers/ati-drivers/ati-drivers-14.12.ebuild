@@ -517,6 +517,7 @@ src_install-libs() {
 	dosym libOpenCL.so.${libmajor} /usr/$(get_libdir)/OpenCL/vendors/amd/libOpenCL.so
 	exeinto /usr/$(get_libdir)
 	doexe "${MY_ARCH_DIR}"/usr/${pkglibdir}/libati*.so*
+	doexe "${MY_ARCH_DIR}"/usr/${pkglibdir}/libamdhsasc*.so
 
 	# OpenCL vendor files
 	insinto /etc/OpenCL/vendors/
