@@ -17,7 +17,7 @@ DRIVERS_URI="mirror://gentoo/amd-catalyst-omega-14.12-linux-run-installers.zip"
 XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
 SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
 FOLDER_PREFIX="common/"
-IUSE="debug +modules qt4 static-libs pax_kernel"
+IUSE="debug +modules qt4 static-libs pax_kernel +internal-va-driver"
 
 LICENSE="AMD GPL-2 QPL-1.0"
 KEYWORDS="-* ~amd64 ~x86"
@@ -36,7 +36,7 @@ RDEPEND="
 	x11-libs/libXrandr
 	x11-libs/libXrender
 	virtual/glu
-	!x11-libs/xvba-video
+	internal-va-driver? ( !x11-libs/xvba-video )
 	abi_x86_32? (
 			|| (
 				virtual/glu[abi_x86_32]
@@ -559,7 +559,7 @@ src_install-libs() {
 	doheader xvba_sdk/include/amdxvba.h
 
 	# VA-API internal wrapper
-	dosym /usr/$(get_libdir)/libXvBAW.so.1.0 /usr/$(get_libdir)/va/drivers/fglrx_drv_video.so
+	use internal-va-driver && dosym /usr/$(get_libdir)/libXvBAW.so.1.0 /usr/$(get_libdir)/va/drivers/fglrx_drv_video.so
 
 	if use pax_kernel; then
 		pax-mark m "${D}"/usr/lib*/opengl/ati/lib/libGL.so.1.2 || die "pax-mark failed"
