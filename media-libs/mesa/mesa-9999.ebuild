@@ -127,6 +127,10 @@ RDEPEND="
 	opencl? (
 				app-admin/eselect-opencl
 				dev-libs/libclc
+				|| (
+					>=dev-libs/elfutils-0.155-r1:=[${MULTILIB_USEDEP}]
+					>=dev-libs/libelf-0.8.13-r2:=[${MULTILIB_USEDEP}]
+				)
 			)
 	openmax? ( >=media-libs/libomxil-bellagio-0.9.3:=[${MULTILIB_USEDEP}] )
 	vaapi? ( >=x11-libs/libva-0.35.0:=[${MULTILIB_USEDEP}] )
