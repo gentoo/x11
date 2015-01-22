@@ -12,7 +12,7 @@ DESCRIPTION="X.Org X servers"
 SLOT="0/${PV}"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~arm-linux ~x86-linux"
 
-IUSE_SERVERS="dmx kdrive xnest xorg xvfb"
+IUSE_SERVERS="dmx kdrive xephyr xnest xorg xvfb"
 IUSE="${IUSE_SERVERS} glamor ipv6 minimal nptl selinux +suid systemd tslib +udev unwind wayland"
 
 CDEPEND=">=app-admin/eselect-opengl-1.3.0
@@ -55,6 +55,7 @@ CDEPEND=">=app-admin/eselect-opengl-1.3.0
 		>=x11-libs/libXext-1.0.5
 		x11-libs/libXv
 	)
+	xephyr? ( x11-libs/libxcb )
 	!minimal? (
 		>=x11-libs/libX11-1.1.5
 		>=x11-libs/libXext-1.0.5
@@ -123,7 +124,8 @@ PDEPEND="
 
 REQUIRED_USE="!minimal? (
 		|| ( ${IUSE_SERVERS} )
-	)"
+	)
+	xephyr ? ( kdrive )"
 
 #UPSTREAMED_PATCHES=(
 #	"${WORKDIR}/patches/"
@@ -165,6 +167,7 @@ src_configure() {
 		$(use_enable !minimal dri)
 		$(use_enable !minimal dri2)
 		$(use_enable !minimal glx)
+		$(use_enable xephyr)
 		$(use_enable xnest)
 		$(use_enable xorg)
 		$(use_enable xvfb)
