@@ -125,7 +125,7 @@ PDEPEND="
 REQUIRED_USE="!minimal? (
 		|| ( ${IUSE_SERVERS} )
 	)
-	xephyr ? ( kdrive )"
+	xephyr? ( kdrive )"
 
 #UPSTREAMED_PATCHES=(
 #	"${WORKDIR}/patches/"
