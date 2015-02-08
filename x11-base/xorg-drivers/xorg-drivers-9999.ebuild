@@ -46,7 +46,6 @@ IUSE_VIDEO_CARDS="
 	video_cards_intel
 	video_cards_mach64
 	video_cards_mga
-	video_cards_modesetting
 	video_cards_neomagic
 	video_cards_nouveau
 	video_cards_nv
@@ -74,7 +73,6 @@ IUSE_VIDEO_CARDS="
 	video_cards_tga
 	video_cards_trident
 	video_cards_tseng
-	video_cards_v4l
 	video_cards_vesa
 	video_cards_via
 	video_cards_virtualbox
@@ -118,7 +116,6 @@ PDEPEND="
 	video_cards_intel?         ( x11-drivers/xf86-video-intel )
 	video_cards_mach64?        ( x11-drivers/xf86-video-mach64 )
 	video_cards_mga?           ( x11-drivers/xf86-video-mga )
-	video_cards_modesetting?   ( x11-drivers/xf86-video-modesetting )
 	video_cards_neomagic?      ( x11-drivers/xf86-video-neomagic )
 	video_cards_nouveau?       ( x11-drivers/xf86-video-nouveau )
 	video_cards_nv?            ( x11-drivers/xf86-video-nv )
@@ -147,7 +144,6 @@ PDEPEND="
 	video_cards_tga?           ( x11-drivers/xf86-video-tga )
 	video_cards_trident?       ( x11-drivers/xf86-video-trident )
 	video_cards_tseng?         ( x11-drivers/xf86-video-tseng )
-	video_cards_v4l?           ( x11-drivers/xf86-video-v4l )
 	video_cards_vesa?          ( x11-drivers/xf86-video-vesa )
 	video_cards_via?           ( x11-drivers/xf86-video-openchrome )
 	video_cards_virtualbox?    ( x11-drivers/xf86-video-virtualbox )
@@ -162,4 +158,5 @@ PDEPEND="
 	!<=x11-drivers/xf86-video-ark-0.7.5
 	!<=x11-drivers/xf86-video-newport-0.2.4
 	!<=x11-drivers/xf86-video-sis-0.10.7
+	!<=x11-drivers/xf86-video-v4l-0.2.0
 "
