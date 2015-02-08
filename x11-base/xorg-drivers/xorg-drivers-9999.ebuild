@@ -93,6 +93,7 @@ PDEPEND="
 	input_devices_hyperpen?    ( x11-drivers/xf86-input-hyperpen )
 	input_devices_joystick?    ( x11-drivers/xf86-input-joystick )
 	input_devices_keyboard?    ( x11-drivers/xf86-input-keyboard )
+	input_devices_libinput?    ( x11-drivers/xf86-input-libinput )
 	input_devices_mouse?       ( x11-drivers/xf86-input-mouse )
 	input_devices_mutouch?     ( x11-drivers/xf86-input-mutouch )
 	input_devices_penmount?    ( x11-drivers/xf86-input-penmount )
