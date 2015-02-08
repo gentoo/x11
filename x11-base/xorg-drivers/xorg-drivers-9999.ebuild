@@ -21,6 +21,7 @@ IUSE_INPUT_DEVICES="
 	input_devices_hyperpen
 	input_devices_joystick
 	input_devices_keyboard
+	input_devices_libinput
 	input_devices_mouse
 	input_devices_mutouch
 	input_devices_penmount
