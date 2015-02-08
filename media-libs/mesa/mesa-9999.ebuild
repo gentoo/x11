@@ -54,7 +54,7 @@ IUSE="${IUSE_VIDEO_CARDS}
 	+udev vaapi vdpau wayland xvmc xa kernel_FreeBSD"
 
 REQUIRED_USE="
-	d3d9? ( gallium dri3 )
+	d3d9?   ( dri3 gallium )
 	llvm?   ( gallium )
 	opencl? (
 		gallium
