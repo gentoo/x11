@@ -30,7 +30,6 @@ RDEPEND=">=dev-libs/libpthread-stubs-0.3-r1:=[${MULTILIB_USEDEP}]
 DEPEND="${RDEPEND}"
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-2.4.58-solaris.patch
 )
 
 src_prepare() {
