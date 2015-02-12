@@ -327,6 +327,8 @@ src_prepare() {
 	# Compile fix, #526602
 	epatch "${FILESDIR}/use-kernel_fpu_begin.patch"
 
+	epatch "${FILESDIR}/get-percpu-without-preempt-on-linux-3.19.patch"
+
 	cd "${MODULE_DIR}"
 
 	# bugged fglrx build system, this file should be copied by hand
