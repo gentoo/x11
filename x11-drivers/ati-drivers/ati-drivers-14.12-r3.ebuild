@@ -17,7 +17,7 @@ DRIVERS_URI="mirror://gentoo/amd-catalyst-omega-14.12-linux-run-installers.zip"
 XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
 SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
 FOLDER_PREFIX="common/"
-IUSE="debug +modules qt4 static-libs pax_kernel"
+IUSE="debug +modules qt4 static-libs pax_kernel gdm-hack"
 
 LICENSE="AMD GPL-2 QPL-1.0"
 KEYWORDS="-* ~amd64 ~x86"
@@ -61,6 +61,9 @@ RDEPEND="
 			x11-libs/libXxf86vm
 			dev-qt/qtcore:4
 			dev-qt/qtgui:4[accessibility]
+	)
+	gdm-hack? (
+		x11-base/xorg-server:=
 	)
 "
 if [[ legacy != ${SLOT} ]]; then
@@ -403,6 +406,11 @@ src_install() {
 	exeinto /usr/$(get_libdir)/xorg/modules
 	doexe "${MY_BASE_DIR}"/usr/X11R6/${PKG_LIBDIR}/modules/{glesx.so,amdxmm.so}
 
+	#516816
+	if use gdm-hack; then
+		sed -i 's#/proc/%i/fd/0#/etc/ati/xvrn#g' "${D}/usr/$(get_libdir)/xorg/modules/drivers/fglrx_drv.so" || die "Applying gdm-hack failed"
+	fi
+
 	# Arch-specific files.
 	# (s)bin.
 	into /opt
@@ -467,6 +475,9 @@ src_install() {
 	doexe "${FILESDIR}"/switchlibGL || die "doexe switchlibGL failed"
 	cp "${FILESDIR}"/switchlibGL "${T}"/switchlibglx
 	doexe "${T}"/switchlibglx || die "doexe switchlibglx failed"
+
+	#516816
+	use gdm-hack && Xorg -version > "${D}/etc/ati/xvrn" 2>&1
 }
 
 src_install-libs() {
@@ -500,6 +511,11 @@ src_install-libs() {
 		exeinto ${ATI_ROOT}/extensions
 		doexe "${EX_BASE_DIR}"/usr/X11R6/${pkglibdir}/modules/extensions/fglrx/fglrx-libglx.so
 		mv "${D}"/${ATI_ROOT}/extensions/{fglrx-,}libglx.so
+
+		#516816
+		if use gdm-hack; then
+			sed -i 's#/proc/%i/fd/0#/etc/ati/xvrn#g' "${D}/${ATI_ROOT}/extensions/libglx.so" || die "Applying gdm-hack failed"
+		fi
 	fi
 
 	# other libs
