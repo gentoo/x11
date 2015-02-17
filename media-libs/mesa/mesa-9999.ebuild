@@ -221,7 +221,6 @@ src_prepare() {
 	base_src_prepare
 
 	eautoreconf
-	multilib_copy_sources
 }
 
 multilib_src_configure() {
@@ -309,7 +308,7 @@ multilib_src_configure() {
 	# build fails with BSD indent, bug #428112
 	use userland_GNU || export INDENT=cat
 
-	econf \
+	ECONF_SOURCE="${S}" econf \
 		--enable-dri \
 		--enable-glx \
 		--enable-shared-glapi \
