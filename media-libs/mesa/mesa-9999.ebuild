@@ -218,11 +218,6 @@ src_prepare() {
 	# fix for hardened pax_kernel, bug 240956
 	[[ ${PV} != 9999* ]] && epatch "${FILESDIR}"/glx_ro_text_segm.patch
 
-	# Solaris needs some recent POSIX stuff in our case
-	if [[ ${CHOST} == *-solaris* ]] ; then
-		sed -i -e "s/-DSVR4/-D_POSIX_C_SOURCE=200112L/" configure.ac || die
-	fi
-
 	base_src_prepare
 
 	eautoreconf
