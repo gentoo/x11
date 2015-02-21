@@ -13,31 +13,23 @@ fi
 
 PYTHON_COMPAT=( python{2_6,2_7} )
 
-inherit base autotools multilib multilib-minimal flag-o-matic \
-	python-any-r1 toolchain-funcs pax-utils ${GIT_ECLASS}
+inherit autotools multilib-minimal python-any-r1 pax-utils ${GIT_ECLASS}
 
 OPENGL_DIR="xorg-x11"
 
-MY_PN="${PN/m/M}"
-MY_P="${MY_PN}-${PV/_/-}"
-MY_SRC_P="${MY_PN}Lib-${PV/_/-}"
-
+MY_P="${P/_/-}"
 FOLDER="${PV/_rc*/}"
 
 DESCRIPTION="OpenGL-like graphic library for Linux"
 HOMEPAGE="http://mesa3d.sourceforge.net/"
 
-#SRC_PATCHES="mirror://gentoo/${P}-gentoo-patches-01.tar.bz2"
-if [[ $PV = 9999* ]]; then
-	SRC_URI="${SRC_PATCHES}"
+if [[ $PV == 9999* ]]; then
+	SRC_URI=""
 else
-	SRC_URI="ftp://ftp.freedesktop.org/pub/mesa/${FOLDER}/${MY_SRC_P}.tar.bz2
-		${SRC_PATCHES}"
+	SRC_URI="ftp://ftp.freedesktop.org/pub/mesa/${FOLDER}/${MY_P}.tar.xz"
 fi
 
-# The code is MIT/X11.
-# GLES[2]/gl[2]{,ext,platform}.h are SGI-B-2.0
-LICENSE="MIT SGI-B-2.0"
+LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~amd64-linux ~arm-linux ~ia64-linux ~x86-linux ~sparc-solaris ~x64-solaris ~x86-solaris"
 
@@ -72,7 +64,7 @@ REQUIRED_USE="
 	wayland? ( egl gbm )
 	xa?  ( gallium )
 	video_cards_freedreno?  ( gallium )
-	video_cards_intel?  ( || ( classic gallium ) )
+	video_cards_intel?  ( || ( classic ) )
 	video_cards_i915?   ( || ( classic gallium ) )
 	video_cards_i965?   ( classic )
 	video_cards_ilo?    ( gallium )
@@ -87,7 +79,7 @@ REQUIRED_USE="
 	${PYTHON_REQUIRED_USE}
 "
 
-LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.56"
+LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.57"
 # keep correct libdrm and dri2proto dep
 # keep blocks in rdepend for binpkg
 RDEPEND="
@@ -186,12 +178,7 @@ EGIT_CHECKOUT_DIR=${S}
 QA_EXECSTACK="usr/lib*/libGL.so*"
 QA_WX_LOAD="usr/lib*/libGL.so*"
 
-# Think about: ggi, fbcon, no-X configs
-
 pkg_setup() {
-	# workaround toc-issue wrt #386545
-	use ppc64 && append-flags -mminimal-toc
-
 	# warning message for bug 459306
 	if use llvm && has_version sys-devel/llvm[!debug=]; then
 		ewarn "Mismatch between debug USE flags in media-libs/mesa and sys-devel/llvm"
@@ -201,24 +188,9 @@ pkg_setup() {
 	python-any-r1_pkg_setup
 }
 
-src_unpack() {
-	default
-	[[ $PV = 9999* ]] && git-r3_src_unpack
-}
-
 src_prepare() {
-	# apply patches
-	if [[ ${PV} != 9999* && -n ${SRC_PATCHES} ]]; then
-		EPATCH_FORCE="yes" \
-		EPATCH_SOURCE="${WORKDIR}/patches" \
-		EPATCH_SUFFIX="patch" \
-		epatch
-	fi
-
 	# fix for hardened pax_kernel, bug 240956
 	[[ ${PV} != 9999* ]] && epatch "${FILESDIR}"/glx_ro_text_segm.patch
-
-	base_src_prepare
 
 	eautoreconf
 }
@@ -227,10 +199,10 @@ multilib_src_configure() {
 	local myconf
 
 	if use classic; then
-	# Configurable DRI drivers
+		# Configurable DRI drivers
 		driver_enable swrast
 
-	# Intel code
+		# Intel code
 		driver_enable video_cards_i915 i915
 		driver_enable video_cards_i965 i965
 		if ! use video_cards_i915 && \
@@ -308,7 +280,8 @@ multilib_src_configure() {
 	# build fails with BSD indent, bug #428112
 	use userland_GNU || export INDENT=cat
 
-	ECONF_SOURCE="${S}" econf \
+	ECONF_SOURCE="${S}" \
+	econf \
 		--enable-dri \
 		--enable-glx \
 		--enable-shared-glapi \
@@ -441,15 +414,7 @@ pkg_postinst() {
 		elog "enabled. Please see patents.txt for an explanation."
 	fi
 
-	local using_radeon r_flag
-	for r_flag in ${RADEON_CARDS}; do
-		if use video_cards_${r_flag}; then
-			using_radeon=1
-			break
-		fi
-	done
-
-	if [[ ${using_radeon} = 1 ]] && ! has_version media-libs/libtxc_dxtn; then
+	if ! has_version media-libs/libtxc_dxtn; then
 		elog "Note that in order to have full S3TC support, it is necessary to install"
 		elog "media-libs/libtxc_dxtn as well. This may be necessary to get nice"
 		elog "textures in some apps, and some others even require this to run."
