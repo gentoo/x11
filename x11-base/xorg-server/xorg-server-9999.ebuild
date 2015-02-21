@@ -68,7 +68,7 @@ CDEPEND=">=app-admin/eselect-opengl-1.3.0
 		>=dev-libs/wayland-1.3.0
 		media-libs/libepoxy
 	)
-	>=x11-apps/xinit-1.3
+	>=x11-apps/xinit-1.3.3-r1
 	systemd? (
 		sys-apps/dbus
 		sys-apps/systemd
