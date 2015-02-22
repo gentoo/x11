@@ -124,6 +124,7 @@ DEPEND="${CDEPEND}
 
 RDEPEND="${CDEPEND}
 	selinux? ( sec-policy/selinux-xserver )
+	!x11-drivers/xf86-video-modesetting
 "
 
 PDEPEND="
