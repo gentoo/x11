@@ -30,7 +30,12 @@ IUSE="doc static-libs"
 RDEPEND=">=dev-libs/expat-2.1.0-r3:=[${MULTILIB_USEDEP}]
 	>=virtual/libffi-3.0.13-r1:=[${MULTILIB_USEDEP}]"
 DEPEND="${RDEPEND}
-	doc? ( app-doc/doxygen )
+	doc? (
+		>=app-doc/doxygen-1.6[dot]
+		app-text/xmlto
+		>=media-gfx/graphviz-2.26.0
+		sys-apps/grep[pcre]
+	)
 	virtual/pkgconfig"
 
 src_configure() {
