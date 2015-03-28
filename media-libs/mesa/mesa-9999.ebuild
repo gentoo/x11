@@ -135,7 +135,6 @@ for card in ${RADEON_CARDS}; do
 done
 
 DEPEND="${RDEPEND}
-	${PYTHON_DEPS}
 	llvm? (
 		video_cards_radeonsi? ( sys-devel/llvm[video_cards_radeon] )
 	)
@@ -144,9 +143,6 @@ DEPEND="${RDEPEND}
 				>=sys-devel/clang-3.4.2:=[${MULTILIB_USEDEP}]
 				>=sys-devel/gcc-4.6
 	)
-	sys-devel/bison
-	sys-devel/flex
-	$(python_gen_any_dep ">=dev-python/mako-0.7.3[\${PYTHON_USEDEP}]")
 	sys-devel/gettext
 	virtual/pkgconfig
 	>=x11-proto/dri2proto-2.8-r1:=[${MULTILIB_USEDEP}]
@@ -158,6 +154,12 @@ DEPEND="${RDEPEND}
 	>=x11-proto/xextproto-7.2.1-r1:=[${MULTILIB_USEDEP}]
 	>=x11-proto/xf86driproto-2.1.1-r1:=[${MULTILIB_USEDEP}]
 	>=x11-proto/xf86vidmodeproto-2.3.1-r1:=[${MULTILIB_USEDEP}]
+"
+[[ ${PV} == "9999" ]] && DEPEND+="
+	sys-devel/bison
+	sys-devel/flex
+	${PYTHON_DEPS}
+	$(python_gen_any_dep ">=dev-python/mako-0.7.3[\${PYTHON_USEDEP}]")
 "
 
 S="${WORKDIR}/${MY_P}"
