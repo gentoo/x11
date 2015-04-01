@@ -18,4 +18,4 @@ RDEPEND=">=x11-libs/libX11-1.6.2:=[${MULTILIB_USEDEP}]
 	>=x11-proto/videoproto-2.3.1-r1:=[${MULTILIB_USEDEP}]
 	>=x11-proto/xproto-7.0.24:=[${MULTILIB_USEDEP}]"
 DEPEND="${RDEPEND}"
-PDEPEND="app-admin/eselect-xvmc"
+PDEPEND="app-eselect/eselect-xvmc"
