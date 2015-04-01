@@ -127,6 +127,7 @@
 =x11-proto/xineramaproto-9999
 =x11-proto/xproto-9999
 
-#mask until new multilib is enabled
+#mask until removal related to native multilib
 =x11-drivers/ati-drivers-14.4_p1-r1
 =x11-drivers/ati-drivers-14.9-r1
+<x11-drivers/ati-drivers-14.4
