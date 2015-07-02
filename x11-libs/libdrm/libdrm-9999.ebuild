@@ -15,22 +15,20 @@ else
 	SRC_URI="http://dri.freedesktop.org/${PN}/${P}.tar.bz2"
 fi
 
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x64-freebsd ~x86-freebsd ~amd64-linux ~arm-linux ~x86-linux ~sparc-solaris ~x64-solaris ~x86-solaris"
+KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x64-freebsd ~x86-freebsd ~amd64-linux ~arm-linux ~x86-linux"
 VIDEO_CARDS="exynos freedreno intel nouveau omap radeon tegra vmware"
 for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
 done
 
-IUSE="${IUSE_VIDEO_CARDS} libkms"
+IUSE="${IUSE_VIDEO_CARDS} libkms valgrind"
 RESTRICT="test" # see bug #236845
 
 RDEPEND=">=dev-libs/libpthread-stubs-0.3-r1:=[${MULTILIB_USEDEP}]
 	video_cards_intel? ( >=x11-libs/libpciaccess-0.13.1-r1:=[${MULTILIB_USEDEP}] )
 	abi_x86_32? ( !app-emulation/emul-linux-x86-opengl[-abi_x86_32(-)] )"
-DEPEND="${RDEPEND}"
-
-PATCHES=(
-)
+DEPEND="${RDEPEND}
+	valgrind? ( dev-util/valgrind )"
 
 src_prepare() {
 	if [[ ${PV} = 9999* ]]; then
@@ -42,7 +40,9 @@ src_prepare() {
 
 src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
-		--enable-udev
+		# Udev is only used by tests now.
+		--disable-udev
+		--disable-cairo-tests
 		$(use_enable video_cards_exynos exynos-experimental-api)
 		$(use_enable video_cards_freedreno freedreno)
 		$(use_enable video_cards_intel intel)
@@ -52,6 +52,9 @@ src_configure() {
 		$(use_enable video_cards_tegra tegra-experimental-api)
 		$(use_enable video_cards_vmware vmwgfx)
 		$(use_enable libkms)
+		# valgrind installs its .pc file to the pkgconfig for the primary arch
+		--enable-valgrind=$(usex valgrind auto no)
 	)
+
 	xorg-2_src_configure
 }
