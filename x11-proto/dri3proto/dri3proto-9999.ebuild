@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-proto/dri3proto/dri3proto-1.0.ebuild,v 1.1 2013/11/01 03:15:00 mattst88 Exp $
+# $Id$
 
 EAPI=5
 XORG_MULTILIB=yes
