@@ -49,7 +49,6 @@
 =x11-libs/libXcursor-9999
 =x11-libs/libXdamage-9999
 =x11-libs/libXdmcp-9999
-=x11-libs/libXevie-9999
 =x11-libs/libXext-9999
 =x11-libs/libXfixes-9999
 =x11-libs/libXfont-9999
