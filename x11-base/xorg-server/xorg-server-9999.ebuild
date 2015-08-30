@@ -13,7 +13,7 @@ SLOT="0/${PV}"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~arm-linux ~x86-linux"
 
 IUSE_SERVERS="dmx kdrive xephyr xnest xorg xvfb"
-IUSE="${IUSE_SERVERS} glamor ipv6 minimal nptl selinux +suid systemd tslib +udev unwind wayland"
+IUSE="${IUSE_SERVERS} glamor ipv6 minimal selinux +suid systemd tslib +udev unwind wayland"
 
 CDEPEND=">=app-eselect/eselect-opengl-1.3.0
 	dev-libs/openssl
@@ -66,7 +66,7 @@ CDEPEND=">=app-eselect/eselect-opengl-1.3.0
 	!minimal? (
 		>=x11-libs/libX11-1.1.5
 		>=x11-libs/libXext-1.0.5
-		>=media-libs/mesa-10.3.4-r1[nptl=]
+		>=media-libs/mesa-10.3.4-r1
 	)
 	tslib? ( >=x11-libs/tslib-1.0 )
 	udev? ( >=virtual/udev-150 )
@@ -179,7 +179,6 @@ src_configure() {
 		$(use_enable xnest)
 		$(use_enable xorg)
 		$(use_enable xvfb)
-		$(use_enable nptl glx-tls)
 		$(use_enable udev config-udev)
 		$(use_with doc doxygen)
 		$(use_with doc xmlto)
