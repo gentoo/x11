@@ -3,7 +3,7 @@
 # $Id$
 
 EAPI=5
-PYTHON_COMPAT=( python{2_6,2_7} )
+PYTHON_COMPAT=( python2_7 )
 
 EGIT_REPO_URI="http://llvm.org/git/${PN}.git"
 
@@ -29,8 +29,8 @@ KEYWORDS="~amd64 ~ppc ~x86"
 IUSE=""
 
 RDEPEND="
-	>=sys-devel/clang-3.6
-	>=sys-devel/llvm-3.6"
+	>=sys-devel/clang-3.7
+	>=sys-devel/llvm-3.7"
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}"
 
