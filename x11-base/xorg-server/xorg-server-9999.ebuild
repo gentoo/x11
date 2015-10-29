@@ -141,7 +141,6 @@ REQUIRED_USE="!minimal? (
 
 PATCHES=(
 	"${UPSTREAMED_PATCHES[@]}"
-	"${FILESDIR}"/${PN}-1.17-ia64-fix_inx_outx.patch
 	"${FILESDIR}"/${PN}-1.12-unloadsubmodule.patch
 )
 
