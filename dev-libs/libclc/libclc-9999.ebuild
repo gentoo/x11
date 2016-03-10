@@ -1,4 +1,4 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -29,8 +29,8 @@ KEYWORDS="~amd64 ~ppc ~x86"
 IUSE=""
 
 RDEPEND="
-	>=sys-devel/clang-3.7
-	>=sys-devel/llvm-3.7"
+	>=sys-devel/clang-3.9
+	>=sys-devel/llvm-3.9"
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}"
 
