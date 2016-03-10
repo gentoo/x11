@@ -12,7 +12,7 @@ if [[ ${PV} = 9999* ]]; then
 	EXPERIMENTAL="true"
 fi
 
-inherit base python-any-r1 $GIT_ECLASS
+inherit python-any-r1 $GIT_ECLASS
 
 DESCRIPTION="OpenCL C library"
 HOMEPAGE="http://libclc.llvm.org/"
