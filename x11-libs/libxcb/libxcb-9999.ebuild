@@ -4,7 +4,7 @@
 
 EAPI=5
 
-PYTHON_COMPAT=( python{2_7,3_2,3_3,3_4} )
+PYTHON_COMPAT=( python{2_7,3_2,3_3,3_4,3_5} )
 PYTHON_REQ_USE=xml
 
 XORG_DOC=doc
@@ -31,7 +31,7 @@ DEPEND="${RDEPEND}
 	dev-libs/libxslt
 	${PYTHON_DEPS}
 	$(python_gen_any_dep \
-		">=x11-proto/xcb-proto-1.11[${MULTILIB_USEDEP},\${PYTHON_USEDEP}]")"
+		">=x11-proto/xcb-proto-1.12[${MULTILIB_USEDEP},\${PYTHON_USEDEP}]")"
 
 python_check_deps() {
 	has_version --host-root ">=x11-proto/xcb-proto-1.11[${PYTHON_USEDEP}]"
