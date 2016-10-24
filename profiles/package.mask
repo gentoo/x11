@@ -15,7 +15,6 @@
 =x11-apps/xman-9999
 =x11-apps/xrandr-9999
 =x11-apps/xwininfo-9999
-=x11-base/xorg-drivers-9999
 =x11-base/xorg-server-9999
 =x11-drivers/xf86-input-evdev-9999
 =x11-drivers/xf86-input-joystick-9999
