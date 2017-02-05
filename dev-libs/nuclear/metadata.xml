@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
-<pkgmetadata>
-	<longdescription lang="en">
-Nuclear is a shell plugin for Weston. It implements a custom protocol to synchronize with a shell client such as Orbital, but does not carry a client itself, and serves no purpose without one.
-	</longdescription>
-</pkgmetadata>
