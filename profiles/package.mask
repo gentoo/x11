@@ -27,7 +27,6 @@
 =x11-drivers/xf86-video-nested-9999
 =x11-drivers/xf86-video-nouveau-9999
 =x11-drivers/xf86-video-vmware-9999
-=x11-libs/glamor-9999
 =x11-libs/libdmx-9999
 =x11-libs/libfontenc-9999
 =x11-libs/libFS-9999
