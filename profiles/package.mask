@@ -20,7 +20,6 @@
 =x11-drivers/xf86-input-mouse-9999
 =x11-drivers/xf86-input-synaptics-9999
 =x11-drivers/xf86-input-wacom-9999
-=x11-drivers/xf86-video-ati-9999
 =x11-drivers/xf86-video-glint-9999
 =x11-drivers/xf86-video-nouveau-9999
 =x11-drivers/xf86-video-vmware-9999
