@@ -43,7 +43,6 @@
 =x11-libs/libXdmcp-9999
 =x11-libs/libXext-9999
 =x11-libs/libXfixes-9999
-=x11-libs/libXfontcache-9999
 =x11-libs/libXft-9999
 =x11-libs/libXi-9999
 =x11-libs/libXinerama-9999
