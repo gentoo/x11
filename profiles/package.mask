@@ -30,11 +30,12 @@
 =x11-libs/libICE-9999
 =x11-libs/libpciaccess-9999
 =x11-libs/libSM-9999
+=x11-libs/libvdpau-va-gl-9999
 =x11-libs/libX11-9999
 =x11-libs/libXamine-9999
 =x11-libs/libXau-9999
-=x11-libs/libXaw-9999
 =x11-libs/libXaw3d-9999
+=x11-libs/libXaw-9999
 =x11-libs/libxcb-9999
 =x11-libs/libXcomposite-9999
 =x11-libs/libXcursor-9999
@@ -72,6 +73,7 @@
 =x11-libs/xcb-util-wm-9999
 =x11-libs/xpyb-9999
 =x11-libs/xtrans-9999
+=x11-misc/envytools-9999
 =x11-misc/util-macros-9999
 =x11-misc/xcb-demo-9999
 =x11-misc/xkeyboard-config-9999
