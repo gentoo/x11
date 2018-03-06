@@ -50,7 +50,6 @@
 =x11-libs/libxkbfile-9999
 =x11-libs/libxkbui-9999
 =x11-libs/libXmu-9999
-=x11-libs/libXp-9999
 =x11-libs/libXpm-9999
 =x11-libs/libXrandr-9999
 =x11-libs/libXrender-9999
