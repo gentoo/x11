@@ -70,7 +70,6 @@
 =x11-libs/xcb-util-keysyms-9999
 =x11-libs/xcb-util-renderutil-9999
 =x11-libs/xcb-util-wm-9999
-=x11-libs/xpyb-9999
 =x11-libs/xtrans-9999
 =x11-misc/envytools-9999
 =x11-misc/util-macros-9999
