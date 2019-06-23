@@ -31,6 +31,8 @@ REQUIRED_USE="|| ( opengl gles2 )
 src_prepare() {
 	rm -rf "${S}/src/libpng"
 	sed -i "s/libpng15/libpng/g" "${S}/wscript" # allow build with >= libpng:1.6
+	sed -i "/req_funcs/ s/,..sqrt.*\]/\]/" "${S}/wscript" #	sqrt patch
+	sed -i "s/-Werror//" "${S}/wscript"
 }
 
 src_configure() {
