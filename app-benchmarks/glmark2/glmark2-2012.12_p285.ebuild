@@ -1,6 +1,5 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=5
 
@@ -15,7 +14,7 @@ SRC_URI="http://bazaar.launchpad.net/~glmark2-dev/glmark2/trunk/tarball/${REV} -
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~arm ~amd64 ~x86"
+KEYWORDS="~amd64 ~arm ~x86"
 IUSE="drm +gles2 opengl wayland X"
 
 RDEPEND="media-libs/libpng

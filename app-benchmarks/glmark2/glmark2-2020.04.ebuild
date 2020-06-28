@@ -1,16 +1,16 @@
 # Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
+EAPI=6
 
-PYTHON_COMPAT=( python2_7 )
+PYTHON_COMPAT=( python3_{7,8,9} )
 inherit waf-utils python-single-r1
 
 REV=${PV#*_p}
 
 DESCRIPTION="Opengl test suite"
 HOMEPAGE="https://launchpad.net/glmark2"
-SRC_URI="https://launchpad.net/${PN}/trunk/${PV}/+download/${P}.tar.gz"
+SRC_URI="https://github.com/glmark2/glmark2/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -27,11 +27,13 @@ DEPEND="${RDEPEND}
 REQUIRED_USE="|| ( opengl gles2 )
 			  || ( drm wayland X )"
 
+PATCHES=(
+	"${FILESDIR}/${PN}"-2020.04-Build-Fix-Python-3-incompatibility.patch
+)
+
 src_prepare() {
+	default
 	rm -rf "${S}/src/libpng"
-	sed -i "s/libpng15/libpng/g" "${S}/wscript" # allow build with >= libpng:1.6
-	sed -i "/req_funcs/ s/,..sqrt.*\]/\]/" "${S}/wscript" #	sqrt patch
-	sed -i "s/-Werror//" "${S}/wscript"
 }
 
 src_configure() {
