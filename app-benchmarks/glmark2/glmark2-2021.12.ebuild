@@ -3,10 +3,7 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{8..10} )
-inherit meson python-single-r1
-
-REV=${PV#*_p}
+inherit meson
 
 DESCRIPTION="glmark2 is an OpenGL 2.0 and ES 2.0 benchmark"
 HOMEPAGE="https://github.com/glmark2/glmark2"
