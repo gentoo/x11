@@ -1,7 +1,7 @@
-# Copyright 1999-2022 Gentoo Authors
+# Copyright 1999-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 inherit meson
 
@@ -18,7 +18,7 @@ RDEPEND="
 	virtual/jpeg:0=
 	media-libs/libpng:0=
 
-	gles2? ( media-libs/mesa[gles2?] )
+	gles2? ( media-libs/mesa[gles2(+)?] )
 	drm? (
 		x11-libs/libdrm
 		media-libs/mesa[gbm(+)]
@@ -38,10 +38,6 @@ BDEPEND="
 
 REQUIRED_USE="|| ( opengl gles2 )
 			  || ( drm wayland X )"
-
-PATCHES=(
-	"${FILESDIR}"/${PV}-libmatrix-Add-missing-utility-include.patch
-)
 
 src_configure() {
 	local flavors=()
